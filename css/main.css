@@ -1,0 +1,138 @@
+body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+	background-image: url("/img/bg.png");
+	background-attachment: fixed;
+    background-color: white;
+}
+
+.clearit {
+	clear: both;
+}
+
+div.ws {
+    padding: 10px;
+}
+
+div.ws-sm {
+    padding: 5px;
+}
+
+div.centered {
+    margin: auto;
+    width: 50%;
+}
+
+.descr {
+	font-size: 75%;
+	font-weight: normal;
+	margin: 0;
+	padding-left: 10px; 
+	display: inline-block;
+}
+
+.white {
+	color: white;
+}
+
+.control-label {
+	font-weight: bold;
+	display: block;
+}
+
+.sechead {
+	padding-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 5px;
+	font-size: 125%;
+}
+
+.sower {
+	background-color: green;
+	color: #fff;"
+}
+
+.sowerlight {
+	background-color: #ccffcc;
+	padding: 5px;
+}
+
+.tender {
+	background-color: #6495ed;
+	color: #fff;"
+}
+
+.tenderlight {
+	background-color: #d1dffa;
+	padding: 5px;
+}
+
+.adjunct {
+	background-color: #ffed4d;
+}
+
+.adjunctlight {
+	background-color: #fffacd;
+	padding: 5px;
+}
+
+.field {
+	padding-bottom: 10px;
+}
+
+.form-actions {
+    margin: 0;
+    background-color: transparent;
+    text-align: center;
+}
+
+.message {
+	font-weight: bold; 
+	color: black;
+	padding: 5px;
+	text-align: center;
+}
+
+.tt-hint,
+.targetsystem,
+.system_sower,
+.system_tender,
+.system_adjunct {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px 8px 8px 8px;
+	font-size: 24px;
+	height: 45px;
+	line-height: 30px;
+	outline: medium none;
+	padding: 8px 12px;
+	width: 125px;
+}
+
+.tt-dropdown-menu {
+	width: 125px;
+	margin-top: 5px;
+	padding: 8px 12px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px 8px 8px 8px;
+	font-size: 18px;
+	color: #111;
+	background-color: #F1F1F1;
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
