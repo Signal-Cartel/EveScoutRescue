@@ -6,7 +6,7 @@ if (isset($_SESSION['auth_characterid'])) {
 	$chardiv = '<div style="text-align: center;">'.$charimg.'<br /><span class="white">'.$charname.'</span><br /><span class="descr"><a href="/auth/logout.php">logout</a></span></div>';
 }
 else {
-	$chardiv = '<a href="/auth/login.php"><img src="/img/EVE_SSO_Login_Buttons_Small_Black.png"></a>';
+	$chardiv = '<a href="../auth/login.php"><img src="../img/EVE_SSO_Login_Buttons_Small_Black.png"></a>';
 }
 ?>
 <html>
@@ -15,22 +15,22 @@ else {
 	<meta http-equiv="Content-Language" content="en-us">
 	<title>Rescue Cache :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
-	<link href="/css/main.css" rel="stylesheet">
+	<link href="../css/main.css" rel="stylesheet">
 	<!-- Latest compiled and minified Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="/js/typeahead.js"></script>
+    <script src="../js/typeahead.js"></script>
 </head>
 
 <body>
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 	<div class="col-md-2 col-sm-6">
-		<a href="/"><img src="/img/eve-scout-logo.png" alt="EvE-Scout Rescue" /></a>
+		<a href="../index.php"><img src="../img/eve-scout-logo.png" alt="EvE-Scout Rescue" /></a>
 	</div>
 	<div class="col-sm-8 white" style="text-align: center; height: 100px; vertical-align: middle;">
-		<br /><span class="sechead">Rescue Cache FAQ<br /><br />
+		<br /><span class="sechead">Rescue Cache FAQ</span><br /><br />
 		Please join the in-game channel <span style="color: gold; font-weight: bold;">EvE-Scout</span> for further assistance.
 	</div>
 	<div class="col-md-2 col-sm-6">
@@ -90,7 +90,7 @@ else {
 				<div id="question2" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
 						<p>Because a rescue cache is a small secure container that contains a minimum of one (1) core probe launcher and eight (8) core scanner probes, it will not be any help to you if you do not already have a probe launcher fitted to your ship, if you do not have a way to change your fit in your current wormhole, or if you no longer have a ship at all!</p>
-						<p>In these cases, be sure to see if we have a <a href="/rf/">rescue frigate</a> that is accessible to you.</p>
+						<p>In these cases, be sure to see if we have a <a href="../rf/">rescue frigate</a> that is accessible to you.</p>
 					</div>
 				</div>
 			</div>
