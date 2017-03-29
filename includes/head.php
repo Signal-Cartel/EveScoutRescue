@@ -1,5 +1,5 @@
 	<meta http-equiv="Content-Language" content="en-us">
-	<title>Rescue Frigate :: EvE-Scout Rescue</title>
+	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
 	<link href="../css/main.css" rel="stylesheet">
 	<!-- Latest compiled and minified Bootstrap -->

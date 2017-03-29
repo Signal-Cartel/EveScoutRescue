@@ -2,7 +2,10 @@
 <html>
 
 <head>
-<?php include_once '../includes/head.php'; ?>
+<?php
+$pgtitle = 'Rescue Frigate';
+include_once '../includes/head.php';
+?>
 </head>
 
 <body>

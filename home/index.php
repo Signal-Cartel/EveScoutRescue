@@ -2,7 +2,10 @@
 <html>
 
 <head>
-<?php include_once '../includes/head.php'; ?>
+<?php 
+$pgtitle = "New Eden's Premier Wormhole Rescue Service";
+include_once '../includes/head.php'; 
+?>
 </head>
 
 <body>

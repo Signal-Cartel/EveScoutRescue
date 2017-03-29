@@ -2,7 +2,10 @@
 <html>
 
 <head>
-<?php include_once '../includes/head.php'; ?>
+<?php
+$pgtitle = 'Search and Rescue';
+include_once '../includes/head.php';
+?>
 </head>
 
 <body>
