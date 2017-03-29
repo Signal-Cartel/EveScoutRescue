@@ -36,8 +36,8 @@ include_once '../includes/head.php';
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Cache</h2>
-				<div class="btn-group pull-right" style="padding-top: 7.5px;">
+				<h2 class="pull-left">Cache&nbsp;&nbsp;&nbsp;&nbsp;<img src="../img/cache.png" height="40px" /></h2>
+				<div class="btn-group pull-right" style="padding-top: 12px;">
 			        <a class="btn btn-primary btn-lg" href="../esrc/" role="button">Learn more</a>
 			    </div>
 			</div>
@@ -49,8 +49,8 @@ include_once '../includes/head.php';
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Frigate</h2>
-				<div class="btn-group pull-right" style="padding-top: 7.5px;">
+				<h2 class="pull-left">Frigate&nbsp;&nbsp;<img src="../img/frig.png" height="40px" /></h2>
+				<div class="btn-group pull-right" style="padding-top: 12px;">
 			        <a class="btn btn-primary btn-lg" href="../rf/" role="button">Learn more</a>
 			    </div>
 			</div>
@@ -62,7 +62,7 @@ include_once '../includes/head.php';
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Search</h2>
+				<h2 class="pull-left">Search&nbsp;&nbsp;&nbsp;<img src="../img/search.png" height="40px" /></h2>
 				<div class="btn-group pull-right" style="padding-top: 7.5px;">
 			        <a class="btn btn-primary btn-lg" href="../sar/" role="button">Learn more</a>
 			    </div>
