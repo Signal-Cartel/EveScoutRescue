@@ -43,7 +43,7 @@ include_once '../includes/head.php';
 				<div id="question0" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
 						<p>The EvE-Scout Rescue Cache (ESRC) program, founded in early YC 118 by <a href="https://gate.eveonline.com/Profile/Forcha%20Alendare">Forcha Alendare</a>, provides a basic emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style.</p>
-						<p>ESRC is only one facet of the EvE-Scout Rescue division, a dedicated group of Signal Cartel pilots who have answered to call of service to the greater New Eden community. As well as being a service to the EVE community, this program provides Signal Cartel members an opportunity to expand their exploration experiences, wormhole lifestyle, and game play content, as well as being an opportunity to earn a small, steady stream of ISK.</p>
+						<p>ESRC is only one facet of the EvE-Scout Rescue division, a dedicated group of Signal Cartel pilots who have answered to call of service to the greater New Eden community. As well as being a service to the EVE community, this program provides Signal Cartel members an opportunity to expand their exploration experiences, wormhole lifestyle, and game play content.</p>
 					</div>
 				</div>
 			</div>
@@ -69,7 +69,7 @@ include_once '../includes/head.php';
 				<div id="question2" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
 						<p>Please head over to our in-game public channel, "Eve-Scout", and ask for a Signal Cartel member to guide you to one of our rescue caches. If there is one available in your current wormhole system, the process to follow to locate it in space is fairly straightforward:</p>
-						<p><img src="../img/BounceMethod.jpg" width="900px" /></p>
+						<p><img src="../img/BounceMethod.jpg" width="900px" style="vertical-align: middle; max-width: 100%; height: auto;" /></p>
 						<ol>
 							<li>Warp to 100 km off the planet (the "Align Planet").</li>
 							<li>Warp to 100 km off the second planet (the "Rescue Cache Planet").</li>
@@ -111,7 +111,7 @@ include_once '../includes/head.php';
 				</div>
 				<div id="question4" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
-						<p>While we respect the inhabitants of every wormhole, it is not always possible to contact them prior to or after leaving a rescue cache. These resources that we leave behind do not provide any actionable intel nor do we share information about our travels with any third parties. Additionally, our pilots are instructed to avoid placing rescue caches within d-scan range of POSes or Citadels whenever possible. However, New Eden is a dangerous place and we cannot guarantee that our resources will not be untampered with. As in all scenarios, use caution when approaching a rescue cache!</p>
+						<p>While we respect the inhabitants of every wormhole, it is not always possible to contact them prior to or after leaving a rescue cache. These resources that we leave behind do not provide any actionable intel nor do we share information about our travels with any third parties. Additionally, our pilots are instructed to avoid placing rescue caches within d-scan range of POSes or Citadels whenever possible. However, New Eden is a dangerous place and we cannot guarantee that our resources will not be tampered with. As in all scenarios, use caution when approaching a rescue cache!</p>
 						<p>For further inquiries regarding EvE-Scout Rescue's initiatives or policies, please contact <a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice Hapus</a>.</p>
 					</div>
 				</div>
@@ -126,7 +126,7 @@ include_once '../includes/head.php';
 					<div class="panel-body">
 						<p>The pilots of <a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, abide by a strict Credo that emphasizes service to the capsuleer community of New Eden, respect to all regardless of affiliation or play style, non-aggression, friendship, kindness, and grace under pressure.</p>
 						<p>Within Signal Cartel, each pilot is encouraged to participate in and invent ways to embody all that the Credo envisions. The Rescue Cache program is merely one of the myriad ways our pilots strive to live up to that high calling.</p>
-						<p>There are many reasons capsuleers fly in New Eden: glory, fame, riches. Our pilots do so to be a part of one of the greatest stories of our time. Our glory, our fame, our wealth is the magnificent narrative tapestry we are weaving together. One of our favorite corporate pastimes is sharing with one another stories of successful rescues that occur as the result of our various rescue programs. We are grateful to you for granting us this unique opportunity!</p>
+						<p>There are many reasons capsuleers fly in New Eden: glory, fame, riches. Our pilots do so to be a part of one of the greatest stories of our time. We derive our glory, fame, and personal reward from the magnificent narrative tapestry we are weaving together. One of our favorite corporate pastimes is sharing with one another stories of successful rescues that occur as the result of our various rescue programs. We are grateful to you for granting us this unique opportunity!</p>
 					</div>
 				</div>
 			</div>

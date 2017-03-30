@@ -26,7 +26,7 @@ include_once '../includes/head.php';
 				<p class="lead">Ahoy, fellow traveler! You are probably here because you've come across one of our rescue caches or an unpiloted rescue frigate. Don't be alarmed; these items are completely harmless! Read on to learn more about our services.</p>
 			</div>
 			<div class="panel-body">
-				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, is a neutral, non-profit entity that aims to provide valuable public service to all of New Eden. As such, one of our primary initiatives is to look for and rescue capsuleers who are stranded inside wormholes without equipment to get out by themselves. In accordance to our Credo, our services are free and available to capsuleers of all play styles and allegiance.</p>
+				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, is a neutral, non-profit entity that aims to provide a valuable public service to all of New Eden. As such, one of our primary initiatives is to look for and rescue capsuleers who are stranded inside wormholes without equipment to get out by themselves. In accordance to our Credo, our services are free and available to capsuleers of all play styles and allegiance.</p>
 				<p>If you also think that no one should be stranded inside a wormhole due to server problems or socket disconnects, please support this initiative by not blowing up our rescue caches and rescue frigates! We sincerely thank you for your cooperation! </p>
 			</div>
 		</div>
