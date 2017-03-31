@@ -1,20 +1,33 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'].'/class/class.db.php';
-
-//CREATE QUERY TO DB AND PUT RECEIVED DATA INTO ASSOCIATIVE ARRAY
-if (isset($_REQUEST['query'])) {
-    $query = $_REQUEST['query'];
-    $array = array();
-
-	$db = new Db();
-	// make available to view only caches that are not expired
-	$options = $db -> select("SELECT System FROM cache WHERE System LIKE '%{$query}%' AND Status <> 'Expired' ORDER BY System");
-	foreach ($options as $value1) {
-		foreach ($value1 as $value2) {
-		  $array[] = $value2;
-		}
+// Check if logged in.
+session_start();
+if (isset($_SESSION['auth_characterid'])) {
+	// Check if user is a member of the Enclave.
+	if (!$_SESSION['auth_characteralliance'] == 'EvE-Scout Enclave') {
+		echo "{\"data\":[],\"errorType\":\"AuthException\",\"errorMsg\":\"You must be a member of Eve-Scout Enclave to view this list!\"}";
+		exit;
 	}
-    //RETURN JSON ARRAY
-    echo json_encode ($array);
 }
-?>
+else {
+	echo "{\"data\":[],\"errorType\":\"AuthException\",\"errorMsg\":\"You must be logged-in to view this list!\"}";
+	exit;
+}
+
+// Proceed if everything is fine.
+include $_SERVER['DOCUMENT_ROOT'].'/class/class.db.php';
+try {
+	$db = new Db();
+	$q = $db->prepare("SELECT System,Location,AlignedWith,Distance,Password,Status FROM cache WHERE System LIKE ? AND Status <> 'Expired' ORDER BY System");
+	$q->execute(["J%"]); // obsolete, old
+	$r = $q->fetchAll(PDO::FETCH_ASSOC);
+	echo "{\"data\":".json_encode($r)."}";
+}
+// Pointless, could be caught by Exception.
+catch (PDOException $e) {
+	echo "{\"data\":[],\"errorType\":\"PDOException\",\"errorMsg\":\"".$e->getMessage()."\"}";
+	exit;
+}
+catch (Exception $e) {
+	echo "{\"data\":[],\"errorType\":\"Exception\",\"errorMsg\":\"".$e->getMessage()."\"}";
+	exit;
+}

@@ -9,9 +9,9 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
     $state=$_GET['state'];
     //Do the initial check.
     //$url='https://sisilogin.testeveonline.com/oauth/token';
-	$url='https://login.eveonline.com/oauth/token';
+    $url='https://login.eveonline.com/oauth/token';
     //$verify_url='https://sisilogin.testeveonline.com/oauth/verify';
-	$verify_url='https://login.eveonline.com/oauth/verify';
+    $verify_url='https://login.eveonline.com/oauth/verify';
     $header='Authorization: Basic '.base64_encode($clientid.':'.$secret);
     $fields_string='';
     $fields=array(
@@ -58,7 +58,7 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
     }
 // Lookup the character details in the DB.
     include_once $_SERVER['DOCUMENT_ROOT'].'/class/class.db.php';
-	$db = new Db();
+    $db = new Db();
     $sql="select corporationname,corporationticker,user.corporationid,
     alliancename,allianceticker,corporation.allianceid,characterid,characterownerhash,
     user.id
@@ -66,28 +66,27 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
     join corporation on user.corporationid=corporation.corporationid
     join alliance on corporation.allianceid=alliance.allianceid
     where
-    user.characterid=".$db->quote($response->CharacterID)."
-    and characterownerhash=".$db->quote($response->CharacterOwnerHash);
-	//echo $sql;
-    //$stmt = $dbh->prepare($sql);
-	$rows = $db -> select($sql);
-    //$stmt->execute(array(':characterid'=>$response->CharacterID,':characterhash'=>$response->CharacterOwnerHash));
+    user.characterid=?
+    and characterownerhash=?";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$response->CharacterID, $response->CharacterOwnerHash]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     //while ($row = $stmt->fetchObject()) {
-	foreach ($rows as $value1) {
-		/*
-		foreach ($value1 as $value2) {
-			echo $value2;
-		}
-		*/
+    foreach ($rows as $value1) {
+        /*
+        foreach ($value1 as $value2) {
+            echo $value2;
+        }
+        */
         //$userdetails=$row;
-		$userdetails=$rows;
-		//echo $userdetails.'<br />';
+        $userdetails=$rows;
+        //echo $userdetails.'<br />';
         //$userid=$row->id;
-		$userid=$value1['characterid'];
-		//echo $userid.'<br />';
+        $userid=$value1['characterid'];
+        //echo $userid.'<br />';
     }
 // Fill in character details, if they're not in the DB
-	if (!isset($userdetails)) {
+    if (!isset($userdetails)) {
         // No database entry for the user. lookup time.
         error_log('Creating user details');
         $ch = curl_init();
@@ -111,14 +110,14 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
         } else {
             auth_error("No character details returned from API");
         }
-	}
-	$_SESSION['auth_characterid']=$response->CharacterID;
+    }
+    $_SESSION['auth_characterid']=$response->CharacterID;
     //$_SESSION['auth_id']=$userid;
     $_SESSION['auth_charactername']=$response->CharacterName;
     //$_SESSION['auth_userdetails']=json_encode($userdetails);
     $_SESSION['auth_characterhash']=$response->CharacterOwnerHash;
-	$_SESSION['auth_charactercorp'] = $corporationName;
-	$_SESSION['auth_characteralliance'] = $allianceName;
+    $_SESSION['auth_charactercorp'] = $corporationName;
+    $_SESSION['auth_characteralliance'] = $allianceName;
     session_write_close();
     header('Location:'. $_SESSION['auth_redirect']);
     exit;
