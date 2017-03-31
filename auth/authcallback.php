@@ -68,16 +68,17 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
     where
     user.characterid=?
     and characterownerhash=?";
+    /*
     $stmt = $db->prepare($sql);
     $stmt->execute([$response->CharacterID, $response->CharacterOwnerHash]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     //while ($row = $stmt->fetchObject()) {
     foreach ($rows as $value1) {
-        /*
+        
         foreach ($value1 as $value2) {
             echo $value2;
         }
-        */
+        
         //$userdetails=$row;
         $userdetails=$rows;
         //echo $userdetails.'<br />';
@@ -85,6 +86,7 @@ if (isset($_SESSION['auth_state']) and isset($_GET['state']) and $_SESSION['auth
         $userid=$value1['characterid'];
         //echo $userid.'<br />';
     }
+    */
 // Fill in character details, if they're not in the DB
     if (!isset($userdetails)) {
         // No database entry for the user. lookup time.
