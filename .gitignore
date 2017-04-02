@@ -46,5 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 *.ini
-config/secret.php
+config
 img/eve-scout-logo-original.png
+originals
+samples
