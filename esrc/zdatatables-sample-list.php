@@ -123,7 +123,7 @@ table.dataTable tbody tr.even.upkeep:hover {
 <div class="row" id="sys-container">
 	<!-- TODO: make compact version instead? add contribution statistics column -->
 	<div class="col-sm-12">
-		<table id="sys-table" class="display table" cellspacing="0" width="100%">
+		<table id="sys-table" class="display table">
 			<thead>
 				<tr>
 					<th>System</th>

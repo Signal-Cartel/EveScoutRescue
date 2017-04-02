@@ -11,6 +11,7 @@
 	<!--
 		body {
 			background: url(../img/<?php echo $_SESSION['selectedBg']; ?>) no-repeat;
+			background-attachment: fixed;
 		}
 	-->
 	</style>
