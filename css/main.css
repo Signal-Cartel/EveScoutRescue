@@ -1,8 +1,7 @@
 body {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
-	background-attachment: fixed;
-    background-color: white;
+    background-color: black;
 }
 
 .clearit {
@@ -108,7 +107,7 @@ div.centered {
 }
 
 .tt-dropdown-menu {
-	width: 125px;
+	width: 200px;
 	margin-top: 5px;
 	padding: 8px 12px;
 	background-color: #fff;

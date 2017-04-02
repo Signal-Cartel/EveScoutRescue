@@ -2,10 +2,10 @@
 <html>
 
 <head>
-<?php 
-$pgtitle = 'Search';
-include_once '../includes/head.php'; 
-?>
+	<?php 
+	$pgtitle = 'Search';
+	include_once '../includes/head.php'; 
+	?>
 	<script>
         $(document).ready(function() {
             $('input.targetsystem').typeahead({
