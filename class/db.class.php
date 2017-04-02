@@ -1,23 +1,25 @@
 <?php
 //serve up the correct config file for db connection, based on which environment we are in
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
-	if (strpos($_SERVER['HTTP_HOST'], 'dev') === false) {
-		$config = parse_ini_file('../../config/esr_dbconfig.ini');		//production
-	}
-	else {
-		$config = parse_ini_file('../../config/esrdev_dbconfig.ini');	//dev
-	}
+    if (strpos($_SERVER['HTTP_HOST'], 'dev') === false) {
+	    $config = parse_ini_file('../../config/esr_dbconfig.ini');		//production
+    }
+    else {
+	    $config = parse_ini_file('../../config/esrdev_dbconfig.ini');	//dev
+    }
 }
 else {
-	$config = parse_ini_file('../config/dbconfig_local.ini');	//local
+    $config = parse_ini_file('../config/dbconfig_local.ini');	//local
 }
 
+//define db connection vars
 define("DB_HOST", $config['hostname']);
 define("DB_USER", $config['username']);
 define("DB_PASS", $config['password']);
 define("DB_NAME", $config['dbname']);
 
-class Database {
+class Database
+{
 	private $host = DB_HOST;
 	private $user = DB_USER;
 	private $pass = DB_PASS;
@@ -27,7 +29,8 @@ class Database {
 	private $error;
 	private $stmt;
 	
-	public function __construct() {
+	public function __construct() 
+	{
 		// Set DSN
 		$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 		
@@ -47,11 +50,13 @@ class Database {
 		}
 	}
 	
-	public function query($query) {
+	public function query($query) 
+	{
 		$this->stmt = $this->dbh->prepare($query);
 	}
 	
-	public function bind($param, $value, $type = null) {
+	public function bind($param, $value, $type = null) 
+	{
 		if (is_null($type)) {
 		  switch (true) {
 			case is_int($value):
@@ -70,41 +75,50 @@ class Database {
 		$this->stmt->bindValue($param, $value, $type);
 	}
 	
-	public function execute() {
+	public function execute() 
+	{
 		return $this->stmt->execute();
 	}
 	
-	public function resultset() {
+	public function resultset() 
+	{
 		$this->execute();
 		return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
-	public function single(){
+	public function single()
+	{
 		$this->execute();
 		return $this->stmt->fetch(PDO::FETCH_ASSOC);
 	}
 	
-	public function rowCount(){
+	public function rowCount()
+	{
 		return $this->stmt->rowCount();
 	}
 	
-	public function lastInsertId(){
+	public function lastInsertId()
+	{
 		return $this->dbh->lastInsertId();
 	}
 	
-	public function beginTransaction(){
+	public function beginTransaction()
+	{
 		return $this->dbh->beginTransaction();
 	}
 	
-	public function endTransaction(){
+	public function endTransaction()
+	{
 		return $this->dbh->commit();
 	}
 	
-	public function cancelTransaction(){
+	public function cancelTransaction()
+	{
 		return $this->dbh->rollBack();
 	}
 	
-	public function debugDumpParams(){
+	public function debugDumpParams()
+	{
 		return $this->stmt->debugDumpParams();
 	}
 }
