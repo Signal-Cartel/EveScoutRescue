@@ -1,11 +1,19 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
+//code adapted from https://github.com/fuzzysteve/eve-sso-auth
+// details on EVE SSO are available at 
+// http://eveonline-third-party-documentation.readthedocs.io/en/latest/sso/
+
+//direct users to this page when they click to login
+// secret.php contains clientid and secret key from 
+// https://developers.eveonline.com/applications
+require_once '../config/secret.php';	
 session_start();
 if (isset($_SESSION['auth_characterid'])) {
     echo "Logged in. ".$_SESSION['auth_characterid'];
     exit;
-} else {
-    //Throw login redirect.
+} 
+else {
+    //Throw login redirect to EVE auth server
 	$authsite='https://login.eveonline.com';
     $authurl='/oauth/authorize';
     $redirect_uri="http%3A%2F%2Fevescoutrescue.com%2Fauth%2Fauthcallback.php";
