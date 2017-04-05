@@ -1,10 +1,11 @@
-<?php include_once '../includes/auth-bg.php'; ?>
+<?php include_once '../includes/auth-public-open.php'; ?>
 <html>
 
 <head>
-<?php 
+<?php
+include_once '../includes/bg.php';
 $pgtitle = "New Eden's Premier Wormhole Rescue Service";
-include_once '../includes/head.php'; 
+include_once '../includes/head.php';
 ?>
 </head>
 

@@ -1,17 +1,4 @@
 <?php
-$cookie_name = "pilotname";
-if (isset($_POST['pilot']) && !empty($_POST['pilot'])) {
-	$cookie_value = $_POST['pilot'];
-	if (!isset($_COOKIE[$cookie_name])) {
-		setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-	} 
-	else {
-		if ($_COOKIE[$cookie_name] <> $cookie_value) {
-			setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-		}
-	}
-}
-
 function test_input($data) {
 	$data = trim($data);
 	$data = stripslashes($data);
@@ -19,14 +6,15 @@ function test_input($data) {
 	return $data;
 }
 
-include_once '../includes/auth-bg.php';
+include_once '../includes/auth-alliance-req.php';
 include_once '../class/db.class.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<?php 
+<?php
+include_once '../includes/bg.php';
 $pgtitle = 'Data Entry';
 include_once '../includes/head.php'; 
 ?>
@@ -256,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		//all good, so prepare success message(s) and clear previously submitted form values
 		if (empty($errmsg)) {
 			if (isset(${"system_$entrytype"})) {
-				$success_url = '<a href="esrc_search.php?system='. ${"system_$entrytype"} .'">Confirm data entry</a> or <a href="'. htmlspecialchars($_SERVER['PHP_SELF']) .'">enter another one.</a>';
+				$success_url = '<a href="search.php?system='. ${"system_$entrytype"} .'">Confirm data entry</a> or <a href="'. htmlspecialchars($_SERVER['PHP_SELF']) .'">enter another one.</a>';
 			}
 			else {
 				$success_url = '<a href="'. htmlspecialchars($_SERVER['PHP_SELF']) .'">Enter another one.</a>';
@@ -275,12 +263,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">Rescue Cache Data Entry</span><br /><br />
-			<a href="esrc_search.php" class="btn btn-info" role="button" tabindex="100">Go to Search Tool</a>
+			<a href="search.php" class="btn btn-info" role="button" tabindex="100">Go to Search</a>
 		</div>
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
-	<div class="row" id="formtop2">
+	<div class="row" id="formtop2" style="background-color: black;">
 		<div class="col-sm-12" style="text-align: center;">
 			<span class="white" style="font-weight: bold;">Complete ONLY ONE of the sections below. Notes may be provided with any type of entry.</span>
 		</div>
@@ -444,7 +432,7 @@ else {
 	</div>
 	<div class="ws"></div>
 	<div class="form-actions">
-		<input type="hidden" name="pilot" value="test">	<!--  TODO: set this to auth login -->
+		<input type="hidden" name="pilot" value="<?php echo $charname; ?>">
 	    <button type="submit" class="btn btn-lg">Submit</button>
 	</div>
 	</form>

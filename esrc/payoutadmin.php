@@ -1,8 +1,9 @@
-<?php include_once '../includes/auth-bg.php'; ?>
+<?php include_once '../includes/auth-admin-req.php'; ?>
 <html>
 
 <head>
-	<?php 
+	<?php
+	include_once '../includes/bg.php';
 	$pgtitle = 'Payout Admin';
 	include_once '../includes/head.php'; 
 	?>
@@ -32,8 +33,8 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">ESRC Payout Admin</span>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="esrc_data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="esrc_search.php" class="btn btn-info" role="button">Go to Search</a><br /><br />
+			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="search.php" class="btn btn-info" role="button">Go to Search</a><br /><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker">
 					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? $start : '' ?>" />
@@ -93,7 +94,7 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 							$ctradj++;
 							break;
 					}
-					echo '<td class="white"><a href="esrc_search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
+					echo '<td class="white"><a href="search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
 					echo '<td class="white">'. $value['AidedPilot'] .'</td>';
 					echo '<td class="white">'. $value['Note'] .'</td>';
 					echo '</tr>';
