@@ -1,8 +1,9 @@
-<?php include_once '../includes/auth-bg.php'; ?>
+<?php include_once '../includes/auth-alliance-req.php'; ?>
 <html>
 
 <head>
 	<?php 
+	include_once '../includes/bg.php';
 	$pgtitle = 'Search';
 	include_once '../includes/head.php'; 
 	?>
@@ -36,7 +37,8 @@ elseif (isset($_GET['system'])) {
 			<div class="form-group">
 				<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" class="targetsystem" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
 			</div>
-			<button type="submit" class="btn btn-lg">Search</button>
+			<button type="submit" class="btn btn-lg">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
 		</form>
 		<div class="clearit">
 			<span class="white">If a system is not listed, no active cache is present.</span>
@@ -58,8 +60,8 @@ if (isset($targetsystem)) {
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
 		//echo '<span style="font-weight: bold; font-size: 150%;">' . $targetsystem . ': </span>';
-		echo '<a href="/esr/esrc_data_entry.php?tendsys='.$targetsystem.'" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;';
-		echo '<a href="/esr/esrc_data_entry.php?adjsys='.$targetsystem.'" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="data_entry.php?tendsys='.$targetsystem.'" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="data_entry.php?adjsys='.$targetsystem.'" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;';
 		echo '<a href="https://tripwire.eve-apps.com/?system=' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;';
 		echo '<a href="http://wh.pasta.gg/' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;';
 		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';

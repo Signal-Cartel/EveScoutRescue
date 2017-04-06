@@ -1,8 +1,9 @@
-<?php include_once '../includes/auth-bg.php'; ?>
+<?php include_once '../includes/auth-public-open.php'; ?>
 <html>
 
 <head>
 <?php 
+include_once '../includes/bg.php';
 $pgtitle = 'Bounce Method';
 include_once '../includes/head.php'; 
 ?>
