@@ -7,9 +7,9 @@ if (isset($_SESSION['auth_characterid'])) {
 				$_SESSION['auth_characterid'].'_64.jpg">';
 	$charname = $_SESSION['auth_charactername'];
 	$chardiv =  '<div style="text-align: center;">'.$charimg.'<br />' .
-				'<div style="background-color: black;"><span class="white">'.
-				$charname.'</span><br /><span class="descr">'.
-				'<a href="../auth/logout.php">logout</a></span></div></div>';
+				'<div><span class="white">' .$charname. '</span><br />' .
+				'<span class="descr"><a href="../auth/logout.php">logout</a></span>' .
+				'</div></div>';
 }
 else {
 	$chardiv =  '<a href="../auth/login.php">'.

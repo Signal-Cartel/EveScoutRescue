@@ -1,4 +1,6 @@
 <?php 
+//TODO: took this out of a function, so need to make it work as a standalone script
+//TODO: also need to update db calls to use new PDO class
 $config = parse_ini_file('../esr_dbconfig.ini');
 $mtables = array();
 $contents = "-- Database: `".$config['dbname']."` --\n";

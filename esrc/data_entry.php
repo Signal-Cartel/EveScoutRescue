@@ -268,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
-	<div class="row" id="formtop2" style="background-color: black;">
+	<div class="row" id="formtop2">
 		<div class="col-sm-12" style="text-align: center;">
 			<span class="white" style="font-weight: bold;">Complete ONLY ONE of the sections below. Notes may be provided with any type of entry.</span>
 		</div>

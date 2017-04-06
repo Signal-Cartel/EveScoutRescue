@@ -94,7 +94,7 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 							$ctradj++;
 							break;
 					}
-					echo '<td class="white"><a href="search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
+					echo '<td style="background-color: #cccccc;"><a href="search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
 					echo '<td class="white">'. $value['AidedPilot'] .'</td>';
 					echo '<td class="white">'. $value['Note'] .'</td>';
 					echo '</tr>';
