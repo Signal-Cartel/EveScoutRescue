@@ -100,7 +100,7 @@ if (isset($targetsystem)):
 					echo '<td'.$statuscellformat.'>'. $row['Status'] .'</td>';
 					echo '<td class="white">'. date("Y-M-d", strtotime($row['ExpiresOn'])) .'</td>';
 					echo '</tr>';
-					$strNotes = htmlspecialchars($row['Note']);
+					$strNotes = $row['Note'];
 					?>
 					</tbody>
 				</table>
