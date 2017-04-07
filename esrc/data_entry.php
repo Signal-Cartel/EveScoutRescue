@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$db = new Database();
 		//begin db transaction
 		$db->beginTransaction();
-		// insert to 'action' table
+		// insert to [activity] table
 		$db->query("INSERT INTO activity (Pilot, EntryType, System, AidedPilot, Note, IP) VALUES (:pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
 		$db->bind(':pilot', $pilot);
 		$db->bind(':entrytype', $entrytype);
@@ -112,7 +112,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$db->execute();
 		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
 		$newID = $db->lastInsertId();
+		//end db transaction
+		$db->endTransaction();
 		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
+		$sqlRollback = "DELETE FROM activity WHERE ID = " . $newID; // in case we need to roll this back
 		//handle each sort of entrytype
 		switch ($entrytype) {
 			// SOWER
@@ -125,7 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
 					$_POST['system_sower'] = '';
 					//roll back [activity] table commit
-					$db->cancelTransaction();
+					$db->query($sqlRollback);
+					$db->execute();
 				}
 				else {
 					//2. check for duplicates - there can only be one non-expired cache per system
@@ -135,7 +139,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					if (!empty($row)) {
 						$errmsg = $errmsg . "Duplicate entry detected. Please tend existing cache before entering a new one for this system.";
 						//roll back [activity] table commit
-						$db->cancelTransaction();
+						$db->query($sqlRollback);
+						$db->execute();
 					}
 					else {
 						//3. system name is valid and not a duplicate, so go ahead and insert
@@ -154,8 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						$db->bind(':expdate', date("Y-m-d H:i:s", strtotime("+30 days",time())));
 						$db->bind(':note', $sower_note);
 						$db->execute();
-						//end db transaction
-						$db->endTransaction();
+						//for user feedback message 
 						$successcolor = '#ccffcc';
 					}
 				}
@@ -171,7 +175,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
 					$_POST['system_tender'] = '';
 					//roll back [activity] table commit
-					$db->cancelTransaction();
+					$db->query($sqlRollback);
+					$db->execute();
 				}
 				else {
 					//2. system name is valid, so go ahead and insert
@@ -186,8 +191,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 							$db->bind(':note', $tender_note);
 							$db->bind(':system', $system_tender);
 							$db->execute();
-							//end db transaction
-							$db->endTransaction();
 							break;
 						case 'Upkeep Required':
 							$db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
@@ -196,20 +199,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 							$db->bind(':note', $tender_note);
 							$db->bind(':system', $system_tender);
 							$db->execute();
-							//end db transaction
-							$db->endTransaction();
 							break;
 						case 'Expired':
+							//FYI: daily process to update expired caches in [cache] is running via cron-job.org
 							$db->query("UPDATE cache SET Status = :status, Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
 							$db->bind(':status', 'Expired');
 							$db->bind(':note', $tender_note);
 							$db->bind(':system', $system_tender);
 							$db->execute();
-							//end db transaction
-							$db->endTransaction();
-							//FYI: daily process to update expired caches in [cache] is running via cron-job.org
 							break;
 					}
+					//for user feedback message
 					$successcolor = '#d1dffa';
 				}
 				break;
@@ -224,7 +224,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
 					$_POST['system_adjunct'] = '';
 					//roll back [activity] table commit
-					$db->cancelTransaction();
+					$db->query($sqlRollback);
+					$db->execute();
 				}
 				else {
 					//2. system name is valid, so go ahead and insert
@@ -235,12 +236,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$db->bind(':note', $adj_note);
 					$db->bind(':system', $system_adjunct);
 					$db->execute();
-					//end db transaction
-					$db->endTransaction();
+					//for user feedback message
 					$successcolor = '#fffacd';
 				}
 				break;
-		}
+		} //switch ($entrytype)
 		
 		//all good, so prepare success message(s) and clear previously submitted form values
 		if (empty($errmsg)) {
