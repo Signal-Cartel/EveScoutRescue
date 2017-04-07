@@ -3,7 +3,6 @@
 
 <head>
 <?php
-include_once '../includes/bg.php';
 $pgtitle = 'Rescue Frigate';
 include_once '../includes/head.php';
 ?>

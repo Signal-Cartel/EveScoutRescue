@@ -16,7 +16,6 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 
 <head>
 <?php
-include_once '../includes/bg.php';
 $pgtitle = 'Data Entry';
 include_once '../includes/head.php'; 
 ?>

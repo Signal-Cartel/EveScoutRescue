@@ -3,7 +3,6 @@
 
 <head>
 <?php
-include_once '../includes/bg.php';
 $pgtitle = "New Eden's Premier Wormhole Rescue Service";
 include_once '../includes/head.php';
 ?>

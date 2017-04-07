@@ -3,7 +3,6 @@
 
 <head>
 <?php 
-include_once '../includes/bg.php';
 $pgtitle = 'Bounce Method';
 include_once '../includes/head.php'; 
 ?>
