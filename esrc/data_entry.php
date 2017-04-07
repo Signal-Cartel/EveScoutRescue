@@ -8,6 +8,8 @@ function test_input($data) {
 
 include_once '../includes/auth-alliance-req.php';
 include_once '../class/db.class.php';
+
+$locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -305,17 +307,24 @@ else {
 			<!--SOWER-->
 			<div class="sechead sower">SOWER</div>
 			<div class="sowerlight">
+				<?php
+				if (isset($_POST['system_sower'])) { 
+					$targetsystemsow = htmlspecialchars($_POST['system_sower']); 
+				}
+				elseif (isset($_GET['sowsys'])) { 
+					$targetsystemsow= htmlspecialchars($_GET['sowsys']); 
+				}
+				?>
 				<div class="form-group">
 					<label class="control-label" for="system_sower">System<span class="descr">Must be in format J######, where # is any number.</span></label>
-					<input type="text" name="system_sower" size="30" class="system_sower" autocomplete="off" placeholder="J######" value="<?php echo isset($_POST['system_sower']) ? htmlspecialchars($_POST['system_sower']) : '' ?>">
+					<input type="text" name="system_sower" size="30" class="system_sower" autocomplete="off" placeholder="J######" value="<?php echo isset($targetsystemsow) ? $targetsystemsow: '' ?>">
 				</div>
 				
 				<div class="field">
 					<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
 					<select class="form-control" id="location" name="location">
 						<option value="">- Select -</option>
-						<?php 
-						$locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
+						<?php
 						foreach ($locopts as $val) {
 							$selectedLoc = '';
 							if (isset($_POST['location']) && $_POST['location'] == $val) {
@@ -432,7 +441,7 @@ else {
 	</div>
 	<div class="ws"></div>
 	<div class="form-actions">
-		<input type="hidden" name="pilot" value="<?php echo $charname; ?>">
+		<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
 	    <button type="submit" class="btn btn-lg">Submit</button>
 	</div>
 	</form>

@@ -49,87 +49,102 @@ elseif (isset($_GET['system'])) {
 <div class="ws"></div>
 <?php
 // display result for the selected system
-if (isset($targetsystem)) { 
+if (isset($targetsystem)):
 	$db = new Database();
 	$db->query("SELECT * FROM cache WHERE System = :system AND Status <> 'Expired'");
 	$db->bind(':system', $targetsystem);
 	$row = $db->single();
-
-	if (!empty($row)) {	//only display this if we got some results back
+	
+	//only display the following if we got some results back
+	if (!empty($row)):	
 		echo '<div class="row" id="systableheader">';
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
-		//echo '<span style="font-weight: bold; font-size: 150%;">' . $targetsystem . ': </span>';
+		//TEND button
 		echo '<a href="data_entry.php?tendsys='.$targetsystem.'" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;';
+		//ADJUNCT button
 		echo '<a href="data_entry.php?adjsys='.$targetsystem.'" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;';
+		//TW button
 		echo '<a href="https://tripwire.eve-apps.com/?system=' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;';
+		//ww.pasta.gg button
 		echo '<a href="http://wh.pasta.gg/' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;';
+		//"clear result" link
+		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
+		echo '</div></div></div>'; ?>
+		
+		<div class="row" id="systable">
+			<div class="col-sm-12">
+				<!-- DETAIL RECORD -->
+				<table class="table" style="width: auto;">
+					<thead>
+						<tr>
+							<th class="white">Sown On</th>
+							<th class="white">Location</th>
+							<th class="white">Aligned With</th>
+							<th class="white">Distance</th>
+							<th class="white">Password</th>
+							<th class="white">Status</th>
+							<th class="white">Expires On</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					echo '<tr>';
+					echo '<td class="white">'. date("Y-M-d", strtotime($row['InitialSeedDate'])) .'</td>';
+					echo '<td class="white">'. $row['Location'] .'</td>';
+					echo '<td class="white">'. $row['AlignedWith'] .'</td>';
+					echo '<td class="white">'. $row['Distance'] .'</td>';
+					echo '<td class="white">'. $row['Password'] .'</td>';
+					$statuscellformat = '';
+					if ($row['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
+					if ($row['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
+					echo '<td'.$statuscellformat.'>'. $row['Status'] .'</td>';
+					echo '<td class="white">'. date("Y-M-d", strtotime($row['ExpiresOn'])) .'</td>';
+					echo '</tr>';
+					$strNotes = $row['Note'];
+					?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<?php if (!empty($strNotes)): ?>
+		<div class="ws"></div>
+		<div class="row" id="sysnotes">
+			<div class="col-sm-12">
+				<!-- DETAIL RECORD NOTE(S) -->
+				<table class="table" style="width: auto;">
+					<thead>
+						<tr>
+							<th class="white">Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="white"><?php echo $strNotes; ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<?php endif; //if (!empty($strNotes))
+	//no results returned, so give an option to sow a new cache in this system
+	else:
+		echo '<div class="row" id="systableheader">';
+		echo '<div class="col-sm-12">';
+		echo '<div style="padding-left: 10px;">';
+		//SOW button
+		echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;';
+		//"clear result" link
 		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
 		echo '</div></div></div>';
-	}
-?>
-<div class="row" id="systable">
-	<div class="col-sm-12">
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th class="white">Sown On</th>
-					<th class="white">Location</th>
-					<th class="white">Aligned With</th>
-					<th class="white">Distance</th>
-					<th class="white">Password</th>
-					<th class="white">Status</th>
-					<th class="white">Expires On</th>
-				</tr>
-			</thead>
-			<tbody>
-					<?php
-	  echo '<tr>';
-	  echo '<td class="white">'. date("Y-M-d", strtotime($row['InitialSeedDate'])) .'</td>';
-	  echo '<td class="white">'. $row['Location'] .'</td>';
-	  echo '<td class="white">'. $row['AlignedWith'] .'</td>';
-	  echo '<td class="white">'. $row['Distance'] .'</td>';
-	  echo '<td class="white">'. $row['Password'] .'</td>';
-	  $statuscellformat = '';
-	  if ($row['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
-	  if ($row['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
-	  echo '<td'.$statuscellformat.'>'. $row['Status'] .'</td>';
-	  echo '<td class="white">'. date("Y-M-d", strtotime($row['ExpiresOn'])) .'</td>';
-	  echo '</tr>';
-	  $strNotes = $row['Note'];
-					?>
-			</tbody>
-		</table>
-	</div>
-</div>
-<?php
-	if (!empty($strNotes)) {
-?>
-<div class="ws"></div>
-<div class="row" id="sysnotes">
-	<div class="col-sm-12">
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th class="white">Notes</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="white"><?php echo $strNotes; ?></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-<?php
-	}
-}
-// no system selected, so show compact list of all active caches
-else {
-?>
+	endif; //(!empty($row))
+
+// no system selected, so show active cache list and summary stats
+else: ?>
 <div class="row" id="allsystable">
 	<div class="col-sm-2">
+		<!-- ACTIVE CACHE LIST -->
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -138,29 +153,31 @@ else {
 				</tr>
 			</thead>
 			<tbody>
-			<?php
-	$db = new Database();
-	$db->query("SELECT System, Status FROM cache WHERE Status <> 'Expired' ORDER BY System");
-	$rows = $db->resultset();
-	
-	$strNotes = '';
-
-	foreach ($rows as $value) {
-	  echo '<tr>';
-	  echo '<td style="background-color: #cccccc;"><a href="?system='. $value['System'] .'">'. $value['System'] .'</a></td>';
-	  $statuscellformat = '';
-	  if ($value['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
-	  if ($value['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
-	  echo '<td'.$statuscellformat.'>'. $value['Status'] .'</td>';
-	  echo '</tr>';
-	}
-			?>
+				<?php 
+				$db = new Database();
+				$db->query("SELECT System, Status FROM cache WHERE Status <> 'Expired' ORDER BY System");
+				$rows = $db->resultset();
+				
+				$strNotes = '';
+			
+				foreach ($rows as $value) {
+				  echo '<tr>';
+				  echo '<td style="background-color: #cccccc;"><a href="?system='. $value['System'] .'">'. $value['System'] .'</a></td>';
+				  $statuscellformat = '';
+				  if ($value['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
+				  if ($value['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
+				  echo '<td'.$statuscellformat.'>'. $value['Status'] .'</td>';
+				  echo '</tr>';
+				} 
+				?>
 			</tbody>
 		</table>
 	</div>
+	<!-- LEADER BOARDS -->
 	<div class="col-sm-4 white">
 		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
 		Current Week (Sunday through Saturday)</span>
+		<!-- CURRENT WEEK LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -169,7 +186,7 @@ else {
 				</tr>
 			</thead>
 			<tbody>
-			<?php
+				<?php
 				$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
 				$end = date('Y-m-d', strtotime("tomorrow"));
 			
@@ -183,20 +200,22 @@ else {
 				$rows = $db->resultset();
 				
 				$ctr = 0;
-
+	
 				foreach ($rows as $value) {
 					$ctr++;
 					echo '<tr>';
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
+					//display only top 3 records
 					if (intval($ctr) == 3) { break; }
 				}
-			?>
+				?>
 			</tbody>
 		</table>
 		<br />
 		<span class="sechead">Last 30 days</span>
+		<!-- LAST 30 DAYS LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -224,6 +243,7 @@ else {
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
+					//display only top 3 records
 					if (intval($ctr) == 3) { break; }
 				}
 			?>
@@ -231,6 +251,7 @@ else {
 		</table>
 		<br />
 		<span class="sechead">All Time (as of 2017-Mar-18)</span>
+		<!-- ALL TIME LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -239,7 +260,7 @@ else {
 				</tr>
 			</thead>
 			<tbody>
-			<?php
+				<?php
 				$db->query("SELECT COUNT(*) AS cnt, Pilot
 					FROM activity
 					GROUP BY Pilot
@@ -253,13 +274,15 @@ else {
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
+					//display only top 3 records
 					if (intval($ctr) == 3) { break; }
 				}
-			?>
+				?>
 			</tbody>
 		</table>
 	</div>
 	<div class="col-sm-4 white">
+		<!-- HALL OF HELP -->
 		<span class="sechead"><span style="font-weight: bold;">HALL OF HELP</span><br /><br />
 		All participants, last 60 days<br />Most recent first</span>
 		<table class="table" style="width: auto;">
@@ -270,7 +293,7 @@ else {
 				</tr>
 			</thead>
 			<tbody>
-			<?php
+				<?php
 				$start = date('Y-m-d', strtotime('-30 days'));
 				$end = date('Y-m-d', strtotime("tomorrow"));
 				$db->query("SELECT Pilot, max(ActivityDate) as maxdate FROM activity 
@@ -281,6 +304,7 @@ else {
 				$rows = $db->resultset();
 				
 				foreach ($rows as $value) {
+					//display records for only the last 60 days
 					if (strtotime($value['maxdate']) > strtotime('-60 day')) {
 						echo '<tr>';
 						echo '<td class="white">'. $value['Pilot'] .'</td>';
@@ -288,12 +312,13 @@ else {
 						echo '</tr>';
 					}
 				}
-			?>
+				?>
 			</tbody>
 		</table>
 	</div>
+	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-2 white">
-	<?php
+		<?php
 		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
 		$row = $db->single();
 		$ctractive = $row['cnt'];
@@ -301,7 +326,7 @@ else {
 		$db->query("SELECT COUNT(*) as cnt FROM activity");
 		$row = $db->single();
 		$ctrtot = $row['cnt'];
-	?>
+		?>
 		<span class="sechead"><span style="font-weight: bold;">Active caches:</span><br />
 		<?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span>
 		<br /><br />
@@ -309,9 +334,7 @@ else {
 		(as of 2017-Mar-18)
 	</div>
 </div>
-<?php
-}
-?>
+<?php endif; //if (isset($targetsystem))?>
 </div>
 </body>
 </html>
