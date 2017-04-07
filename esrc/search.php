@@ -21,7 +21,7 @@
 require_once '../class/db.class.php';
 
 if(isset($_POST['targetsystem'])) { 
-	$targetsystem = filter_var($_POST['targetsystem'], FILTER_SANITIZE_STRING);
+	$targetsystem = htmlspecialchars($_POST['targetsystem']);
 }
 elseif (isset($_GET['system'])) {
 	$targetsystem = htmlspecialchars($_GET["system"]);
@@ -93,15 +93,15 @@ if (isset($targetsystem)):
 					echo '<td class="white">'. date("Y-M-d", strtotime($row['InitialSeedDate'])) .'</td>';
 					echo '<td class="white">'. $row['Location'] .'</td>';
 					echo '<td class="white">'. $row['AlignedWith'] .'</td>';
-					echo '<td class="white">'. $row['Distance'] .'</td>';
-					echo '<td class="white">'. $row['Password'] .'</td>';
+					echo '<td class="white">'. htmlspecialchars($row['Distance']) .'</td>';
+					echo '<td class="white">'. htmlspecialchars($row['Password']) .'</td>';
 					$statuscellformat = '';
 					if ($row['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
 					if ($row['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
 					echo '<td'.$statuscellformat.'>'. $row['Status'] .'</td>';
 					echo '<td class="white">'. date("Y-M-d", strtotime($row['ExpiresOn'])) .'</td>';
 					echo '</tr>';
-					$strNotes = $row['Note'];
+					$strNotes = htmlspecialchars($row['Note']);
 					?>
 					</tbody>
 				</table>
@@ -158,8 +158,6 @@ else: ?>
 				$db->query("SELECT System, Status FROM cache WHERE Status <> 'Expired' ORDER BY System");
 				$rows = $db->resultset();
 				
-				$strNotes = '';
-			
 				foreach ($rows as $value) {
 				  echo '<tr>';
 				  echo '<td style="background-color: #cccccc;"><a href="?system='. $value['System'] .'">'. $value['System'] .'</a></td>';
