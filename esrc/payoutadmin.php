@@ -72,7 +72,7 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 				<tbody>
 				<?php
 				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT * FROM activity WHERE ActivityDate BETWEEN :start AND :end ORDER By ActivityDate ASC");
+				$db->query("SELECT * FROM activity WHERE ActivityDate BETWEEN :start AND :end ORDER By ActivityDate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
