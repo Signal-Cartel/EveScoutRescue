@@ -6,7 +6,7 @@ function test_input($data) {
 	return $data;
 }
 
-include_once '../includes/auth-alliance-req.php';
+include_once '../includes/auth-inc.php';
 include_once '../class/db.class.php';
 
 $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
