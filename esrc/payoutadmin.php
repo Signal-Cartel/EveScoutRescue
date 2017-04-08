@@ -1,4 +1,4 @@
-<?php include_once '../includes/auth-admin-req.php'; ?>
+<?php include_once '../includes/auth-inc.php'; ?>
 <html>
 
 <head>
