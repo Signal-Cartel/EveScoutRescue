@@ -94,8 +94,8 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 							break;
 					}
 					echo '<td style="background-color: #cccccc;"><a href="search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
-					echo '<td class="white">'. htmlspecialchars($value['AidedPilot']) .'</td>';
-					echo '<td class="white">'. htmlspecialchars($value['Note']) .'</td>';
+					echo '<td class="white">'. htmlspecialchars_decode($value['AidedPilot']) .'</td>';
+					echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
 					echo '</tr>';
 				}
 		

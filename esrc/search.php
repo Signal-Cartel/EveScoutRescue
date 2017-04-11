@@ -92,8 +92,8 @@ if (isset($targetsystem)):
 					echo '<td class="white">'. date("Y-M-d", strtotime($row['InitialSeedDate'])) .'</td>';
 					echo '<td class="white">'. $row['Location'] .'</td>';
 					echo '<td class="white">'. $row['AlignedWith'] .'</td>';
-					echo '<td class="white">'. htmlspecialchars($row['Distance']) .'</td>';
-					echo '<td class="white">'. htmlspecialchars($row['Password']) .'</td>';
+					echo '<td class="white">'. htmlspecialchars_decode($row['Distance']) .'</td>';
+					echo '<td class="white">'. htmlspecialchars_decode($row['Password']) .'</td>';
 					$statuscellformat = '';
 					if ($row['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
 					if ($row['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
