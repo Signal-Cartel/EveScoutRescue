@@ -139,11 +139,11 @@ if (isset($targetsystem)):
 		echo '</div></div></div>';
 	endif; //(!empty($row))
 
-// no system selected, so show active cache list and summary stats
+// no system selected, so show summary stats
 else: ?>
 <div class="row" id="allsystable">
-	<div class="col-sm-2">
-		<!-- ACTIVE CACHE LIST -->
+	<!-- ACTIVE CACHE LIST -->
+	<!-- <div class="col-sm-2">
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -152,7 +152,7 @@ else: ?>
 				</tr>
 			</thead>
 			<tbody>
-				<?php 
+				<?php /*
 				$db = new Database();
 				$db->query("SELECT System, Status FROM cache WHERE Status <> 'Expired' ORDER BY System");
 				$rows = $db->resultset();
@@ -165,11 +165,11 @@ else: ?>
 				  if ($value['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
 				  echo '<td'.$statuscellformat.'>'. $value['Status'] .'</td>';
 				  echo '</tr>';
-				} 
+				} */
 				?>
 			</tbody>
 		</table>
-	</div>
+	</div> -->
 	<!-- LEADER BOARDS -->
 	<div class="col-sm-4 white">
 		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
@@ -184,6 +184,7 @@ else: ?>
 			</thead>
 			<tbody>
 				<?php
+				$db = new Database();
 				$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
 				$end = date('Y-m-d', strtotime("tomorrow"));
 			
@@ -314,21 +315,39 @@ else: ?>
 		</table>
 	</div>
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
-	<div class="col-sm-2 white">
+	<div class="col-sm-4 white">
 		<?php
-		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
+		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'adjunct'");
 		$row = $db->single();
-		$ctractive = $row['cnt'];
-		
+		$ctrrescues = $row['cnt'];
+		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'sower'");
+		$row = $db->single();
+		$ctrsown = $row['cnt'];
+		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'tender'");
+		$row = $db->single();
+		$ctrtended = $row['cnt'];
 		$db->query("SELECT COUNT(*) as cnt FROM activity");
 		$row = $db->single();
 		$ctrtot = $row['cnt'];
+		
+		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
+		$row = $db->single();
+		$ctractive = $row['cnt'];
+		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status = 'Expired'");
+		$row = $db->single();
+		$ctrexpired = $row['cnt'];
 		?>
-		<span class="sechead"><span style="font-weight: bold;">Active caches:</span><br />
-		<?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span>
-		<br /><br />
+		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
+		<br />
+		<span class="sechead"><span style="font-weight: bold;">Total Active Caches:</span><br />
+		<?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+		<br />
 		<span class="sechead" style="font-weight: bold;">All actions: <?php echo $ctrtot; ?></span><br />
-		(as of 2017-Mar-18)
+		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
+		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
+		<span class="sechead">Expired: <?php echo $ctrexpired; ?></span><br />
+		<br />
+		(all figures as of 2017-Mar-18)
 	</div>
 </div>
 <?php endif; //if (isset($targetsystem))?>
