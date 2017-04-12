@@ -333,9 +333,6 @@ else: ?>
 		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
 		$row = $db->single();
 		$ctractive = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status = 'Expired'");
-		$row = $db->single();
-		$ctrexpired = $row['cnt'];
 		?>
 		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
 		<br />
@@ -345,7 +342,6 @@ else: ?>
 		<span class="sechead" style="font-weight: bold;">All actions: <?php echo $ctrtot; ?></span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
 		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
-		<span class="sechead">Expired: <?php echo $ctrexpired; ?></span><br />
 		<br />
 		(all figures as of 2017-Mar-18)
 	</div>
