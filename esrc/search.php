@@ -317,13 +317,13 @@ else: ?>
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-4 white">
 		<?php
-		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'adjunct'");
+		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'adjunct'");
 		$row = $db->single();
 		$ctrrescues = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'sower'");
+		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'sower'");
 		$row = $db->single();
 		$ctrsown = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM ACTIVITY WHERE EntryType = 'tender'");
+		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'tender'");
 		$row = $db->single();
 		$ctrtended = $row['cnt'];
 		$db->query("SELECT COUNT(*) as cnt FROM activity");
