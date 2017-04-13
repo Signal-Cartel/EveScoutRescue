@@ -67,5 +67,8 @@ include_once '../includes/head.php';
 	</div>
 </div>
 </div>
+
+<?php echo isset($charfooter) ? $charfooter : '' ?>
+
 </body>
 </html>
