@@ -126,16 +126,40 @@ if (isset($targetsystem)):
 			</div>
 		</div>
 		<?php endif; //if (!empty($strNotes))
-	//no results returned, so give an option to sow a new cache in this system
+	//no results returned, so check for options
 	else:
+		//start writing HTML
 		echo '<div class="row" id="systableheader">';
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
-		//SOW button
-		echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
-		echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;';
-		//"clear result" link
-		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
+		
+		//1. check to make sure system name entered is a valid wormhole system
+		$db->query("SELECT System FROM wh_systems WHERE System = :system");
+		$db->bind(':system', $targetsystem);
+		$row = $db->single();
+		if (empty($row)) {
+			echo '<span class="white">Invalid wormhole system name entered. Please correct name and resubmit.</span>&nbsp;&nbsp;&nbsp;';
+		}
+		else {
+			//2. check for "Do Not Sow" system
+			//   - when wormhole residents ask us not to sow caches in their
+			//     holes, we agree to suspend doing so for three months
+			$db->query("SELECT System, DoNotSowUntil FROM wh_systems WHERE System = :system AND DoNotSowUntil > CURDATE()");
+			$db->bind(':system', $targetsystem);
+			$row = $db->single();
+			if (!empty($row)) {
+				$dateNoSow = date("Y-M-d", strtotime($row['DoNotSowUntil']));
+				echo '<span class="white">Upon request of the current wormhole residents, caches are not to be sown in this system until '.$dateNoSow.'</span>&nbsp;&nbsp;&nbsp;';
+			}
+			else {
+				//3. system is available, so give an option to sow a new cache in this system
+				echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
+				echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;'; //SOW button
+			}
+		}
+		
+		//finish writing HTML
+		echo '<a href="?" class="btn btn-link" role="button">clear result</a>'; //"clear result" link
 		echo '</div></div></div>';
 	endif; //(!empty($row))
 

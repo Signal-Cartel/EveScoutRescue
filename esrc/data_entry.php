@@ -143,24 +143,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						$db->execute();
 					}
 					else {
-						//3. system name is valid and not a duplicate, so go ahead and insert
-						$sower_note = $noteDate . 'Sown by '. $pilot;
-						if (!empty($notes)) { $sower_note = $sower_note . '<br />' . $notes; }
-						
-						$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, AlignedWith, Distance, Password, Status, ExpiresOn, Note) VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :note)");
-						$db->bind(':cacheid', $newID);
-						$db->bind(':sowdate', date("Y-m-d H:i:s", strtotime("now")));
+						//3. check for "Do Not Sow" systems
+						//   - when wormhole residents ask us not to sow caches in their
+						//     holes, we agree to suspend doing so for three months
+						$db->query("SELECT System, DoNotSowUntil FROM wh_systems WHERE System = :system AND DoNotSowUntil > CURDATE()");
 						$db->bind(':system', $system_sower);
-						$db->bind(':location', $location);
-						$db->bind(':aw', $alignedwith);
-						$db->bind(':distance', $distance);
-						$db->bind(':pw', $password);
-						$db->bind(':status', 'Healthy');
-						$db->bind(':expdate', date("Y-m-d H:i:s", strtotime("+30 days",time())));
-						$db->bind(':note', $sower_note);
-						$db->execute();
-						//for user feedback message 
-						$successcolor = '#ccffcc';
+						$row = $db->single();
+						if (!empty($row)) {
+							$dateNoSow = date("Y-M-d", strtotime($row['DoNotSowUntil']));
+							$errmsg = $errmsg . "Upon request of the current wormhole residents, caches are not to be sown in this system until ".$dateNoSow;
+							//roll back [activity] table commit
+							$db->query($sqlRollback);
+							$db->execute();
+						}
+						else {
+							//4. system name is valid and not a duplicate, so go ahead and insert
+							$sower_note = $noteDate . 'Sown by '. $pilot;
+							if (!empty($notes)) { $sower_note = $sower_note . '<br />' . $notes; }
+							
+							$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, AlignedWith, Distance, Password, Status, ExpiresOn, Note) VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :note)");
+							$db->bind(':cacheid', $newID);
+							$db->bind(':sowdate', date("Y-m-d H:i:s", strtotime("now")));
+							$db->bind(':system', $system_sower);
+							$db->bind(':location', $location);
+							$db->bind(':aw', $alignedwith);
+							$db->bind(':distance', $distance);
+							$db->bind(':pw', $password);
+							$db->bind(':status', 'Healthy');
+							$db->bind(':expdate', date("Y-m-d H:i:s", strtotime("+30 days",time())));
+							$db->bind(':note', $sower_note);
+							$db->execute();
+							//for user feedback message 
+							$successcolor = '#ccffcc';
+						}
 					}
 				}
 				break;
