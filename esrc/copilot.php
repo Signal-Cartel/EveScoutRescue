@@ -11,27 +11,40 @@ $cache = strtoupper($_GET["cache"]);
 
 try {
 	$db = new Database();
+	
 	if ($cache && strlen($cache) == 7) {
-		$db->query("SELECT System,Location,Status,ExpiresOn,InitialSeedDate FROM cache WHERE System LIKE :system AND Status <> 'Expired' ORDER BY System");
-		$db->bind(':system', $cache);
-		$row = $db->single();
+	//check for "No Sow" system
+	$db->query("SELECT System, DoNotSowUntil FROM wh_systems 
+				WHERE System = :system AND DoNotSowUntil > CURDATE()");
+	$db->bind(':system', $cache);
+	$row = $db->single();
+		if (!empty($row)) {
+			echo json_encode($row);
+		}
+		//we can sow here
+		else {
+			//check for presence of a cache in system
+			$db->query("SELECT System, Location, Status, ExpiresOn, InitialSeedDate 
+						FROM cache WHERE System LIKE :system AND Status <> 'Expired'");
+			$db->bind(':system', $cache);
+			$row = $db->single();
+			if (count($row) < 1) {
+				throw new Exception("none");
+			}
+			echo json_encode($row);
+		}
 	}
+	//$cache not present or wrong format
 	else {
 		throw new Exception("invalid");
-		
 	}
-
-	if (count($row) < 1) {
-		throw new Exception("none");
-	}
-	echo json_encode($row);
 }
 catch (Exception $e) {
 	$errorMsg = $e->getMessage();
-	if (($errorMsg<>"invalid") && ($errorMsg<>"none")){
+	if (($errorMsg<>"invalid") && ($errorMsg<>"none")) {
 		echo "error";
 	}
-	else{
+	else {
 		echo $errorMsg;
 	}
 }
