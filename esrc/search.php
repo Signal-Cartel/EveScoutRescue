@@ -265,8 +265,8 @@ else: ?>
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 3 records
-					if (intval($ctr) == 3) { break; }
+					//display only top 5 records
+					if (intval($ctr) == 5) { break; }
 				}
 			?>
 			</tbody>
@@ -296,8 +296,8 @@ else: ?>
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 3 records
-					if (intval($ctr) == 3) { break; }
+					//display only top 10 records
+					if (intval($ctr) == 10) { break; }
 				}
 				?>
 			</tbody>
