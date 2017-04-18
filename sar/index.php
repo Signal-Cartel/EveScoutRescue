@@ -22,7 +22,7 @@ include_once '../includes/head.php';
 <div class="row">
 	<div class="col-sm-12">
 		<div class="panel-group" id="faqAccordion">
-			<?php include_once '../includes/faq-q1.php'; ?>
+			<?php include_once '../faq/faq-q1.php'; ?>
 			<div class="panel panel-default">
 				<div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question2">
 					<h4 class="panel-title">
@@ -61,8 +61,8 @@ include_once '../includes/head.php';
 					</div>
 				</div>
 			</div>
-			<?php include_once '../includes/faq-q10.php'; ?>
-			<?php include_once '../includes/faq-q20.php'; ?>
+			<?php include_once '../faq/faq-q10.php'; ?>
+			<?php include_once '../faq/faq-q20.php'; ?>
 		</div>
 	</div>
 </div>

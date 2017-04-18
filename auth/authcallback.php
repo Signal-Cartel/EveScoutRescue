@@ -9,7 +9,6 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
 
 
-//code adapted from https://github.com/fuzzysteve/eve-sso-auth
 /**
  * Log an error in case authentication fails
  * @param unknown $error_message
