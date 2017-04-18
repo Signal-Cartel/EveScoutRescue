@@ -2,11 +2,24 @@
 //code adapted from https://github.com/fuzzysteve/eve-sso-auth
 
 //auth_functions.php handles errors
-require_once('auth_functions.php');
+// require_once('auth_functions.php');
 
 //secret.php contains clientid and secret key from
 //https://developers.eveonline.com/applications
 require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
+
+
+//code adapted from https://github.com/fuzzysteve/eve-sso-auth
+/**
+ * Log an error in case authentication fails
+ * @param unknown $error_message
+ */
+function auth_error($error_message)
+{
+	print "There's been an error";
+	error_log($error_message);
+	exit();
+}
 
 session_start();
 //User Agent needs to uniquely identify this application
