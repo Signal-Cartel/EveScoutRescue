@@ -24,7 +24,7 @@ try {
 		//we can sow here
 		else {
 			//check for presence of a cache in system
-			$db->query("SELECT System, Location, Status, ExpiresOn, InitialSeedDate 
+			$db->query("SELECT System, Location, Status, ExpiresOn, InitialSeedDate, LastUpdated 
 						FROM cache WHERE System LIKE :system AND Status <> 'Expired'");
 			$db->bind(':system', $cache);
 			$row = $db->single();
