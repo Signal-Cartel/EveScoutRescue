@@ -18,6 +18,7 @@
 
 <?php
 require_once '../class/db.class.php';
+require_once '../class/leaderboard.class.php';
 
 if(isset($_POST['targetsystem'])) { 
 	$targetsystem = htmlspecialchars($_POST['targetsystem']);
@@ -126,40 +127,16 @@ if (isset($targetsystem)):
 			</div>
 		</div>
 		<?php endif; //if (!empty($strNotes))
-	//no results returned, so check for options
+	//no results returned, so give an option to sow a new cache in this system
 	else:
-		//start writing HTML
 		echo '<div class="row" id="systableheader">';
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
-		
-		//1. check to make sure system name entered is a valid wormhole system
-		$db->query("SELECT System FROM wh_systems WHERE System = :system");
-		$db->bind(':system', $targetsystem);
-		$row = $db->single();
-		if (empty($row)) {
-			echo '<span class="white">Invalid wormhole system name entered. Please correct name and resubmit.</span>&nbsp;&nbsp;&nbsp;';
-		}
-		else {
-			//2. check for "Do Not Sow" system
-			//   - when wormhole residents ask us not to sow caches in their
-			//     holes, we agree to suspend doing so for three months
-			$db->query("SELECT System, DoNotSowUntil FROM wh_systems WHERE System = :system AND DoNotSowUntil > CURDATE()");
-			$db->bind(':system', $targetsystem);
-			$row = $db->single();
-			if (!empty($row)) {
-				$dateNoSow = date("Y-M-d", strtotime($row['DoNotSowUntil']));
-				echo '<span class="white">Upon request of the current wormhole residents, caches are not to be sown in this system until '.$dateNoSow.'</span>&nbsp;&nbsp;&nbsp;';
-			}
-			else {
-				//3. system is available, so give an option to sow a new cache in this system
-				echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
-				echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;'; //SOW button
-			}
-		}
-		
-		//finish writing HTML
-		echo '<a href="?" class="btn btn-link" role="button">clear result</a>'; //"clear result" link
+		//SOW button
+		echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;';
+		//"clear result" link
+		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
 		echo '</div></div></div>';
 	endif; //(!empty($row))
 
@@ -194,6 +171,11 @@ else: ?>
 			</tbody>
 		</table>
 	</div> -->
+	
+	<?php 
+		$leaderBoard = new LeaderBoard();
+	?>
+	
 	<!-- LEADER BOARDS -->
 	<div class="col-sm-4 white">
 		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
@@ -247,32 +229,33 @@ else: ?>
 			</thead>
 			<tbody>
 			<?php
-				$start = date('Y-m-d', strtotime('-30 days'));
-				$end = date('Y-m-d', strtotime("tomorrow"));
-				$db->query("SELECT COUNT(*) AS cnt, Pilot
-					FROM activity
-					WHERE ActivityDate BETWEEN :start AND :end
-					GROUP BY Pilot
-					ORDER BY cnt DESC");
-				$db->bind(':start', $start);
-				$db->bind(':end', $end);
-				$rows = $db->resultset();
+// 				$start = date('Y-m-d', strtotime('-30 days'));
+// 				$end = date('Y-m-d', strtotime("tomorrow"));
+// 				$db->query("SELECT COUNT(*) AS cnt, Pilot
+// 					FROM activity
+// 					WHERE ActivityDate BETWEEN :start AND :end
+// 					GROUP BY Pilot
+// 					ORDER BY cnt DESC");
+// 				$db->bind(':start', $start);
+// 				$db->bind(':end', $end);
+// 				$rows = $db->resultset();
 				
-				$ctr = 0;
+				$rows = $leaderBoard->getTopLastDays(5, 30);
+// 				$ctr = 0;
 				foreach ($rows as $value) {
-					$ctr++;
+// 					$ctr++;
 					echo '<tr>';
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 5 records
-					if (intval($ctr) == 5) { break; }
+					//display only top 3 records
+// 					if (intval($ctr) == 3) { break; }
 				}
 			?>
 			</tbody>
 		</table>
 		<br />
-		<span class="sechead">All Time</span>
+		<span class="sechead">All Time (as of 2017-Mar-18)</span>
 		<!-- ALL TIME LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
@@ -283,21 +266,14 @@ else: ?>
 			</thead>
 			<tbody>
 				<?php
-				$db->query("SELECT COUNT(*) AS cnt, Pilot
-					FROM activity
-					GROUP BY Pilot
-					ORDER BY cnt DESC");
-				$rows = $db->resultset();
+
+				$rows = $leaderBoard->getAllHigh(10);
 				
-				$ctr = 0;
 				foreach ($rows as $value) {
-					$ctr++;
 					echo '<tr>';
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 10 records
-					if (intval($ctr) == 10) { break; }
 				}
 				?>
 			</tbody>
@@ -306,7 +282,7 @@ else: ?>
 	<div class="col-sm-4 white">
 		<!-- HALL OF HELP -->
 		<span class="sechead"><span style="font-weight: bold;">HALL OF HELP</span><br /><br />
-		All participants, last 30 days<br />Most recent first</span>
+		All participants, last 60 days<br />Most recent first</span>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -316,23 +292,13 @@ else: ?>
 			</thead>
 			<tbody>
 				<?php
-				$start = date('Y-m-d', strtotime('-30 days'));
-				$end = date('Y-m-d', strtotime("tomorrow"));
-				$db->query("SELECT Pilot, max(ActivityDate) as maxdate FROM activity 
-					WHERE ActivityDate BETWEEN :start AND :end
-					GROUP BY Pilot ORDER BY maxdate DESC");
-				$db->bind(':start', $start);
-				$db->bind(':end', $end);
-				$rows = $db->resultset();
-				
+				$rows = $leaderBoard->getActivePilots();
 				foreach ($rows as $value) {
-					//display records for only the last 30 days
-					if (strtotime($value['maxdate']) > strtotime('-30 day')) {
-						echo '<tr>';
-						echo '<td class="white">'. $value['Pilot'] .'</td>';
-						echo '<td class="white">'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
-						echo '</tr>';
-					}
+					//display records for only the last 60 days
+					echo '<tr>';
+					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td class="white">'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
+					echo '</tr>';
 				}
 				?>
 			</tbody>
