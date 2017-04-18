@@ -272,7 +272,7 @@ else: ?>
 			</tbody>
 		</table>
 		<br />
-		<span class="sechead">All Time (as of 2017-Mar-18)</span>
+		<span class="sechead">All Time</span>
 		<!-- ALL TIME LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
@@ -306,7 +306,7 @@ else: ?>
 	<div class="col-sm-4 white">
 		<!-- HALL OF HELP -->
 		<span class="sechead"><span style="font-weight: bold;">HALL OF HELP</span><br /><br />
-		All participants, last 60 days<br />Most recent first</span>
+		All participants, last 30 days<br />Most recent first</span>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -326,8 +326,8 @@ else: ?>
 				$rows = $db->resultset();
 				
 				foreach ($rows as $value) {
-					//display records for only the last 60 days
-					if (strtotime($value['maxdate']) > strtotime('-60 day')) {
+					//display records for only the last 30 days
+					if (strtotime($value['maxdate']) > strtotime('-30 day')) {
 						echo '<tr>';
 						echo '<td class="white">'. $value['Pilot'] .'</td>';
 						echo '<td class="white">'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
