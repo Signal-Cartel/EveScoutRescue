@@ -28,7 +28,7 @@ elseif (isset($_GET['system'])) {
 	$targetsystem = htmlspecialchars($_GET["system"]);
 }
 ?>
-<body>
+<body class="white">
 <div class="container">
 
 <div class="row" id="header" style="padding-top: 10px;">
@@ -36,13 +36,13 @@ elseif (isset($_GET['system'])) {
 	<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
 		<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 			<div class="form-group">
-				<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" class="targetsystem" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
+				<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" class="targetsystem black" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
 			</div>
 			<button type="submit" class="btn btn-lg">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
 		</form>
 		<div class="clearit">
-			<span class="white">If a system is not listed, no active cache is present.</span>
+			<span>If a system is not listed, no active cache is present.</span>
 		</div>
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
@@ -57,21 +57,35 @@ if (isset($targetsystem)):
 	$row = $db->single();
 	
 	//only display the following if we got some results back
-	if (!empty($row)):	
-		echo '<div class="row" id="systableheader">';
-		echo '<div class="col-sm-12">';
-		echo '<div style="padding-left: 10px;">';
-		//TEND button
-		echo '<a href="data_entry.php?tendsys='.$targetsystem.'" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;';
-		//ADJUNCT button
-		echo '<a href="data_entry.php?adjsys='.$targetsystem.'" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;';
-		//TW button
-		echo '<a href="https://tripwire.eve-apps.com/?system=' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;';
-		//ww.pasta.gg button
-		echo '<a href="http://wh.pasta.gg/' . $targetsystem . '" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;';
-		//"clear result" link
-		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
-		echo '</div></div></div>'; ?>
+	if (!empty($row))
+	{
+		// calculate status cell format
+		$statuscellformat = '';
+		if ($row ['Status'] == 'Healthy') {
+			$statuscellformat = ' style="background-color:green;color:white;"';
+		}
+		if ($row ['Status'] == 'Upkeep Required') {
+			$statuscellformat = ' style="background-color:yellow;"';
+		}
+		// save notes as separate var
+		$strNotes = $row['Note'];
+		?>
+		<div class="row" id="systableheader">
+		<div class="col-sm-12">
+		<div style="padding-left: 10px;">
+		<!-- TEND button -->
+		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<!-- ADJUNCT button -->
+		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
+		<!-- TW button -->
+		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<!-- ww.pasta.gg button -->
+		<a href="http://wh.pasta.gg/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;
+		<!-- clear result" link -->
+		<a href="?" class="btn btn-link" role="button">clear result</a>
+		</div>
+		</div>
+		</div>
 		
 		<div class="row" id="systable">
 			<div class="col-sm-12">
@@ -79,36 +93,30 @@ if (isset($targetsystem)):
 				<table class="table" style="width: auto;">
 					<thead>
 						<tr>
-							<th class="white">Sown On</th>
-							<th class="white">Location</th>
-							<th class="white">Aligned With</th>
-							<th class="white">Distance</th>
-							<th class="white">Password</th>
-							<th class="white">Status</th>
-							<th class="white">Expires On</th>
+							<th>Sown On</th>
+							<th>Location</th>
+							<th>Aligned With</th>
+							<th>Distance</th>
+							<th>Password</th>
+							<th>Status</th>
+							<th>Expires On</th>
 						</tr>
 					</thead>
 					<tbody>
-					<?php
-					echo '<tr>';
-					echo '<td class="white">'. date("Y-M-d", strtotime($row['InitialSeedDate'])) .'</td>';
-					echo '<td class="white">'. $row['Location'] .'</td>';
-					echo '<td class="white">'. $row['AlignedWith'] .'</td>';
-					echo '<td class="white">'. htmlspecialchars_decode($row['Distance']) .'</td>';
-					echo '<td class="white">'. htmlspecialchars_decode($row['Password']) .'</td>';
-					$statuscellformat = '';
-					if ($row['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
-					if ($row['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
-					echo '<td'.$statuscellformat.'>'. $row['Status'] .'</td>';
-					echo '<td class="white">'. date("Y-M-d", strtotime($row['ExpiresOn'])) .'</td>';
-					echo '</tr>';
-					$strNotes = $row['Note'];
-					?>
+					<tr>
+					<td><?=date("Y-M-d", strtotime($row['InitialSeedDate']))?></td>
+					<td><?=$row['Location']?></td>
+					<td><?=$row['AlignedWith']?></td>
+					<td><?=htmlspecialchars_decode($row['Distance'])?></td>
+					<td><?=htmlspecialchars_decode($row['Password'])?></td>
+					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
+					<td><?=date("Y-M-d", strtotime($row['ExpiresOn']))?></td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<?php if (!empty($strNotes)): ?>
+		<?php if (!empty($strNotes)) { ?>
 		<div class="ws"></div>
 		<div class="row" id="sysnotes">
 			<div class="col-sm-12">
@@ -116,41 +124,46 @@ if (isset($targetsystem)):
 				<table class="table" style="width: auto;">
 					<thead>
 						<tr>
-							<th class="white">Notes</th>
+							<th>Notes</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td class="white"><?php echo $strNotes; ?></td>
+							<td><?= htmlspecialchars($strNotes) ?></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<?php endif; //if (!empty($strNotes))
-	//no results returned, so give an option to sow a new cache in this system
-	else:
-		echo '<div class="row" id="systableheader">';
-		echo '<div class="col-sm-12">';
-		echo '<div style="padding-left: 10px;">';
-		//SOW button
-		echo '<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;';
-		echo '<a href="data_entry.php?sowsys='.$targetsystem.'" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;';
-		//"clear result" link
-		echo '<a href="?" class="btn btn-link" role="button">clear result</a>';
-		echo '</div></div></div>';
-	endif; //(!empty($row))
+		<?php } //if (!empty($strNotes))
+	}
+	else
+	{
+		//no results returned, so give an option to sow a new cache in this system
+		?>
+		<div class="row" id="systableheader">
+		<div class="col-sm-12">
+		<div style="padding-left: 10px;">
+		<!-- SOW button  -->
+		<span>No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
+		<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+
+		<a href="?" class="btn btn-link" role="button">clear result</a>
+		</div></div></div>
+	<?php 
+	} //(!empty($row))
 
 // no system selected, so show summary stats
-else: ?>
+else:
+?>
 <div class="row" id="allsystable">
 	<!-- ACTIVE CACHE LIST -->
 	<!-- <div class="col-sm-2">
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th class="white">System</th>
-					<th class="white">Status</th>
+					<th>System</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -185,8 +198,8 @@ else: ?>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th class="white">Pilot</th>
-					<th class="white">Total Actions</th>
+					<th>Pilot</th>
+					<th>Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -195,8 +208,8 @@ else: ?>
 	
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td class="white">'. $value['Pilot'] .'</td>';
-					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
+					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -208,8 +221,8 @@ else: ?>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th class="white">Pilot</th>
-					<th class="white">Total Actions</th>
+					<th>Pilot</th>
+					<th>Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -218,8 +231,8 @@ else: ?>
 
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td class="white">'. $value['Pilot'] .'</td>';
-					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
+					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 			?>
@@ -231,8 +244,8 @@ else: ?>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th class="white">Pilot</th>
-					<th class="white">Total Actions</th>
+					<th>Pilot</th>
+					<th>Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -242,8 +255,8 @@ else: ?>
 				
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td class="white">'. $value['Pilot'] .'</td>';
-					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
+					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -257,8 +270,8 @@ else: ?>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th class="white">Pilot</th>
-					<th class="white">Date</th>
+					<th>Pilot</th>
+					<th>Date</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -267,8 +280,8 @@ else: ?>
 				foreach ($rows as $value) {
 					//display records for only the last 60 days
 					echo '<tr>';
-					echo '<td class="white">'. $value['Pilot'] .'</td>';
-					echo '<td class="white">'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
+					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td>'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
 					echo '</tr>';
 				}
 				?>
