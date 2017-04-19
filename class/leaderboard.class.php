@@ -79,6 +79,26 @@ class Leaderboard
 	/**
 	 * Get list of top pilots of current week
 	 */
+	public function getTopPilotsWeek(int $count = 5)
+	{
+		$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
+		$end = date('Y-m-d', strtotime("tomorrow"));
+			
+		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
+					FROM activity
+					WHERE ActivityDate BETWEEN :start AND :end
+					GROUP BY Pilot
+					ORDER BY cnt desc, act DESC limit :limit");
+		$this->db->bind(':start', $start);
+		$this->db->bind(':end', $end);
+		$this->db->bind(':limit', $count);
+		
+		$result = $this->db->resultset();
+		
+		$this->db->closeQuery();
+		
+		return $result;
+	}
 	
 	/**
 	 * Get personal stats of a pilot

@@ -19,6 +19,7 @@
 <?php
 require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
+require_once '../class/caches.class.php';
 
 if(isset($_POST['targetsystem'])) { 
 	$targetsystem = htmlspecialchars($_POST['targetsystem']);
@@ -190,29 +191,13 @@ else: ?>
 			</thead>
 			<tbody>
 				<?php
-				$db = new Database();
-				$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
-				$end = date('Y-m-d', strtotime("tomorrow"));
-			
-				$db->query("SELECT COUNT(*) AS cnt, Pilot 
-					FROM activity 
-					WHERE ActivityDate BETWEEN :start AND :end
-					GROUP BY Pilot
-					ORDER BY cnt DESC");
-				$db->bind(':start', $start);
-				$db->bind(':end', $end);
-				$rows = $db->resultset();
-				
-				$ctr = 0;
+				$rows = $leaderBoard->getTopPilotsWeek();				
 	
 				foreach ($rows as $value) {
-					$ctr++;
 					echo '<tr>';
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 3 records
-					if (intval($ctr) == 3) { break; }
 				}
 				?>
 			</tbody>
@@ -229,27 +214,13 @@ else: ?>
 			</thead>
 			<tbody>
 			<?php
-// 				$start = date('Y-m-d', strtotime('-30 days'));
-// 				$end = date('Y-m-d', strtotime("tomorrow"));
-// 				$db->query("SELECT COUNT(*) AS cnt, Pilot
-// 					FROM activity
-// 					WHERE ActivityDate BETWEEN :start AND :end
-// 					GROUP BY Pilot
-// 					ORDER BY cnt DESC");
-// 				$db->bind(':start', $start);
-// 				$db->bind(':end', $end);
-// 				$rows = $db->resultset();
-				
 				$rows = $leaderBoard->getTopLastDays(5, 30);
-// 				$ctr = 0;
+
 				foreach ($rows as $value) {
-// 					$ctr++;
 					echo '<tr>';
 					echo '<td class="white">'. $value['Pilot'] .'</td>';
 					echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
-					//display only top 3 records
-// 					if (intval($ctr) == 3) { break; }
 				}
 			?>
 			</tbody>
@@ -307,22 +278,17 @@ else: ?>
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-4 white">
 		<?php
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'adjunct'");
-		$row = $db->single();
-		$ctrrescues = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'sower'");
-		$row = $db->single();
-		$ctrsown = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'tender'");
-		$row = $db->single();
-		$ctrtended = $row['cnt'];
-		$db->query("SELECT COUNT(*) as cnt FROM activity");
-		$row = $db->single();
-		$ctrtot = $row['cnt'];
+		$caches = new Caches();
+
+		$ctrrescues = $caches->getRescueTotalCount();
+
+		$ctrsown = $caches->getSownTotalCount();
+
+		$ctrtended = $caches->getTendTotalCount();
+
+		$ctrtot = $caches->getActionTotalCount();
 		
-		$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
-		$row = $db->single();
-		$ctractive = $row['cnt'];
+		$ctractive = $caches->getActiveCount();
 		?>
 		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
 		<br />
