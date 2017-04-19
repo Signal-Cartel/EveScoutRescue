@@ -12,12 +12,23 @@ else {
     $config = parse_ini_file('../config/dbconfig_local.ini');	//local
 }
 
+// check if a config is found
+if ($config === FALSE)
+{
+	echo "<p><b>No DB config found!</b></p>";
+	// add error logging here
+	exit(1);
+}
+
 //define db connection vars
 define("DB_HOST", $config['hostname']);
 define("DB_USER", $config['username']);
 define("DB_PASS", $config['password']);
 define("DB_NAME", $config['dbname']);
 
+/**
+ * Database connection handling wrapper. It's possible to run one query at a time only.
+ */
 class Database
 {
 	private $host = DB_HOST;
@@ -25,15 +36,20 @@ class Database
 	private $pass = DB_PASS;
 	private $dbname = DB_NAME;
 	
+	// the database connection handle
 	private $dbh;
+	// the last error
 	private $error;
+	// the current statement to execute and retrieve results
 	private $stmt;
+	// flag indication if the statement is already executed
+	private $executed = FALSE;
 	
 	public function __construct() 
 	{
 		// Set DSN
 		$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
-		
+
 		// Set options
 		$options = array(
 			PDO::ATTR_PERSISTENT => true, 
@@ -47,11 +63,14 @@ class Database
 		// Catch any errors
 		catch (PDOException $e) {
 			$this->error = $e->getMessage();
+			echo "PDO creation failed: ". htmlspecialchars($this->error);
+			exit(1);
 		}
 	}
 	
 	public function query($query) 
 	{
+		$this->executed = FALSE;
 		$this->stmt = $this->dbh->prepare($query);
 	}
 	
@@ -77,18 +96,52 @@ class Database
 	
 	public function execute() 
 	{
+		// set the executed flag to TRUE
+		$this->executed = TRUE;
+		// before execute the current query
 		return $this->stmt->execute();
 	}
 	
 	public function resultset() 
 	{
-		$this->execute();
+		// check if the statement is already executed
+		if (!$this->executed)
+		{
+			// no, execute the statement
+			$this->execute();
+			// before retrieve result set
+		}
+		// return result set of query
 		return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+	
+	/*
+	 * Close the cursor to the database of the last statement.
+	 *
+	 * IMPORTANT:
+	 * Do not access the result set or the result size after closing the statement!
+	 */
+	public function closeQuery()
+	{
+		// check if the statement is executed
+		if ($this->executed)
+		{
+			// yes, close the result cursor
+			$this->stmt->closeCursor();
+		}
+		$this->stmt = NULL;
 	}
 	
 	public function single()
 	{
-		$this->execute();
+		// check if the statement is already executed
+		if (!$this->executed)
+		{
+			// no, execute the statement
+			$this->execute();
+			// before retrieve result set
+		}
+		// return result set of query
 		return $this->stmt->fetch(PDO::FETCH_ASSOC);
 	}
 	
