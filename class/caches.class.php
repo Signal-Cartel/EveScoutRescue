@@ -27,7 +27,7 @@ class Caches
 	}
 	
 	/**
-	 * Get hash with number of all actions
+	 * Get number of all actions
 	 */
 	public function getActionTotalCount()
 	{
@@ -40,7 +40,7 @@ class Caches
 	}
 
 	/**
-	 * Get hash with number of 'sown' actions
+	 * Get number of 'sown' actions
 	 */
 	public function getSownTotalCount()
 	{
@@ -53,7 +53,7 @@ class Caches
 	}
 	
 	/**
-	 * Get hash with number of 'tend' actions
+	 * Get number of 'tend' actions
 	 */
 	public function getTendTotalCount()
 	{
@@ -66,7 +66,7 @@ class Caches
 	}
 	
 	/**
-	 * Get hash with number of 'tend' actions
+	 * Get number of 'rescue' actions
 	 */
 	public function getRescueTotalCount()
 	{
@@ -78,6 +78,25 @@ class Caches
 		return $result['cnt'];
 	}
 	
-	
+	/**
+	 * Get values of a systems cache
+	 */
+	public function getCacheInfo(string $system)
+	{
+		// check if a system is supplied
+		if (!isset($system))
+		{
+			return;
+		}
+		
+		$this->db->query("SELECT * FROM cache WHERE System = :system AND Status <> 'Expired'");
+		$this->db->bind(':system', $system);
+		
+		$result = $this->db->single();
+		
+		$this->db->closeQuery();
+		
+		return $result;
+	}
 }
 ?>

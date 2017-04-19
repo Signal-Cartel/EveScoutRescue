@@ -21,11 +21,14 @@ require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
 
-if(isset($_POST['targetsystem'])) { 
-	$targetsystem = htmlspecialchars($_POST['targetsystem']);
+// create a cache object instance
+$caches = new Caches();
+
+if(isset($_REQUEST['targetsystem'])) { 
+	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
 }
-elseif (isset($_GET['system'])) {
-	$targetsystem = htmlspecialchars($_GET["system"]);
+elseif (isset($_REQUEST['system'])) {
+	$targetsystem = htmlspecialchars($_REQUEST["system"]);
 }
 ?>
 <body class="white">
@@ -33,10 +36,10 @@ elseif (isset($_GET['system'])) {
 
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
-	<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
+	<div class="col-sm-8  black" style="text-align: center; height: 100px; vertical-align: middle;">
 		<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 			<div class="form-group">
-				<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" class="targetsystem black" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
+				<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" class="targetsystem" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
 			</div>
 			<button type="submit" class="btn btn-lg">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
@@ -49,13 +52,11 @@ elseif (isset($_GET['system'])) {
 </div>
 <div class="ws"></div>
 <?php
-// display result for the selected system
+// check if a system is supplied
 if (isset($targetsystem)):
-	$db = new Database();
-	$db->query("SELECT * FROM cache WHERE System = :system AND Status <> 'Expired'");
-	$db->bind(':system', $targetsystem);
-	$row = $db->single();
-	
+	// display result for the selected system
+	// get cache information from database
+	$row = $caches->getCacheInfo($targetsystem);
 	//only display the following if we got some results back
 	if (!empty($row))
 	{
@@ -291,8 +292,6 @@ else:
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-4 white">
 		<?php
-		$caches = new Caches();
-
 		$ctrrescues = $caches->getRescueTotalCount();
 
 		$ctrsown = $caches->getSownTotalCount();
