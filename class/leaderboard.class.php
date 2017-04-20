@@ -118,7 +118,7 @@ class Leaderboard
 			$days = 60;
 		}
 		
-		$start = date('Y-m-d', strtotime('-'.$lastDays.' days'));
+		$start = date('Y-m-d', strtotime('-'.$days.' days'));
 		$end = date('Y-m-d', strtotime("tomorrow"));
 		$this->db->query("SELECT Pilot, max(ActivityDate) as maxdate FROM activity
 					WHERE ActivityDate BETWEEN :start AND :end
