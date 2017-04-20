@@ -16,7 +16,8 @@ class Leaderboard
 	 * Get the all time high pilots. 
 	 * @param int $count number or high score places (default 3)
 	 */
-	public function getAllHigh(int $count)
+// 	public function getAllHigh(int $count)
+	public function getAllHigh($count)
 	{
 		// check if parameter if wrong
 		if ($count <= 0)
@@ -42,7 +43,8 @@ class Leaderboard
 	 * @param int $count number or high score places (default 3)
 	 * @param int $lastDays last days range (default 30)
 	 */
-	public function getTopLastDays(int $count, int $lastDays)
+// 	public function getTopLastDays(int $count, int $lastDays)
+	public function getTopLastDays($count, $lastDays)
 	{
 		// check if parameter if wrong
 		if ($count <= 0)
@@ -79,7 +81,8 @@ class Leaderboard
 	/**
 	 * Get list of top pilots of current week
 	 */
-	public function getTopPilotsWeek(int $count)
+// 	public function getTopPilotsWeek(int $count)
+	public function getTopPilotsWeek($count)
 	{
 		$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
 		$end = date('Y-m-d', strtotime("tomorrow"));
@@ -107,7 +110,8 @@ class Leaderboard
 	/**
 	 *  Get list of recently active pilots (by day)
 	 */
-	public function getActivePilots(int $days)
+// 	public function getActivePilots(int $days)
+	public function getActivePilots($days)
 	{
 		if ($days <=0)
 		{

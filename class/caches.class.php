@@ -81,7 +81,8 @@ class Caches
 	/**
 	 * Get values of a systems cache
 	 */
-	public function getCacheInfo(string $system)
+// 	public function getCacheInfo(string $system)
+	public function getCacheInfo($system)
 	{
 		// check if a system is supplied
 		if (!isset($system))
