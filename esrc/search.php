@@ -205,7 +205,7 @@ else:
 			</thead>
 			<tbody>
 				<?php
-				$rows = $leaderBoard->getTopPilotsWeek();				
+				$rows = $leaderBoard->getTopPilotsWeek(5);				
 	
 				foreach ($rows as $value) {
 					echo '<tr>';
@@ -277,7 +277,7 @@ else:
 			</thead>
 			<tbody>
 				<?php
-				$rows = $leaderBoard->getActivePilots();
+				$rows = $leaderBoard->getActivePilots(60);
 				foreach ($rows as $value) {
 					//display records for only the last 60 days
 					echo '<tr>';
