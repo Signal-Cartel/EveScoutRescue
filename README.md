@@ -14,7 +14,7 @@ Steps to setup a development system
      `System` varchar(8) COLLATE latin1_general_ci NOT NULL,
      `AidedPilot` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
      `Note` text COLLATE latin1_general_ci,
-     `IP` varchar(25) COLLATE latin1_general_ci NOT NULL,
+     `IP` varchar(40) COLLATE latin1_general_ci NOT NULL,
      PRIMARY KEY (`ID`)
     ) ENGINE=MyISAM AUTO_INCREMENT=925 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
 
