@@ -33,6 +33,10 @@ div.centered {
 	color: white;
 }
 
+.black {
+    color: black !important;
+}
+
 .control-label {
 	font-weight: bold;
 	display: block;
