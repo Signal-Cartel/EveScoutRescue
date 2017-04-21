@@ -143,7 +143,7 @@ if (isset($targetsystem)):
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- SOW button  -->
-		<span>No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
+		<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 		<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
 
 		<a href="?" class="btn btn-link" role="button">clear result</a>
@@ -155,34 +155,6 @@ if (isset($targetsystem)):
 else:
 ?>
 <div class="row" id="allsystable">
-	<!-- ACTIVE CACHE LIST -->
-	<!-- <div class="col-sm-2">
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th>System</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php /*
-				$db = new Database();
-				$db->query("SELECT System, Status FROM cache WHERE Status <> 'Expired' ORDER BY System");
-				$rows = $db->resultset();
-				
-				foreach ($rows as $value) {
-				  echo '<tr>';
-				  echo '<td style="background-color: #cccccc;"><a href="?system='. $value['System'] .'">'. $value['System'] .'</a></td>';
-				  $statuscellformat = '';
-				  if ($value['Status'] == 'Healthy') { $statuscellformat = ' style="background-color:green;color:white;"'; }
-				  if ($value['Status'] == 'Upkeep Required') { $statuscellformat = ' style="background-color:yellow;"'; }
-				  echo '<td'.$statuscellformat.'>'. $value['Status'] .'</td>';
-				  echo '</tr>';
-				} */
-				?>
-			</tbody>
-		</table>
-	</div> -->
 	
 	<?php 
 		$leaderBoard = new LeaderBoard();
