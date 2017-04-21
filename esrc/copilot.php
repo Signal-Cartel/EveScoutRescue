@@ -14,7 +14,8 @@ try {
 	
 	if ($cache && strlen($cache) == 7) {
 	//check for "No Sow" system
-	$db->query("SELECT System, DoNotSowUntil FROM wh_systems 
+	$db->query("SELECT System, Class, DoNotSowUntil 
+				FROM wh_systems 
 				WHERE System = :system AND DoNotSowUntil > CURDATE()");
 	$db->bind(':system', $cache);
 	$row = $db->single();
@@ -24,8 +25,11 @@ try {
 		//we can sow here
 		else {
 			//check for presence of a cache in system
-			$db->query("SELECT System, Location, Status, ExpiresOn, InitialSeedDate, LastUpdated 
-						FROM cache WHERE System LIKE :system AND Status <> 'Expired'");
+			$db->query("SELECT c.System, Location, AlignedWith, Status, ExpiresOn, 
+							InitialSeedDate, LastUpdated, Class 
+						FROM cache c
+						INNER JOIN wh_systems wh ON c.System = wh.System 
+						WHERE c.System = :system AND Status <> 'Expired'");
 			$db->bind(':system', $cache);
 			$row = $db->single();
 			if (count($row) < 1) {
