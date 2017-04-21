@@ -31,7 +31,7 @@ elseif (isset($_REQUEST['system'])) {
 	$targetsystem = htmlspecialchars($_REQUEST["system"]);
 }
 ?>
-<body class="white">
+<body>
 <div class="container">
 
 <div class="row" id="header" style="padding-top: 10px;">
@@ -44,9 +44,6 @@ elseif (isset($_REQUEST['system'])) {
 			<button type="submit" class="btn btn-lg">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
 		</form>
-		<div class="clearit">
-			<span>If a system is not listed, no active cache is present.</span>
-		</div>
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
@@ -94,24 +91,24 @@ if (isset($targetsystem)):
 				<table class="table" style="width: auto;">
 					<thead>
 						<tr>
-							<th>Sown On</th>
-							<th>Location</th>
-							<th>Aligned With</th>
-							<th>Distance</th>
-							<th>Password</th>
-							<th>Status</th>
-							<th>Expires On</th>
+							<th class="white">Sown On</th>
+							<th class="white">Location</th>
+							<th class="white">Aligned With</th>
+							<th class="white">Distance</th>
+							<th class="white">Password</th>
+							<th class="white">Status</th>
+							<th class="white">Expires On</th>
 						</tr>
 					</thead>
 					<tbody>
 					<tr>
-					<td><?=date("Y-M-d", strtotime($row['InitialSeedDate']))?></td>
-					<td><?=$row['Location']?></td>
-					<td><?=$row['AlignedWith']?></td>
-					<td><?=htmlspecialchars_decode($row['Distance'])?></td>
-					<td><?=htmlspecialchars_decode($row['Password'])?></td>
+					<td class="white"><?=date("Y-M-d", strtotime($row['InitialSeedDate']))?></td>
+					<td class="white"><?=$row['Location']?></td>
+					<td class="white"><?=$row['AlignedWith']?></td>
+					<td class="white"><?=htmlspecialchars_decode($row['Distance'])?></td>
+					<td class="white"><?=htmlspecialchars_decode($row['Password'])?></td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
-					<td><?=date("Y-M-d", strtotime($row['ExpiresOn']))?></td>
+					<td class="white"><?=date("Y-M-d", strtotime($row['ExpiresOn']))?></td>
 					</tr>
 					</tbody>
 				</table>
@@ -125,12 +122,12 @@ if (isset($targetsystem)):
 				<table class="table" style="width: auto;">
 					<thead>
 						<tr>
-							<th>Notes</th>
+							<th class="white">Notes</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td><?= htmlspecialchars($strNotes) ?></td>
+							<td class="white"><?= htmlspecialchars_decode($strNotes) ?></td>
 						</tr>
 					</tbody>
 				</table>
@@ -199,18 +196,18 @@ else:
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
+					<th class="white">Pilot</th>
+					<th class="white">Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-				$rows = $leaderBoard->getTopPilotsWeek(5);				
+				$rows = $leaderBoard->getTopPilotsWeek(3);				
 	
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
+					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td align="right" class="white">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -222,8 +219,8 @@ else:
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
+					<th class="white">Pilot</th>
+					<th class="white">Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -232,21 +229,21 @@ else:
 
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
+					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td align="right" class="white">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 			?>
 			</tbody>
 		</table>
 		<br />
-		<span class="sechead">All Time (as of 2017-Mar-18)</span>
+		<span class="sechead">All Time</span>
 		<!-- ALL TIME LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
+					<th class="white">Pilot</th>
+					<th class="white">Total Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -256,8 +253,8 @@ else:
 				
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
+					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td align="right" class="white">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -267,22 +264,22 @@ else:
 	<div class="col-sm-4 white">
 		<!-- HALL OF HELP -->
 		<span class="sechead"><span style="font-weight: bold;">HALL OF HELP</span><br /><br />
-		All participants, last 60 days<br />Most recent first</span>
+		All participants, last 30 days<br />Most recent first</span>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
-					<th>Pilot</th>
-					<th>Date</th>
+					<th class="white">Pilot</th>
+					<th class="white">Date</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-				$rows = $leaderBoard->getActivePilots(60);
+				$rows = $leaderBoard->getActivePilots(30);
 				foreach ($rows as $value) {
-					//display records for only the last 60 days
+					//display records for only the last 30 days
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
-					echo '<td>'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
+					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td class="white">'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
 					echo '</tr>';
 				}
 				?>
