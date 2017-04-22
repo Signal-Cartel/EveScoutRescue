@@ -168,7 +168,10 @@ if (isset($targetsystem)):
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
-			<span class="white">The system '<?=$targetsystem?>' is locked until <?=date("Y-M-d", strtotime($lockedDate))?>. Do not sow a cache in this system.&nbsp;&nbsp;&nbsp;</span>
+			<span class="white">Upon request of the current wormhole residents, 
+				caches are not to be sown in '<?=$targetsystem?>' until 
+				<?=date("Y-M-d", strtotime($lockedDate))?>.
+			</span>
 	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
@@ -183,10 +186,9 @@ if (isset($targetsystem)):
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
-			<span class="white">No cache exists for this system.&nbsp;
-			'<?=$targetsystem?>' is not a valid system name.&nbsp;&nbsp;&nbsp;</span>
-	
-			<a href="?" class="btn btn-link" role="button">clear result</a>
+			<span class="white">'<?=$targetsystem?>' is not a valid system name. 
+				Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+				<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
 		}
