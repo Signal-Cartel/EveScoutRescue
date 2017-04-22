@@ -77,6 +77,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 		}
 		
+		if (!empty($location) && !empty($alignedwith) && $location === $alignedwith) {
+			$errmsg = $errmsg . "Location and Align can not be the same.\n";
+		}
+		
 		// use the Systems class o validate the entered system name
 		if ($systems->validatename($system_sower) != 0) { $errmsg = $errmsg . "System must be in the format: J######, where # is any number.\n"; }
 		
