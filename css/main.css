@@ -1,4 +1,4 @@
-﻿body {
+body {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
     background-color: black;
@@ -22,7 +22,7 @@ div.centered {
 }
 
 .descr {
-	font-size: 100%;
+	font-size: 80%;
 	font-weight: normal;
 	margin: 0;
 	padding-left: 10px;
@@ -32,6 +32,10 @@ div.centered {
 
 .white {
 	color: white;
+}
+
+.black {
+    color: black !important;
 }
 
 .control-label {
@@ -49,7 +53,7 @@ div.centered {
 
 .sower {
 	background-color: green;
-	color: rgba(16, 16, 16, 0.8);"
+	color: white;
 	border-radius: 6px 6px 0px 0px;
 }
 
@@ -61,7 +65,7 @@ div.centered {
 
 .tender {
 	background-color: #6495ed;
-	color: rgba(35, 35, 35, 0.8);"
+	color: white;
 	border-radius: 6px 6px 0px 0px;
 }
 
@@ -117,7 +121,7 @@ div.centered {
 }
 
 .tt-dropdown-menu {
-	width: 200px;
+	width: 50%;
 	margin-top: 5px;
 	padding: 8px 12px;
 	background-color: #fff;

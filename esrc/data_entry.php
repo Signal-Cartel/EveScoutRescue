@@ -415,7 +415,7 @@ else {
 							</div>
 							<p class="descr">What was the condition of the cache when you left it?<br />
 								&nbsp;&nbsp;&nbsp;<b>Healthy</b> = Anchored, safe, and full of supplies<br />
-								&nbsp;&nbsp;&nbsp;<b>Upkeep Required</b> = Needs maintenance/supplies<br />
+								&nbsp;&nbsp;&nbsp;<b>Upkeep Required</b> = Needs re-supplied<br />
 								&nbsp;&nbsp;&nbsp;<b>Expired</b> = Could not find or is unusable</p>
 						</div>
 					</div>
