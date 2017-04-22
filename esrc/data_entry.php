@@ -277,7 +277,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	<div class="ws"></div>
 	<div class="row" id="formtop">
 		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-8" style="text-align: center;">
+		<div class="col-sm-4" style="text-align: center;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">Rescue Cache Data Entry</span><br /><br />
 			<a href="search.php" class="btn btn-info" role="button" tabindex="100">Go to Search</a>
 		</div>

@@ -1,4 +1,4 @@
-body {
+﻿body {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
     background-color: black;
@@ -22,19 +22,16 @@ div.centered {
 }
 
 .descr {
-	font-size: 75%;
+	font-size: 100%;
 	font-weight: normal;
 	margin: 0;
-	padding-left: 10px; 
+	padding-left: 10px;
 	display: inline-block;
+	line-height: normal;
 }
 
 .white {
 	color: white;
-}
-
-.black {
-    color: black !important;
 }
 
 .control-label {
@@ -43,39 +40,47 @@ div.centered {
 }
 
 .sechead {
-	padding-bottom: 10px;
-	padding-top: 10px;
-	padding-left: 5px;
-	font-size: 125%;
+	padding-bottom: 3px;
+	padding-top: 3px;
+	padding-left: 14px;
+	font-size: 156%;
+	font-weight: bolder;
 }
 
 .sower {
 	background-color: green;
-	color: #fff;"
+	color: rgba(16, 16, 16, 0.8);"
+	border-radius: 6px 6px 0px 0px;
 }
 
 .sowerlight {
 	background-color: #ccffcc;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .tender {
 	background-color: #6495ed;
-	color: #fff;"
+	color: rgba(35, 35, 35, 0.8);"
+	border-radius: 6px 6px 0px 0px;
 }
 
 .tenderlight {
 	background-color: #d1dffa;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .adjunct {
 	background-color: #ffed4d;
+	border-radius: 6px 6px 0px 0px;
+	color: rgb(47, 47, 47);
 }
 
 .adjunctlight {
 	background-color: #fffacd;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .field {
@@ -97,17 +102,18 @@ div.centered {
 
 .tt-hint,
 .targetsystem,
+.system,
 .system_sower,
 .system_tender,
 .system_adjunct {
 	border: 2px solid #CCCCCC;
 	border-radius: 8px 8px 8px 8px;
-	font-size: 24px;
-	height: 45px;
+	font-size: 130%;
+	height: 34px;
 	line-height: 30px;
 	outline: medium none;
 	padding: 8px 12px;
-	width: 200px;
+	width: 70%;
 }
 
 .tt-dropdown-menu {
