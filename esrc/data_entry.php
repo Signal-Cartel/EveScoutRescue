@@ -47,6 +47,8 @@ include_once '../includes/head.php';
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 { 
+	$systems = new Systems();
+	
 	$pilot = $system_sower = $system_tender = $system_adjunct = $location = $alignedwith = $distance = $password = $status = $aidedpilot = $notes = $errmsg = $entrytype = $noteDate = $successmsg = $success_url = "";
 	
 	$pilot = test_input($_POST["pilot"]);
@@ -75,7 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 		}
 		
-		if (preg_match('/\b[J][0-9]{6}\b/', $system_sower) != 1) { $errmsg = $errmsg . "System must be in the format: J######, where # is any number.\n"; }
+		// use the Systems class o validate the entered system name
+		if ($systems->validatename($system_sower) != 0) { $errmsg = $errmsg . "System must be in the format: J######, where # is any number.\n"; }
 		
 		if (22000 >= (int)$distance || (int)$distance >= 50000) { $errmsg = $errmsg . "Distance must be a number between 22000 and 50000.\n"; }
 	}
@@ -118,7 +121,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
 		$sqlRollback = "DELETE FROM activity WHERE ID = " . $newID; // in case we need to roll this back
 		//handle each sort of entrytype
-		$systems = new Systems();
 		switch ($entrytype) {
 			// SOWER
 			case 'sower':
