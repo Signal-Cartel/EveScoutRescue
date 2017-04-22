@@ -9,9 +9,16 @@ class Caches
 	public function __construct()
 	{
 		// create a new database class instace
-		$this->db = new Database();
+		$this->connectDatabase ();
 	}
-
+	
+	/**
+	 * Create a new DB connection.
+	 */
+	private function connectDatabase() {
+		$this->db = new Database ();
+	}
+	
 	/**
 	 * Get number of total active caches
 	 * @return number of all activ caches

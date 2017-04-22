@@ -28,7 +28,7 @@ else {	//not logged in
 <script>
 $(document).ready(function() {
 	$('#sys-table').DataTable({
-		"ajax": '/esrc/activecaches.php',
+		"ajax": '/esrc/typeahead.php?type=cache',
 		"language": {
 			"search": "_INPUT_",
 			"searchPlaceholder": "System..."
