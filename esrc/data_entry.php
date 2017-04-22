@@ -102,6 +102,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	
 //DB UPDATES
 	if (empty($errmsg)) {
+		// make the system ID uppercase
+ 		${"system_$entrytype"} = strtoupper(${"system_$entrytype"});
+		
 		$db = new Database();
 		//begin db transaction
 		$db->beginTransaction();
