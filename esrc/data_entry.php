@@ -8,6 +8,7 @@ function test_input($data) {
 
 include_once '../includes/auth-inc.php';
 include_once '../class/db.class.php';
+include_once '../class/systems.class.php';
 
 $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 ?>
@@ -117,15 +118,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
 		$sqlRollback = "DELETE FROM activity WHERE ID = " . $newID; // in case we need to roll this back
 		//handle each sort of entrytype
+		$systems = new Systems();
 		switch ($entrytype) {
 			// SOWER
 			case 'sower':
 				//1. check to make sure system name entered is a valid wormhole system
-				$db->query("SELECT System FROM wh_systems WHERE System = :system");
-				$db->bind(':system', $system_sower);
-				$row = $db->single();
-				if (empty($row)) {
-					$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
+				if ($systems->validatename($system_sower)) {
+						$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
 					$_POST['system_sower'] = '';
 					//roll back [activity] table commit
 					$db->query($sqlRollback);
@@ -146,11 +145,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						//3. check for "Do Not Sow" systems
 						//   - when wormhole residents ask us not to sow caches in their
 						//     holes, we agree to suspend doing so for three months
-						$db->query("SELECT System, DoNotSowUntil FROM wh_systems WHERE System = :system AND DoNotSowUntil > CURDATE()");
-						$db->bind(':system', $system_sower);
-						$row = $db->single();
-						if (!empty($row)) {
-							$dateNoSow = date("Y-M-d", strtotime($row['DoNotSowUntil']));
+						$lockDate = $systems->locked($system_sower);
+						if (isset($lockDate)) {
+							$dateNoSow = date("Y-M-d", strtotime($lockDate));
 							$errmsg = $errmsg . "Upon request of the current wormhole residents, caches are not to be sown in this system until ".$dateNoSow;
 							//roll back [activity] table commit
 							$db->query($sqlRollback);

@@ -20,6 +20,7 @@
 require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
+require_once '../class/systems.class.php';
 
 // create a cache object instance
 $caches = new Caches();
@@ -137,10 +138,16 @@ if (isset($targetsystem)):
 	}
 	else
 	{
+		$systems = new Systems();
 		//no results returned, so give an option to sow a new cache in this system
 		// check if the length of the string matches the worm hole names
-		if (strlen($targetsystem) === 7)
+// 		if (strlen($targetsystem) === 7)
+		if ($systems->validatename($targetsystem) === 0)
 		{
+			$lockedDate = $systems->locked($targetsystem);
+			
+			if (!isset($lockedDate))
+			{
 			// yes, create a link to the data entry page
 			?>
 			<div class="row" id="systableheader">
@@ -153,6 +160,20 @@ if (isset($targetsystem)):
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
+			}
+			else
+			{
+				?>	
+			<div class="row" id="systableheader">
+			<div class="col-sm-12">
+			<div style="padding-left: 10px;">
+			<!-- SOW button  -->
+			<span class="white">The system '<?=$targetsystem?>' is locked until <?=date("Y-M-d", strtotime($lockedDate))?>. Do not sow a cache in this system.&nbsp;&nbsp;&nbsp;</span>
+	
+			<a href="?" class="btn btn-link" role="button">clear result</a>
+			</div></div></div>
+				<?php
+			}
 		}
 		else 
 		{
@@ -163,7 +184,7 @@ if (isset($targetsystem)):
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
 			<span class="white">No cache exists for this system.&nbsp;
-			'<?=$targetsystem?>' does not match the system name pattern.&nbsp;&nbsp;&nbsp;</span>
+			'<?=$targetsystem?>' is not a valid system name.&nbsp;&nbsp;&nbsp;</span>
 	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
