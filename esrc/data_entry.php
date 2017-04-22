@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 		}
 		
-		if (!empty($location) && !empty($alignedwith) && $location === $alignedwith) {
+		if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && $location != 'See Notes') {
 			$errmsg = $errmsg . "Location and Align can not be the same.\n";
 		}
 		
