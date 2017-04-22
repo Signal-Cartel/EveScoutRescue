@@ -10,7 +10,7 @@
         $(document).ready(function() {
             $('input.targetsystem').typeahead({
                 name: 'targetsystem',
-                remote: 'jsystems.php?query=%QUERY'
+                remote: 'typeahead.php?type=system&query=%QUERY'
             });
         })
     </script>
@@ -138,17 +138,37 @@ if (isset($targetsystem)):
 	else
 	{
 		//no results returned, so give an option to sow a new cache in this system
-		?>
-		<div class="row" id="systableheader">
-		<div class="col-sm-12">
-		<div style="padding-left: 10px;">
-		<!-- SOW button  -->
-		<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-		<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
-
-		<a href="?" class="btn btn-link" role="button">clear result</a>
-		</div></div></div>
-	<?php 
+		// check if the length of the string matches the worm hole names
+		if (strlen($targetsystem) === 7)
+		{
+			// yes, create a link to the data entry page
+			?>
+			<div class="row" id="systableheader">
+			<div class="col-sm-12">
+			<div style="padding-left: 10px;">
+			<!-- SOW button  -->
+			<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
+			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+	
+			<a href="?" class="btn btn-link" role="button">clear result</a>
+			</div></div></div>
+		<?php
+		}
+		else 
+		{
+			// wrong system name length
+			?>
+			<div class="row" id="systableheader">
+			<div class="col-sm-12">
+			<div style="padding-left: 10px;">
+			<!-- SOW button  -->
+			<span class="white">No cache exists for this system.&nbsp;
+			'<?=$targetsystem?>' does not match the system name pattern.&nbsp;&nbsp;&nbsp;</span>
+	
+			<a href="?" class="btn btn-link" role="button">clear result</a>
+			</div></div></div>
+		<?php
+		}
 	} //(!empty($row))
 
 // no system selected, so show summary stats
