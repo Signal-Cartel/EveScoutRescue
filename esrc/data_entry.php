@@ -78,11 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 		
 		if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && $location != 'See Notes') {
-			$errmsg = $errmsg . "Location and Align can not be the same.\n";
+			$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
 		}
 		
-		// use the Systems class o validate the entered system name
-		if ($systems->validatename($system_sower) != 0) { $errmsg = $errmsg . "System must be in the format: J######, where # is any number.\n"; }
+		// use the Systems class to validate the entered system name
+		if ($systems->validatename($system_sower) != 0) { $errmsg = $errmsg . "Invalid system name entered. Please select a valid system from the list.\n"; }
 		
 		if (22000 >= (int)$distance || (int)$distance >= 50000) { $errmsg = $errmsg . "Distance must be a number between 22000 and 50000.\n"; }
 	}
