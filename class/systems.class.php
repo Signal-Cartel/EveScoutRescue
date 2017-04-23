@@ -108,7 +108,26 @@ class Systems {
 		
 		return $result ['locked'];
 	}
-	
+
+	/**
+	 * Returns the number of currently locked (on request) systems.
+	 * @return mixed
+	 */
+	public function getLockedCount()
+	{
+		// check the DB for the system name
+		$sql = "select count(1) as locked from wh_systems where DoNotSowUntil is not null and DoNotSowUntil > CURRENT_DATE()";
+		// create query
+		$this->db->query ( $sql );
+		// and bind parameters
+		$this->db->bind ( ":system", $system );
+		// execute the query
+		$result = $this->db->single ();
+		// close the query
+		$this->db->closeQuery ();
+		
+		return $result['locked'];
+	}
 }
 
 ?>

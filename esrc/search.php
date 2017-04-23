@@ -201,6 +201,7 @@ else:
 	
 	<?php 
 		$leaderBoard = new LeaderBoard();
+		$systems = new Systems();
 	?>
 	
 	<!-- LEADER BOARDS -->
@@ -313,11 +314,14 @@ else:
 		$ctrtot = $caches->getActionTotalCount();
 		
 		$ctractive = $caches->getActiveCount();
+		
+		$lockedSys = $systems->getLockedCount();
 		?>
 		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
 		<br />
-		<span class="sechead"><span style="font-weight: bold;">Total Active Caches:</span><br />
-		<?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
+		<span class="sechead"><?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+		<span class="sechead">Locked systems: <?php echo $lockedSys ?></span><br />
 		<br />
 		<span class="sechead" style="font-weight: bold;">All actions: <?php echo $ctrtot; ?></span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
