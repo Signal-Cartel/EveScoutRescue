@@ -10,7 +10,7 @@
         $(document).ready(function() {
             $('input.targetsystem').typeahead({
                 name: 'targetsystem',
-                remote: 'typeahead.php?type=system&query=%QUERY'
+                remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
         })
     </script>
