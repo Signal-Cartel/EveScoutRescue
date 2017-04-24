@@ -13,7 +13,7 @@ $cache = strtoupper ( $_REQUEST ["cache"] );
 try {
 	$db = new Database ();
 	
-	$systems = new Systems();
+	$systems = new Systems($db);
 	
 	if ($cache && strlen ( $cache ) == 7) {
 		// check for "No Sow" system

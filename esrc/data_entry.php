@@ -9,6 +9,7 @@ function test_input($data) {
 include_once '../includes/auth-inc.php';
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
+include_once '../class/caches.class.php';
 
 $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 ?>
@@ -47,7 +48,9 @@ include_once '../includes/head.php';
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 { 
-	$systems = new Systems();
+	$db = new Database();
+	$systems = new Systems($db);
+	$caches = new Caches($db);
 	
 	$pilot = $system_sower = $system_tender = $system_adjunct = $location = $alignedwith = $distance = $password = $status = $aidedpilot = $notes = $errmsg = $entrytype = $noteDate = $successmsg = $success_url = "";
 	
@@ -91,6 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$entrytype = 'tender';
 		
 		if (empty($status)) { $errmsg = $errmsg . "You must indicate the status of the cache you are tending.\n"; }
+		
+		if (!$caches->isTendingAllowed($system_tender)) { $errmsg = $errmsg . "Cache is sown or tended within last 24 hours (".$caches->getCacheInfo($system_tender)['LastUpdated'].").\n"; };
 	}
 	// ADJUNCT entry
 	elseif (empty($system_sower) && empty($system_tender) && !empty($system_adjunct)) { // more than one system provided
@@ -109,7 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		// make the system ID uppercase
  		${"system_$entrytype"} = strtoupper(${"system_$entrytype"});
 		
-		$db = new Database();
 		//begin db transaction
 		$db->beginTransaction();
 		// insert to [activity] table
