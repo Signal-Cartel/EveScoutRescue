@@ -23,19 +23,19 @@ include_once '../includes/head.php';
 		$(document).ready(function() {
 			$('input.system_sower').typeahead({
 				name: 'system_sower',
-				remote: 'jsystems.php?query=%QUERY',
+				remote: '../data/typeahead.php?type=system&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
 			$('input.system_tender').typeahead({
 				name: 'system_tender',
-				remote: 'activecaches.php?query=%QUERY',
+				remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
 			$('input.system_adjunct').typeahead({
 				name: 'system_adjunct',
-				remote: 'activecaches.php?query=%QUERY',
+				remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
