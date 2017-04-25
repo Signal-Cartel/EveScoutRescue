@@ -136,6 +136,37 @@ class Caches
 		$this->db->closeQuery();
 		
 		return $result['cnt'];
+	}
+	
+	/**
+	 * Returns the number of caches to expire.
+	 * @param unknown $days remaining days
+	 * @return mixed number of caches to expire
+	 */
+	public function expireInDays($days)
+	{
+		// check if parametzer is set
+		if (!isset($days))
+		{
+			// no, set default 5 days
+			$days = 5;
 		}
+		
+		// check if the number is greaten than limit
+		if ($days > 30)
+		{
+			// set days to the limit
+			$days = 30;
+		}
+		
+		$this->db->query("SELECT count(1) as cnt FROM cache where status <> 'Expired' and datediff(CURRENT_DATE(), lastupdated) > :days");
+		$this->db->bind(':days', 30 - $days);
+		
+		$result = $this->db->single();
+		
+		$this->db->closeQuery();
+		
+		return $result['cnt'];
+	}
 }
 ?>
