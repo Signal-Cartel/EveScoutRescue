@@ -39,19 +39,24 @@ elseif (isset($_REQUEST['system'])) {
 
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
-	<div class="col-sm-4 black">
-		<form method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-			<div class="form-group">
-				<input type="text" name="targetsystem" size="24" autoFocus="autoFocus" autocomplete="off" class="targetsystem" placeholder="System Name" value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
-				<div class="pull-right">
-					<button type="submit" class="btn btn-md">Search</button>
-				</div>
+	<div class="col-sm-8 black" style="text-align: center;">
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-5" style="text-align: left;">
+				<form method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+					<div class="form-group">
+						<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" 
+							autocomplete="off" class="targetsystem" placeholder="System Name" 
+							value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
+					</div>
+					<div class="clearit">
+						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
+					</div>
+				</form>
 			</div>
-			<div class="clearit pull-right">
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
-			</div>
-		</form>
+			<div class="col-sm-4"></div>
+		</div>
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
