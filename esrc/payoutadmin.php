@@ -30,7 +30,7 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 <div class="container">
 	<div class="row" id="header" style="padding-top: 10px;">
 		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
+		<div class="col-sm-4" style="text-align: center; height: 100px; vertical-align: middle;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">ESRC Payout Admin</span>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="search.php" class="btn btn-info" role="button">Go to Search</a><br /><br />
