@@ -1,0 +1,4 @@
+RewriteEngine On 
+RewriteCond %{HTTPS} !^on [OR]
+RewriteCond %{HTTP_HOST} ^www\.evescoutrescue\.com [NC]
+RewriteRule ^(.*)$ https://evescoutrescue.com/$1 [R=301,L]
