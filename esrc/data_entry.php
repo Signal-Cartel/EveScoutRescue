@@ -287,7 +287,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	<div class="ws"></div>
 	<div class="row" id="formtop">
 		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-8" style="text-align: center;">
+		<div class="col-sm-4" style="text-align: center;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">Rescue Cache Data Entry</span><br /><br />
 			<a href="search.php" class="btn btn-info" role="button" tabindex="100">Go to Search</a>
 		</div>
@@ -425,7 +425,7 @@ else {
 							</div>
 							<p class="descr">What was the condition of the cache when you left it?<br />
 								&nbsp;&nbsp;&nbsp;<b>Healthy</b> = Anchored, safe, and full of supplies<br />
-								&nbsp;&nbsp;&nbsp;<b>Upkeep Required</b> = Needs maintenance/supplies<br />
+								&nbsp;&nbsp;&nbsp;<b>Upkeep Required</b> = Needs re-supplied<br />
 								&nbsp;&nbsp;&nbsp;<b>Expired</b> = Could not find or is unusable</p>
 						</div>
 					</div>
