@@ -28,21 +28,38 @@ include_once '../includes/head.php';
                 remote: '../data/typeahead.php?type=system&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
-            });
+			});
 			$('input.system_tender').typeahead({
                 name: 'system_tender',
                 remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
-            });
+			});
 			$('input.system_adjunct').typeahead({
                 name: 'system_adjunct',
                 remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
-            });
-        })
-    </script>
+			});
+			
+			// initialize field order preference
+			LocOnTop = true; //HTML loads with Location field on top - the default
+			//see if a preference is stored
+			if (typeof(Storage) !== "undefined"){
+				//stored as string only
+				if (localStorage.LocOnTop) {
+					LocOnTop = (localStorage.LocOnTop == 'true');
+				}
+			}
+			// if we returned a false value, swap the fields
+			if (!LocOnTop){
+				var tophtm = document.getElementById("topfield").innerHTML;
+				var bottomhtm = document.getElementById("bottomfield").innerHTML;
+				document.getElementById("topfield").innerHTML = bottomhtm;
+				document.getElementById("bottomfield").innerHTML = tophtm;
+			}
+		})
+	</script>
 </head>
 <body>
 <?php
@@ -287,7 +304,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	<div class="ws"></div>
 	<div class="row" id="formtop">
 		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-8" style="text-align: center;">
+		<div class="col-sm-4" style="text-align: center;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">Rescue Cache Data Entry</span><br /><br />
 			<a href="search.php" class="btn btn-info" role="button" tabindex="100">Go to Search</a>
 		</div>
@@ -343,39 +360,60 @@ else {
 					<label class="control-label" for="system_sower">System<span class="descr">Must be in format J######, where # is any number.</span></label>
 					<input type="text" name="system_sower" size="30" class="system_sower" autocomplete="off" placeholder="J######" value="<?php echo isset($targetsystemsow) ? $targetsystemsow: '' ?>">
 				</div>
-				
-				<div class="field">
-					<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="location" name="location">
-						<option value="">- Select -</option>
-						<?php
-						foreach ($locopts as $val) {
-							$selectedLoc = '';
-							if (isset($_POST['location']) && $_POST['location'] == $val) {
-								$selectedLoc = ' selected="selected"';
-							}
-							echo '<option value="' . $val . '"' . $selectedLoc . '>' . $val . '</option>';
-						}
-						?>
-					</select>
-				</div>
 
-				<div class="field">
-					<label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="alignedwith" name="alignedwith" >
-						<?php $strSelectedAW = isset($_POST['alignedwith']) ? ' selected="selected"' : '' ?>
-						<option value="">- Select -</option>
-						<?php 
-						foreach ($locopts as $val) {
-							$selectedLoc = '';
-							if (isset($_POST['alignedwith']) && $_POST['alignedwith'] == $val) {
-								$selectedLoc = ' selected="selected"';
+				<!--This is the beginning of the swap fields------------------------------------------------------>
+				<div id="topfield">
+					<div class="field">
+						<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
+						<select class="form-control" id="location" name="location">
+							<option value="">- Select -</option>
+							<?php
+							foreach ($locopts as $val) {
+								$selectedLoc = '';
+								if (isset($_POST['location']) && $_POST['location'] == $val) {
+									$selectedLoc = ' selected="selected"';
+								}
+								echo '<option value="' . $val . '"' . $selectedLoc . '>' . $val . '</option>';
 							}
-							echo '<option value="' . $val . '"' . $selectedLoc . '>' . $val . '</option>';
-						}
-						?>
-					</select>
+							?>
+						</select>
+					</div>
+				</div><!-- End topfield -->
+				<div class="pull-right">					
+					<a class="btn btn-success btn-xs" tabindex="99" role="button"href="javascript: swapThem();">Location&lt;-&gt;Align</a>
 				</div>
+				<div id="bottomfield" >
+					<div class="field">
+						<label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
+						<select class="form-control" id="alignedwith" name="alignedwith" >
+							<?php $strSelectedAW = isset($_POST['alignedwith']) ? ' selected="selected"' : '' ?>
+							<option value="">- Select -</option>
+							<?php 
+							foreach ($locopts as $val) {
+								$selectedLoc = '';
+								if (isset($_POST['alignedwith']) && $_POST['alignedwith'] == $val) {
+									$selectedLoc = ' selected="selected"';
+								}
+								echo '<option value="' . $val . '"' . $selectedLoc . '>' . $val . '</option>';
+							}
+							?>
+						</select>
+					</div>
+				</div><!-- end bottomfield -->
+				
+				<script>
+				function swapThem(){
+					var tophtm = document.getElementById("topfield").innerHTML;
+					var bottomhtm = document.getElementById("bottomfield").innerHTML;
+					document.getElementById("topfield").innerHTML = bottomhtm;
+					document.getElementById("bottomfield").innerHTML = tophtm;
+					LocOnTop = !LocOnTop;
+					if (typeof(Storage) !== "undefined"){
+						localStorage.LocOnTop = LocOnTop;
+					}	
+				}
+				</script>
+				<!--This is the end of the swap fields------------------------------------------------------>
 
 				<div class="field">
 					<label class="control-label" for="f11">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
@@ -424,9 +462,9 @@ else {
 								<label for="status_3"><input id="status_3" name="status" type="radio" value="Expired"<?php echo $checkedE; ?>>Expired</label>
 							</div>
 							<p class="descr">What was the condition of the cache when you left it?<br />
-								&nbsp;&nbsp;&nbsp;<b>Healthy</b> = Anchored, safe, and full of supplies<br />
-								&nbsp;&nbsp;&nbsp;<b>Upkeep Required</b> = Needs maintenance/supplies<br />
-								&nbsp;&nbsp;&nbsp;<b>Expired</b> = Could not find or is unusable</p>
+								<b>Healthy</b> = Anchored, safe, and full of supplies<br />
+								<b>Upkeep Required</b> = Needs re-supplied<br />
+								<b>Expired</b> = Could not find or is unusable</p>
 						</div>
 					</div>
 					<!--END TENDER-->

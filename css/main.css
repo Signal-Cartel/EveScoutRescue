@@ -22,11 +22,12 @@ div.centered {
 }
 
 .descr {
-	font-size: 75%;
+	font-size: 100%;
 	font-weight: normal;
 	margin: 0;
-	padding-left: 10px; 
+	padding-left: 10px;
 	display: inline-block;
+	line-height: normal;
 }
 
 .white {
@@ -43,39 +44,47 @@ div.centered {
 }
 
 .sechead {
-	padding-bottom: 10px;
-	padding-top: 10px;
-	padding-left: 5px;
-	font-size: 125%;
+	padding-bottom: 3px;
+	padding-top: 3px;
+	padding-left: 14px;
+	font-size: 156%;
+	font-weight: bolder;
 }
 
 .sower {
 	background-color: green;
-	color: #fff;"
+	color: white;
+	border-radius: 6px 6px 0px 0px;
 }
 
 .sowerlight {
 	background-color: #ccffcc;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .tender {
 	background-color: #6495ed;
-	color: #fff;"
+	color: white;
+	border-radius: 6px 6px 0px 0px;
 }
 
 .tenderlight {
 	background-color: #d1dffa;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .adjunct {
 	background-color: #ffed4d;
+	border-radius: 6px 6px 0px 0px;
+	color: rgb(47, 47, 47);
 }
 
 .adjunctlight {
 	background-color: #fffacd;
 	padding: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .field {
@@ -97,23 +106,24 @@ div.centered {
 
 .tt-hint,
 .targetsystem,
+.system,
 .system_sower,
 .system_tender,
 .system_adjunct {
 	border: 2px solid #CCCCCC;
 	border-radius: 8px 8px 8px 8px;
-	font-size: 24px;
-	height: 45px;
+	font-size: 130%;
+	height: 34px;
 	line-height: 30px;
 	outline: medium none;
 	padding: 8px 12px;
-	width: 200px;
+	width: 70%;
 }
 
 .tt-dropdown-menu {
-	width: 200px;
+	width: 40%;
 	margin-top: 5px;
-	padding: 8px 12px;
+	padding: 8px 0px;
 	background-color: #fff;
 	border: 1px solid #ccc;
 	border: 1px solid rgba(0, 0, 0, 0.2);
@@ -124,7 +134,7 @@ div.centered {
 }
 
 .tt-suggestion {
-    padding: 3px 20px;
+    padding: 3px 10px;
     font-size: 18px;
     line-height: 24px;
 }

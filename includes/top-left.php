@@ -1,3 +1,3 @@
-<div class="col-md-2 col-sm-6">
+<div class="col-sm-4 pull-left">
 	<a href="../index.php"><img src="../img/eve-scout-logo.png" alt="EvE-Scout Rescue" /></a>
 </div>
