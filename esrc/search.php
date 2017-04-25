@@ -10,7 +10,7 @@
         $(document).ready(function() {
             $('input.targetsystem').typeahead({
                 name: 'targetsystem',
-                remote: 'activecaches.php?query=%QUERY'
+                remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
         })
     </script>
@@ -20,9 +20,12 @@
 require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
+require_once '../class/systems.class.php';
+
+$database = new Database();
 
 // create a cache object instance
-$caches = new Caches();
+$caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
 	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
@@ -77,13 +80,17 @@ if (isset($targetsystem)):
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
+		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
 		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<?php } else { ?>
+		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
+		<?php  } ?>
 		<!-- ADJUNCT button -->
 		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
-		<!-- ww.pasta.gg button -->
-		<a href="http://wh.pasta.gg/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;
+		<!-- anoik.is button -->
+		<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 		<!-- clear result" link -->
 		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
@@ -142,6 +149,7 @@ if (isset($targetsystem)):
 	}
 	else
 	{
+		$systems = new Systems($database);
 		//no results returned, so give an option to sow a new cache in this system
 		// check if the length of the string matches the worm hole names
 		// 		if (strlen($targetsystem) === 7)
@@ -203,7 +211,8 @@ else:
 <div class="row" id="allsystable">
 	
 	<?php 
-		$leaderBoard = new LeaderBoard();
+		$leaderBoard = new LeaderBoard($database);
+		$systems = new Systems($database);
 	?>
 	
 	<!-- LEADER BOARDS -->
@@ -316,11 +325,14 @@ else:
 		$ctrtot = $caches->getActionTotalCount();
 		
 		$ctractive = $caches->getActiveCount();
+		
+		$lockedSys = $systems->getLockedCount();
 		?>
 		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
 		<br />
-		<span class="sechead"><span style="font-weight: bold;">Total Active Caches:</span><br />
-		<?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
+		<span class="sechead"><?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+		<span class="sechead">Locked systems: <?php echo $lockedSys ?></span><br />
 		<br />
 		<span class="sechead" style="font-weight: bold;">All actions: <?php echo $ctrtot; ?></span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />

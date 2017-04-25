@@ -8,6 +8,8 @@ function test_input($data) {
 
 include_once '../includes/auth-inc.php';
 include_once '../class/db.class.php';
+include_once '../class/systems.class.php';
+include_once '../class/caches.class.php';
 
 $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 ?>
@@ -20,22 +22,22 @@ $pgtitle = 'Data Entry';
 include_once '../includes/head.php'; 
 ?>
 	<script>
-		$(document).ready(function() {
-			$('input.system_sower').typeahead({
-				name: 'system_sower',
-				remote: '../data/typeahead.php?type=system&query=%QUERY',
+        $(document).ready(function() {
+            $('input.system_sower').typeahead({
+                name: 'system_sower',
+                remote: '../data/typeahead.php?type=system&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
 			$('input.system_tender').typeahead({
-				name: 'system_tender',
-				remote: '../data/typeahead.php?type=cache&query=%QUERY',
+                name: 'system_tender',
+                remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
 			$('input.system_adjunct').typeahead({
-				name: 'system_adjunct',
-				remote: '../data/typeahead.php?type=cache&query=%QUERY',
+                name: 'system_adjunct',
+                remote: '../data/typeahead.php?type=cache&query=%QUERY',
 				minLength: 3, // send AJAX request only after user type in at least 3 characters
 				limit: 8 // limit to show only 8 results
 			});
@@ -63,6 +65,10 @@ include_once '../includes/head.php';
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 { 
+	$db = new Database();
+	$systems = new Systems($db);
+	$caches = new Caches($db);
+	
 	$pilot = $system_sower = $system_tender = $system_adjunct = $location = $alignedwith = $distance = $password = $status = $aidedpilot = $notes = $errmsg = $entrytype = $noteDate = $successmsg = $success_url = "";
 	
 	$pilot = test_input($_POST["pilot"]);
@@ -91,7 +97,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 		}
 		
-		if (preg_match('/\b[J][0-9]{6}\b/', $system_sower) != 1) { $errmsg = $errmsg . "System must be in the format: J######, where # is any number.\n"; }
+		if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && $location != 'See Notes') {
+			$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
+		}
+		
+		// use the Systems class to validate the entered system name
+		if ($systems->validatename($system_sower) != 0) { $errmsg = $errmsg . "Invalid system name entered. Please select a valid system from the list.\n"; }
 		
 		if (22000 >= (int)$distance || (int)$distance >= 50000) { $errmsg = $errmsg . "Distance must be a number between 22000 and 50000.\n"; }
 	}
@@ -100,6 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$entrytype = 'tender';
 		
 		if (empty($status)) { $errmsg = $errmsg . "You must indicate the status of the cache you are tending.\n"; }
+		
+		if (!$caches->isTendingAllowed($system_tender)) { $errmsg = $errmsg . "You may not tend a cache that has been sown or tended within the last 24 hours. Last Updated: ".$caches->getCacheInfo($system_tender)['LastUpdated']."\n"; };
 	}
 	// ADJUNCT entry
 	elseif (empty($system_sower) && empty($system_tender) && !empty($system_adjunct)) { // more than one system provided
@@ -115,7 +128,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	
 //DB UPDATES
 	if (empty($errmsg)) {
-		$db = new Database();
+		// make the system ID uppercase
+ 		${"system_$entrytype"} = strtoupper(${"system_$entrytype"});
+		
 		//begin db transaction
 		$db->beginTransaction();
 		// insert to [activity] table
@@ -138,11 +153,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			// SOWER
 			case 'sower':
 				//1. check to make sure system name entered is a valid wormhole system
-				$db->query("SELECT System FROM wh_systems WHERE System = :system");
-				$db->bind(':system', $system_sower);
-				$row = $db->single();
-				if (empty($row)) {
-					$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
+				if ($systems->validatename($system_sower)) {
+						$errmsg = $errmsg . "Invalid wormhole system name entered. Please correct name and resubmit.";
 					$_POST['system_sower'] = '';
 					//roll back [activity] table commit
 					$db->query($sqlRollback);
@@ -163,11 +175,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						//3. check for "Do Not Sow" systems
 						//   - when wormhole residents ask us not to sow caches in their
 						//     holes, we agree to suspend doing so for three months
-						$db->query("SELECT System, DoNotSowUntil FROM wh_systems WHERE System = :system AND DoNotSowUntil > CURDATE()");
-						$db->bind(':system', $system_sower);
-						$row = $db->single();
-						if (!empty($row)) {
-							$dateNoSow = date("Y-M-d", strtotime($row['DoNotSowUntil']));
+						$lockDate = $systems->locked($system_sower);
+						if (isset($lockDate)) {
+							$dateNoSow = date("Y-M-d", strtotime($lockDate));
 							$errmsg = $errmsg . "Upon request of the current wormhole residents, caches are not to be sown in this system until ".$dateNoSow;
 							//roll back [activity] table commit
 							$db->query($sqlRollback);

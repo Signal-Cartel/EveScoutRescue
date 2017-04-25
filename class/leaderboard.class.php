@@ -6,12 +6,26 @@ class Leaderboard
 {
 	var $db = null;
 	
-	public function __construct()
+	public function __construct($database = NULL)
 	{
-		// create a new database class instace
-		$this->db = new Database();
+		if (isset($database))
+		{
+			$this->db = $database;
+		}
+		else
+		{
+			// create a new database class instace
+			$this->connectDatabase ();
+		}
 	}
-
+	
+	/**
+	 * Create a new DB connection.
+	 */
+	private function connectDatabase() {
+		$this->db = new Database ();
+	}
+	
 	/**
 	 * Get the all time high pilots. 
 	 * @param int $count number or high score places (default 3)

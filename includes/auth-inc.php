@@ -11,7 +11,7 @@ $admins      = array('Thrice Hapus','Mynxee','Johnny Splunk');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {
-	$charimg    = '<img src="http://image.eveonline.com/Character/'.
+	$charimg    = '<img src="https://image.eveonline.com/Character/'.
 				$_SESSION['auth_characterid'].'_64.jpg">';
 	$charname   = $_SESSION['auth_charactername'];
 	$chardiv    = '<div style="text-align: center;">'.$charimg.'<br />' .
@@ -71,7 +71,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
 
 //set the return page and redirect to login
 function login_redirect() {
-	$_SESSION['auth_redirect'] = 'http://evescoutrescue.com'.htmlentities($_SERVER['PHP_SELF']);
+	$_SESSION['auth_redirect'] = 'https://evescoutrescue.com'.htmlentities($_SERVER['PHP_SELF']);
 	header("Location: ../auth/login.php");
 	exit;
 }

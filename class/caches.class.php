@@ -6,12 +6,26 @@ class Caches
 {
 	var $db = null;
 
-	public function __construct()
+	public function __construct($database = NULL)
 	{
-		// create a new database class instace
-		$this->db = new Database();
+		if (isset($database))
+		{
+			$this->db = $database;		
+		}
+		else 
+		{
+			// create a new database class instace
+			$this->connectDatabase ();
+		}
 	}
-
+	
+	/**
+	 * Create a new DB connection.
+	 */
+	private function connectDatabase() {
+		$this->db = new Database ();
+	}
+	
 	/**
 	 * Get number of total active caches
 	 * @return number of all activ caches
@@ -99,5 +113,29 @@ class Caches
 		
 		return $result;
 	}
+	
+	/**
+	 * Check if a cache is allowed to be tender
+	 * @param unknown $system the system to check
+	 * @return void|mixed 0 - cache is not allowed to be tendet; 1- cache can be tended
+	 */
+	public function isTendingAllowed($system)
+	{
+		// check if a system is supplied
+		if (!isset($system))
+		{
+			return;
+		}
+
+		// select 0/1 from cache if time diff is >= 24 hours
+		$this->db->query("SELECT count(1) as cnt FROM cache WHERE System = :system AND Status <> 'Expired' and (time_to_sec(timediff(CURRENT_TIMESTAMP(), LastUpdated)) / 3600) >= 24");
+		$this->db->bind(':system', $system);
+		
+		$result = $this->db->single();
+		
+		$this->db->closeQuery();
+		
+		return $result['cnt'];
+		}
 }
 ?>

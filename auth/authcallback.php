@@ -1,13 +1,10 @@
 <?php
 //code adapted from https://github.com/fuzzysteve/eve-sso-auth
 
-//auth_functions.php handles errors
-// require_once('auth_functions.php');
+// secret.php contains clientid and secret key from
+// https://developers.eveonline.com/applications
 
-//secret.php contains clientid and secret key from
-//https://developers.eveonline.com/applications
 require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
-
 
 /**
  * Log an error in case authentication fails
