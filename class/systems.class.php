@@ -3,9 +3,18 @@
 require_once '../class/db.class.php';
 class Systems {
 	var $db = null;
-	public function __construct() {
-		// create a new database class instace
-		$this->connectDatabase ();
+
+	public function __construct($database = NULL)
+	{
+		if (isset($database))
+		{
+			$this->db = $database;
+		}
+		else
+		{
+			// create a new database class instace
+			$this->connectDatabase ();
+		}
 	}
 	
 	/**

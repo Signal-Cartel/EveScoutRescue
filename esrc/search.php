@@ -10,7 +10,7 @@
         $(document).ready(function() {
             $('input.targetsystem').typeahead({
                 name: 'targetsystem',
-                remote: 'typeahead.php?type=system&query=%QUERY'
+                remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
         })
     </script>
@@ -22,8 +22,10 @@ require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 
+$database = new Database();
+
 // create a cache object instance
-$caches = new Caches();
+$caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
 	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
@@ -73,7 +75,11 @@ if (isset($targetsystem)):
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
+		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
 		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<?php } else { ?>
+		<span class="white"><b>Tend not necessary</b></span>&nbsp;&nbsp;&nbsp;
+		<?php  } ?>
 		<!-- ADJUNCT button -->
 		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
@@ -138,7 +144,7 @@ if (isset($targetsystem)):
 	}
 	else
 	{
-		$systems = new Systems();
+		$systems = new Systems($database);
 		//no results returned, so give an option to sow a new cache in this system
 		// check if the length of the string matches the worm hole names
 // 		if (strlen($targetsystem) === 7)
@@ -200,8 +206,8 @@ else:
 <div class="row" id="allsystable">
 	
 	<?php 
-		$leaderBoard = new LeaderBoard();
-		$systems = new Systems();
+		$leaderBoard = new LeaderBoard($database);
+		$systems = new Systems($database);
 	?>
 	
 	<!-- LEADER BOARDS -->
