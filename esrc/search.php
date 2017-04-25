@@ -336,18 +336,21 @@ else:
 		$expireDays = 5;
 		$toexpire = $caches->expireInDays($expireDays);
 		?>
-		<span class="sechead" style="font-weight: bold; color: gold;">Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
+		<span class="sechead" style="font-weight: bold; color: gold;">
+			Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
 		<br />
 		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
-		<span class="sechead"><?php echo $ctractive; ?> of 2603 (<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
-		<span class="sechead">Locked systems: <?php echo $lockedSys ?></span><br />
+		<span class="sechead"><?php echo $ctractive; ?> of 2603 
+			(<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
 		<br />
-		<span class="sechead" style="font-weight: bold;">All actions: <?php echo $ctrtot; ?></span><br />
+		<span class="sechead">"No Sow" systems: <?php echo $lockedSys ?></span><br />
+		<span class="sechead">Expiring in <?=$expireDays?> days: <?php echo $toexpire; ?></span><br />
+		<br />
+		<span class="sechead" style="font-weight: bold;">All actions: 
+			<?php echo $ctrtot; ?></span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
 		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
-		<span class="sechead">Expire (<?=$expireDays?> days): <?php echo $toexpire; ?></span><br />
-		<br />
-		(all figures as of 2017-Mar-18)
+		(as of 2017-Mar-18)
 	</div>
 </div>
 <?php endif; //if (isset($targetsystem))?>
