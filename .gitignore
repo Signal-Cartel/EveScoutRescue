@@ -50,6 +50,7 @@ config
 img/eve-scout-logo-original.png
 originals
 samples
+doc
 
 # editor backup files
 *.bak

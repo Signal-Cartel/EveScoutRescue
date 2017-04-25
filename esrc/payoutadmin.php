@@ -30,7 +30,7 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 <div class="container">
 	<div class="row" id="header" style="padding-top: 10px;">
 		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-4" style="text-align: center; height: 100px; vertical-align: middle;">
+		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">ESRC Payout Admin</span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker">
