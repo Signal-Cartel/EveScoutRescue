@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		
 		if (empty($status)) { $errmsg = $errmsg . "You must indicate the status of the cache you are tending.\n"; }
 		
-		if (!$caches->isTendingAllowed($system_tender)) { $errmsg = $errmsg . "Cache is sown or tended within last 24 hours (".$caches->getCacheInfo($system_tender)['LastUpdated'].").\n"; };
+		if (!$caches->isTendingAllowed($system_tender)) { $errmsg = $errmsg . "You may not tend a cache that has been sown or tended within the last 24 hours. Last Updated: ".$caches->getCacheInfo($system_tender)['LastUpdated']."\n"; };
 	}
 	// ADJUNCT entry
 	elseif (empty($system_sower) && empty($system_tender) && !empty($system_adjunct)) { // more than one system provided

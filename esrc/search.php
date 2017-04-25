@@ -78,14 +78,14 @@ if (isset($targetsystem)):
 		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
 		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
 		<?php } else { ?>
-		<span class="white"><b>Tend not necessary</b></span>&nbsp;&nbsp;&nbsp;
+		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
 		<!-- ADJUNCT button -->
 		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
-		<!-- ww.pasta.gg button -->
-		<a href="http://wh.pasta.gg/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">ww.pasta.gg</a>&nbsp;&nbsp;&nbsp;
+		<!-- anoik.is button -->
+		<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 		<!-- clear result" link -->
 		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
