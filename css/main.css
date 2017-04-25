@@ -22,7 +22,7 @@ div.centered {
 }
 
 .descr {
-	font-size: 80%;
+	font-size: 100%;
 	font-weight: normal;
 	margin: 0;
 	padding-left: 10px;
@@ -121,9 +121,9 @@ div.centered {
 }
 
 .tt-dropdown-menu {
-	width: 50%;
+	width: 40%;
 	margin-top: 5px;
-	padding: 8px 12px;
+	padding: 8px 0px;
 	background-color: #fff;
 	border: 1px solid #ccc;
 	border: 1px solid rgba(0, 0, 0, 0.2);
@@ -134,7 +134,7 @@ div.centered {
 }
 
 .tt-suggestion {
-    padding: 3px 20px;
+    padding: 3px 10px;
     font-size: 18px;
     line-height: 24px;
 }
