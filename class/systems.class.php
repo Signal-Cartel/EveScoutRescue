@@ -1,4 +1,12 @@
 <?php
+
+// check if called from an allowed page
+if (!defined('ESRC'))
+{
+	echo "Do not call the script direct!";
+	exit ( 1 );
+}
+
 // use database class
 require_once '../class/db.class.php';
 class Systems {
