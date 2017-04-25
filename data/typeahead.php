@@ -32,18 +32,23 @@ else
 	$type = 'system';
 }
 
-
 switch ($type) {
-	case 'system':
+	case 'system' :
+		// search for all systems
 		$sql = "SELECT System FROM wh_systems WHERE System LIKE :query ORDER BY System limit :limit";
 		break;
-	case 'cache':
+	case 'cache' :
+		// search for active caches
 		$sql = "SELECT System FROM cache WHERE System LIKE :query AND Status <> 'Expired' ORDER BY System limit :limit";
 		break;
-	default:
+	case 'freesystem':
+		// search for systems without a cache
+		$sql = "SELECT System FROM wh_systems WHERE System LIKE :query AND system not in (select system from cache where status <> 'Expired') and (DoNotSowUntil is NULL or DoNotSowUntil is not null and DoNotSowUntil < CURRENT_DATE()) order by system limit :limit";
+		break;
+	default :
+		// default is search for all systems
 		$sql = "SELECT System FROM wh_systems WHERE System LIKE :query ORDER BY System limit :limit";
 		break;
-		
 }
 // result data
 $result = array();
@@ -62,6 +67,9 @@ $rows = $db->resultset ();
 foreach ( $rows as $value ) {
 	$result [] = $value ['System'];
 }
+
+// close the db cursor
+$db->closeQuery();
 
 // RETURN JSON ARRAY
 echo json_encode ( $result );
