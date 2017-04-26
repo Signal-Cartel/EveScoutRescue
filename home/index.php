@@ -47,8 +47,7 @@ $ctractive = $caches->getActiveCount();
 		<span class="white">since YC119-Mar-18</span>
 	</div>
 	<div class="col-sm-6" style="text-align: center;">
-		<span class="sechead white">Total Active Caches:</span>
-		<span class="sechead white">
+		<span class="sechead white">Total Active Caches: 
 			<span style="font-weight: bold; color: gold;"><?php echo $ctractive; ?></span>
 		</span><br /> 
 		<span class="white">
