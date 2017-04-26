@@ -1,5 +1,13 @@
 <?php
 // use database class
+
+// check if called from an allowed page
+if (!defined('ESRC'))
+{
+	echo "Do not call the script direct!";
+	exit ( 1 );
+}
+
 require_once '../class/db.class.php';
 
 class Leaderboard
