@@ -1,4 +1,12 @@
-<?php include_once '../includes/auth-inc.php'; ?>
+<?php 
+
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
+include_once '../includes/auth-inc.php'; 
+
+?>
 <html>
 
 <head>
@@ -18,20 +26,38 @@ include_once '../includes/head.php';
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
+<?php
+require_once '../class/db.class.php';
+require_once '../class/caches.class.php';
+
+$database = new Database();
+$caches = new Caches($database);
+
+$ctrrescues = $caches->getRescueTotalCount();
+
+$ctractive = $caches->getActiveCount();
+?>
 <div class="ws"></div>
 <div class="row">
-	<div class="col-sm-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<p class="lead">Ahoy, fellow traveler! You are probably here because you've come across one of our rescue caches or an unpiloted rescue frigate. Don't be alarmed; these items are completely harmless! Read on to learn more about our services.</p>
-			</div>
-			<div class="panel-body">
-				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, is a neutral, non-profit entity that aims to provide a valuable public service to all of New Eden. As such, one of our primary initiatives is to look for and rescue capsuleers who are stranded inside wormholes without equipment to get out by themselves. In accordance to our Credo, our services are free and available to capsuleers of all play styles and allegiance.</p>
-				<p>If you also think that no one should be stranded inside a wormhole due to server problems or socket disconnects, please support this initiative by not blowing up our rescue caches and rescue frigates! We sincerely thank you for your cooperation! </p>
-			</div>
-		</div>
+	<div class="col-sm-6" style="text-align: center;">
+		<span class="sechead white">
+			Confirmed Rescues: 
+			<span style="font-weight: bold; color: gold;"><?php echo $ctrrescues; ?></span>
+		</span><br />
+		<span class="white">since YC119-Mar-18</span>
+	</div>
+	<div class="col-sm-6" style="text-align: center;">
+		<span class="sechead white">Total Active Caches:</span>
+		<span class="sechead white">
+			<span style="font-weight: bold; color: gold;"><?php echo $ctractive; ?></span>
+		</span><br /> 
+		<span class="white">
+			<span style="font-weight: bold; color: gold;"><?php echo round((intval($ctractive)/2603)*100,1); ?>% </span>
+			of all wormhole systems
+		</span>
 	</div>
 </div>
+<div class="ws"></div>
 <div class="row">
 	<div class="col-sm-4">
 		<div class="panel panel-default">
@@ -73,6 +99,18 @@ include_once '../includes/head.php';
 		</div>
 	</div>
 </div>
+<div class="ws"></div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, is a neutral, non-profit entity that aims to provide a valuable public service to all of New Eden. As such, one of our primary initiatives is to look for and rescue capsuleers who are stranded inside wormholes without equipment to get out by themselves. In accordance to our Credo, our services are free and available to capsuleers of all play styles and allegiance.</p>
+				<p>If you also think that no one should be stranded inside a wormhole due to server problems or socket disconnects, please support this initiative by not blowing up our rescue caches and rescue frigates! We sincerely thank you for your cooperation! </p>
+			</div>
+		</div>
+	</div>
+</div>
+
 </div>
 
 <?php echo isset($charfooter) ? $charfooter : '' ?>
