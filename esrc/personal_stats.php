@@ -226,7 +226,7 @@ elseif (isset($_REQUEST['system'])) {
 					}
 					//display records for only the last 30 days
 					echo '<tr>';
-					echo '<td>'. date("Y-M-d h:m:s", strtotime($value['ActivityDate'])) .'</td>';
+					echo '<td>'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
 					echo '<td'. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';
 					echo '</tr>';

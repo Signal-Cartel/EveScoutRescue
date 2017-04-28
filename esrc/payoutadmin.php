@@ -74,7 +74,7 @@ else {
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
-						<th class="white" style="width: 12%;">Date</th>
+						<th class="white">Date</th>
 						<th class="white">Pilot</th>
 						<th class="white">Type</th>
 						<th class="white">System</th>
@@ -93,13 +93,28 @@ else {
 				$rows = $db->resultset();
 				foreach ($rows as $value) {
 					$ctrtotact++;
+					// calculate action cell format
+					$actioncellformat= '';
+					switch ($value['EntryType']) {
+						case 'sower':
+							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+							break;
+						case 'tender':
+							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+							break;
+						case 'adjunct':
+							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+							break;
+						default:
+							// ??
+					}
 					echo '<tr>';
-					echo '<td class="white">'. date("Y-M-d", strtotime($value['ActivityDate'])) .'</td>';
+					echo '<td class="white">'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
 					echo '<td style="background-color: #cccccc;">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['Pilot'] .'">EG</a></td>';
-					echo '<td class="white">'. $value['EntryType'] .'</td>';
+					echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
 							$ctrsow++;
@@ -114,7 +129,9 @@ else {
 					echo '<td style="background-color: #cccccc;">
 							<a href="search.php?system='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
-					echo '<td class="white">'. htmlspecialchars_decode($value['AidedPilot']) .'</td>';
+					echo '<td class="white"><a target="_blank" 
+							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
+							htmlspecialchars_decode($value['AidedPilot']) .'</td>';
 					echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
 					echo '</tr>';
 				}
