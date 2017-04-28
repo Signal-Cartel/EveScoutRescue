@@ -317,9 +317,18 @@ else:
 				<?php
 				$rows = $leaderBoard->getActivePilots(30);
 				foreach ($rows as $value) {
+					//prepare stats link
+					$pilot = $value['Pilot'];
+					$ptxt = $pilot;
+					$pformat = '';
+					if ($pilot == $charname) {
+						$ptxt = '<a target="_blank" href="personal_stats.php?pilot='. 
+									urlencode($pilot) .'">'. $pilot .'</a>';
+						$pformat = ' style="background-color: #cccccc;"';
+					}
 					//display records for only the last 30 days
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td'. $pformat .'>'. $ptxt .'</td>';
 					echo '<td>'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
 					echo '</tr>';
 				}

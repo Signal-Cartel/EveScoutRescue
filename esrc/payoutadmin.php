@@ -1,4 +1,16 @@
-<?php include_once '../includes/auth-inc.php'; ?>
+<?php 
+
+include_once '../includes/auth-inc.php'; 
+
+if (!isset($_POST['start'])) {
+	$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
+}
+
+if (!isset($_POST['end'])) {
+	$end = date('Y-m-d', strtotime("tomorrow"));
+}
+
+?>
 <html>
 
 <head>
@@ -22,7 +34,10 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	$start = htmlspecialchars(date("Y-m-d", strtotime($_POST['start'])));
 	$end = htmlspecialchars(date("Y-m-d", strtotime($_POST['end'])));
 }
-if (isset($_POST['details']) && $_POST['details'] == 'yes') {
+if (isset($_POST['details']) && $_POST['details'] != 'yes') {
+	$checked = '';
+}
+else {
 	$checked = ' checked="checked"';
 }
 ?>
@@ -70,7 +85,9 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 				<tbody>
 				<?php
 				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT * FROM activity WHERE ActivityDate BETWEEN :start AND :end ORDER By ActivityDate DESC");
+				$db->query("SELECT * FROM activity 
+							WHERE ActivityDate BETWEEN :start AND :end 
+							ORDER By ActivityDate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
@@ -78,7 +95,10 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 					$ctrtotact++;
 					echo '<tr>';
 					echo '<td class="white">'. date("Y-M-d", strtotime($value['ActivityDate'])) .'</td>';
-					echo '<td class="white">'. $value['Pilot'] .'</td>';
+					echo '<td style="background-color: #cccccc;">
+							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a target="_blank" 
+							href="https://gate.eveonline.com/Profile/'. $value['Pilot'] .'">EG</a></td>';
 					echo '<td class="white">'. $value['EntryType'] .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
@@ -91,7 +111,9 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 							$ctradj++;
 							break;
 					}
-					echo '<td style="background-color: #cccccc;"><a href="search.php?system='. $value['System'] .'" target="_blank">'. $value['System'] .'</a></td>';
+					echo '<td style="background-color: #cccccc;">
+							<a href="search.php?system='. $value['System'] .'" target="_blank">'. 
+							$value['System'] .'</a></td>';
 					echo '<td class="white">'. htmlspecialchars_decode($value['AidedPilot']) .'</td>';
 					echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
 					echo '</tr>';
