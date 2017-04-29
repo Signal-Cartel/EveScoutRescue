@@ -224,9 +224,13 @@ elseif (isset($_REQUEST['system'])) {
 						default:
 							// ??
 					}
+					$eveyear = intval(date("Y", strtotime($value['ActivityDate'])))-1898;
 					//display records for only the last 30 days
 					echo '<tr>';
-					echo '<td>'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
+					// add 4 hours to convert to UTC (EVE) for display
+					echo '<td>YC'. $eveyear .'-'. 
+							date("M-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')).
+						 '</td>';
 					echo '<td'. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';
 					echo '</tr>';

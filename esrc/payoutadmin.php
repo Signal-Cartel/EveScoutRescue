@@ -113,8 +113,12 @@ else {
 						default:
 							// ??
 					}
+					$eveyear = intval(date("Y", strtotime($value['ActivityDate'])))-1898;
 					echo '<tr>';
-					echo '<td class="white text-nowrap">'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
+					// add 4 hours to convert to UTC (EVE) for display
+					echo '<td class="white text-nowrap">YC'. $eveyear .'-'. 
+							date("M-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')) .
+						 '</td>';
 					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
