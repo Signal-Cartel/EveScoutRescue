@@ -24,6 +24,11 @@ if (!isset($_POST['end'])) {
 			table-layout: fixed;
 			word-wrap: break-word;
 		}
+		a,
+		a:visited,
+		a:hover {
+			color: aqua;
+		}
 	-->
 	</style>
 </head>
@@ -109,8 +114,8 @@ else {
 							// ??
 					}
 					echo '<tr>';
-					echo '<td class="white">'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
-					echo '<td style="background-color: #cccccc;">
+					echo '<td class="white text-nowrap">'. date("Y-M-d H:i:s", strtotime($value['ActivityDate'])) .'</td>';
+					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['Pilot'] .'">EG</a></td>';
@@ -126,8 +131,7 @@ else {
 							$ctradj++;
 							break;
 					}
-					echo '<td style="background-color: #cccccc;">
-							<a href="search.php?system='. $value['System'] .'" target="_blank">'. 
+					echo '<td><a href="search.php?system='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
 					echo '<td class="white"><a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
