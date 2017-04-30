@@ -187,8 +187,8 @@ if (isset($targetsystem)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
-			<span class="white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
+			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
 	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
@@ -200,13 +200,11 @@ if (isset($targetsystem)) {
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
-			<!-- SOW button  -->
-			<span class="white">Upon request of the current wormhole residents, 
-				caches are not to be sown in '<?=$targetsystem?>' until 
-				<?=date("Y-M-d", strtotime($lockedDate))?>.
-			</span>
-	
-			<a href="?" class="btn btn-link" role="button">clear result</a>
+				<span class="sechead white">Upon request of the current wormhole residents, 
+					caches are not to be sown in <?=$targetsystem?> until 
+					<?=date("Y-M-d", strtotime($lockedDate))?>.
+				</span>
+				<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 				<?php
 			}
@@ -219,7 +217,7 @@ if (isset($targetsystem)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
-			<span class="white">'<?=$targetsystem?>' is not a valid system name. 
+			<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
 				Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
 				<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
