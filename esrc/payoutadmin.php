@@ -71,6 +71,7 @@ else {
 	// display results for the selected date range
 	if (isset($_POST['start']) && isset($_POST['end'])) { 
 		$db = new Database();
+		
 		//show detailed records if "Details" is checked
 		if (isset($_POST['details']) && $_POST['details'] == 'yes') {	
 	?>
