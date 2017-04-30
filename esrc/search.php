@@ -6,6 +6,14 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 
+function getShortEVEdate($origdate)
+{
+	$eveyear = intval(date("Y", strtotime($origdate)))-1898;
+	
+	$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate .'+ 4 hours'));
+	
+	return $result;
+}
 
 ?>
 <html>
@@ -72,7 +80,7 @@ elseif (isset($_REQUEST['system'])) {
 <div class="ws"></div>
 <?php
 // check if a system is supplied
-if (isset($targetsystem)):
+if (isset($targetsystem)) {
 	// display result for the selected system
 	// get cache information from database
 	$row = $caches->getCacheInfo($targetsystem);
@@ -218,9 +226,82 @@ if (isset($targetsystem)):
 		<?php
 		}
 	} //(!empty($row))
-
+	
+	// see if there is historical data to display for this system
+	$database->query("SELECT * FROM activity
+						WHERE System = :system
+						ORDER By ActivityDate DESC");
+	$database->bind(':system', $targetsystem);
+	$rows = $database->resultset();
+	$database->closeQuery();
+	if (!empty($rows)) {
+		echo '<div class="row" id="historytable">';
+		echo '<div class="col-sm-12">';
+		echo '<div style="padding-left: 10px;">';
+		echo '<br /><span class="sechead">HISTORY</span><br />';
+		echo '<table class="table" style="width: auto;">
+				<thead>
+					<tr>
+						<th class="white">Sown/Tended</th>
+						<th class="white">Pilot</th>
+						<th class="white">Type</th>
+						<th class="white">Location</th>
+						<th class="white">Aligned With</th>
+						<th class="white">Distance</th>
+						<th class="white">Expires On</th>
+						<th class="white">Note</th>
+					</tr>
+				</thead>
+				<tbody>';
+		foreach ($rows as $value) {
+			//get cache table data for sower records
+			$sowrow = '';
+			if ($value['EntryType'] == 'sower') {
+				$database->query("SELECT * FROM cache WHERE CacheID = :id");
+				$database->bind(':id', $value['ID']);
+				$sowrow = $database->single();
+				$database->closeQuery();
+			}
+			echo '<tr>';
+			switch ($value['EntryType']) {
+				case 'sower':
+					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+					break;
+				case 'tender':
+					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+					break;
+				case 'adjunct':
+					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+					break;
+				default:
+					// ??
+			}
+			echo '<tr>';
+			// add 4 hours to convert to UTC (EVE) for display
+			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
+			echo '<td class="white text-nowrap">'. getShortEVEdate($rowdate) .'</td>';
+			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
+			echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
+			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
+			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
+			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
+			echo '<td class="text-nowrap">'. $rowAW .'</td>';
+			$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
+			echo '<td class="text-nowrap">'. $rowDist.'</td>';
+			$rowExp = (!empty($sowrow)) ? getShortEVEdate($sowrow['ExpiresOn']) : '';
+			echo '<td class="text-nowrap">'. $rowExp.'</td>';
+			echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
+			echo '</tr>';
+			echo '</tr>';
+		}
+		echo '</tbody>
+			</table>';
+		echo '</div></div></div>';
+	}
+	
 // no system selected, so show summary stats
-else:
+}
+else {
 ?>
 <div class="row" id="allsystable">
 	
@@ -371,7 +452,8 @@ else:
 		(as of 2017-Mar-18)
 	</div>
 </div>
-<?php endif; //if (isset($targetsystem))?>
+<?php 
+} //if (isset($targetsystem))?>
 </div>
 </body>
 </html>
