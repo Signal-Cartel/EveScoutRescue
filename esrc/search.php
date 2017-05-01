@@ -136,13 +136,13 @@ if (isset($targetsystem)) {
 					</thead>
 					<tbody>
 					<tr>
-					<td><?=date("Y-M-d", strtotime($row['InitialSeedDate']))?></td>
+					<td><?=getShortEVEdate($row['InitialSeedDate'])?></td>
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
 					<td><?=htmlspecialchars_decode($row['Distance'])?></td>
 					<td><?=htmlspecialchars_decode($row['Password'])?></td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
-					<td><?=date("Y-M-d", strtotime($row['ExpiresOn']))?></td>
+					<td><?=getShortEVEdate($row['ExpiresOn'])?></td>
 					</tr>
 					</tbody>
 				</table>
@@ -408,7 +408,7 @@ else {
 					//display records for only the last 30 days
 					echo '<tr>';
 					echo '<td'. $pformat .'>'. $ptxt .'</td>';
-					echo '<td>'. date("Y-M-d", strtotime($value['maxdate'])) .'</td>';
+					echo '<td>'. date("M-d", strtotime($value['maxdate'])) .'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -447,7 +447,7 @@ else {
 			<?php echo $ctrtot; ?></span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
 		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
-		(as of 2017-Mar-18)
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as of YC119-Mar-18)
 	</div>
 </div>
 <?php 
