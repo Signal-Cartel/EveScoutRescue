@@ -136,8 +136,6 @@ class Systems {
 		$sql = "select count(1) as locked from wh_systems where DoNotSowUntil is not null and DoNotSowUntil > CURRENT_DATE()";
 		// create query
 		$this->db->query ( $sql );
-		// and bind parameters
-		$this->db->bind ( ":system", $system );
 		// execute the query
 		$result = $this->db->single ();
 		// close the query
