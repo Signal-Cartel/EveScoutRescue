@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						else {
 							//4. system name is valid and not a duplicate, so go ahead and insert
 							$sower_note = $noteDate . 'Sown by '. $pilot;
-							if (!empty($notes)) { $sower_note = $sower_note . '\n' . $notes; }
+							if (!empty($notes)) { $sower_note = $sower_note . "\n" . $notes; }
 								
 							$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, AlignedWith, Distance, Password, Status, ExpiresOn, Note) VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :note)");
 							$db->bind(':cacheid', $newID);
