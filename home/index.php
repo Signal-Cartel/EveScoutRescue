@@ -10,10 +10,45 @@ include_once '../includes/auth-inc.php';
 <html>
 
 <head>
-<?php
-$pgtitle = "New Eden's Premier Wormhole Rescue Service";
-include_once '../includes/head.php';
-?>
+	<?php
+	$pgtitle = "New Eden's Premier Wormhole Rescue Service";
+	include_once '../includes/head.php';
+	?>
+	<script type="text/javascript">
+		$(window).load(function(){
+		    setCarouselHeight('#carousel-example');
+	
+		    function setCarouselHeight(id)
+		    {
+		        var slideHeight = [];
+		        $(id+' .item').each(function()
+		        {
+		            // add all slide heights to an array
+		            slideHeight.push($(this).height());
+		        });
+	
+		        // find the tallest item
+		        max = Math.max.apply(null, slideHeight);
+	
+		        // set the slide's height
+		        $(id+' .carousel-content').each(function()
+		        {
+		            $(this).css('height',max+'px');
+		        });
+		    }
+		});
+    </script>
+    <style>
+    <!--
+    	.carousel-content {
+		    color:white;
+		    display:flex;
+		    text-align: left;
+		    padding-left: 20px;
+		    padding-right: 20px;
+		}
+    -->
+    </style>
 </head>
 
 <body>
@@ -39,14 +74,12 @@ $ctractive = $caches->getActiveCount();
 ?>
 <div class="ws"></div>
 <div class="row">
-	<div class="col-sm-6" style="text-align: center;">
+	<div class="col-sm-4" style="text-align: center;">
 		<span class="sechead white">
 			Confirmed Rescues: 
 			<span style="font-weight: bold; color: gold;"><?php echo $ctrrescues; ?></span>
 		</span><br />
-		<span class="white">since YC119-Mar-18</span>
-	</div>
-	<div class="col-sm-6" style="text-align: center;">
+		<span class="white">since YC119-Mar-18</span><br /><br />
 		<span class="sechead white">Total Active Caches: 
 			<span style="font-weight: bold; color: gold;"><?php echo $ctractive; ?></span>
 		</span><br /> 
@@ -54,6 +87,28 @@ $ctractive = $caches->getActiveCount();
 			<span style="font-weight: bold; color: gold;"><?php echo round((intval($ctractive)/2603)*100,1); ?>% </span>
 			of all wormhole systems
 		</span>
+	</div>
+	<div class="col-sm-8" style="text-align: center;">
+		<!-- TESTIMONIAL CAROUSEL -->
+		<div id="carousel-example" class="carousel slide" data-ride="carousel"
+			data-interval="20000">
+	    	<!-- Wrapper for slides -->
+		    <div class="row">
+		        <div class="col-sm-offset-1 col-sm-10">
+		            <div class="carousel-inner">
+		                <?php include '../includes/testimonials.php'; ?>
+		            </div>
+		        </div>
+		    </div>
+		    <!-- Controls --> 
+		    <a class="left carousel-control" href="#carousel-example" data-slide="prev">
+		    	<span class="glyphicon glyphicon-chevron-left"></span>
+		 	</a>
+		 	<a class="right carousel-control" href="#carousel-example" data-slide="next">
+		    	<span class="glyphicon glyphicon-chevron-right"></span>
+		  	</a>
+		</div>
+		<!-- END TESTIMONIAL CAROUSEL -->
 	</div>
 </div>
 <div class="ws"></div>
