@@ -131,8 +131,8 @@ if (isset($targetsystem)) {
 					<td><?=Output::getEveDate($row['InitialSeedDate'])?></td>
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
-					<td><?=htmlspecialchars($row['Distance'])?></td>
-					<td><?=htmlspecialchars($row['Password'])?></td>
+					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
+					<td><?=Output::htmlEncodeString($row['Password'])?></td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 					</tr>
