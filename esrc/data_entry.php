@@ -116,10 +116,10 @@ else {
 			<div class="sowerlight">
 				<?php
 				if (isset($_POST['system_sower'])) { 
-					$targetsystemsow = htmlspecialchars($_POST['system_sower']); 
+					$targetsystemsow = htmlspecialchars_decode($_POST['system_sower']); 
 				}
 				elseif (isset($_GET['sowsys'])) { 
-					$targetsystemsow= htmlspecialchars($_GET['sowsys']); 
+					$targetsystemsow= htmlspecialchars_decode($_GET['sowsys']); 
 				}
 				?>
 				<div class="form-group">
@@ -183,12 +183,12 @@ else {
 
 				<div class="field">
 					<label class="control-label" for="f11">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
-					<input type="text" class="form-control " id="distance" name="distance" value="<?php echo isset($_POST['distance']) ? htmlspecialchars($_POST['distance']) : '' ?>" type="number" />
+					<input type="text" class="form-control " id="distance" name="distance" value="<?php echo isset($_POST['distance']) ? Output::htmlEncodeString($_POST['distance']) : '' ?>" type="number" />
 				</div>
 	
 				<div class="field">
 					<label class="control-label" for="password">Password<span class="descr">What is the password for the secure container?</span></label>
-					<input type="text" class="form-control" id="password" name="password" value="<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '' ?>"  />
+					<input type="text" class="form-control" id="password" name="password" value="<?php echo isset($_POST['password']) ? Output::htmlEncodeString($_POST['password']) : '' ?>"  />
 				</div>
 			</div>
 			<!--END SOWER-->
@@ -201,10 +201,10 @@ else {
 					<div class="tenderlight">
 						<?php
 						if (isset($_POST['system_tender'])) { 
-							$targetsystemtend = htmlspecialchars($_POST['system_tender']); 
+							$targetsystemtend = Output::htmlEncodeString($_POST['system_tender']); 
 						}
 						elseif (isset($_GET['tendsys'])) { 
-							$targetsystemtend = htmlspecialchars($_GET['tendsys']); 
+							$targetsystemtend = Output::htmlEncodeString($_GET['tendsys']); 
 						}
 						?>
 						<div class="form-group">
@@ -240,10 +240,10 @@ else {
 					<div class="adjunctlight">
 						<?php
 						if (isset($_POST['system_adjunct'])) { 
-							$targetsystemadj = htmlspecialchars($_POST['system_adjunct']); 
+							$targetsystemadj = Output::htmlEncodeString($_POST['system_adjunct']); 
 						}
 						elseif (isset($_GET['adjsys'])) { 
-							$targetsystemadj = htmlspecialchars($_GET['adjsys']); 
+							$targetsystemadj = Output::htmlEncodeString($_GET['adjsys']); 
 						}
 						?>
 						<div class="form-group">
@@ -252,7 +252,7 @@ else {
 						</div>
 						<div class="field">
 							<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the Capsuleer who required rescue?</span></label>
-							<input type="text" class="form-control" id="aidedpilot" name="aidedpilot" value="<?php echo isset($_POST['aidedpilot']) ? htmlspecialchars($_POST['aidedpilot']) : '' ?>" />
+							<input type="text" class="form-control" id="aidedpilot" name="aidedpilot" value="<?php echo isset($_POST['aidedpilot']) ? Output::htmlEncodeString($_POST['aidedpilot']) : '' ?>" />
 						</div>
 					</div>
 					<!--END ADJUNCT-->
@@ -262,7 +262,7 @@ else {
 				<div class="col-sm-12">
 					<div class="ws"></div>
 					<label class="control-label white" for="notes">Notes<span class="descr white">Is there any other important information we need to know?</span></label>
-					<textarea class="form-control" id="notes" name="notes" rows="3"><?php echo isset($_POST['notes']) ? htmlspecialchars($_POST['notes']) : '' ?></textarea>
+					<textarea class="form-control" id="notes" name="notes" rows="3"><?php echo isset($_POST['notes']) ? Output::htmlEncodeString($_POST['notes']) : '' ?></textarea>
 				</div>
 			</div>
 		</div>
