@@ -19,8 +19,8 @@
 <?php
 require_once '../class/db.class.php';
 if (isset($_POST['start']) && isset($_POST['end'])) { 
-	$start = htmlspecialchars(date("Y-m-d", strtotime($_POST['start'])));
-	$end = htmlspecialchars(date("Y-m-d", strtotime($_POST['end'])));
+	$start = date("Y-m-d", strtotime($_POST['start']));
+	$end = date("Y-m-d", strtotime($_POST['end']));
 }
 if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 	$checked = ' checked="checked"';
@@ -34,9 +34,9 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 			<span style="font-size: 125%; font-weight: bold; color: white;">Cache Drive Totals</span><br />
 			<form method="post" class="form-inline black" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker">
-					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? $start : '' ?>" />
+					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? htmlspecialchars($start) : '' ?>" />
 					<span class="input-group-addon">to</span>
-					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? $end : '' ?>" />
+					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? htmlspecialchars($end) : '' ?>" />
 				</div>
 				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button>
 			</form>

@@ -1,4 +1,8 @@
 <?php 
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
 
 include_once '../includes/auth-inc.php'; 
 
@@ -9,6 +13,8 @@ if (!isset($_POST['start'])) {
 if (!isset($_POST['end'])) {
 	$end = date('Y-m-d', strtotime("tomorrow"));
 }
+
+require_once '../class/output.class.php';
 
 ?>
 <html>
@@ -36,8 +42,8 @@ if (!isset($_POST['end'])) {
 <?php
 require_once '../class/db.class.php';
 if (isset($_POST['start']) && isset($_POST['end'])) { 
-	$start = htmlspecialchars(date("Y-m-d", strtotime($_POST['start'])));
-	$end = htmlspecialchars(date("Y-m-d", strtotime($_POST['end'])));
+	$start = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['start'])));
+	$end = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['end'])));
 }
 if (isset($_POST['details']) && $_POST['details'] != 'yes') {
 	$checked = '';
@@ -140,8 +146,8 @@ else {
 							$value['System'] .'</a></td>';
 					echo '<td class="white"><a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
-							htmlspecialchars_decode($value['AidedPilot']) .'</td>';
-					echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
+							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
+					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
 					echo '</tr>';
 				}
 		
