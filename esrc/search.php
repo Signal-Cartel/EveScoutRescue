@@ -6,15 +6,6 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 
-function getShortEVEdate($origdate)
-{
-	$eveyear = intval(date("Y", strtotime($origdate)))-1898;
-	
-	$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate .'+ 4 hours'));
-	
-	return $result;
-}
-
 ?>
 <html>
 
@@ -38,6 +29,7 @@ require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
+require_once '../class/output.class.php';
 
 $database = new Database();
 
@@ -45,10 +37,10 @@ $database = new Database();
 $caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
-	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
+	$targetsystem = htmlspecialchars_decode($_REQUEST['targetsystem']);
 }
 elseif (isset($_REQUEST['system'])) {
-	$targetsystem = htmlspecialchars($_REQUEST["system"]);
+	$targetsystem = htmlspecialchars_decode($_REQUEST["system"]);
 }
 ?>
 <body class="white">
@@ -96,7 +88,7 @@ if (isset($targetsystem)) {
 			$statuscellformat = ' style="background-color:yellow;color:black;"';
 		}
 		// save notes as separate var
-		$strNotes = $row['Note'];
+		$strNotes = Output::htmlEncodeString($row['Note']);
 		?>
 		<div class="row" id="systableheader">
 		<div class="col-sm-12">
@@ -136,13 +128,13 @@ if (isset($targetsystem)) {
 					</thead>
 					<tbody>
 					<tr>
-					<td><?=getShortEVEdate($row['InitialSeedDate'])?></td>
+					<td><?=Output::getEveDate($row['InitialSeedDate'])?></td>
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
-					<td><?=htmlspecialchars_decode($row['Distance'])?></td>
-					<td><?=htmlspecialchars_decode($row['Password'])?></td>
+					<td><?=htmlspecialchars($row['Distance'])?></td>
+					<td><?=htmlspecialchars($row['Password'])?></td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
-					<td><?=getShortEVEdate($row['ExpiresOn'])?></td>
+					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 					</tr>
 					</tbody>
 				</table>
@@ -161,7 +153,7 @@ if (isset($targetsystem)) {
 					</thead>
 					<tbody>
 						<tr>
-							<td><?= htmlspecialchars_decode($strNotes) ?></td>
+							<td><?= $strNotes ?></td>
 						</tr>
 					</tbody>
 				</table>
@@ -189,7 +181,11 @@ if (isset($targetsystem)) {
 			<!-- SOW button  -->
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
-	
+			<!-- TW button -->
+			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<!-- anoik.is button -->
+			<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+			<!--  clear data button -->	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
@@ -277,7 +273,7 @@ if (isset($targetsystem)) {
 			echo '<tr>';
 			// add 4 hours to convert to UTC (EVE) for display
 			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
-			echo '<td class="white text-nowrap">'. getShortEVEdate($rowdate) .'</td>';
+			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
 			echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
@@ -286,9 +282,9 @@ if (isset($targetsystem)) {
 			echo '<td class="text-nowrap">'. $rowAW .'</td>';
 			$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
 			echo '<td class="text-nowrap">'. $rowDist.'</td>';
-			$rowExp = (!empty($sowrow)) ? getShortEVEdate($sowrow['ExpiresOn']) : '';
+			$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
 			echo '<td class="text-nowrap">'. $rowExp.'</td>';
-			echo '<td class="white">'. htmlspecialchars_decode($value['Note']) .'</td>';
+			echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
 			echo '</tr>';
 			echo '</tr>';
 		}
