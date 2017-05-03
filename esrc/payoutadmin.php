@@ -37,6 +37,15 @@ require_once '../class/output.class.php';
 		}
 	-->
 	</style>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $('#example').DataTable( {
+		        "order": [[ 0, "desc" ]],
+		        "pagingType": "full_numbers",
+		        "pageLength": 15
+		    } );
+		} );
+	</script>
 </head>
 
 <?php
@@ -83,7 +92,7 @@ else {
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-10">
-			<table class="table" style="width: auto;">
+			<table id="example" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Date</th>
@@ -144,7 +153,7 @@ else {
 					}
 					echo '<td><a href="search.php?system='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
-					echo '<td class="white"><a target="_blank" 
+					echo '<td><a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
 							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
 					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';

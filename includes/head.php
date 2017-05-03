@@ -1,13 +1,16 @@
 	<meta http-equiv="Content-Language" content="en-us">
 	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
+	<!-- CSS -->
 	<link href="../css/main.css" rel="stylesheet">
-	<!-- Latest compiled and minified Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="../css/sticky-footer.css" rel="stylesheet">
+	<link href="../css/datatables_custom.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- JS -->
+    <script src="../js/typeahead.js"></script>
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="../js/typeahead.js"></script>
+	<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <!-- All background images courtesy of EvE-Scout Observatory: 
     		- http://observatory.eve-scout.com/
     		- https://www.flickr.com/photos/eve-scout/ -->
