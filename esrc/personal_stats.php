@@ -13,15 +13,14 @@ if (!isset($_REQUEST['pilot'])) {
 
 if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 	$pilot = $_REQUEST['pilot'];
+	
+	// !!!comment out on localhost for testing!!!
 	if ($pilot != $charname) {
-		//echo $pilot .':'. $charname;
-		//leave this if statement commented out on localhost for testing
-		
 		if (array_search($charname, $admins) === false) {
 			header("Location: /");
 		}
-		
 	}
+
 }
 
 function getPilotStats($start, $end, $pilot)
@@ -66,8 +65,23 @@ function getTypeCounts($pilot, $type)
 	$pgtitle = 'Personal Stats';
 	include_once '../includes/head.php'; 
 	?>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $('#example').DataTable( {
+		        "order": [[ 0, "desc" ]],
+		        "pagingType": "full_numbers"
+		    } );
+		} );
+	</script>
+	<style>
+	<!--
+		a,
+		a:visited,
+		a:hover {
+			color: aqua;
+		}
+	-->
+	</style>
 </head>
 
 <?php
@@ -187,8 +201,7 @@ elseif (isset($_REQUEST['system'])) {
 	</div>
 	<div class="col-sm-6 white">
 		<!-- FULL LISTING -->
-		<span class="sechead">Detail</span>
-		<table class="table table-striped black" style="width: auto; background: white;">
+		<table id="example" class="table">
 			<thead>
 				<tr>
 					<th>Timestamp</th>
@@ -229,7 +242,7 @@ elseif (isset($_REQUEST['system'])) {
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td>YC'. $eveyear .'-'. 
-							date("M-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')).
+							date("m-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')).
 						 '</td>';
 					echo '<td'. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';
