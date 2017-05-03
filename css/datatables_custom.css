@@ -1,6 +1,9 @@
 /*
  * Table styles
  */
+table tr, table th{
+	background: transparent !important;
+}
 table.dataTable {
   width: 100%;
   margin: 0 auto;
@@ -94,7 +97,7 @@ table.dataTable {
   table.dataTable.display tbody tr.selected > .sorting_3 {
     background-color: #acbad4; }
   table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
-    background-color: black; }
+    background-color: transparent; }
   table.dataTable.display tbody tr.odd > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
     background-color: black; }
   table.dataTable.display tbody tr.odd > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
@@ -106,7 +109,7 @@ table.dataTable {
   table.dataTable.display tbody tr.odd.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_3 {
     background-color: #a9b6d0; }
   table.dataTable.display tbody tr.even > .sorting_1, table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
-    background-color: black; }
+    background-color: transparent; }
   table.dataTable.display tbody tr.even > .sorting_2, table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
     background-color: black; }
   table.dataTable.display tbody tr.even > .sorting_3, table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
@@ -118,11 +121,11 @@ table.dataTable {
   table.dataTable.display tbody tr.even.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_3 {
     background-color: #afbdd8; }
   table.dataTable.display tbody tr:hover > .sorting_1, table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
-    background-color: black; }
+    background-color: transparent; }
   table.dataTable.display tbody tr:hover > .sorting_2, table.dataTable.order-column.hover tbody tr:hover > .sorting_2 {
-    background-color: black; }
+    background-color: transparent; }
   table.dataTable.display tbody tr:hover > .sorting_3, table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
-    background-color: black; }
+    background-color: transparent; }
   table.dataTable.display tbody tr:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
     background-color: #a1aec7; }
   table.dataTable.display tbody tr:hover.selected > .sorting_2, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_2 {
