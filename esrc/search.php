@@ -392,11 +392,11 @@ else {
 				<?php
 				$rows = $leaderBoard->getActivePilots(30);
 				foreach ($rows as $value) {
-					//prepare stats link
+					//prepare personal stats link for logged-in pilot
 					$pilot = $value['Pilot'];
 					$ptxt = $pilot;
 					$pformat = '';
-					if ($pilot == $charname) {
+					if (isset($charname) && $pilot == $charname) {
 						$ptxt = '<a target="_blank" href="personal_stats.php?pilot='. 
 									urlencode($pilot) .'">'. $pilot .'</a>';
 						$pformat = ' style="background-color: #cccccc;"';
