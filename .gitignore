@@ -55,3 +55,4 @@ doc
 # editor backup files
 *.bak
 *~
+curtime.php
