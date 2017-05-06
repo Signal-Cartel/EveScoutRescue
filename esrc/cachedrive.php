@@ -18,35 +18,17 @@
 
 <?php
 require_once '../class/db.class.php';
-if (isset($_POST['start']) && isset($_POST['end'])) { 
-	$start = date("Y-m-d", strtotime($_POST['start']));
-	$end = date("Y-m-d", strtotime($_POST['end']));
-}
-if (isset($_POST['details']) && $_POST['details'] == 'yes') {
-	$checked = ' checked="checked"';
-}
 ?>
 <body class="white">
 <div class="container">
 	<div class="row" id="header" style="padding-top: 10px;">
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
-			<span style="font-size: 125%; font-weight: bold; color: white;">Cache Drive Totals</span><br />
-			<form method="post" class="form-inline black" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-				<div class="input-daterange input-group" id="datepicker">
-					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? htmlspecialchars($start) : '' ?>" />
-					<span class="input-group-addon">to</span>
-					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? htmlspecialchars($end) : '' ?>" />
-				</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button>
-			</form>
+			<span style="font-size: 125%; font-weight: bold; color: white;">Cache Drive Totals</span>
 		</div>
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
-	<?php
-	// display results for the selected date range
-	if (isset($_POST['start']) && isset($_POST['end'])) { ?>
 	<div class="row" id="systable">
 		<!-- OVERALL TABLE -->
 		<div class="col-sm-3">
@@ -62,6 +44,8 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 					<?php
 					//summary data
 					$db = new Database();
+					$start = date("Y-m-d H:i:s", strtotime('2017-05-05 20:00:00'));
+					$end = date("Y-m-d H:i:s", strtotime('2017-05-07 19:59:59'));
 					
 					//count of all actions performed in the specified period
 					$db->query("SELECT COUNT(*) as cnt
@@ -139,7 +123,6 @@ if (isset($_POST['details']) && $_POST['details'] == 'yes') {
 		</div>
 		
 	</div>
-	<?php }	?>
 	</div>
 </body>
 </html>
