@@ -272,7 +272,8 @@ if (isset($targetsystem)) {
 			}
 			echo '<tr>';
 			// add 4 hours to convert to UTC (EVE) for display
-			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
+// 			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
+			$rowdate = $value['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
 			echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
