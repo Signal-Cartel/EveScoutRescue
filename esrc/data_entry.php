@@ -257,6 +257,30 @@ else {
 						</div>
 					</div>
 					<!--END ADJUNCT-->
+					<!-- EXISTING CACHE INFO -->
+					<?php 
+					// only display this when we are tender or agent
+					$db = new Database();
+					$caches = new Caches($db);
+					if (isset($_GET['tendsys']) || isset($_GET['adjsys'])) {
+						$sysName = isset($_GET['tendsys']) ? $_GET['tendsys'] : $_GET['adjsys'];
+						// get cache information from database
+						$row = $caches->getCacheInfo($sysName);
+						if (!empty($row)) {
+					?>
+					<div class="white">
+						<br />
+						<strong>Existing cache info:</strong><br />
+						Location: <?=$row['Location']?><br />
+						Align: <?=$row['AlignedWith']?><br />
+						Distance: <?=$row['Distance']?><br />
+						Password: <?=$row['Password']?>
+					</div>
+					<?php 
+						}
+					}
+					?>
+					<!-- END EXISTING CACHE INFO -->
 				</div>
 			</div>
 			<div class="row">
