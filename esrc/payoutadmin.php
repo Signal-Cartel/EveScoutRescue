@@ -69,12 +69,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	$start = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['start'])));
 	$end = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['end'])));
 }
-if (isset($_POST['details']) && $_POST['details'] != 'yes') {
-	$checked = '';
-}
-else {
-	$checked = ' checked="checked"';
-}
 ?>
 <body>
 <div class="container">
@@ -99,11 +93,10 @@ else {
 	<div class="ws"></div>
 	<?php
 	// display results for the selected date range
-	//if (isset($_POST['start']) && isset($_POST['end'])) { 
-		$db = new Database();
+	$db = new Database();
 		
-		//show detailed records if "Payout" is not checked
-		if (!isset($_POST['details']) && $_POST['details'] != 'yes') {	
+	//show detailed records if "Payout" is not checked
+	if (!isset($_POST['details']) && $_POST['details'] != 'yes') {	
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-10">
@@ -241,7 +234,6 @@ else {
 	</div>
 <?php
 	}
-//}
 ?>
 	</div>
 </body>
