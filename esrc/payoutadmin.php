@@ -45,6 +45,21 @@ require_once '../class/output.class.php';
 		        "pageLength": 15
 		    } );
 		} );
+
+		// refresh page every 10 minutes in order to stay logged in
+		var time = new Date().getTime();
+	    $(document.body).bind("mousemove keypress", function(e) {
+	         time = new Date().getTime();
+	    });
+
+	    function refresh() {
+	         if(new Date().getTime() - time >= 600000) 
+	             window.location.reload(true);
+	         else 
+	             setTimeout(refresh, 10000);
+	    }
+
+	    setTimeout(refresh, 10000);
 	</script>
 </head>
 
@@ -74,7 +89,7 @@ else {
 					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? $end : '' ?>" />
 				</div>
 				<div class="checkbox">
-					<label class="white"><input type="checkbox" name="details" value="yes"<?php echo (isset($checked)) ? $checked : '' ?>> Details</label>
+					<label class="white"><input type="checkbox" name="details" value="yes"> Payout</label>
 				</div>
 				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button>
 			</form>
@@ -84,11 +99,11 @@ else {
 	<div class="ws"></div>
 	<?php
 	// display results for the selected date range
-	if (isset($_POST['start']) && isset($_POST['end'])) { 
+	//if (isset($_POST['start']) && isset($_POST['end'])) { 
 		$db = new Database();
 		
-		//show detailed records if "Details" is checked
-		if (isset($_POST['details']) && $_POST['details'] == 'yes') {	
+		//show detailed records if "Payout" is not checked
+		if (!isset($_POST['details']) && $_POST['details'] != 'yes') {	
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-10">
@@ -178,7 +193,7 @@ else {
 	</div>
 	<?php
 	}
-	//show summary data if "Details" is NOT checked
+	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
 		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
@@ -226,7 +241,7 @@ else {
 	</div>
 <?php
 	}
-}
+//}
 ?>
 	</div>
 </body>
