@@ -1,16 +1,5 @@
 <?php
-//serve up the correct config file for db connection, based on which environment we are in
-if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
-    if (strpos($_SERVER['HTTP_HOST'], 'dev') === false) {
-	    $config = parse_ini_file('../../config/esr_dbconfig.ini');		//production
-    }
-    else {
-	    $config = parse_ini_file('../../config/esrdev_dbconfig.ini');	//dev
-    }
-}
-else {
-    $config = parse_ini_file('../config/dbconfig_local.ini');	//local
-}
+$config = parse_ini_file('../../config/esr_dbconfig.ini');
 
 // check if a config is found
 if ($config === FALSE)
