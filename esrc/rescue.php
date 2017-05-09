@@ -11,7 +11,7 @@ include_once '../includes/auth-inc.php';
 
 <head>
 	<?php 
-	$pgtitle = 'Search';
+	$pgtitle = 'SAR request';
 	include_once '../includes/head.php'; 
 	?>
 	<script>
@@ -20,8 +20,6 @@ include_once '../includes/auth-inc.php';
                 name: 'system',
                 remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
-        })
-        $(document).ready(function() {
             $('input.targetsystem').typeahead({
                 name: 'targetsystem',
                 remote: '../data/typeahead.php?type=system&query=%QUERY'
@@ -95,8 +93,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
-<form target="rescue.php" method="POST">
-System: <?php if (isset($targetsystem)) {?><input class="black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($targetsystem)?>"/> <?php } else { ?> <input class="black" type="text" name="system" autocomplete="off" /> <?php }?> 
+<form action="rescue.php" method="POST">
+System: <?php if (isset($targetsystem)) {?><input placeholder="System name" class="system tt-query black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($targetsystem)?>"/> <?php } else { ?> <input placeholder="System name" class="system tt-query black" type="text" name="system" class="system" autocomplete="off" /> <?php }?>
 Pilot: <input type="text" class="black" name="pilot"  /> 
 Can refit: <select class="black" name="canrefit" ><option value="0" default>No</option><option value="1">Yes</option></select> 
 Note: 					<textarea class="form-control black" id="notes" name="notes" rows="3"></textarea>
