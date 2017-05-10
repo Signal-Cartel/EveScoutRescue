@@ -48,7 +48,7 @@ $leaderBoard = new Leaderboard($database);
 			<div class="panel-body">
 				<p>In early YC118, 
 					<a href="https://gate.eveonline.com/Profile/Forcha%20Alendare">Forcha 
-					Alendare</a>, had a vision of a service that would provide a basic 
+					Alendare</a> had a vision of a service that would provide a basic 
 					emergency resource kit for capsuleers stranded in wormholes, 
 					regardless of alliance, sovereignty, or play style. This vision
 					quickly grew to become the Rescue Cache program as we know it today. 
@@ -56,7 +56,7 @@ $leaderBoard = new Leaderboard($database);
 					program had humble beginnings, but nonetheless managed to capture the 
 					imagination of many Signal Cartel pilots.</p>
 				<p>In late YC118, Forcha decided to move on to activities that would potentially 
-					bring him in conflict with the 
+					bring him into conflict with the 
 					<a href="http://www.eve-scout.com/signal-cartel/">Credo</a>, so he chose to  
 					leave the corp. The program languished without anyone tending it, and corp and 
 					alliance leadership decided it was too valuable to be allowed to wither 
