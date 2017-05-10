@@ -1,6 +1,21 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div>
+        	I used your [SAR] service, and what can I say? - I was pretty amazed, 
+        	because, you know, EVE is a game where one trusts on one. I heard of 
+        	you guys long ago, but never thought I'd need this kind of help. I 
+        	gave it a try, and it worked pretty well for me. I'd give [the rescue 
+        	pilot] a medal.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Roger Y0ung<br />
+				<span style="font-size: 85%;">rescued on YC119-May-07</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div>
         	The service was both easy and quick, and got me out of quite a pickle.
         	I expect this service will be used well by others in need.<br /><br />
 			<span class="pull-right" style="text-align: right;">
