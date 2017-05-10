@@ -135,7 +135,7 @@ $ctractive = $caches->getActiveCount();
 			    </div>
 			</div>
 			<div class="panel-body">
-				<p class="lead">If we don't have a rescue cache or frigate in your current wormhole system, don't despair! Our Search and Rescue pilots will work hard to find you and scout you back to known space.</p>
+				<p class="lead">If we don't have a rescue cache in your current wormhole system, don't despair! Our Search and Rescue pilots will work hard to find you and scout you back to known space.</p>
 			</div>
 		</div>
 	</div>
@@ -157,7 +157,7 @@ $ctractive = $caches->getActiveCount();
 				<p>If you also think that no one should be stranded inside a wormhole due 
 				to server problems or socket disconnects, please support this initiative 
 				by not blowing up our rescue caches! We sincerely thank you for your cooperation!</p>
-				<p>Learn more about <a href="about.php">who we are</a>.</p>
+				<p>Curious to learn more about who we are? <a href="about.php">Right this way.</a></p>
 			</div>
 		</div>
 	</div>
