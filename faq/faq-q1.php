@@ -6,7 +6,12 @@
 	</div>
 	<div id="question1" class="panel-collapse collapse" style="height: 0px;">
 		<div class="panel-body">
-			<p>Please head over to our in-game public channel, "Eve-Scout", and ask for a Signal Cartel member to guide you to one of our rescue caches or rescue frigates or to help set up a search and rescue request. If you would like to be more discreet, you can EVEmail <a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice Hapus</a> to further discuss rescue options.</p>
+			<p>Please head over to our in-game public channel, "Eve-Scout", and ask for a 
+				Signal Cartel member to guide you to one of our rescue caches 
+				or to help set up a search and rescue request. If you would like 
+				to be more discreet, you can EVEmail 
+				<a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice Hapus</a> 
+				to further discuss rescue options.</p>
 		</div>
 	</div>
 </div>

@@ -31,7 +31,11 @@ include_once '../includes/head.php';
 				</div>
 				<div id="question2" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
-						<p>The EvE-Scout Search and Rescue (SAR) program is one arm of our EvE-Scout Rescue (ESR) division. In situations where no rescue cache or rescue frigate is present, or where those options do not provide any help to the stranded pilot, our SAR program strives to facilitate a live rescue by one of our scouts. This service is offered to all pilots, regardless of alliance, sovereignty, or play style.</p>
+						<p>The EvE-Scout Search and Rescue (SAR) program is one arm of our 
+							EvE-Scout Rescue (ESR) division. In situations where no rescue 
+							cache is present, our SAR program strives to facilitate a live 
+							rescue by one of our scouts. This service is offered to all pilots, 
+							regardless of alliance, sovereignty, or play style.</p>
 					</div>
 				</div>
 			</div>

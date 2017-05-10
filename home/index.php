@@ -113,10 +113,10 @@ $ctractive = $caches->getActiveCount();
 </div>
 <div class="ws"></div>
 <div class="row">
-	<div class="col-sm-4">
+	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Cache&nbsp;&nbsp;&nbsp;&nbsp;<img src="../img/cache.png" height="40px" /></h2>
+				<h2 class="pull-left">Rescue Cache&nbsp;&nbsp;&nbsp;&nbsp;<img src="../img/cache.png" height="40px" /></h2>
 				<div class="btn-group pull-right" style="padding-top: 12px;">
 			        <a class="btn btn-primary btn-lg" href="../esrc/" role="button">Learn more</a>
 			    </div>
@@ -126,23 +126,10 @@ $ctractive = $caches->getActiveCount();
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-4">
+	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Frigate&nbsp;&nbsp;<img src="../img/frig.png" height="40px" /></h2>
-				<div class="btn-group pull-right" style="padding-top: 12px;">
-			        <a class="btn btn-primary btn-lg" href="../rf/" role="button">Learn more</a>
-			    </div>
-			</div>
-			<div class="panel-body">
-				<p class="lead">Don't have any way to fit a probe launcher? Then our rescue frigates may be just what you're looking for. They have been custom fit so that you can pilot one with even minimal skills.</p>
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-4">
-		<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Search&nbsp;&nbsp;&nbsp;<img src="../img/search.png" height="40px" /></h2>
+				<h2 class="pull-left">Search &amp; Rescue &nbsp;&nbsp;&nbsp;<img src="../img/search.png" height="40px" /></h2>
 				<div class="btn-group pull-right" style="padding-top: 7.5px;">
 			        <a class="btn btn-primary btn-lg" href="../sar/" role="button">Learn more</a>
 			    </div>
@@ -158,8 +145,19 @@ $ctractive = $caches->getActiveCount();
 	<div class="col-sm-12">
 		<div class="panel panel-default">
 			<div class="panel-body">
-				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, the core corporation of the <a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout Enclave</a> alliance, is a neutral, non-profit entity that aims to provide a valuable public service to all of New Eden. As such, one of our primary initiatives is to look for and rescue capsuleers who are stranded inside wormholes without equipment to get out by themselves. In accordance to our Credo, our services are free and available to capsuleers of all play styles and allegiance.</p>
-				<p>If you also think that no one should be stranded inside a wormhole due to server problems or socket disconnects, please support this initiative by not blowing up our rescue caches and rescue frigates! We sincerely thank you for your cooperation! </p>
+				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, 
+					the core corporation of the 
+					<a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout 
+					Enclave</a> alliance, is a neutral, non-profit entity that aims to 
+					provide a valuable public service to all of New Eden. As such, one 
+					of our primary initiatives is to look for and rescue capsuleers who 
+					are stranded inside wormholes without equipment to get out by themselves. 
+					In accordance to our Credo, our services are free and available to 
+					capsuleers of all play styles and allegiance.</p>
+				<p>If you also think that no one should be stranded inside a wormhole due 
+				to server problems or socket disconnects, please support this initiative 
+				by not blowing up our rescue caches! We sincerely thank you for your cooperation!</p>
+				<p>Learn more about <a href="about.php">who we are</a>.</p>
 			</div>
 		</div>
 	</div>
