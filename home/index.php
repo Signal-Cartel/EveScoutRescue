@@ -86,7 +86,10 @@ $ctractive = $caches->getActiveCount();
 		<span class="white">
 			<span style="font-weight: bold; color: gold;"><?php echo round((intval($ctractive)/2603)*100,1); ?>% </span>
 			of all wormhole systems
-		</span>
+		</span><br />
+		<div class="btn-group" style="padding-top: 24px; text-align: center;">
+	        <a class="btn btn-primary btn-lg" href="about.php" role="button">About Us</a>
+	    </div>
 	</div>
 	<div class="col-sm-8" style="text-align: center;">
 		<!-- TESTIMONIAL CAROUSEL -->
@@ -157,7 +160,6 @@ $ctractive = $caches->getActiveCount();
 				<p>If you also think that no one should be stranded inside a wormhole due 
 				to server problems or socket disconnects, please support this initiative 
 				by not blowing up our rescue caches! We sincerely thank you for your cooperation!</p>
-				<p>Curious to learn more about who we are? <a href="about.php">Right this way.</a></p>
 			</div>
 		</div>
 	</div>
