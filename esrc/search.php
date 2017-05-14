@@ -37,10 +37,10 @@ $database = new Database();
 $caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
-	$targetsystem = htmlspecialchars_decode($_REQUEST['targetsystem']);
+	$system = htmlspecialchars_decode($_REQUEST['targetsystem']);
 }
 elseif (isset($_REQUEST['system'])) {
-	$targetsystem = htmlspecialchars_decode($_REQUEST["system"]);
+	$system = htmlspecialchars_decode($_REQUEST["system"]);
 }
 ?>
 <body class="white">
@@ -56,7 +56,7 @@ elseif (isset($_REQUEST['system'])) {
 					<div class="form-group">
 						<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" 
 							autocomplete="off" class="targetsystem" placeholder="System Name" 
-							value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
+							value="<?php echo isset($system) ? $system : '' ?>">
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -72,10 +72,10 @@ elseif (isset($_REQUEST['system'])) {
 <div class="ws"></div>
 <?php
 // check if a system is supplied
-if (isset($targetsystem)) {
+if (isset($system)) {
 	// display result for the selected system
 	// get cache information from database
-	$row = $caches->getCacheInfo($targetsystem);
+	$row = $caches->getCacheInfo($system);
 	//only display the following if we got some results back
 	if (!empty($row))
 	{
@@ -94,17 +94,17 @@ if (isset($targetsystem)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
-		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
-		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<?php if ($caches->isTendingAllowed($system)) { ?>
+		<a href="data_entry.php?tendsys=<?=$system?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
 		<!-- ADJUNCT button -->
-		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
+		<a href="data_entry.php?adjsys=<?=$system?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 		<!-- clear result" link -->
 		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
@@ -167,9 +167,9 @@ if (isset($targetsystem)) {
 		//no results returned, so give an option to sow a new cache in this system
 		// check if the length of the string matches the worm hole names
 		// 		if (strlen($targetsystem) === 7)
-		if ($systems->validatename($targetsystem) === 0)
+		if ($systems->validatename($system) === 0)
 		{
-			$lockedDate = $systems->locked($targetsystem);
+			$lockedDate = $systems->locked($system);
 			
 			if (!isset($lockedDate))
 			{
@@ -180,11 +180,11 @@ if (isset($targetsystem)) {
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+			<a href="data_entry.php?sowsys=<?=$system?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
-			<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 			<!--  clear data button -->	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
@@ -197,7 +197,7 @@ if (isset($targetsystem)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 				<span class="sechead white">Upon request of the current wormhole residents, 
-					caches are not to be sown in <?=$targetsystem?> until 
+					caches are not to be sown in <?=$system?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
 				<a href="?" class="btn btn-link" role="button">clear result</a>
@@ -213,7 +213,7 @@ if (isset($targetsystem)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
-			<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
+			<span class="sechead white">'<?=$system?>' is not a valid system name. 
 				Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
 				<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
@@ -225,7 +225,7 @@ if (isset($targetsystem)) {
 	$database->query("SELECT * FROM activity
 						WHERE System = :system
 						ORDER By ActivityDate DESC");
-	$database->bind(':system', $targetsystem);
+	$database->bind(':system', $system);
 	$rows = $database->resultset();
 	$database->closeQuery();
 	if (!empty($rows)) {

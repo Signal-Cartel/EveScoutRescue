@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
@@ -43,26 +43,6 @@ if (isset($_REQUEST['system'])) {
 	$system = htmlspecialchars_decode($_REQUEST["system"]);
 }
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
-{
-	// add value checks!
-	// system ok
-	// all values are set
-	// same request is not active (system, pilot)
-	
-	$database->beginTransaction();
-	$database->query("insert into rescuerequest(system, pilot, canrefit, note) values(:system, :pilot, :canrefit, :note)");
-	$database->bind(":system", $_REQUEST['system']);
-	$database->bind(":pilot", $_REQUEST['pilot']);
-	$database->bind(":canrefit", $_REQUEST['canrefit']);
-	$database->bind(":note", $_REQUEST['notes']);
-	
-	$database->execute();
-	
-	$database->endTransaction();
-	
-}
-
 // create an update action
 
 ?>
@@ -92,23 +72,75 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
-<div class="ws">
-<form action="rescue.php" method="POST">
-<p> System: <?php if (isset($system)) {?><input placeholder="System name" class="system tt-query black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($system)?>"/> <?php } else { ?> <input placeholder="System name" class="system tt-query black" type="text" name="system" class="system" autocomplete="off" /> <?php }?>
-</p>
-<p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name"/>
-</p>
-<p> 
-Can refit: <select class="black" name="canrefit" ><option value="0" default>No</option><option value="1">Yes</option></select>
-</p>
-<p> 
-Note: 					<textarea class="form-control black" id="notes" name="notes" rows="3"></textarea>
-</p>
-<p>
-Send: <input class="black" type="submit" name="action" value="Create"> &nbsp; Cancel: <input class="black" type="submit" name="action" value="View"> &nbsp; Show all <a href="./rescueoverview.php">active</a> requests.
-</p>
-</form>
+<?php 
+
+// get finished status parameter flag
+$finished = $_REQUEST['finished'];
+if (!isset($finished))
+{
+	$finished = 0;
+}
+
+// get requests from database
+$database->query("select id, requestdate, system, pilot, canrefit, finished from rescuerequest where finished = :finished order by requestdate");
+$database->bind(":finished", $finished);
+// $database->execute();
+$data = $database->resultset();
+// echo "<pre>";
+// print_r($database);
+// echo "\n";
+// print_r($data);
+// echo "</pre>";
+$database->closeQuery();
+if (isset($data))
+{
+?>
+
+<div>
+<a href="./rescueaction.php?action=New">New SAR request</a>
 </div>
+
+<div>
+<p>
+<?php
+if ($finished == 0)
+{
+?>
+View active requests. Display <a href="./rescueoverview.php?finished=1">finished</a> requests.
+<?php 	
+}
+else 
+{
+?>
+View finished requests. Display <a href="./rescueoverview.php?finished=0">active</a> requests.
+<?php
+}
+?>
+</p>
+<table width="90%">
+<tr>
+<th>Started</th><th>System</th><th>Pilot</th><th>refit</th><th>Manage</th>
+</tr>
+<?php 
+	foreach ($data as $row) {
+		echo "<tr>";
+		echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
+		echo "<td>".Output::htmlEncodeString($row['system'])."</td>";
+		echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
+		echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
+		echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
+		echo "</tr>";
+	}
+}
+else
+{
+	echo "No active rescure requests";
+}
+?>
+</table>
+
+</div>
+
 
 </div>
 </body>
