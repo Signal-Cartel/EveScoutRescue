@@ -74,6 +74,17 @@ if (isset($_REQUEST['system'])) {
 </div>
 <?php 
 
+function displayLine($row)
+{
+	echo "<tr>";
+	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
+	echo "<td>".Output::htmlEncodeString($row['system'])."</td>";
+	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
+	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
+	echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
+	echo "</tr>";
+}
+
 // get finished status parameter flag
 $finished = $_REQUEST['finished'];
 if (!isset($finished))
@@ -123,13 +134,18 @@ View finished requests. Display <a href="./rescueoverview.php?finished=0">active
 </tr>
 <?php 
 	foreach ($data as $row) {
-		echo "<tr>";
-		echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
-		echo "<td>".Output::htmlEncodeString($row['system'])."</td>";
-		echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
-		echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
-		echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
-		echo "</tr>";
+		if (isset($_REQUEST['system']))
+		{
+			if ($_REQUEST['system'] == $row['system'])
+			{
+				displayLine($row);
+			}
+		}
+		else
+		{
+			displayLine($row);
+		}
+		
 	}
 }
 else

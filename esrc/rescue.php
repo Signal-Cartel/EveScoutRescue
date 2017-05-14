@@ -93,7 +93,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws">
-<form action="rescue.php" method="POST">
+<form action="rescueaction.php" method="POST">
 <p> System: <?php if (isset($system)) {?><input placeholder="System name" class="system tt-query black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($system)?>"/> <?php } else { ?> <input placeholder="System name" class="system tt-query black" type="text" name="system" class="system" autocomplete="off" /> <?php }?>
 </p>
 <p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name"/>

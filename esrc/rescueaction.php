@@ -26,8 +26,12 @@ $data['notes'] = $_REQUEST['notes'];
 
 if ($action === 'View')
 {
-	// 	displayOverview();
-	echo "View action";
+	$targetURL = './rescueoverview.php';
+	if (isset($data['system']) && $data['system'] != '')
+	{
+		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
+	}
+	header('Location: '.$targetURL);
 }
 else if ($action === 'New')
 {
@@ -60,9 +64,15 @@ else if ($action === 'Create')
 	
 	$database->endTransaction();
 	
-	echo "Create action";
+// 	echo "Create action";
 	
 // 	displayOverview();
+	$targetURL = './rescueoverview.php';
+	if (isset($data['system']))
+	{
+		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
+	}
+	header('Location: '.$targetURL);
 }
 else if($action === 'Edit')
 {

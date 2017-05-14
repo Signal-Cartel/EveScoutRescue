@@ -99,6 +99,10 @@ if (isset($system)) {
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
+		<!--  new SAR request -->
+		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
+<!--  <a href="./rescueaction.php?action=New">New SAR request</a>  -->
+		
 		<!-- ADJUNCT button -->
 		<a href="data_entry.php?adjsys=<?=$system?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
@@ -160,6 +164,18 @@ if (isset($system)) {
 			</div>
 		</div>
 		<?php } //if (!empty($strNotes))
+			
+		$database->query("select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate");
+		$database->bind(":system", $system);
+			// $database->execute();
+		$data = $database->single();
+		$database->closeQuery();
+		if ($data['cnt'] > 0)
+		{
+		?>
+		<p><b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a> rescue requests in system.</b></p> 
+		<?php 
+		}
 	}
 	else
 	{
