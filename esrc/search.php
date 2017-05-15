@@ -106,7 +106,8 @@ if (isset($targetsystem)) {
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
-		<!-- ADJUNCT button -->
+		<!-- AGENT button -->
+		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
 		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
@@ -459,5 +460,11 @@ else {
 <?php 
 } //if (isset($targetsystem))?>
 </div>
+
+<!-- MODAL includes -->
+<?php
+include 'modal_agent.php';
+?>
+
 </body>
 </html>
