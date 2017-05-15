@@ -81,11 +81,18 @@ if (isset($targetsystem)) {
 	{
 		// calculate status cell format
 		$statuscellformat = '';
-		if ($row ['Status'] == 'Healthy') {
-			$statuscellformat = ' style="background-color:green;color:white;"';
-		}
-		if ($row ['Status'] == 'Upkeep Required') {
-			$statuscellformat = ' style="background-color:yellow;color:black;"';
+		switch ($row ['Status']) {
+			case 'Healthy':
+				$statuscellformat = ' style="background-color:green;color:white;"';
+				break;
+			case 'Upkeep Required':
+				$statuscellformat = ' style="background-color:yellow;color:black;"';
+				break;
+			case 'Locals Tend':
+				$statuscellformat = ' style="background-color:#fffacd;color:black;"';
+				break;
+			default:
+				$statuscellformat = '';
 		}
 		// save notes as separate var
 		$strNotes = Output::htmlEncodeString($row['Note']);
@@ -220,7 +227,8 @@ if (isset($targetsystem)) {
 		<?php
 		}
 	} //(!empty($row))
-	
+
+	//HISTORY
 	// see if there is historical data to display for this system
 	$database->query("SELECT * FROM activity
 						WHERE System = :system
@@ -256,7 +264,7 @@ if (isset($targetsystem)) {
 				$sowrow = $database->single();
 				$database->closeQuery();
 			}
-			echo '<tr>';
+			
 			switch ($value['EntryType']) {
 				case 'sower':
 					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
@@ -268,8 +276,9 @@ if (isset($targetsystem)) {
 					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 					break;
 				default:
-					// ??
+					$actioncellformat= '';
 			}
+			
 			echo '<tr>';
 			// add 4 hours to convert to UTC (EVE) for display
 // 			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
