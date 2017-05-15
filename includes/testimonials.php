@@ -17,7 +17,7 @@
 	<div class="carousel-content">
     	<div>
         	I used your [SAR] service, and what can I say? - I was pretty amazed, 
-        	because, you know, EVE is a game where one trusts on one. I heard of 
+        	because, you know, EVE is a game where one trusts no one. I heard of 
         	you guys long ago, but never thought I'd need this kind of help. I 
         	gave it a try, and it worked pretty well for me. I'd give [the rescue 
         	pilot] a medal.<br /><br />
