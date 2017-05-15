@@ -204,8 +204,24 @@ if (isset($system)) {
 			<!--  clear data button -->	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
+			
+			
 		<?php
-			}
+				$database->query ( "select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate" );
+				$database->bind ( ":system", $system );
+				// $database->execute();
+				$data = $database->single ();
+				$database->closeQuery ();
+				if ($data ['cnt'] > 0) {
+					?>
+		<p>
+			<b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a>
+				rescue requests in system.
+			</b>
+		</p>
+		<?php 
+				}
+					}
 			else
 			{
 				?>	
