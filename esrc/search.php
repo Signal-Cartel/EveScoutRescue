@@ -99,12 +99,10 @@ if (isset($system)) {
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
-		<!--  new SAR request -->
-		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
-<!--  <a href="./rescueaction.php?action=New">New SAR request</a>  -->
-		
 		<!-- ADJUNCT button -->
 		<a href="data_entry.php?adjsys=<?=$system?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
+		<!--  new SAR request -->
+		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
@@ -197,6 +195,8 @@ if (isset($system)) {
 			<!-- SOW button  -->
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 			<a href="data_entry.php?sowsys=<?=$system?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+			<!--  new SAR request -->
+			<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
 			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->

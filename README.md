@@ -50,6 +50,18 @@ Steps to setup a development system
       `requestdate` datetime default current_timestamp(),
       `canrefit` int,
       `finished` int default 0,
+      `lastcontact` datetime default current_timestamp,
+      `startagent` varchar(255) not null,
+      `closeagent` varchar(255),
+      `LastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+    CREATE TABLE `rescuenote` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `rescueid` int(11) NOT NULL,
+      `notedate` datetime default current_timestamp(),
+      `agent` varchar(255) not null,
       `note` text COLLATE latin1_general_ci,
        PRIMARY KEY (`id`)
      ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
