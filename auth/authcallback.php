@@ -18,8 +18,6 @@ function auth_error($error_message)
 }
 
 session_start();
-//User Agent needs to uniquely identify this application
-$useragent="EvE-Scout Rescue agent";
 
 //login.php sends an authorization request to EVE's SSO server. The EVE server 
 //then sends its response to this script. We need to handle that response.
