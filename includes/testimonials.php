@@ -1,6 +1,21 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div>
+        	I appreciate the work you guys did, as there was not only excellent work 
+        	by the person in the chat channel, but also by the person who had installed 
+        	the cache in that particular wormhole to try and get me out.<br /><br />
+			Even though you guys didn't get me out, you did spectacular work considering 
+			how badly I had gotten myself stuck.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Ashwind Houssa<br />
+				<span style="font-size: 85%;">attempted rescued on YC119-May-07</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div>
         	I used your [SAR] service, and what can I say? - I was pretty amazed, 
         	because, you know, EVE is a game where one trusts on one. I heard of 
         	you guys long ago, but never thought I'd need this kind of help. I 
