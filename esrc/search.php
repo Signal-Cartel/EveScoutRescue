@@ -42,6 +42,8 @@ if(isset($_REQUEST['targetsystem'])) {
 elseif (isset($_REQUEST['system'])) {
 	$targetsystem = htmlspecialchars_decode($_REQUEST["system"]);
 }
+
+if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 ?>
 <body class="white">
 <div class="container">
@@ -70,7 +72,20 @@ elseif (isset($_REQUEST['system'])) {
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
+ 
 <?php
+// display error message if there is one
+if (!empty($errmsg)) {
+?>
+	<div class="row" id="errormessage" style="background-color: #ff9999;">
+		<div class="col-sm-12 message">
+			<?php echo nl2br($errmsg); ?>
+		</div>
+	</div>
+	<div class="ws"></div>
+<?php
+}
+
 // check if a system is supplied
 if (isset($targetsystem)) {
 	// display result for the selected system

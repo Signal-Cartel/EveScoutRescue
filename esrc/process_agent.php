@@ -39,14 +39,18 @@ if (isset($_POST['sys_adj'])) {
 	//FORM VALIDATION
 	$entrytype = 'agent';
 	if (empty($aidedpilot)) { 
-		$errmsg = $errmsg . "You must indicate the name of the capsuleer who 
-			required rescue.\n"; 
+		$errmsg = $errmsg . "You must indicate the name of the capsuleer who required rescue."; 
 	}
 	//END FORM VALIDATION
 
 	//display error message if there is one
 	if (!empty($errmsg)) {
-		echo $errmsg;
+		$redirectURL = "search.php?system=". $system ."&errmsg=". urlencode($errmsg);
+		?>
+		<script>
+			window.location.replace("<?=$redirectURL?>")
+		</script>
+		<?php 
 	} 
 	
 	// otherwise, perform DB UPDATES
@@ -77,8 +81,14 @@ if (isset($_POST['sys_adj'])) {
 		$db->bind(':note', $adj_note);
 		$db->bind(':system', $system);
 		$db->execute();
+		
+		$redirectURL = "search.php?system=". $system;
+		?>
+		<script>
+			window.location.replace("<?=$redirectURL?>")
+		</script>
+		<?php 
 
-		echo 'Record entered successfully.';
 	}
 	//END DB UPDATES
 }
