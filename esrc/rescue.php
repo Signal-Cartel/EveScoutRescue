@@ -96,13 +96,17 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
 <form action="rescueaction.php" method="POST">
 <p> System: <?php if (isset($system)) {?><input placeholder="System name" class="system tt-query black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($system)?>"/> <?php } else { ?> <input placeholder="System name" class="system tt-query black" type="text" name="system" class="system" autocomplete="off" /> <?php }?>
 </p>
-<p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name"/>
+<p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name"/> &nbsp; Enter "Pilot Name (Contact Name)" if a intermediate contact is involved.
 </p>
 <p> 
-Can refit: <select class="black" name="canrefit" ><option value="0" default>No</option><option value="1">Yes</option></select>
+Can refit: <input type="checkbox" name="canrefit" value="1" />
+<!-- <select class="black" name="canrefit" ><option value="0" default>No</option><option value="1">Yes</option></select> -->
 </p>
 <p> 
-Note: 					<textarea class="form-control black" id="notes" name="notes" rows="3"></textarea>
+Probe launcher: <input type="checkbox" name="launcher" value="1" />
+</p>
+<p> 
+Note: 					<textarea class="form-control black" id="notes" name="notes" rows="5"></textarea>
 </p>
 <p>
 Send: <input class="black" type="submit" name="action" value="Create"> &nbsp; Cancel: <input class="black" type="submit" name="action" value="View"> &nbsp; Show all <a href="./rescueoverview.php">active</a> requests.

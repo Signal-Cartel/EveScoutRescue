@@ -79,6 +79,7 @@ $database->closeQuery();
 
 
 <p>
+<form method="POST" action="./rescueaction.php">
 <table border="1">
 <tr>
 <th>Key</th><th>Value</th>
@@ -98,7 +99,27 @@ $database->closeQuery();
 <tr>
 <td>Creating agent</td><td><?=Output::htmlEncodeString($row['startagent'])?></td>
 </tr>
+<tr>
+<td>Closing agent</td><td><?=Output::htmlEncodeString($row['closeagent'])?></td>
+</tr>
+<tr>
+<td>Contacted (check box if contacted)</td><td><input type="checkbox" name="contacted" value="1" /></td>
+</tr>
+<tr>
+<td>Remind me</td><td><input class="black" type="text" name="reminder" size="5" placeholder="days" /></td>
+</tr>
+<tr>
+<td>Status</td><td> <fieldset> <input type="radio" id="status_open" name="status" value="open" /> <label for="status_open"> open</label>
+<br>
+ <input type="radio" id="status_closed" name="status" value="closed" /> <label for="status_closed">closed</label>
+ <br> <input type="radio" id="status_pending" name="status" value="pending" /> <label for="status_pending">pending</label></fieldset>
+ </td>
+</tr>
+
 </table>
+<input type="hidden" name="action" value="update" />
+<input type="submit" value="Update" />
+</form>
 </p>
 
 <p>
@@ -121,6 +142,21 @@ foreach($rows as $row)
 }
 ?>
 </table>
+</p>
+<p>
+Add a note<br />
+<form method="POST" action="./rescueaction.php">
+<p> 
+Note: <textarea class="form-control black" id="notes" name="notes" rows="5"></textarea>
+<input type="hidden" name="request" value="<?=Output::htmlEncodeString($_REQUEST['request'])?>" />
+<input type="hidden" name="action" value="AddNote" />
+<input type="submit" name="Click" value="Save" />
+</p>
+
+
+
+</form>
+
 </p>
 
 </div>

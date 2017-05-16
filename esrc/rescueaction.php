@@ -40,7 +40,21 @@ $data['request'] = $_REQUEST['request'];
 $data['system'] = $_REQUEST['system'];
 $data['pilot'] = $_REQUEST['pilot'];
 $data['canrefit'] = $_REQUEST['canrefit'];
+$data['launcher'] = $_REQUEST['launcher'];
 $data['notes'] = $_REQUEST['notes'];
+
+if (!isset($data['launcher']))
+{
+	$data['launcher'] = 0;
+}
+if (!isset($data['canrefit']))
+{
+	$data['canrefit'] = 0;
+}
+
+
+// create a database instance
+$database = new Database();
 
 if ($action === 'View')
 {
@@ -64,20 +78,19 @@ else if ($action === 'New')
 // process create action
 else if ($action === 'Create')
 {
-	$database = new Database();
-	
 	// add value checks!
 	// system ok
 	// all values are set
 	// same request is not active (system, pilot)
 	
 	$database->beginTransaction();
-	$database->query("insert into rescuerequest(system, pilot, canrefit, startagent) values(:system, :pilot, :canrefit, :agent)");
+	$database->query("insert into rescuerequest(system, pilot, canrefit, launcher, startagent) values(:system, :pilot, :canrefit, :launcher, :agent)");
 	$database->bind(":system", $data['system']);
 	$database->bind(":pilot", $data['pilot']);
 	$database->bind(":canrefit", $data['canrefit']);
+	$database->bind(":launcher", $data['launcher']);
 	$database->bind(":agent", $charname);
-// 	$database->bind(":note", $data['notes']);
+
 	// execute insert query
 	$database->execute();
 	// get new rescue ID
@@ -114,7 +127,35 @@ else if($action === 'Edit')
 	}
 	header('Location: '.$targetURL);
 	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($data['request']).'</a>';
+}
+else if($action === 'AddNote')
+{
+	// insert rescue note
+	if (isset($data['notes']) && $data['notes'] != '')
+	{
+		$database->beginTransaction();
+		// get new rescue ID
+		$rescueID = $_REQUEST['request'];
+	
+		$database->query("insert into rescuenote(rescueid, note, agent) values(:rescueid, :note, :agent)");
+		$database->bind(":rescueid", $rescueID);
+		$database->bind(":agent", $charname);
+		$database->bind(":note", $data['notes']);
+	
+		$database->execute();
+		
+		$database->endTransaction();
 	}
+	
+	// display request manage page again
+	$targetURL = './rescuemanage.php';
+	if (isset($data['request']))
+	{
+		$targetURL .= '?request=' . Output::htmlEncodeString ( $data ['request'] );
+	}
+	header('Location: '.$targetURL);
+	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($data['request']).'</a>';
+}	
 else
 {
 	echo "Unknown action: ".Output::htmlEncodeString($action);
