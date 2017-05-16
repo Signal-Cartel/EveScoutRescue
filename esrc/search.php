@@ -107,8 +107,8 @@ if (isset($targetsystem)) {
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
 		<!-- AGENT button -->
-		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
-		<a href="data_entry.php?adjsys=<?=$targetsystem?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
+		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
+			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
@@ -274,6 +274,9 @@ if (isset($targetsystem)) {
 					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 					break;
 				case 'adjunct':
+					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+					break;
+				case 'agent':
 					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 					break;
 				default:

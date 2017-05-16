@@ -30,11 +30,9 @@ if (isset($_POST['sys_adj'])) {
 	$db = new Database();
 
 	$pilot = $system = $aidedpilot = $errmsg = $entrytype = $noteDate = '';
-	
-	echo $_POST["pilot"];
 
 	$pilot = test_input($_POST["pilot"]);
-	$system = test_input($_POST["system"]);
+	$system = test_input($_POST["sys_adj"]);
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
 
@@ -77,16 +75,12 @@ if (isset($_POST['sys_adj'])) {
 			
 		$db->query("UPDATE cache SET Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
 		$db->bind(':note', $adj_note);
-		$db->bind(':system', $system_adjunct);
+		$db->bind(':system', $system);
 		$db->execute();
 
-		echo 'All good!';
-		
+		echo 'Record entered successfully.';
 	}
 	//END DB UPDATES
-}
-else {
-	echo 'Nothing set.';
 }
 
 ?>
