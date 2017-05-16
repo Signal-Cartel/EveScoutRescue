@@ -117,7 +117,8 @@ if (isset($targetsystem)) {
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
 		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
-		<a href="data_entry.php?tendsys=<?=$targetsystem?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
+			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
@@ -482,6 +483,7 @@ else {
 <!-- MODAL includes -->
 <?php
 include 'modal_agent.php';
+include 'modal_tend.php';
 ?>
 
 </body>
