@@ -1,5 +1,16 @@
 <div class="item active">
 	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	10/10 would use again xD<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Emily Carloon<br />
+				<span style="font-size: 85%;">involved in a rescue on YC119-May-17</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
     	<div>
         	I appreciate the work you guys did, as there was not only excellent work 
         	by the person in the chat channel, but also by the person who had installed 
