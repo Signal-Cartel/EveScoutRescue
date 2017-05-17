@@ -85,7 +85,7 @@ $database->closeQuery();
 <th>Key</th><th>Value</th>
 </tr>
 <tr>
-<td>Date</td><td><?=Output::getEveDate($row['requestdate'])?></td>
+<td>Creation date</td><td><?=Output::getEveDate($row['requestdate'])?></td>
 </tr>
 <tr>
 <td>Pilot</td><td><?=Output::htmlEncodeString($row['pilot'])?></td>
@@ -94,13 +94,24 @@ $database->closeQuery();
 <td>System</td><td><?=Output::htmlEncodeString($row['system'])?></td>
 </tr>
 <tr>
-<td>Last contact</td><td><?=Output::getEveDate($row['lastcontact'])?></td>
+<td>Reminder</td><td><?=Output::getEveDate($row['reminderdate'])?></td>
 </tr>
 <tr>
 <td>Creating agent</td><td><?=Output::htmlEncodeString($row['startagent'])?></td>
 </tr>
+<?php
+// display closin agent only if status is closed
+if ($row['status'] === 'closed')
+{
+?>
 <tr>
 <td>Closing agent</td><td><?=Output::htmlEncodeString($row['closeagent'])?></td>
+</tr>
+<?php 
+}
+?>
+<tr>
+<td>Last contacted</td><td><?=Output::getEveDate($row['lastcontact'])?></td>
 </tr>
 <tr>
 <td>Contacted (check box if contacted)</td><td><input type="checkbox" name="contacted" value="1" /></td>
@@ -109,15 +120,21 @@ $database->closeQuery();
 <td>Remind me</td><td><input class="black" type="text" name="reminder" size="5" placeholder="days" /></td>
 </tr>
 <tr>
-<td>Status</td><td> <fieldset> <input type="radio" id="status_open" name="status" value="open" /> <label for="status_open"> open</label>
-<br>
- <input type="radio" id="status_closed" name="status" value="closed" /> <label for="status_closed">closed</label>
- <br> <input type="radio" id="status_pending" name="status" value="pending" /> <label for="status_pending">pending</label></fieldset>
+<td>Status</td><td>
+<?php if ($row['status'] === 'new') { ?>
+<input type="radio" id="status_new" name="status" value="new" checked="checked" /> <label for="status_new"> new</label><br />
+<?php } ?>
+<fieldset>
+<input type="radio" id="status_open" name="status" value="open" <?php if ($row['status'] === 'open') { echo ' checked="checked" '; } ?>/> <label for="status_open"> open</label><br>
+<input type="radio" id="status_closed" name="status" value="closed"  <?php if ($row['status'] === 'closed') { echo ' checked="checked" '; } ?>/> <label for="status_closed">closed</label><br>
+<input type="radio" id="status_pending" name="status" value="pending"  <?php if ($row['status'] === 'pending') { echo ' checked="checked" '; } ?>/> <label for="status_pending">pending</label>
+</fieldset>
  </td>
 </tr>
 
 </table>
-<input type="hidden" name="action" value="update" />
+<input type="hidden" name="request" value="<?=Output::htmlEncodeString($_REQUEST['request'])?>" />
+<input type="hidden" name="action" value="UpdateRequest" />
 <input type="submit" value="Update" />
 </form>
 </p>

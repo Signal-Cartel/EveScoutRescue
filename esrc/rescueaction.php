@@ -17,7 +17,6 @@ include_once '../includes/auth-inc.php';
 
 require_once '../class/output.class.php';
 require_once '../class/db.class.php';
-//require_once '../class/output.class.php';
 
 // determin current action
 $action = $_REQUEST['action'];
@@ -52,18 +51,12 @@ if (!isset($data['canrefit']))
 	$data['canrefit'] = 0;
 }
 
-
 // create a database instance
 $database = new Database();
 
 if ($action === 'View')
 {
-	$targetURL = './rescueoverview.php';
-	if (isset($data['system']) && $data['system'] != '')
-	{
-		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
-	}
-	header('Location: '.$targetURL);
+	displayRequestOverview ( $data['system'] );
 }
 else if ($action === 'New')
 {
@@ -95,7 +88,7 @@ else if ($action === 'Create')
 	$database->execute();
 	// get new rescue ID
 	$rescueID = $database->lastInsertId();
-	
+// 	echo "<br> Creaded request: ".$rescueID.": Note:".$data['notes']."<br>";
 	// insert rescue note
 	if (isset($data['notes']) && $data['notes'] != '')
 	{
@@ -104,29 +97,26 @@ else if ($action === 'Create')
 		$database->bind(":agent", $charname);
 		$database->bind(":note", $data['notes']);
 		
+		// execute the insert query
 		$database->execute();
 	}
 	$database->endTransaction();
 	
 // 	echo "Create action";
+
+	displayRequestOverview($data ['system'] );
 	
 // 	displayOverview();
-	$targetURL = './rescueoverview.php';
-	if (isset($data['system']))
-	{
-		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
-	}
-	header('Location: '.$targetURL);
+// 	$targetURL = './rescueoverview.php';
+// 	if (isset($data['system']))
+// 	{
+// 		$targetURL .= '?system=' . Output::htmlEncodeString ( );
+// 	}
+// 	header('Location: '.$targetURL);
 }
 else if($action === 'Edit')
 {
-	$targetURL = './rescuemanage.php';
-	if (isset($data['request']))
-	{
-		$targetURL .= '?request=' . Output::htmlEncodeString ( $data ['request'] );
-	}
-	header('Location: '.$targetURL);
-	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($data['request']).'</a>';
+	displayManageRequest ( $data['request'] );
 }
 else if($action === 'AddNote')
 {
@@ -147,18 +137,90 @@ else if($action === 'AddNote')
 		$database->endTransaction();
 	}
 	
-	// display request manage page again
-	$targetURL = './rescuemanage.php';
-	if (isset($data['request']))
+	displayManageRequest ( $data['request'] );
+}
+else if ($action === 'UpdateRequest')
+{
+	// update request data
+// 	print_r($_REQUEST);
+	$rescueID = $_REQUEST['request'];
+
+	// check for special status and values if request is closed
+	$closeAgent = NULL;
+	$finished = 0; 
+	if($_REQUEST['status'] === 'closed')
 	{
-		$targetURL .= '?request=' . Output::htmlEncodeString ( $data ['request'] );
+		$closeAgent = $charname;
+		$finished = 1;
 	}
-	header('Location: '.$targetURL);
-	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($data['request']).'</a>';
-}	
+	
+	$database->beginTransaction();
+	// update status
+	$database->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
+	$database->bind(":status", $_REQUEST['status']);
+	$database->bind(":closeagent", $closeAgent);
+	$database->bind(":finished", $finished);
+	$database->bind(":rescueid", $rescueID);
+	$database->execute();
+	
+	// check and set reminder date
+	if (isset($_REQUEST['contacted']))
+	{
+		$database->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
+		$database->bind(":rescueid", $rescueID);
+// 		$database->debugDumpParams();
+		$database->execute();
+	}
+
+	// check if a reminder is set
+	if (isset($_REQUEST['reminder']) && is_numeric($_REQUEST['reminder']))
+	{
+		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
+		$database->bind(":reminder", $_REQUEST['reminder']);
+		$database->bind(":rescueid", $rescueID);
+// 		$database->debugDumpParams();
+		$database->execute();
+	}
+// 	print_r($_REQUEST);
+	$database->endTransaction();
+	
+	displayManageRequest ( $data['request'] );
+}
 else
 {
 	echo "Unknown action: ".Output::htmlEncodeString($action);
+}
+
+
+/**
+ * @param requestID
+ */
+
+function displayManageRequest($requestID = NULL) {
+	// display request manage page again
+	$targetURL = './rescuemanage.php';
+	if (isset($requestID))
+	{
+		$targetURL .= '?request=' . Output::htmlEncodeString ( $requestID );
+	}
+	header('Location: '.$targetURL);
+	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($requestID).'</a>';
+}
+
+
+/**
+ * Redirect to the request overview page
+ * @param system
+ */
+
+function displayRequestOverview($system = NULL) {
+	$targetURL = './rescueoverview.php';
+	if (isset($system) && $system != '')
+	{
+		$targetURL .= '?system=' . Output::htmlEncodeString ( $system  );
+	}
+	header('Location: '.$targetURL);
+	echo '<a href="'.$targetURL.'">Rescue request overview</a>';
 }
 
 ?>

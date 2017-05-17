@@ -48,13 +48,14 @@ Steps to setup a development system
       `system` varchar(8) NOT NULL,
       `pilot` varchar(255) NOT NULL,
       `requestdate` datetime default current_timestamp(),
-      `canrefit` int default 0,
-      `launcher` int default 0,
-      `finished` int default 0,
+      `reminderdate` datetime default current_timestamp(),
+      `canrefit` int not null default 0,
+      `launcher` int not null default 0,
+      `finished` int not null default 0,
       `lastcontact` datetime default current_timestamp,
       `startagent` varchar(255) not null,
       `closeagent` varchar(255),
-      `status` varchar(255) default 'open',
+      `status` varchar(255) not null default 'new',
       `LastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
        PRIMARY KEY (`id`)
      ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
