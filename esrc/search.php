@@ -204,7 +204,8 @@ if (isset($targetsystem)) {
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-			<a href="data_entry.php?sowsys=<?=$targetsystem?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
+				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
 			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
@@ -236,10 +237,9 @@ if (isset($targetsystem)) {
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
-			<!-- SOW button  -->
-			<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
-				Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-				<a href="?" class="btn btn-link" role="button">clear result</a>
+				<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
+					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+					<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
 		}
@@ -484,6 +484,7 @@ else {
 <?php
 include 'modal_agent.php';
 include 'modal_tend.php';
+include 'modal_sow.php';
 ?>
 
 </body>
