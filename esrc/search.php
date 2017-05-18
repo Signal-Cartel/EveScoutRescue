@@ -62,7 +62,6 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
 					</div>
 				</form>
 			</div>

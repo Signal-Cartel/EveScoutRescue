@@ -9,8 +9,25 @@
       </div>
       <form name="tendform" id="tendform" action="process_tend.php" method="POST">
 	      <div class="modal-body black">
+	      	<div class="pull-right">					
+				<!-- EXISTING CACHE INFO -->
+				<?php 
+				// get cache information from database
+				$row = $caches->getCacheInfo($targetsystem);
+				if (!empty($row)) {
+				?>
+					<strong>Existing Cache Info</strong><br />
+					Location: <?=$row['Location']?><br />
+					Align: <?=$row['AlignedWith']?><br />
+					Distance: <?=$row['Distance']?><br />
+					Password: <?=$row['Password']?>
+				<?php 
+				}
+				?>
+				<!-- END EXISTING CACHE INFO -->
+			</div>
 			<div class="form-group">
-				<label class="control-label" for="sys_tend">System: </label>
+				<label class="control-label" for="sys_tend">System</label>
 				<input type="hidden" name="sys_tend" value="<?php echo $targetsystem ?>" />
 				<span class="sechead"><?php echo $targetsystem ?></span>
 			</div>
