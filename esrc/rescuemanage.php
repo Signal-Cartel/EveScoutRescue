@@ -85,16 +85,13 @@ $database->closeQuery();
 <th>Key</th><th>Value</th>
 </tr>
 <tr>
-<td>Creation date</td><td><?=Output::getEveDate($row['requestdate'])?></td>
-</tr>
-<tr>
 <td>Pilot</td><td><?=Output::htmlEncodeString($row['pilot'])?></td>
 </tr>
 <tr>
 <td>System</td><td><?=Output::htmlEncodeString($row['system'])?></td>
 </tr>
 <tr>
-<td>Reminder</td><td><?=Output::getEveDate($row['reminderdate'])?></td>
+<td>Creation date</td><td><?=Output::getEveDate($row['requestdate'])?></td>
 </tr>
 <tr>
 <td>Creating agent</td><td><?=Output::htmlEncodeString($row['startagent'])?></td>
@@ -115,6 +112,9 @@ if ($row['status'] === 'closed')
 </tr>
 <tr>
 <td>Contacted (check box if contacted)</td><td><input type="checkbox" name="contacted" value="1" /></td>
+</tr>
+<tr>
+<td>Reminder</td><td><?=Output::getEveDate($row['reminderdate'])?></td>
 </tr>
 <tr>
 <td>Remind me</td><td><input class="black" type="text" name="reminder" size="5" placeholder="days" /></td>

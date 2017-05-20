@@ -43,28 +43,6 @@ if (isset($_REQUEST['system'])) {
 	$system = htmlspecialchars_decode($_REQUEST["system"]);
 }
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Create')
-{
-	// add value checks!
-	// system ok
-	// all values are set
-	// same request is not active (system, pilot)
-	
-	$database->beginTransaction();
-	$database->query("insert into rescuerequest(system, pilot, canrefit, note) values(:system, :pilot, :canrefit, :note)");
-	$database->bind(":system", $_REQUEST['system']);
-	$database->bind(":pilot", $_REQUEST['pilot']);
-	$database->bind(":canrefit", $_REQUEST['canrefit']);
-	$database->bind(":note", $_REQUEST['notes']);
-	
-	$database->execute();
-	
-	$database->endTransaction();
-	
-}
-
-// create an update action
-
 ?>
 <body class="white">
 <div class="container">

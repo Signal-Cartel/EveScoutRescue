@@ -17,6 +17,7 @@ include_once '../includes/auth-inc.php';
 
 require_once '../class/output.class.php';
 require_once '../class/db.class.php';
+require_once '../class/rescue.class.php';
 
 // determin current action
 $action = $_REQUEST['action'];
@@ -53,6 +54,7 @@ if (!isset($data['canrefit']))
 
 // create a database instance
 $database = new Database();
+$rescue = new Rescue($database);
 
 if ($action === 'View')
 {
@@ -60,6 +62,7 @@ if ($action === 'View')
 }
 else if ($action === 'New')
 {
+	// display the new request page with (optional) preset system
 	$targetURL = './rescue.php';
 	if (isset($data['system']))
 	{
@@ -77,45 +80,22 @@ else if ($action === 'Create')
 	// same request is not active (system, pilot)
 	
 	$database->beginTransaction();
-	$database->query("insert into rescuerequest(system, pilot, canrefit, launcher, startagent) values(:system, :pilot, :canrefit, :launcher, :agent)");
-	$database->bind(":system", $data['system']);
-	$database->bind(":pilot", $data['pilot']);
-	$database->bind(":canrefit", $data['canrefit']);
-	$database->bind(":launcher", $data['launcher']);
-	$database->bind(":agent", $charname);
 
-	// execute insert query
-	$database->execute();
-	// get new rescue ID
-	$rescueID = $database->lastInsertId();
-// 	echo "<br> Creaded request: ".$rescueID.": Note:".$data['notes']."<br>";
-	// insert rescue note
+	$rescueID = $rescue->createRequest($data['system'], $data['pilot'], $data['canrefit'], $data['launcher'], $charname);
+
+	// insert rescue note if set
 	if (isset($data['notes']) && $data['notes'] != '')
 	{
-		$database->query("insert into rescuenote(rescueid, note, agent) values(:rescueid, :note, :agent)");
-		$database->bind(":rescueid", $rescueID);
-		$database->bind(":agent", $charname);
-		$database->bind(":note", $data['notes']);
-		
-		// execute the insert query
-		$database->execute();
+		$rescue->createRescueNote($rescueID, $charname, $data['notes']);
 	}
 	$database->endTransaction();
-	
-// 	echo "Create action";
 
+	// switch display to overview with current system
 	displayRequestOverview($data ['system'] );
-	
-// 	displayOverview();
-// 	$targetURL = './rescueoverview.php';
-// 	if (isset($data['system']))
-// 	{
-// 		$targetURL .= '?system=' . Output::htmlEncodeString ( );
-// 	}
-// 	header('Location: '.$targetURL);
 }
 else if($action === 'Edit')
 {
+	// display an existing request edit form
 	displayManageRequest ( $data['request'] );
 }
 else if($action === 'AddNote')
@@ -127,13 +107,13 @@ else if($action === 'AddNote')
 		// get new rescue ID
 		$rescueID = $_REQUEST['request'];
 	
-		$database->query("insert into rescuenote(rescueid, note, agent) values(:rescueid, :note, :agent)");
-		$database->bind(":rescueid", $rescueID);
-		$database->bind(":agent", $charname);
-		$database->bind(":note", $data['notes']);
+// 		$database->query("insert into rescuenote(rescueid, note, agent) values(:rescueid, :note, :agent)");
+// 		$database->bind(":rescueid", $rescueID);
+// 		$database->bind(":agent", $charname);
+// 		$database->bind(":note", $data['notes']);
 	
-		$database->execute();
-		
+// 		$database->execute();
+		$rescue->createRescueNote($rescueID, $charname, $data['notes']);	
 		$database->endTransaction();
 	}
 	
