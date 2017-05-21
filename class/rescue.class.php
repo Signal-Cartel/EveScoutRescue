@@ -78,5 +78,31 @@ class Rescue {
 		// execute the insert query
 		$this->db->execute();
 	}
+
+	/**
+	 * Update the last contact time stamp to the current time
+	 * @param unknown $rescueID
+	 */
+	public function registerContact($rescueID)
+	{
+		$this->db->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
+		$this->db->bind(":rescueid", $rescueID);
+		// 		$database->debugDumpParams();
+		$this->db->execute();
+	}
+	
+	/**
+	 * Set the reminder of the request  
+	 * @param unknown $rescueID
+	 * @param unknown $reminderDays
+	 */
+	public function setReminder($rescueID, $reminderDays)
+	{
+		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
+		$database->bind(":rescueid", $rescueID);
+		$database->bind(":reminder", $reminderDays);
+		// 		$database->debugDumpParams();
+		$database->execute();
+	}
 }
 ?>

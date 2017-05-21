@@ -11,7 +11,7 @@ include_once '../includes/auth-inc.php';
 
 <head>
 	<?php 
-	$pgtitle = 'SAR request';
+	$pgtitle = 'SAR request overview';
 	include_once '../includes/head.php'; 
 	?>
 	<script>

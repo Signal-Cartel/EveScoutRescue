@@ -36,9 +36,10 @@ if (!isset($charname))
 }
 
 // try to get data from request
-$data['request'] = $_REQUEST['request'];
-$data['system'] = $_REQUEST['system'];
-$data['pilot'] = $_REQUEST['pilot'];
+// $rescueID = $_REQUEST['request'];
+$rescueID = $_REQUEST['request'];
+
+$system = $_REQUEST['system'];
 $data['canrefit'] = $_REQUEST['canrefit'];
 $data['launcher'] = $_REQUEST['launcher'];
 $data['notes'] = $_REQUEST['notes'];
@@ -58,13 +59,13 @@ $rescue = new Rescue($database);
 
 if ($action === 'View')
 {
-	displayRequestOverview ( $data['system'] );
+	displayRequestOverview ( $system );
 }
 else if ($action === 'New')
 {
 	// display the new request page with (optional) preset system
 	$targetURL = './rescue.php';
-	if (isset($data['system']))
+	if (isset($system))
 	{
 		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
 	}
@@ -74,29 +75,45 @@ else if ($action === 'New')
 // process create action
 else if ($action === 'Create')
 {
+	// mark data as ok
+	$dataOK= TRUE;
 	// add value checks!
+	$pilot = $_REQUEST['pilot'];
+	// check if pilot is set
+	if (!isset($pilot) || trim($pilot) === '')
+	{
+		// pilot information not set
+		$dataOK = FALSE;
+	}
 	// system ok
 	// all values are set
 	// same request is not active (system, pilot)
-	
-	$database->beginTransaction();
-
-	$rescueID = $rescue->createRequest($data['system'], $data['pilot'], $data['canrefit'], $data['launcher'], $charname);
-
-	// insert rescue note if set
-	if (isset($data['notes']) && $data['notes'] != '')
+	if ($dataOK)
 	{
-		$rescue->createRescueNote($rescueID, $charname, $data['notes']);
+		$database->beginTransaction();
+	
+		$newRescueID = $rescue->createRequest($system, $pilot, $data['canrefit'], $data['launcher'], $charname);
+	
+		// insert rescue note if set
+		if (isset($data['notes']) && $data['notes'] != '')
+		{
+			$rescue->createRescueNote($newRescueID, $charname, $data['notes']);
+		}
+		$database->endTransaction();
+	
+		// switch display to overview with current system
+		displayRequestOverview($data ['system'] );
 	}
-	$database->endTransaction();
-
-	// switch display to overview with current system
-	displayRequestOverview($data ['system'] );
+	else 
+	{
+		// data was wrong. Display input mask with wrong data
+		echo "Wrong data entered! Need fix";
+	}
 }
 else if($action === 'Edit')
 {
 	// display an existing request edit form
-	displayManageRequest ( $data['request'] );
+	displayManageRequest ( $rescueID );
 }
 else if($action === 'AddNote')
 {
@@ -105,19 +122,12 @@ else if($action === 'AddNote')
 	{
 		$database->beginTransaction();
 		// get new rescue ID
-		$rescueID = $_REQUEST['request'];
 	
-// 		$database->query("insert into rescuenote(rescueid, note, agent) values(:rescueid, :note, :agent)");
-// 		$database->bind(":rescueid", $rescueID);
-// 		$database->bind(":agent", $charname);
-// 		$database->bind(":note", $data['notes']);
-	
-// 		$database->execute();
 		$rescue->createRescueNote($rescueID, $charname, $data['notes']);	
 		$database->endTransaction();
 	}
 	
-	displayManageRequest ( $data['request'] );
+	displayManageRequest ( $rescueID );
 }
 else if ($action === 'UpdateRequest')
 {
@@ -146,25 +156,29 @@ else if ($action === 'UpdateRequest')
 	// check and set reminder date
 	if (isset($_REQUEST['contacted']))
 	{
-		$database->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
-		$database->bind(":rescueid", $rescueID);
-// 		$database->debugDumpParams();
-		$database->execute();
+// 		$database->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
+// 		$database->bind(":rescueid", $rescueID);
+// // 		$database->debugDumpParams();
+// 		$database->execute();
+		$rescue->registerContact($rescueID);
 	}
 
+	// get the set reminder days
+	$reminder = $_REQUEST['reminder'];
 	// check if a reminder is set
-	if (isset($_REQUEST['reminder']) && is_numeric($_REQUEST['reminder']))
+	if (isset($reminder) && is_numeric(trim($reminder)))
 	{
-		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
-		$database->bind(":reminder", $_REQUEST['reminder']);
-		$database->bind(":rescueid", $rescueID);
-// 		$database->debugDumpParams();
-		$database->execute();
+// 		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
+// 		$database->bind(":reminder", $_REQUEST['reminder']);
+// 		$database->bind(":rescueid", $rescueID);
+// // 		$database->debugDumpParams();
+// 		$database->execute();
+		$rescue->setReminder($rescueID, trim($reminder));
 	}
 // 	print_r($_REQUEST);
 	$database->endTransaction();
 	
-	displayManageRequest ( $data['request'] );
+	displayManageRequest ( $rescueID );
 }
 else
 {
@@ -175,7 +189,6 @@ else
 /**
  * @param requestID
  */
-
 function displayManageRequest($requestID = NULL) {
 	// display request manage page again
 	$targetURL = './rescuemanage.php';
@@ -192,7 +205,6 @@ function displayManageRequest($requestID = NULL) {
  * Redirect to the request overview page
  * @param system
  */
-
 function displayRequestOverview($system = NULL) {
 	$targetURL = './rescueoverview.php';
 	if (isset($system) && $system != '')

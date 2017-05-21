@@ -15,7 +15,7 @@ require_once '../class/db.class.php';
 
 <head>
 <?php
-$pgtitle = 'SAR request';
+$pgtitle = 'SAR request update';
 include_once '../includes/head.php';
 ?>
 	<script>
