@@ -35,24 +35,22 @@
 				<label class="control-label" for="status">Status</label>
 				<div class="radio">
 					<label for="status_1">
-						<input id="status_1" name="status" type="radio" value="Healthy">Healthy
+						<input id="status_1" name="status" type="radio" value="Healthy">
+						<strong>Healthy</strong> = Anchored, safe, and full of supplies
 					</label>
 				</div>
 				<div class="radio">
 					<label for="status_2">
-						<input id="status_2" name="status" type="radio" value="Upkeep Required">Upkeep Required
+						<input id="status_2" name="status" type="radio" value="Upkeep Required">
+						<strong>Upkeep Required</strong> = Needs supplies
 					</label>
 				</div>
 				<div class="radio">
 					<label for="status_3">
-						<input id="status_3" name="status" type="radio" value="Expired">Expired
+						<input id="status_3" name="status" type="radio" value="Expired">
+						<strong>Expired</strong> = Could not find or is unusable
 					</label>
 				</div>
-				<p class="descr">What was the condition of the cache when you left it?<br />
-					<b>Healthy</b> = Anchored, safe, and full of supplies<br />
-					<b>Upkeep Required</b> = Needs re-supplied<br />
-					<b>Expired</b> = Could not find or is unusable
-				</p>
 			</div>
 		  	<div class="field">
 				<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>
