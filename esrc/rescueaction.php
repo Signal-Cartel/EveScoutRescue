@@ -44,6 +44,9 @@ $data['canrefit'] = $_REQUEST['canrefit'];
 $data['launcher'] = $_REQUEST['launcher'];
 $data['notes'] = $_REQUEST['notes'];
 
+$errors = [];
+
+
 if (!isset($data['launcher']))
 {
 	$data['launcher'] = 0;
