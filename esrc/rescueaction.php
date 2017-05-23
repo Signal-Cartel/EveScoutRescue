@@ -18,6 +18,7 @@ include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
 require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
+require_once '../class/systems.class.php';
 
 // determin current action
 $action = $_REQUEST['action'];
@@ -59,6 +60,7 @@ if (!isset($data['canrefit']))
 // create a database instance
 $database = new Database();
 $rescue = new Rescue($database);
+$whsystem = new Systems($database);
 
 if ($action === 'View')
 {
@@ -78,17 +80,47 @@ else if ($action === 'New')
 // process create action
 else if ($action === 'Create')
 {
+	$errorCount = 0;
 	// mark data as ok
 	$dataOK= TRUE;
 	// add value checks!
 	$pilot = $_REQUEST['pilot'];
 	// check if pilot is set
+	if (isset($pilot))
+	{
+		// remove spaces
+		$pilot = trim($pilot);
+	}
+	
+	// check if pilot is set and no empty string
 	if (!isset($pilot) || trim($pilot) === '')
 	{
 		// pilot information not set
+		$error[$errorCount++] = "Pilot name is missing!";
 		$dataOK = FALSE;
 	}
+	else if ($rescue->isRequestActive($pilot) > 0)
+	{
+		// already an active SAR request for pilot 
+		$error[$errorCount++] = "Pilot has a request open!";
+		$dataOK = FALSE;
+		}
 	// system ok
+	if (!isset($system) || trim($system) === '')
+	{
+		// system information not set
+		$error[$errorCount++] = "System name is missing!";
+		$dataOK = FALSE;
+	}
+	else
+	{
+		if ($whsystem->validatename($system) == 1)
+		{
+			// system information is wrong
+			$error[$errorCount++] = "System name is no WH system!";
+			$dataOK = FALSE;
+		}
+	}
 	// all values are set
 	// same request is not active (system, pilot)
 	if ($dataOK)
@@ -110,7 +142,8 @@ else if ($action === 'Create')
 	else 
 	{
 		// data was wrong. Display input mask with wrong data
-		echo "Wrong data entered! Need fix";
+// 		echo "Wrong data entered! Need fix";
+		require_once './rescue.php';
 	}
 }
 else if($action === 'Edit')
@@ -139,30 +172,26 @@ else if ($action === 'UpdateRequest')
 	$rescueID = $_REQUEST['request'];
 
 	// check for special status and values if request is closed
-	$closeAgent = NULL;
-	$finished = 0; 
-	if($_REQUEST['status'] === 'closed')
-	{
-		$closeAgent = $charname;
-		$finished = 1;
-	}
+// 	$closeAgent = NULL;
+// 	$finished = 0; 
+// 	if($_REQUEST['status'] === 'closed')
+// 	{
+// 		$closeAgent = $charname;
+// 		$finished = 1;
+// 	}
 	
 	$database->beginTransaction();
 	// update status
-	$database->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
-	$database->bind(":status", $_REQUEST['status']);
-	$database->bind(":closeagent", $closeAgent);
-	$database->bind(":finished", $finished);
-	$database->bind(":rescueid", $rescueID);
-	$database->execute();
-	
+// 	$database->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
+// 	$database->bind(":status", $_REQUEST['status']);
+// 	$database->bind(":closeagent", $closeAgent);
+// 	$database->bind(":finished", $finished);
+// 	$database->bind(":rescueid", $rescueID);
+// 	$database->execute();
+	$rescue->setStatus($rescueID, $_REQUEST['status']);
 	// check and set reminder date
 	if (isset($_REQUEST['contacted']))
 	{
-// 		$database->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
-// 		$database->bind(":rescueid", $rescueID);
-// // 		$database->debugDumpParams();
-// 		$database->execute();
 		$rescue->registerContact($rescueID);
 	}
 
@@ -171,14 +200,8 @@ else if ($action === 'UpdateRequest')
 	// check if a reminder is set
 	if (isset($reminder) && is_numeric(trim($reminder)))
 	{
-// 		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
-// 		$database->bind(":reminder", $_REQUEST['reminder']);
-// 		$database->bind(":rescueid", $rescueID);
-// // 		$database->debugDumpParams();
-// 		$database->execute();
 		$rescue->setReminder($rescueID, trim($reminder));
 	}
-// 	print_r($_REQUEST);
 	$database->endTransaction();
 	
 	displayManageRequest ( $rescueID );
@@ -209,10 +232,15 @@ function displayManageRequest($requestID = NULL) {
  * @param system
  */
 function displayRequestOverview($system = NULL) {
-	$targetURL = './rescueoverview.php';
+	$targetURL = './rescueoverview.php?';
+	$finished = $_REQUEST['finished'];
+	if (isset($finished) && $finished != '')
+	{
+		$targetURL .= 'finished=' . Output::htmlEncodeString ( $finished  ).'&';
+	}
 	if (isset($system) && $system != '')
 	{
-		$targetURL .= '?system=' . Output::htmlEncodeString ( $system  );
+		$targetURL .= 'system=' . Output::htmlEncodeString ( $system  );
 	}
 	header('Location: '.$targetURL);
 	echo '<a href="'.$targetURL.'">Rescue request overview</a>';

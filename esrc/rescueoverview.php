@@ -74,11 +74,11 @@ if (isset($_REQUEST['system'])) {
 </div>
 <?php 
 
-function displayLine($row)
+function displayLine($row, $finished = 0, $system = NULL)
 {
 	echo "<tr>";
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
-	echo "<td>".Output::htmlEncodeString($row['system'])."</td>";
+	echo '<td><a href="./rescueaction?action=View&system='.(isset($system)?'':Output::htmlEncodeString($row['system'])).'&finished='.Output::htmlEncodeString($finished).'">'.Output::htmlEncodeString($row['system']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
 	echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
@@ -117,16 +117,29 @@ if (isset($data))
 if ($finished == 0)
 {
 ?>
-View active requests. Display <a href="./rescueoverview.php?finished=1">finished</a> requests.
+View active requests. Display <a href="./rescueaction.php?action=View&finished=1">all finished</a> requests.
+<?php
+if (isset($system))
+{
+?>
+	Display <a href="./rescueaction.php?action=View&finished=1&system=<?=Output::htmlEncodeString($system)?>">finished</a> requests of <?=Output::htmlEncodeString($system)?>.
 <?php 	
+}
 }
 else 
 {
 ?>
-View finished requests. Display <a href="./rescueoverview.php?finished=0">active</a> requests.
+View finished requests. Display <a href="./rescueaction.php?action=View&finished=0">all active</a> requests.
+<?php
+if (isset($system))
+{
+?>
+	Display <a href="./rescueaction.php?action=View&finished=0&system=<?=Output::htmlEncodeString($system)?>">all active</a> requests of <?=Output::htmlEncodeString($system)?>.
 <?php
 }
+}
 ?>
+<!-- http://www.odins-erben-wow.de/esrc/esrc/rescueaction.php?action=View&system=J111000  -->
 </p>
 <table width="90%">
 <tr>
@@ -134,16 +147,16 @@ View finished requests. Display <a href="./rescueoverview.php?finished=0">active
 </tr>
 <?php 
 	foreach ($data as $row) {
-		if (isset($_REQUEST['system']))
+		if (isset($system))
 		{
-			if ($_REQUEST['system'] == $row['system'])
+			if ($system == $row['system'])
 			{
-				displayLine($row);
+				displayLine($row, $finished, $system);
 			}
 		}
 		else
 		{
-			displayLine($row);
+			displayLine($row, $finished);
 		}
 		
 	}

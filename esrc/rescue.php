@@ -71,20 +71,37 @@ if (isset($_REQUEST['system'])) {
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws">
+
+<?php 
+if (isset($dataOK) && $dataOK == FALSE)
+{
+?>
+	<div class="red">
+	Errors:<br />
+	<?php 
+	foreach ($error as $e)
+	{
+		echo Output::htmlEncodeString($e)."<br />";
+	}
+	?>	
+	</div>
+<?php 
+}
+?>
+
 <form action="rescueaction.php" method="POST">
 <p> System: <?php if (isset($system)) {?><input placeholder="System name" class="system tt-query black" type="text" autocomplete="off" name="system" value="<?=Output::htmlEncodeString($system)?>"/> <?php } else { ?> <input placeholder="System name" class="system tt-query black" type="text" name="system" class="system" autocomplete="off" /> <?php }?>
 </p>
-<p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name"/> &nbsp; Enter "Pilot Name (Contact Name)" if a intermediate contact is involved.
+<p>Pilot: <input type="text" class="black" name="pilot"  placeholder="Pilot name" <?php if (isset($_REQUEST['pilot'])) { echo 'value="'.Output::htmlEncodeString($_REQUEST['pilot']).'"'; }?>/> &nbsp; Enter "Pilot Name (Contact Name)" if a intermediate contact is involved.
 </p>
 <p> 
-Can refit: <input type="checkbox" name="canrefit" value="1" />
-<!-- <select class="black" name="canrefit" ><option value="0" default>No</option><option value="1">Yes</option></select> -->
+Can refit: <input type="checkbox" name="canrefit" value="1" <?php if (isset($_REQUEST['canrefit'])) { echo 'checked="checked"'; } ?>/>
 </p>
 <p> 
-Probe launcher: <input type="checkbox" name="launcher" value="1" />
+Probe launcher: <input type="checkbox" name="launcher" value="1" <?php if (isset($_REQUEST['launcher'])) { echo 'checked="checked"'; } ?>/>
 </p>
 <p> 
-Note: 					<textarea class="form-control black" id="notes" name="notes" rows="5"></textarea>
+Note: 					<textarea class="form-control black" id="notes" name="notes" rows="5"><?php if (isset($_REQUEST['notes'])) { echo $_REQUEST['notes']; }?></textarea>
 </p>
 <p>
 Send: <input class="black" type="submit" name="action" value="Create"> &nbsp; Cancel: <input class="black" type="submit" name="action" value="View"> &nbsp; Show all <a href="./rescueoverview.php">active</a> requests.

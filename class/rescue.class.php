@@ -10,6 +10,10 @@ if (!defined('ESRC'))
 
 require_once '../class/db.class.php';
 
+/**
+ * Class to manage and search SAR requests. 
+ *
+ */
 class Rescue {
 	var $db = null;
 	
@@ -27,7 +31,7 @@ class Rescue {
 	}
 	
 	/**
-	 * Create a new DB connection.
+	 * Creates a new DB connection.
 	 */
 	private function connectDatabase() {
 		$this->db = new Database ();
@@ -98,11 +102,47 @@ class Rescue {
 	 */
 	public function setReminder($rescueID, $reminderDays)
 	{
-		$database->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
-		$database->bind(":rescueid", $rescueID);
-		$database->bind(":reminder", $reminderDays);
+		$this->db->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
+		$this->db->bind(":rescueid", $rescueID);
+		$this->db->bind(":reminder", $reminderDays);
 		// 		$database->debugDumpParams();
-		$database->execute();
+		$this->db->execute();
+	}
+	
+	/**
+	 * Update the status of the rescue request
+	 * @param unknown $rescueID
+	 * @param unknown $status
+	 */
+	public function setStatus($rescueID, $status)
+	{
+		$closeAgent = NULL;
+		$finished = 0;
+		if($status === 'closed')
+		{
+			$closeAgent = $charname;
+			$finished = 1;
+		}
+		$this->db->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
+		$this->db->bind(":status", $status);
+		$this->db->bind(":closeagent", $closeAgent);
+		$this->db->bind(":finished", $finished);
+		$this->db->bind(":rescueid", $rescueID);
+		$this->db->execute();
+	}
+	
+	/**
+	 * Check if a SAR request is active for pilot
+	 * @return 0 if no request is active or 1 if one is active
+	 */
+	public function isRequestActive($pilot)
+	{
+		$this->db->query("select count(1) as cnt from rescuerequest where finished = 0 and pilot = :pilot");
+		$this->db->bind(":pilot", $pilot);
+		
+		$result = $this->db->single();
+		
+		return $result['cnt'];
 	}
 }
 ?>

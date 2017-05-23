@@ -74,7 +74,7 @@ $database->closeQuery();
 <div>
 <div>
 
-<a href="./rescueaction.php?action=View&system=<?=Output::htmlEncodeString($row['system'])?>">Overview</a> &nbsp; <a href="./rescueaction.php?action=New">New SAR</a>
+<a href="./rescueaction.php?action=View">Overview all</a> <a href="./rescueaction.php?action=View&system=<?=Output::htmlEncodeString($row['system'])?>">Overview <?=Output::htmlEncodeString($row['system'])?></a> &nbsp; <a href="./rescueaction.php?action=New">New SAR</a>
 </div>
 
 
