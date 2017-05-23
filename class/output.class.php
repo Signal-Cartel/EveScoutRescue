@@ -21,7 +21,7 @@ class Output {
 	{
 		$eveyear = intval(date("Y", strtotime($origdate)))-1898;
 		
-		$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate .'+ 4 hours'));
+		$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate));
 
 		return $result;
 	}

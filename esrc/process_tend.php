@@ -29,9 +29,10 @@ if (isset($_POST['sys_tend'])) {
 	// yes, process the request
 	$db = new Database();
 
-	$pilot = $system = $status = $aidedpilot = ''; 
+	$activitydate = $pilot = $system = $status = $aidedpilot = ''; 
 	$errmsg = $entrytype = $noteDate = '';
 
+	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$pilot = test_input($_POST["pilot"]);
 	$system = test_input($_POST["sys_tend"]);
 	$status= test_input($_POST["status"]);
@@ -62,7 +63,10 @@ if (isset($_POST['sys_tend'])) {
 		//begin db transaction
 		$db->beginTransaction();
 		// insert to [activity] table
-		$db->query("INSERT INTO activity (Pilot, EntryType, System, AidedPilot, Note, IP) VALUES (:pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$db->query("INSERT INTO activity (ActivityDate, Pilot, EntryType, System, AidedPilot, 
+						Note, IP) 
+					VALUES (:activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$db->bind(':activitydate', $activitydate);
 		$db->bind(':pilot', $pilot);
 		$db->bind(':entrytype', $entrytype);
 		$db->bind(':system', $system);
@@ -75,24 +79,30 @@ if (isset($_POST['sys_tend'])) {
 		//end db transaction
 		$db->endTransaction();
 		//prepare note for update
-		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
+		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
 		$tender_note = '<br />' . $noteDate . 'Tended by '. $pilot;
-		if (!empty($notes)) { $tender_note = $tender_note . '<br />' . $notes; }		
+		if (!empty($notes)) { $tender_note = $tender_note. '<br />' . $notes; }		
 		//perform [cache] update
 		switch ($status) {
 			case 'Expired':
 				//FYI: daily process to update expired caches in [cache] is running via cron-job.org
-				$db->query("UPDATE cache SET Status = :status, Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
+				$db->query("UPDATE cache SET Status = :status, Note = CONCAT(Note, :note),
+								LastUpdated = :lastupdated 
+							WHERE System = :system AND Status <> 'Expired'");
 				$db->bind(':status', $status);
 				$db->bind(':note', $tender_note);
+				$db->bind(':lastupdated', $activitydate);
 				$db->bind(':system', $system);
 				$db->execute();
 				break;
 			default:	//'Healthy', 'Upkeep Required'
-				$db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
-				$db->bind(':expdate', date("Y-m-d H:i:s", strtotime("+30 days",time())));
+				$db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, 
+								Note = CONCAT(Note, :note), LastUpdated = :lastupdated  
+							WHERE System = :system AND Status <> 'Expired'");
+				$db->bind(':expdate', gmdate("Y-m-d", strtotime("+30 days", time())));
 				$db->bind(':status', $status);
 				$db->bind(':note', $tender_note);
+				$db->bind(':lastupdated', $activitydate);
 				$db->bind(':system', $system);
 				$db->execute();
 		}

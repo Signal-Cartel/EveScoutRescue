@@ -242,7 +242,7 @@ elseif (isset($_REQUEST['system'])) {
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td>YC'. $eveyear .'-'. 
-							date("m-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')).
+							date("m-d H:i:s", strtotime($value['ActivityDate'])).
 						 '</td>';
 					echo '<td'. $actioncellformat .'>'. $value['EntryType'] .'</td>';
 					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';

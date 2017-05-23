@@ -35,11 +35,12 @@ if (isset($_POST['sys_sow'])) {
 	$db = new Database();
 	$systems = new Systems($db);
 	
-	$pilot = $system = $location = $alignedwith = $distance = '';
+	$pilot = $activitydate= $system = $location = $alignedwith = $distance = '';
 	$password = $status = $aidedpilot = $notes = $errmsg = $entrytype = '';
 	$noteDate = $successmsg = $success_url = "";
 	
 	$pilot = test_input($_POST["pilot"]);
+	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$system = test_input($_POST["sys_sow"]);
 	$location = test_input($_POST["location"]);
 	$alignedwith = test_input($_POST["alignedwith"]);
@@ -87,8 +88,11 @@ if (isset($_POST['sys_sow'])) {
 		//begin db transaction
 		$db->beginTransaction();
 		// insert to [activity] table
-		$db->query("INSERT INTO activity (Pilot, EntryType, System, AidedPilot, Note, IP) VALUES (:pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$db->query("INSERT INTO activity (Pilot, ActivityDate, EntryType, System, 
+					AidedPilot, Note, IP) 
+					VALUES (:pilot, :activitydate, :entrytype, :system, :aidedpilot, :note, :ip)");
 		$db->bind(':pilot', $pilot);
+		$db->bind(':activitydate', $activitydate);
 		$db->bind(':entrytype', $entrytype);
 		$db->bind(':system', $system);
 		$db->bind(':aidedpilot', $aidedpilot);
@@ -100,20 +104,24 @@ if (isset($_POST['sys_sow'])) {
 		//end db transaction
 		$db->endTransaction();
 		//prepare note
-		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
+		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
 		$sower_note = $noteDate . 'Sown by '. $pilot;
-		if (!empty($notes)) { $sower_note = $sower_note . "\n" . $notes; }
+		if (!empty($notes)) { $sower_note = $sower_note. "\n" . $notes; }
 		//perform [cache] insert
-		$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, AlignedWith, Distance, Password, Status, ExpiresOn, Note) VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :note)");
+		$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, 
+						AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note) 
+					VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, 
+						:status, :expdate, :lastupdated, :note)");
 		$db->bind(':cacheid', $newID);
-		$db->bind(':sowdate', date("Y-m-d H:i:s", strtotime("now")));
+		$db->bind(':sowdate', $activitydate);
 		$db->bind(':system', $system);
 		$db->bind(':location', $location);
 		$db->bind(':aw', $alignedwith);
 		$db->bind(':distance', $distance);
 		$db->bind(':pw', $password);
 		$db->bind(':status', 'Healthy');
-		$db->bind(':expdate', date("Y-m-d H:i:s", strtotime("+30 days",time())));
+		$db->bind(':expdate', gmdate("Y-m-d", strtotime("+30 days", time())));
+		$db->bind(':lastupdated', $activitydate);
 		$db->bind(':note', $sower_note);
 		$db->execute();
 		//redirect back to search page to show updated info

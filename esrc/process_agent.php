@@ -29,8 +29,9 @@ if (isset($_POST['sys_adj'])) {
 	// yes, process the request
 	$db = new Database();
 
-	$pilot = $system = $aidedpilot = $errmsg = $entrytype = $noteDate = '';
+	$activitydate = $pilot = $system = $aidedpilot = $errmsg = $entrytype = $noteDate = '';
 
+	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$pilot = test_input($_POST["pilot"]);
 	$system = test_input($_POST["sys_adj"]);
 	$aidedpilot = test_input($_POST["aidedpilot"]);
@@ -61,7 +62,10 @@ if (isset($_POST['sys_adj'])) {
 		//begin db transaction
 		$db->beginTransaction();
 		// insert to [activity] table
-		$db->query("INSERT INTO activity (Pilot, EntryType, System, AidedPilot, Note, IP) VALUES (:pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$db->query("INSERT INTO activity (ActivityDate, Pilot, EntryType, System, 
+						AidedPilot, Note, IP) 
+					VALUES (:activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$db->bind(':activitydate', $activitydate);
 		$db->bind(':pilot', $pilot);
 		$db->bind(':entrytype', $entrytype);
 		$db->bind(':system', $system);
@@ -73,12 +77,14 @@ if (isset($_POST['sys_adj'])) {
 		$newID = $db->lastInsertId();
 		//end db transaction
 		$db->endTransaction();
-		$noteDate = '[' . date("Y-M-d", strtotime("now")) . '] ';
-		$adj_note = '<br />' . $noteDate . 'Adjunct: '. $pilot . '; Aided: ' . $aidedpilot;
-		if (!empty($notes)) { $adj_note = $adj_note . '<br />' . $notes; }
+		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
+		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
+		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
 			
-		$db->query("UPDATE cache SET Note = CONCAT(Note, :note) WHERE System = :system AND Status <> 'Expired'");
-		$db->bind(':note', $adj_note);
+		$db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = :lastupdated 
+					WHERE System = :system AND Status <> 'Expired'");
+		$db->bind(':note', $agent_note);
+		$db->bind(':lastupdated', $activitydate);
 		$db->bind(':system', $system);
 		$db->execute();
 		

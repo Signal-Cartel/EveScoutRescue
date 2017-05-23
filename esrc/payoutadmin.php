@@ -141,7 +141,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td class="white text-nowrap">YC'. $eveyear .'-'. 
-							date("m-d H:i:s", strtotime($value['ActivityDate'] .'+ 4 hours')) .
+							date("m-d H:i:s", strtotime($value['ActivityDate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
