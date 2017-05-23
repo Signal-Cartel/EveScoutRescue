@@ -30,14 +30,13 @@ include_once '../includes/auth-inc.php';
 
 <?php
 require_once '../class/db.class.php';
-require_once '../class/caches.class.php';
-require_once '../class/systems.class.php';
+require_once '../class/rescue.class.php';
 require_once '../class/output.class.php';
 
 $database = new Database();
 
 // create a cache object instance
-$caches = new Caches($database);
+$rescue = new Rescue($database);
 
 if (isset($_REQUEST['system'])) {
 	$system = htmlspecialchars_decode($_REQUEST["system"]);
@@ -81,6 +80,8 @@ function displayLine($row, $finished = 0, $system = NULL)
 	echo '<td><a href="./rescueaction?action=View&system='.(isset($system)?'':Output::htmlEncodeString($row['system'])).'&finished='.Output::htmlEncodeString($finished).'">'.Output::htmlEncodeString($row['system']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
+	echo "<td>".Output::htmlEncodeString($row['launcher'])."</td>";
+	echo "<td>".Output::htmlEncodeString($row['status'])."</td>";
 	echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
 	echo "</tr>";
 }
@@ -93,16 +94,8 @@ if (!isset($finished))
 }
 
 // get requests from database
-$database->query("select id, requestdate, system, pilot, canrefit, finished from rescuerequest where finished = :finished order by requestdate");
-$database->bind(":finished", $finished);
-// $database->execute();
-$data = $database->resultset();
-// echo "<pre>";
-// print_r($database);
-// echo "\n";
-// print_r($data);
-// echo "</pre>";
-$database->closeQuery();
+$data = $rescue->getRequests($finished);
+
 if (isset($data))
 {
 ?>
@@ -143,7 +136,7 @@ if (isset($system))
 </p>
 <table width="90%">
 <tr>
-<th>Started</th><th>System</th><th>Pilot</th><th>refit</th><th>Manage</th>
+<th>Started</th><th>System</th><th>Pilot</th><th>refit</th><th>launcher</th><th>status</th><th>Manage</th>
 </tr>
 <?php 
 	foreach ($data as $row) {

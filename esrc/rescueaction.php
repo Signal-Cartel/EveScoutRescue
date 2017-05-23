@@ -168,26 +168,10 @@ else if($action === 'AddNote')
 else if ($action === 'UpdateRequest')
 {
 	// update request data
-// 	print_r($_REQUEST);
 	$rescueID = $_REQUEST['request'];
 
-	// check for special status and values if request is closed
-// 	$closeAgent = NULL;
-// 	$finished = 0; 
-// 	if($_REQUEST['status'] === 'closed')
-// 	{
-// 		$closeAgent = $charname;
-// 		$finished = 1;
-// 	}
-	
 	$database->beginTransaction();
 	// update status
-// 	$database->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
-// 	$database->bind(":status", $_REQUEST['status']);
-// 	$database->bind(":closeagent", $closeAgent);
-// 	$database->bind(":finished", $finished);
-// 	$database->bind(":rescueid", $rescueID);
-// 	$database->execute();
 	$rescue->setStatus($rescueID, $_REQUEST['status']);
 	// check and set reminder date
 	if (isset($_REQUEST['contacted']))

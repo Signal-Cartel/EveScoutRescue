@@ -144,5 +144,28 @@ class Rescue {
 		
 		return $result['cnt'];
 	}
+
+	/**
+	 * Get all requests by status
+	 * @param number $finished 0 - all open requests (default); 1 - alll finished requests
+	 * @return array
+	 */
+	public function getRequests($finished = 0)
+	{
+		// get requests from database
+		$this->db->query("select id, requestdate, system, pilot, canrefit, launcher, status, finished from rescuerequest where finished = :finished order by requestdate");
+		$this->db->bind(":finished", $finished);
+		// $database->execute();
+		$data = $this->db->resultset();
+		// echo "<pre>";
+		// print_r($database);
+		// echo "\n";
+		// print_r($data);
+		// echo "</pre>";
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+
 }
 ?>
