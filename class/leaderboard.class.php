@@ -81,8 +81,8 @@ class Leaderboard
 		}
 		
 		// prepare the query
-		$start = date('Y-m-d', strtotime('-'.$lastDays.' days'));
-		$end = date('Y-m-d', strtotime("tomorrow"));
+		$start = gmdate('Y-m-d', strtotime('-'.$lastDays.' days'));
+		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 		$this->db->query("SELECT COUNT(*) AS cnt, Pilot
 					FROM activity
 					WHERE ActivityDate BETWEEN :start AND :end
@@ -106,8 +106,8 @@ class Leaderboard
 // 	public function getTopPilotsWeek(int $count)
 	public function getTopPilotsWeek($count)
 	{
-		$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
-		$end = date('Y-m-d', strtotime("tomorrow"));
+		$start = gmdate('Y-m-d', strtotime('last Sunday', strtotime("now")));
+		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 			
 		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
 					FROM activity
@@ -140,8 +140,8 @@ class Leaderboard
 			$days = 60;
 		}
 		
-		$start = date('Y-m-d', strtotime('-'.$days.' days'));
-		$end = date('Y-m-d', strtotime("tomorrow"));
+		$start = gmdate('Y-m-d', strtotime('-'.$days.' days'));
+		$end = gmdate('Y-m-d', strtotime("+ 1 days"));
 		$this->db->query("SELECT Pilot, max(ActivityDate) as maxdate FROM activity
 					WHERE ActivityDate BETWEEN :start AND :end
 					GROUP BY Pilot ORDER BY maxdate DESC");
