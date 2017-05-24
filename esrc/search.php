@@ -283,6 +283,7 @@ if (isset($targetsystem)) {
 			
 			switch ($value['EntryType']) {
 				case 'sower':
+				case 'Sower':
 					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
 					break;
 				case 'tender':
