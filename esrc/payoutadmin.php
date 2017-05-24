@@ -176,6 +176,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 			</table>
 		</div>
 		<div class="col-sm-2 white">
+			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
 			Actions this period: <?php echo $ctrtotact; ?><br />
 			Sowed: <?php echo $ctrsow; ?><br />
 			Tended: <?php echo $ctrtend; ?><br />
@@ -197,7 +198,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		$ctrtot = $row['cnt'];
 	?>
 	<div class="row" id="systable">
-		<div class="col-sm-12">
+		<div class="col-sm-10">
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -207,22 +208,22 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					</tr>
 				</thead>
 				<tbody>
-		<?php
-		//summary data
-		$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end GROUP BY Pilot");
-		$db->bind(':start', $start);
-		$db->bind(':end', $end);
-		$rows = $db->resultset();
-		$ctr = 0;
-		foreach ($rows as $value) {
-			$ctr++;
-			echo '<tr>';
-			echo '<td><input type="text" value="'. $value['Pilot'] .'" /></td>';
-			echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
-			echo '<td><input type="text" value="'. round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" /></td>';
-			echo '</tr>';
-		}
-		?>
+					<?php
+					//summary data
+					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end GROUP BY Pilot");
+					$db->bind(':start', $start);
+					$db->bind(':end', $end);
+					$rows = $db->resultset();
+					$ctr = 0;
+					foreach ($rows as $value) {
+						$ctr++;
+						echo '<tr>';
+						echo '<td><input type="text" value="'. $value['Pilot'] .'" /></td>';
+						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
+						echo '<td><input type="text" value="'. round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" /></td>';
+						echo '</tr>';
+					}
+					?>
 					<tr>
 						<td class="white" align="right">Participants: <?php echo $ctr; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL: </td>
 						<td class="white" align="right"><?php echo $ctrtot; ?></td>
@@ -230,6 +231,15 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="col-sm-2 white">
+			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
+			Actions this period: <?php echo $ctrtotact; ?><br />
+			Sowed: <?php echo $ctrsow; ?><br />
+			Tended: <?php echo $ctrtend; ?><br />
+			Adjunct: <?php echo $ctradj; ?><br /><br />
+			Total caches in space:<br />
+			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
 		</div>
 	</div>
 <?php
