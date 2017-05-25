@@ -290,8 +290,6 @@ if (isset($targetsystem)) {
 					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 					break;
 				case 'adjunct':
-					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
-					break;
 				case 'agent':
 					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 					break;

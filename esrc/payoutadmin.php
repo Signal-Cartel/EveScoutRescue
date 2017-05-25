@@ -132,6 +132,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 							break;
 						case 'adjunct':
+						case 'agent':
 							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 							break;
 						default:
