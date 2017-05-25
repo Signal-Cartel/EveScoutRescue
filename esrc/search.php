@@ -42,6 +42,8 @@ if(isset($_REQUEST['targetsystem'])) {
 elseif (isset($_REQUEST['system'])) {
 	$system = htmlspecialchars_decode($_REQUEST["system"]);
 }
+
+if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 ?>
 <body class="white">
 <div class="container">
@@ -60,7 +62,6 @@ elseif (isset($_REQUEST['system'])) {
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
 					</div>
 				</form>
 			</div>
@@ -70,7 +71,20 @@ elseif (isset($_REQUEST['system'])) {
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
+ 
 <?php
+// display error message if there is one
+if (!empty($errmsg)) {
+?>
+	<div class="row" id="errormessage" style="background-color: #ff9999;">
+		<div class="col-sm-12 message">
+			<?php echo nl2br($errmsg); ?>
+		</div>
+	</div>
+	<div class="ws"></div>
+<?php
+}
+
 // check if a system is supplied
 if (isset($system)) {
 	// display result for the selected system
@@ -101,13 +115,15 @@ if (isset($system)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
-		<?php if ($caches->isTendingAllowed($system)) { ?>
-		<a href="data_entry.php?tendsys=<?=$system?>" class="btn btn-success" role="button">Tend</a>&nbsp;&nbsp;&nbsp;
+		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
+		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
+			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
 		<?php } else { ?>
 		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
 		<?php  } ?>
-		<!-- ADJUNCT button -->
-		<a href="data_entry.php?adjsys=<?=$system?>" class="btn btn-warning" role="button">Adjunct</a>&nbsp;&nbsp;&nbsp;
+		<!-- AGENT button -->
+		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
+			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
 		<!--  new SAR request -->
 		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
@@ -201,7 +217,8 @@ if (isset($system)) {
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-			<a href="data_entry.php?sowsys=<?=$system?>" class="btn btn-success btn-lg" role="button">Sow one now</a>&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
+				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
 			<!--  new SAR request -->
 			<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
@@ -251,10 +268,9 @@ if (isset($system)) {
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
-			<!-- SOW button  -->
-			<span class="sechead white">'<?=$system?>' is not a valid system name. 
-				Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-				<a href="?" class="btn btn-link" role="button">clear result</a>
+				<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
+					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+					<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
 		}
@@ -299,12 +315,14 @@ if (isset($system)) {
 			
 			switch ($value['EntryType']) {
 				case 'sower':
+				case 'Sower':
 					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
 					break;
 				case 'tender':
 					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 					break;
 				case 'adjunct':
+				case 'agent':
 					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 					break;
 				default:
@@ -491,5 +509,13 @@ else {
 <?php 
 } //if (isset($targetsystem))?>
 </div>
+
+<!-- MODAL includes -->
+<?php
+include 'modal_agent.php';
+include 'modal_tend.php';
+include 'modal_sow.php';
+?>
+
 </body>
 </html>
