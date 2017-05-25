@@ -131,11 +131,11 @@ if ($row['finished'] == 1)
 <fieldset>
 <input type="radio" id="status_open" name="status" value="open" <?php if ($row['status'] === 'open') { echo ' checked="checked" '; } ?>/> <label for="status_open"> open</label><br>
 <input type="radio" id="status_pending" name="status" value="pending"  <?php if ($row['status'] === 'pending') { echo ' checked="checked" '; } ?>/> <label for="status_pending">pending</label><br>
-<input type="radio" id="status_closed_rescued" name="status" value="closed-rescued"  <?php if ($row['status'] === 'closed-rescued') { echo ' checked="checked" '; } ?>/> <label for="status_closed_rescued">Close - rescued</label><br>
-<input type="radio" id="status_closed_escaped" name="status" value="closed-escaped"  <?php if ($row['status'] === 'closed-escaped') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escaped">Close - escaped by self</label><br>
-<input type="radio" id="status_closed_escapedlocals" name="status" value="closed-escapedlocals"  <?php if ($row['status'] === 'closed-escapedlocals') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escapedlocals">Close - escaped by locals</label><br>
-<input type="radio" id="status_closed_destruct" name="status" value="closed-destruct"  <?php if ($row['status'] === 'closed-destruct') { echo ' checked="checked" '; } ?>/> <label for="status_closed_destruct">Close - self destruct</label><br>
-<input type="radio" id="status_closed_noresponse" name="status" value="closed-noresponse"  <?php if ($row['status'] === 'closed-noresponse') { echo ' checked="checked" '; } ?>/> <label for="status_closed_noresponse">Close - no response</label><br>
+<input type="radio" id="status_closed_rescued" name="status" value="closed-rescued"  <?php if ($row['status'] === 'closed-rescued') { echo ' checked="checked" '; } ?>/> <label for="status_closed_rescued">Closed - rescued</label><br>
+<input type="radio" id="status_closed_escaped" name="status" value="closed-escaped"  <?php if ($row['status'] === 'closed-escaped') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escaped">Closed - escaped by self</label><br>
+<input type="radio" id="status_closed_escapedlocals" name="status" value="closed-escapedlocals"  <?php if ($row['status'] === 'closed-escapedlocals') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escapedlocals">Closed - escaped by locals</label><br>
+<input type="radio" id="status_closed_destruct" name="status" value="closed-destruct"  <?php if ($row['status'] === 'closed-destruct') { echo ' checked="checked" '; } ?>/> <label for="status_closed_destruct">Closed - self destruct</label><br>
+<input type="radio" id="status_closed_noresponse" name="status" value="closed-noresponse"  <?php if ($row['status'] === 'closed-noresponse') { echo ' checked="checked" '; } ?>/> <label for="status_closed_noresponse">Closed - no response</label><br>
 </fieldset>
  </td>
 </tr>
