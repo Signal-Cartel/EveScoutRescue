@@ -172,19 +172,27 @@ else if ($action === 'UpdateRequest')
 
 	$database->beginTransaction();
 	// update status
-	$rescue->setStatus($rescueID, $_REQUEST['status']);
+	$rescue->setStatus($rescueID, $_REQUEST['status'], $charname);
 	// check and set reminder date
 	if (isset($_REQUEST['contacted']))
 	{
 		$rescue->registerContact($rescueID);
 	}
 
+	// NOTE: REMINDER STUFF IS NOT VISIBLE in UI currently
 	// get the set reminder days
 	$reminder = $_REQUEST['reminder'];
 	// check if a reminder is set
 	if (isset($reminder) && is_numeric(trim($reminder)))
 	{
 		$rescue->setReminder($rescueID, trim($reminder));
+	}
+	// NOTE: REMINDER STUFF IS NOT VISIBLE in UI currently
+	
+	// insert rescue note
+	if (isset($data['notes']) && $data['notes'] != '')
+	{
+		$rescue->createRescueNote($rescueID, $charname, $data['notes']);
 	}
 	$database->endTransaction();
 	

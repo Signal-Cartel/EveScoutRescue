@@ -73,6 +73,43 @@ if (isset($_REQUEST['system'])) {
 </div>
 <?php 
 
+/**
+ * Translates the internal status value to a readable form.
+ * 
+ * Note: May be move to a central place later if used more than once.
+ * 
+ * @param unknown $status
+ * @return string|unknown
+ */
+function translateStatus($status)
+{
+	$result = "unknown";
+	switch ($status)
+	{
+		case 'closed-rescued' : $result = "Pilot rescued by SAR";
+		break;
+		case 'closed-escaped' : $result = "Pilot escaped by own action";
+		break;
+		case 'closed-escapedlocals' : $result = "Pilot rescued by locals";
+		break;
+		case 'closed-destruct' : $result = "Pilot used self destruct";
+		break;
+		case 'closed-noresponse' : $result = "Pilot did not respond";
+		break;
+		
+		default:
+			$result = $status;
+			break;
+	}
+	return $result;
+}
+
+/**
+ * Format a request as HTML table row in output
+ * @param unknown $row
+ * @param number $finished
+ * @param unknown $system
+ */
 function displayLine($row, $finished = 0, $system = NULL)
 {
 	echo "<tr>";
@@ -81,7 +118,7 @@ function displayLine($row, $finished = 0, $system = NULL)
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['launcher'])."</td>";
-	echo "<td>".Output::htmlEncodeString($row['status'])."</td>";
+	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
 	echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
 	echo "</tr>";
 }

@@ -78,13 +78,15 @@ $database->closeQuery();
 </div>
 
 
-<p>
+<p/>
 <form method="POST" action="./rescueaction.php">
 <table border="1">
+<!-- 
 <tr>
 <th>Key</th><th>Value</th>
 </tr>
-<tr>
+ -->
+ <tr>
 <td>Pilot</td><td><?=Output::htmlEncodeString($row['pilot'])?></td>
 </tr>
 <tr>
@@ -98,7 +100,7 @@ $database->closeQuery();
 </tr>
 <?php
 // display closin agent only if status is closed
-if ($row['status'] === 'closed')
+if ($row['finished'] == 1)
 {
 ?>
 <tr>
@@ -111,14 +113,16 @@ if ($row['status'] === 'closed')
 <td>Last contacted</td><td><?=Output::getEveDate($row['lastcontact'])?></td>
 </tr>
 <tr>
-<td>Contacted (check box if contacted)</td><td><input type="checkbox" name="contacted" value="1" /></td>
+<td>Check box if contacted recently</td><td><input type="checkbox" name="contacted" value="1" /></td>
 </tr>
+<!--
 <tr>
 <td>Reminder</td><td><?=Output::getEveDate($row['reminderdate'])?></td>
 </tr>
 <tr>
 <td>Remind me</td><td><input class="black" type="text" name="reminder" size="5" placeholder="days" /></td>
 </tr>
+-->
 <tr>
 <td>Status</td><td>
 <?php if ($row['status'] === 'new') { ?>
@@ -126,8 +130,12 @@ if ($row['status'] === 'closed')
 <?php } ?>
 <fieldset>
 <input type="radio" id="status_open" name="status" value="open" <?php if ($row['status'] === 'open') { echo ' checked="checked" '; } ?>/> <label for="status_open"> open</label><br>
-<input type="radio" id="status_closed" name="status" value="closed"  <?php if ($row['status'] === 'closed') { echo ' checked="checked" '; } ?>/> <label for="status_closed">closed</label><br>
-<input type="radio" id="status_pending" name="status" value="pending"  <?php if ($row['status'] === 'pending') { echo ' checked="checked" '; } ?>/> <label for="status_pending">pending</label>
+<input type="radio" id="status_pending" name="status" value="pending"  <?php if ($row['status'] === 'pending') { echo ' checked="checked" '; } ?>/> <label for="status_pending">pending</label><br>
+<input type="radio" id="status_closed_rescued" name="status" value="closed-rescued"  <?php if ($row['status'] === 'closed-rescued') { echo ' checked="checked" '; } ?>/> <label for="status_closed_rescued">Close - rescued</label><br>
+<input type="radio" id="status_closed_escaped" name="status" value="closed-escaped"  <?php if ($row['status'] === 'closed-escaped') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escaped">Close - escaped by self</label><br>
+<input type="radio" id="status_closed_escapedlocals" name="status" value="closed-escapedlocals"  <?php if ($row['status'] === 'closed-escapedlocals') { echo ' checked="checked" '; } ?>/> <label for="status_closed_escapedlocals">Close - escaped by locals</label><br>
+<input type="radio" id="status_closed_destruct" name="status" value="closed-destruct"  <?php if ($row['status'] === 'closed-destruct') { echo ' checked="checked" '; } ?>/> <label for="status_closed_destruct">Close - self destruct</label><br>
+<input type="radio" id="status_closed_noresponse" name="status" value="closed-noresponse"  <?php if ($row['status'] === 'closed-noresponse') { echo ' checked="checked" '; } ?>/> <label for="status_closed_noresponse">Close - no response</label><br>
 </fieldset>
  </td>
 </tr>
@@ -136,45 +144,48 @@ if ($row['status'] === 'closed')
 <input type="hidden" name="request" value="<?=Output::htmlEncodeString($_REQUEST['request'])?>" />
 <input type="hidden" name="action" value="UpdateRequest" />
 <input type="submit" value="Update" />
-</form>
-</p>
+<!--  </form>  -->
+<p />
 
-<p>
-<table border="1">
-<tr>
-<th colspan="3">Notes</th>
-</tr>
+<!-- <form method="POST" action="./rescueaction.php">  -->
+<p /> 
+Enter a note: <textarea class="form-control black" id="notes" name="notes" rows="3"></textarea>
+<!--  
+<input type="hidden" name="request" value="<?=Output::htmlEncodeString($_REQUEST['request'])?>" />
+<input type="hidden" name="action" value="AddNote" />
+ -->
+ <input type="submit" name="Click" value="Save" />
+<p />
+</form>
+
 <?php 
 $database->query("select notedate, agent, note from rescuenote where rescueid = :rescueid order by notedate desc");
 $database->bind(":rescueid", $_REQUEST['request']);
 $rows = $database->resultset();
 $database->closeQuery();
-foreach($rows as $row)
+if (count($rows) > 0)
 {
+?>
+<table border="1">
+<tr>
+<th colspan="3">Notes</th>
+</tr>
+<?php 
+	foreach($rows as $row)
+	{
 ?>
 <tr>
 <td><?=Output::getEveDate($row['notedate'])?></td><td><?=Output::htmlEncodeString($row['agent'])?></td><td><?=Output::htmlEncodeString($row['note'])?></td>
 </tr>
 <?php 
-}
-?>
+	} // end foreach
+	?>
 </table>
-</p>
-<p>
-Add a note<br />
-<form method="POST" action="./rescueaction.php">
-<p> 
-Note: <textarea class="form-control black" id="notes" name="notes" rows="5"></textarea>
-<input type="hidden" name="request" value="<?=Output::htmlEncodeString($_REQUEST['request'])?>" />
-<input type="hidden" name="action" value="AddNote" />
-<input type="submit" name="Click" value="Save" />
-</p>
+<?php
+} // end count(rows)
+?>
 
-
-
-</form>
-
-</p>
+<p />
 
 </div>
 

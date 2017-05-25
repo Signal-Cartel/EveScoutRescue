@@ -114,13 +114,15 @@ class Rescue {
 	 * @param unknown $rescueID
 	 * @param unknown $status
 	 */
-	public function setStatus($rescueID, $status)
+	public function setStatus($rescueID, $status, $agentName = NULL)
 	{
 		$closeAgent = NULL;
 		$finished = 0;
-		if($status === 'closed')
+			
+// 		if($status === 'closed')
+		if(substr($status, 0, 6) === 'closed')
 		{
-			$closeAgent = $charname;
+			$closeAgent = $agentName;
 			$finished = 1;
 		}
 		$this->db->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
