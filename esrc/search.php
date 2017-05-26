@@ -16,8 +16,8 @@ include_once '../includes/auth-inc.php';
 	?>
 	<script>
         $(document).ready(function() {
-            $('input.targetsystem').typeahead({
-                name: 'targetsystem',
+            $('input.sys').typeahead({
+                name: 'sys',
                 remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
         })
@@ -36,14 +36,22 @@ $database = new Database();
 // create a cache object instance
 $caches = new Caches($database);
 
-if(isset($_REQUEST['targetsystem'])) { 
-	$system = htmlspecialchars_decode($_REQUEST['targetsystem']);
-}
-elseif (isset($_REQUEST['system'])) {
-	$system = htmlspecialchars_decode($_REQUEST["system"]);
+$system = '';
+if(isset($_REQUEST['sys'])) { 
+	$system = htmlspecialchars_decode($_REQUEST['sys']);
 }
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
+
+// check for active SAR request
+$database->query("select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate");
+$database->bind(":system", $system);
+$data = $database->single();
+$database->closeQuery();
+$activeSAR = '';
+if ($data['cnt'] > 0) {
+	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span';
+}
 ?>
 <body class="white" style="background-color: black;">
 <div class="container">
@@ -54,10 +62,10 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 		<div class="row">
 			<div class="col-sm-3"></div>
 			<div class="col-sm-5" style="text-align: left;">
-				<form method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+				<form method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="form-group">
-						<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" 
-							autocomplete="off" class="targetsystem" placeholder="System Name" 
+						<input type="text" name="sys" size="30" autoFocus="autoFocus" 
+							autocomplete="off" class="sys" placeholder="System Name" 
 							value="<?php echo isset($system) ? $system : '' ?>">
 					</div>
 					<div class="clearit">
@@ -70,6 +78,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
+<div class="ws"></div>
+
+<ul  class="nav nav-tabs">
+	<li class="active"><a href="#" data-toggle="tab">Rescue Cache</a></li>
+	<li><a href="rescueoverview.php?sys=<?=$system?>">Search &amp; Rescue<?=$activeSAR?></a></li>
+</ul>
 <div class="ws"></div>
  
 <?php
@@ -86,7 +100,7 @@ if (!empty($errmsg)) {
 }
 
 // check if a system is supplied
-if (isset($system)) {
+if (!empty($system)) {
 	// display result for the selected system
 	// get cache information from database
 	$row = $caches->getCacheInfo($system);
@@ -115,7 +129,7 @@ if (isset($system)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
-		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
+		<?php if ($caches->isTendingAllowed($system)) { ?>
 		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
 			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
 		<?php } else { ?>
@@ -124,8 +138,6 @@ if (isset($system)) {
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
-		<!--  new SAR request -->
-		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
@@ -184,26 +196,12 @@ if (isset($system)) {
 				</table>
 			</div>
 		</div>
-		<?php } //if (!empty($strNotes))
-			
-		$database->query("select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate");
-		$database->bind(":system", $system);
-			// $database->execute();
-		$data = $database->single();
-		$database->closeQuery();
-		if ($data['cnt'] > 0)
-		{
-		?>
-		<p><b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a> rescue requests in system.</b></p> 
 		<?php 
-		}
+		} //if (!empty($strNotes))
 	}
-	else
-	{
+	else {
 		$systems = new Systems($database);
 		//no results returned, so give an option to sow a new cache in this system
-		// check if the length of the string matches the worm hole names
-		// 		if (strlen($targetsystem) === 7)
 		if ($systems->validatename($system) === 0)
 		{
 			$lockedDate = $systems->locked($system);
@@ -219,8 +217,6 @@ if (isset($system)) {
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
 				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
-			<!--  new SAR request -->
-			<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
 			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
@@ -228,26 +224,10 @@ if (isset($system)) {
 			<!--  clear data button -->	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
-			
-			
-		<?php
-				$database->query ( "select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate" );
-				$database->bind ( ":system", $system );
-				// $database->execute();
-				$data = $database->single ();
-				$database->closeQuery ();
-				if ($data ['cnt'] > 0) {
-					?>
-		<p>
-			<b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a>
-				rescue requests in system.
-			</b>
-		</p>
-		<?php 
-				}
-					}
-			else
-			{
+
+			<?php 
+			} 
+			else {
 				?>	
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
@@ -268,7 +248,7 @@ if (isset($system)) {
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
-				<span class="sechead white">'<?=$targetsystem?>' is not a valid system name. 
+				<span class="sechead white">'<?=$system?> not a valid system name. 
 					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
 					<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
@@ -507,7 +487,7 @@ else {
 	</div>
 </div>
 <?php 
-} //if (isset($targetsystem))?>
+} //if (isset($system))?>
 </div>
 
 <!-- MODAL includes -->

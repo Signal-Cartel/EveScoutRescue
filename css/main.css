@@ -106,6 +106,7 @@ div.centered {
 
 .tt-hint,
 .targetsystem,
+.sys,
 .system,
 .system_sower,
 .system_tender,
@@ -147,4 +148,10 @@ div.centered {
 
 .tt-suggestion p {
     margin: 0;
+}
+
+.nav-tabs > li > a {
+ 	border-radius: 4px 4px 0 0 ;
+  	background-color: rgba(255, 255, 255, 0.4);
+  	color: black;
 }

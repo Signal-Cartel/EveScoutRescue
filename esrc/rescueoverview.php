@@ -16,8 +16,8 @@ include_once '../includes/auth-inc.php';
 	?>
 	<script>
         $(document).ready(function() {
-            $('input.system').typeahead({
-                name: 'system',
+            $('input.sys').typeahead({
+                name: 'sys',
                 remote: '../data/typeahead.php?type=system&query=%QUERY'
             });
             $('input.targetsystem').typeahead({
@@ -38,8 +38,9 @@ $database = new Database();
 // create a cache object instance
 $rescue = new Rescue($database);
 
-if (isset($_REQUEST['system'])) {
-	$system = htmlspecialchars_decode($_REQUEST["system"]);
+$system = '';
+if (isset($_REQUEST['sys'])) {
+	$system = htmlspecialchars_decode($_REQUEST["sys"]);
 }
 
 // create an update action
@@ -54,25 +55,30 @@ if (isset($_REQUEST['system'])) {
 		<div class="row">
 			<div class="col-sm-3"></div>
 			<div class="col-sm-5" style="text-align: left;">
-				<form method="post" action="./search.php">
+				<form method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="form-group">
-						<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" 
-							autocomplete="off" class="targetsystem" placeholder="System Name" 
+						<input type="text" name="sys" size="30" autoFocus="autoFocus" 
+							autocomplete="off" class="sys" placeholder="System Name" 
 							value="<?php echo isset($system) ? $system : '' ?>">
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!-- 					
-						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
--->
 					</div>
- 				</form>
+				</form>
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
+<div class="ws"></div>
+
+<ul  class="nav nav-tabs">
+	<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
+	<li class="active"><a href="#">Search &amp; Rescue</a></li>
+</ul>
+<div class="ws"></div>
+
 <?php 
 
 /**
@@ -126,11 +132,8 @@ function displayLine($row, $finished = 0, $system = NULL)
 }
 
 // get finished status parameter flag
-$finished = $_REQUEST['finished'];
-if (!isset($finished))
-{
-	$finished = 0;
-}
+if (isset($_REQUEST['finished'])) { $finished = $_REQUEST['finished']; }
+if (!isset($finished)) { $finished = 0; }
 
 // get requests from database
 $data = $rescue->getRequests($finished);
@@ -140,7 +143,7 @@ if (isset($data))
 ?>
 
 <div>
-<a href="./rescueaction.php?action=New">New SAR request</a>
+<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-danger" role="button">New SAR</a>
 </div>
 
 <div>
@@ -149,31 +152,31 @@ if (isset($data))
 if ($finished == 0)
 {
 ?>
-View active requests. Display <a href="./rescueaction.php?action=View&finished=1">all finished</a> requests.
+View active requests. Display <a href="rescueaction.php?action=View&finished=1">all finished</a> requests.
 <?php
 if (isset($system))
 {
 ?>
-	Display <a href="./rescueaction.php?action=View&finished=1&system=<?=Output::htmlEncodeString($system)?>">finished</a> requests of <?=Output::htmlEncodeString($system)?>.
+	Display <a href="rescueaction.php?action=View&finished=1&system=<?=Output::htmlEncodeString($system)?>">finished</a> requests of <?=Output::htmlEncodeString($system)?>.
 <?php 	
 }
 }
 else 
 {
 ?>
-View finished requests. Display <a href="./rescueaction.php?action=View&finished=0">all active</a> requests.
+View finished requests. Display <a href="rescueaction.php?action=View&finished=0">all active</a> requests.
 <?php
 if (isset($system))
 {
 ?>
-	Display <a href="./rescueaction.php?action=View&finished=0&system=<?=Output::htmlEncodeString($system)?>">all active</a> requests of <?=Output::htmlEncodeString($system)?>.
+	Display <a href="rescueaction.php?action=View&finished=0&system=<?=Output::htmlEncodeString($system)?>">all active</a> requests of <?=Output::htmlEncodeString($system)?>.
 <?php
 }
 }
 ?>
-<!-- http://www.odins-erben-wow.de/esrc/esrc/rescueaction.php?action=View&system=J111000  -->
+
 </p>
-<table width="90%">
+<table class="table" style="width: auto;">
 <tr>
 <th>Started</th><th>System</th><th>Pilot</th><th>refit</th><th>launcher</th><th>status</th><th>Manage</th>
 </tr>
