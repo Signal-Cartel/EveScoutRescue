@@ -72,7 +72,7 @@ else if ($action === 'New')
 	$targetURL = './rescue.php';
 	if (isset($system))
 	{
-		$targetURL .= '?system=' . Output::htmlEncodeString ( $data ['system'] );
+		$targetURL .= '?system=' . Output::htmlEncodeString ( $system );
 	}
 	header('Location: '.$targetURL);
 	echo '<a href="'.$targetURL.'">Create a new rescue request</a>';

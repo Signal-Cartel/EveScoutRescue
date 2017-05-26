@@ -51,7 +51,9 @@ include_once '../includes/head.php';
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!-- 
 						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
+-->
 					</div>
 				</form>
 			</div>
@@ -80,8 +82,9 @@ $database->closeQuery();
 
 <p/>
 <form method="POST" action="./rescueaction.php">
-<table border="1">
+<table>
 <!-- 
+<table border="1">
 <tr>
 <th>Key</th><th>Value</th>
 </tr>
@@ -166,7 +169,8 @@ $database->closeQuery();
 if (count($rows) > 0)
 {
 ?>
-<table border="1">
+<!-- <table border="1"> -->
+<table>
 <tr>
 <th colspan="3">Notes</th>
 </tr>

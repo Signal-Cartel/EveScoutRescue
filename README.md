@@ -48,7 +48,7 @@ Steps to setup a development system
       `system` varchar(8) NOT NULL,
       `pilot` varchar(255) NOT NULL,
       `requestdate` datetime default current_timestamp(),
-      `reminderdate` datetime default current_timestamp(),
+      `reminderdate` datetime,
       `canrefit` int not null default 0,
       `launcher` int not null default 0,
       `finished` int not null default 0,

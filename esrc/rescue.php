@@ -59,11 +59,12 @@ if (isset($_REQUEST['system'])) {
 							autocomplete="off" class="targetsystem" placeholder="System Name" 
 							value="<?php echo isset($system) ? $system : '' ?>">
 					</div>
-					<div class="clearit">
+ 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!--
 						<a href="data_entry.php" class="btn btn-info" role="button">Go to Data Entry</a>
+-->				</form>
 					</div>
-				</form>
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
