@@ -92,7 +92,7 @@ class Caches
 	 */
 	public function getRescueTotalCount()
 	{
-		$this->db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'adjunct'");
+		$this->db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'adjunct' OR EntryType = 'agent'");
 		$result = $this->db->single();
 	
 		$this->db->closeQuery();
