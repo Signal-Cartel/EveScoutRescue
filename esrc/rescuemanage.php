@@ -129,9 +129,11 @@ if ($row['finished'] == 1)
 <tr>
 <td>Status</td><td>
 <?php if ($row['status'] === 'new') { ?>
+<!--
 <input type="radio" id="status_new" name="status" value="new" checked="checked" /> <label for="status_new"> new</label><br />
+-->
 <?php } ?>
-<fieldset>
+<!-- <fieldset>
 <input type="radio" id="status_open" name="status" value="open" <?php if ($row['status'] === 'open') { echo ' checked="checked" '; } ?>/> <label for="status_open"> open</label><br>
 <input type="radio" id="status_pending" name="status" value="pending"  <?php if ($row['status'] === 'pending') { echo ' checked="checked" '; } ?>/> <label for="status_pending">pending</label><br>
 <input type="radio" id="status_closed_rescued" name="status" value="closed-rescued"  <?php if ($row['status'] === 'closed-rescued') { echo ' checked="checked" '; } ?>/> <label for="status_closed_rescued">Closed - rescued</label><br>
@@ -140,7 +142,20 @@ if ($row['finished'] == 1)
 <input type="radio" id="status_closed_destruct" name="status" value="closed-destruct"  <?php if ($row['status'] === 'closed-destruct') { echo ' checked="checked" '; } ?>/> <label for="status_closed_destruct">Closed - self destruct</label><br>
 <input type="radio" id="status_closed_noresponse" name="status" value="closed-noresponse"  <?php if ($row['status'] === 'closed-noresponse') { echo ' checked="checked" '; } ?>/> <label for="status_closed_noresponse">Closed - no response</label><br>
 </fieldset>
- </td>
+-->
+<select class="black" name="status">
+<?php if ($row['status'] === 'new') { ?>
+<option value="new" selected="selected">new</option>
+<?php } ?>
+<option value="open" <?php if ($row['status'] === 'open') { echo ' selected="selected" '; } ?>>open</option>
+<option value="pending" <?php if ($row['status'] === 'pending') { echo ' selected="selected" '; } ?>>pending</option>
+<option value="status_closed_rescued" <?php if ($row['status'] === 'status_closed_rescued') { echo ' selected="selected" '; } ?>>Closed - rescued</option>
+<option value="closed-escaped" <?php if ($row['status'] === 'closed-escaped') { echo ' selected="selected" '; } ?>>Closed - escaped by self</option>
+<option value="closed-escapedlocals" <?php if ($row['status'] === 'closed-escapedlocals') { echo ' selected="selected" '; } ?>>Closed - escaped by locals</option>
+<option value="closed-destruct" <?php if ($row['status'] === 'closed-destruct') { echo ' selected="selected" '; } ?>>Closed - self destruct</option>
+<option value="closed-noresponse" <?php if ($row['status'] === 'closed-noresponse') { echo ' selected="selected" '; } ?>>Closed - no response</option>
+</select>
+</td>
 </tr>
 
 </table>
