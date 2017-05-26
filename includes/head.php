@@ -27,6 +27,10 @@
 		body {
 			background: url(../img/<?php echo $_SESSION['selectedBg']; ?>) no-repeat;
 			background-attachment: fixed;
+			-webkit-background-size: cover;
+   			-moz-background-size: cover;
+   			-o-background-size: cover;
+   			background-size: cover;
 		}
 	-->
 	</style>
