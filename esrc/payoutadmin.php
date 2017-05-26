@@ -157,6 +157,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							$ctrtend++;
 							break;
 						case 'adjunct':
+						case 'agent':
 							$ctradj++;
 							break;
 					}
