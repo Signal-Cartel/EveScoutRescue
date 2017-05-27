@@ -42,7 +42,33 @@ Steps to setup a development system
      `Notes` text COLLATE latin1_general_ci NOT NULL,
      PRIMARY KEY (`System`)
     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+    
+    CREATE TABLE `rescuerequest` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `system` varchar(8) NOT NULL,
+      `pilot` varchar(255) NOT NULL,
+      `requestdate` date NOT null,
+      `reminderdate` date,
+      `canrefit` int not null default 0,
+      `launcher` int not null default 0,
+      `finished` int not null default 0,
+      `lastcontact` date,
+      `startagent` varchar(255) not null,
+      `closeagent` varchar(255),
+      `status` varchar(255) not null default 'new',
+      `LastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
 
+    CREATE TABLE `rescuenote` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `rescueid` int(11) NOT NULL,
+      `notedate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `agent` varchar(255) not null,
+      `note` text COLLATE latin1_general_ci,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+     
 * copy the folders and files to the web site (ignore .git*, .settings, .project, .buildpath files and folders)
 
 * create a local "esr_dbconfig.ini" with the following entries
@@ -57,3 +83,32 @@ Steps to setup a development system
 * import the wormhole data ()
 
 * import a data dump if you want to work with real data. Otherwise prepare some data on your own (We should provide a small demo data generate script). 
+
+
+Mysql 5.6 required:
+
+    CREATE TABLE `rescuerequest` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `system` varchar(8) NOT NULL,
+      `pilot` varchar(255) NOT NULL,
+      `requestdate` datetime default current_timestamp(),
+      `reminderdate` datetime,
+      `canrefit` int not null default 0,
+      `launcher` int not null default 0,
+      `finished` int not null default 0,
+      `lastcontact` datetime default current_timestamp,
+      `startagent` varchar(255) not null,
+      `closeagent` varchar(255),
+      `status` varchar(255) not null default 'new',
+      `LastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+    CREATE TABLE `rescuenote` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `rescueid` int(11) NOT NULL,
+      `notedate` datetime default current_timestamp(),
+      `agent` varchar(255) not null,
+      `note` text COLLATE latin1_general_ci,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
