@@ -1,22 +1,6 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
-        	I was stranded in a wormhole I was exploring and was destroyed as I 
-        	entered the system. The rescue pilot contacted me asking if I was 
-        	in distress and I confirmed as such. The pilot walked me through 
-        	the steps and was very patient with me as well since I am very new 
-        	to the game. I am grateful to the EvE-Scout Rescue Search 
-        	and Rescue Division. I would recommend that everyone join their channel.<br /><br />
-			<span class="pull-right" style="text-align: right;">
-				Dellman Heluene<br />
-				<span style="font-size: 85%;">rescued on YC119-May-25</span>
-			</span>
-        </div>
-    </div>
-</div>
-<div class="item">
-	<div class="carousel-content">
-    	<div style="width: 100%;">
         	10/10 would use again xD<br /><br />
 			<span class="pull-right" style="text-align: right;">
 				Emily Carloon<br />
