@@ -47,6 +47,50 @@ Steps to setup a development system
       `id` int(11) not NULL AUTO_INCREMENT,
       `system` varchar(8) NOT NULL,
       `pilot` varchar(255) NOT NULL,
+      `requestdate` date NOT null,
+      `reminderdate` date,
+      `canrefit` int not null default 0,
+      `launcher` int not null default 0,
+      `finished` int not null default 0,
+      `lastcontact` date,
+      `startagent` varchar(255) not null,
+      `closeagent` varchar(255),
+      `status` varchar(255) not null default 'new',
+      `LastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+    CREATE TABLE `rescuenote` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `rescueid` int(11) NOT NULL,
+      `notedate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `agent` varchar(255) not null,
+      `note` text COLLATE latin1_general_ci,
+       PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+     
+* copy the folders and files to the web site (ignore .git*, .settings, .project, .buildpath files and folders)
+
+* create a local "esr_dbconfig.ini" with the following entries
+
+    hostname=<dbHostname>
+    username=<dbUserName>
+    password=<dbPasswd>
+    dbname=<databaseName>
+    
+* place the file one level above the "esrc" directory (out of range for web server document root)
+
+* import the wormhole data ()
+
+* import a data dump if you want to work with real data. Otherwise prepare some data on your own (We should provide a small demo data generate script). 
+
+
+Mysql 5.6 required:
+
+    CREATE TABLE `rescuerequest` (
+      `id` int(11) not NULL AUTO_INCREMENT,
+      `system` varchar(8) NOT NULL,
+      `pilot` varchar(255) NOT NULL,
       `requestdate` datetime default current_timestamp(),
       `reminderdate` datetime,
       `canrefit` int not null default 0,
@@ -68,18 +112,3 @@ Steps to setup a development system
       `note` text COLLATE latin1_general_ci,
        PRIMARY KEY (`id`)
      ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
-
-* copy the folders and files to the web site (ignore .git*, .settings, .project, .buildpath files and folders)
-
-* create a local "esr_dbconfig.ini" with the following entries
-
-    hostname=<dbHostname>
-    username=<dbUserName>
-    password=<dbPasswd>
-    dbname=<databaseName>
-    
-* place the file one level above the "esrc" directory (out of range for web server document root)
-
-* import the wormhole data ()
-
-* import a data dump if you want to work with real data. Otherwise prepare some data on your own (We should provide a small demo data generate script). 

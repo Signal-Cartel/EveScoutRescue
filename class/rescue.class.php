@@ -49,7 +49,7 @@ class Rescue {
 	 */
 	public function createRequest($system, $pilot, $canrefit, $launcher, $agentname)
 	{
-		$this->db->query("insert into rescuerequest(system, pilot, canrefit, launcher, startagent) values(:system, :pilot, :canrefit, :launcher, :agent)");
+		$this->db->query("insert into rescuerequest(system, pilot, canrefit, launcher, startagent, requestdate, lastcontact) values(:system, :pilot, :canrefit, :launcher, :agent, now(), now())");
 		$this->db->bind(":system", $system);
 		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":canrefit", $canrefit);
@@ -89,7 +89,7 @@ class Rescue {
 	 */
 	public function registerContact($rescueID)
 	{
-		$this->db->query("update rescuerequest set lastcontact = current_timestamp() where id = :rescueid");
+		$this->db->query("update rescuerequest set lastcontact = now() where id = :rescueid");
 		$this->db->bind(":rescueid", $rescueID);
 		// 		$database->debugDumpParams();
 		$this->db->execute();
@@ -102,7 +102,7 @@ class Rescue {
 	 */
 	public function setReminder($rescueID, $reminderDays)
 	{
-		$this->db->query("update rescuerequest set reminderdate = date_add(current_timestamp(), INTERVAL :reminder day) where id = :rescueid");
+		$this->db->query("update rescuerequest set reminderdate = date_add(now(), INTERVAL :reminder day) where id = :rescueid");
 		$this->db->bind(":rescueid", $rescueID);
 		$this->db->bind(":reminder", $reminderDays);
 		// 		$database->debugDumpParams();
