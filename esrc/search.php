@@ -37,10 +37,10 @@ $database = new Database();
 $caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
-	$system = htmlspecialchars_decode($_REQUEST['targetsystem']);
+	$targetsystem = htmlspecialchars_decode($_REQUEST['targetsystem']);
 }
 elseif (isset($_REQUEST['system'])) {
-	$system = htmlspecialchars_decode($_REQUEST["system"]);
+	$targetsystem = htmlspecialchars_decode($_REQUEST["system"]);
 }
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
@@ -58,7 +58,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 					<div class="form-group">
 						<input type="text" name="targetsystem" size="30" autoFocus="autoFocus" 
 							autocomplete="off" class="targetsystem" placeholder="System Name" 
-							value="<?php echo isset($system) ? $system : '' ?>">
+							value="<?php echo isset($targetsystem) ? $targetsystem : '' ?>">
 					</div>
 					<div class="clearit">
 						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -86,10 +86,10 @@ if (!empty($errmsg)) {
 }
 
 // check if a system is supplied
-if (isset($system)) {
+if (isset($targetsystem)) {
 	// display result for the selected system
 	// get cache information from database
-	$row = $caches->getCacheInfo($system);
+	$row = $caches->getCacheInfo($targetsystem);
 	//only display the following if we got some results back
 	if (!empty($row))
 	{
@@ -124,12 +124,10 @@ if (isset($system)) {
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
-		<!--  new SAR request -->
-		<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+		<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 		<!-- clear result" link -->
 		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
@@ -185,18 +183,6 @@ if (isset($system)) {
 			</div>
 		</div>
 		<?php } //if (!empty($strNotes))
-			
-		$database->query("select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate");
-		$database->bind(":system", $system);
-			// $database->execute();
-		$data = $database->single();
-		$database->closeQuery();
-		if ($data['cnt'] > 0)
-		{
-		?>
-		<p><b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a> rescue requests in system.</b></p> 
-		<?php 
-		}
 	}
 	else
 	{
@@ -204,9 +190,9 @@ if (isset($system)) {
 		//no results returned, so give an option to sow a new cache in this system
 		// check if the length of the string matches the worm hole names
 		// 		if (strlen($targetsystem) === 7)
-		if ($systems->validatename($system) === 0)
+		if ($systems->validatename($targetsystem) === 0)
 		{
-			$lockedDate = $systems->locked($system);
+			$lockedDate = $systems->locked($targetsystem);
 			
 			if (!isset($lockedDate))
 			{
@@ -219,33 +205,15 @@ if (isset($system)) {
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
 				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
-			<!--  new SAR request -->
-			<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-warning" role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
-			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+			<a href="http://anoik.is/systems/<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 			<!--  clear data button -->	
 			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
-			
-			
 		<?php
-				$database->query ( "select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate" );
-				$database->bind ( ":system", $system );
-				// $database->execute();
-				$data = $database->single ();
-				$database->closeQuery ();
-				if ($data ['cnt'] > 0) {
-					?>
-		<p>
-			<b>There exists <a href="./rescueoverview.php?system=<?=$system?>">active</a>
-				rescue requests in system.
-			</b>
-		</p>
-		<?php 
-				}
-					}
+			}
 			else
 			{
 				?>	
@@ -253,7 +221,7 @@ if (isset($system)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 				<span class="sechead white">Upon request of the current wormhole residents, 
-					caches are not to be sown in <?=$system?> until 
+					caches are not to be sown in <?=$targetsystem?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
 				<a href="?" class="btn btn-link" role="button">clear result</a>
@@ -281,7 +249,7 @@ if (isset($system)) {
 	$database->query("SELECT * FROM activity
 						WHERE System = :system
 						ORDER By ActivityDate DESC");
-	$database->bind(':system', $system);
+	$database->bind(':system', $targetsystem);
 	$rows = $database->resultset();
 	$database->closeQuery();
 	if (!empty($rows)) {
