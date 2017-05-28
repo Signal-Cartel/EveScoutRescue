@@ -137,6 +137,13 @@ $ctractive = $caches->getActiveCount();
 		</div>
 	</div>
 </div>
+<div class="ws"></div>
+<div class="row">
+	<div class="col-sm-12" style="text-align: center;">
+		<span class="sechead" style="color: gold;">As seen on the o7 Show:</span><br />
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/y-V9a28ufoM?ecver=1" frameborder="0" allowfullscreen></iframe>
+	</div>
+</div>
 
 </div>
 
