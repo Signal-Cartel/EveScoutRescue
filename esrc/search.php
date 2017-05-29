@@ -86,7 +86,7 @@ if (!empty($errmsg)) {
 }
 
 // check if a system is supplied
-if (isset($targetsystem)) {
+if (isset($targetsystem) && trim($targetsystem) != '') {
 	// display result for the selected system
 	// get cache information from database
 	$row = $caches->getCacheInfo($targetsystem);
