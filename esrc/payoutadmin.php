@@ -11,7 +11,7 @@ if (!isset($_POST['start'])) {
 		$start = gmdate('Y-m-d', strtotime("now"));
 	}
 	else {
-		$start = gmdate('Y-m-d', strtotime('Sunday'));
+		$start = gmdate('Y-m-d', strtotime('last Sunday'));
 	}
 }
 

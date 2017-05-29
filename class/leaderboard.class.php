@@ -106,7 +106,12 @@ class Leaderboard
 // 	public function getTopPilotsWeek(int $count)
 	public function getTopPilotsWeek($count)
 	{
-		$start = gmdate('Y-m-d', strtotime('Sunday'));
+		if(gmdate('w', strtotime("now")) == 0) {
+			$start = gmdate('Y-m-d', strtotime("now"));
+		}
+		else {
+			$start = gmdate('Y-m-d', strtotime('last Sunday'));
+		}
 		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 			
 		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
