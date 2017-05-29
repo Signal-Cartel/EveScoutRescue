@@ -7,7 +7,12 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php'; 
 
 if (!isset($_POST['start'])) {
-	$start = gmdate('Y-m-d', strtotime('last Sunday', strtotime("now")));
+	if(gmdate('w', strtotime("now")) == 0) {
+		$start = gmdate('Y-m-d', strtotime("now"));
+	}
+	else {
+		$start = gmdate('Y-m-d', strtotime('Sunday'));
+	}
 }
 
 if (!isset($_POST['end'])) {

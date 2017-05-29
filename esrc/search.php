@@ -298,8 +298,6 @@ if (isset($targetsystem)) {
 			}
 			
 			echo '<tr>';
-			// add 4 hours to convert to UTC (EVE) for display
-// 			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
 			$rowdate = $value['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
@@ -335,7 +333,7 @@ else {
 	<!-- LEADER BOARDS -->
 	<div class="col-sm-4 white">
 		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
-		Current Week (Sunday through Saturday)</span>
+		Current Week (Sun-Sat)</span>
 		<!-- CURRENT WEEK LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>
