@@ -151,6 +151,7 @@ function displayTable($data, $finished = 0, $system = NULL)
 		echo '	<thead>';
 		echo '		<tr>';
 		echo '			<th>Started</th>';
+		echo (!empty($system)) ? '' : '<th>System</th>';
 		echo '			<th>Pilot</th>';
 		echo '			<th>refit</th>';
 		echo '			<th>launcher</th>';
@@ -181,6 +182,7 @@ function displayLine($row, $finished = 0, $system = NULL)
 {
 	echo "<tr>";
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
+	echo (!empty($system)) ? '' : '<td style="background-color: #ccc;"><a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['launcher'])."</td>";
@@ -189,13 +191,19 @@ function displayLine($row, $finished = 0, $system = NULL)
 	echo "</tr>";
 }
 
-// get active requests from database
-$data = $rescue->getSystemRequests($system, 0);
-displayTable($data, 0, $system);
-
-// get finished requests from database
-$data = $rescue->getSystemRequests($system, 1);
-displayTable($data, 1, $system);
+if (!empty($system)) {
+	// get active requests from database
+	$data = $rescue->getSystemRequests($system, 0);
+	displayTable($data, 0, $system);
+	
+	// get finished requests from database
+	$data = $rescue->getSystemRequests($system, 1);
+	displayTable($data, 1, $system);
+}
+else {
+	$data = $rescue->getRequests();
+	displayTable($data, 0, $system);
+}
 ?>
 
 <!-- MODAL includes -->
