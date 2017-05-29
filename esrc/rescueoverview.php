@@ -43,6 +43,8 @@ if (isset($_REQUEST['sys'])) {
 	$system = htmlspecialchars_decode($_REQUEST["sys"]);
 }
 
+if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
+
 // create an update action
 
 ?>
@@ -73,10 +75,30 @@ if (isset($_REQUEST['sys'])) {
 </div>
 <div class="ws"></div>
 
-<ul  class="nav nav-tabs">
+<ul class="nav nav-tabs">
 	<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
 	<li class="active"><a href="#">Search &amp; Rescue</a></li>
 </ul>
+<div class="ws"></div>
+
+<?php
+// display error message if there is one
+if (!empty($errmsg)) {
+?>
+	<div class="row" id="errormessage" style="background-color: #ff9999;">
+		<div class="col-sm-12 message">
+			<?php echo nl2br($errmsg); ?>
+		</div>
+	</div>
+	<div class="ws"></div>
+<?php
+}
+?>
+
+<div>
+	<a type="button" class="btn btn-danger"	role="button" data-toggle="modal" 
+		data-target="#ModalSARNew">New SAR</a>
+</div>
 <div class="ws"></div>
 
 <?php 
@@ -113,6 +135,43 @@ function translateStatus($status)
 }
 
 /**
+ * Format a request as HTML table in output
+ * @param unknown $row
+ * @param number $finished
+ * @param unknown $system
+ */
+function displayTable($data, $finished = 0, $system = NULL)
+{
+	$strStatus = ($finished == 0) ? 'Active' : 'Finished';
+	
+	echo '<div>';
+	echo '<span class="sechead">'. $strStatus .' Requests</span>';
+	if (!empty($data)) {
+		echo '<table class="table" style="width: auto;">';
+		echo '	<thead>';
+		echo '		<tr>';
+		echo '			<th>Started</th>';
+		echo '			<th>Pilot</th>';
+		echo '			<th>refit</th>';
+		echo '			<th>launcher</th>';
+		echo '			<th>status</th>';
+		echo '			<th>Manage</th>';
+		echo '		</tr>';
+		echo '	</thead>';
+		echo '	<tbody>';
+		foreach ($data as $row) {
+			displayLine($row, $finished, $system);
+		}
+		echo '	</tbody>';
+		echo '</table>';
+	}
+	else {
+		echo '<p>None for this system.</p>';
+	}
+	echo '</div>';
+}
+
+/**
  * Format a request as HTML table row in output
  * @param unknown $row
  * @param number $finished
@@ -122,89 +181,27 @@ function displayLine($row, $finished = 0, $system = NULL)
 {
 	echo "<tr>";
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
-	echo '<td><a href="./rescueaction?action=View&system='.(isset($system)?'':Output::htmlEncodeString($row['system'])).'&finished='.Output::htmlEncodeString($finished).'">'.Output::htmlEncodeString($row['system']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
 	echo "<td>".Output::htmlEncodeString($row['launcher'])."</td>";
 	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
-	echo "<td><a href=\"./rescueaction.php?action=Edit&request=".$row['id']."\">Manage the request</a></td>";
+	echo '<td><a href="rescueaction.php?action=Edit&request='.$row['id'].'">Manage the request</a></td>';
 	echo "</tr>";
 }
 
-// get finished status parameter flag
-if (isset($_REQUEST['finished'])) { $finished = $_REQUEST['finished']; }
-if (!isset($finished)) { $finished = 0; }
+// get active requests from database
+$data = $rescue->getSystemRequests($system, 0);
+displayTable($data, 0, $system);
 
-// get requests from database
-$data = $rescue->getRequests($finished);
-
-if (isset($data))
-{
+// get finished requests from database
+$data = $rescue->getSystemRequests($system, 1);
+displayTable($data, 1, $system);
 ?>
 
-<div>
-<a href="./rescueaction.php?action=New&system=<?=$system?>" class="btn btn-danger" role="button">New SAR</a>
-</div>
-
-<div>
-<p>
+<!-- MODAL includes -->
 <?php
-if ($finished == 0)
-{
+include 'modal_sar_new.php';
 ?>
-View active requests. Display <a href="rescueaction.php?action=View&finished=1">all finished</a> requests.
-<?php
-if (isset($system))
-{
-?>
-	Display <a href="rescueaction.php?action=View&finished=1&system=<?=Output::htmlEncodeString($system)?>">finished</a> requests of <?=Output::htmlEncodeString($system)?>.
-<?php 	
-}
-}
-else 
-{
-?>
-View finished requests. Display <a href="rescueaction.php?action=View&finished=0">all active</a> requests.
-<?php
-if (isset($system))
-{
-?>
-	Display <a href="rescueaction.php?action=View&finished=0&system=<?=Output::htmlEncodeString($system)?>">all active</a> requests of <?=Output::htmlEncodeString($system)?>.
-<?php
-}
-}
-?>
-
-</p>
-<table class="table" style="width: auto;">
-<tr>
-<th>Started</th><th>System</th><th>Pilot</th><th>refit</th><th>launcher</th><th>status</th><th>Manage</th>
-</tr>
-<?php 
-	foreach ($data as $row) {
-		if (isset($system))
-		{
-			if ($system == $row['system'])
-			{
-				displayLine($row, $finished, $system);
-			}
-		}
-		else
-		{
-			displayLine($row, $finished);
-		}
-		
-	}
-}
-else
-{
-	echo "No active rescure requests";
-}
-?>
-</table>
-
-</div>
-
 
 </div>
 </body>

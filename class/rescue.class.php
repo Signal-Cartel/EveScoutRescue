@@ -159,11 +159,40 @@ class Rescue {
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();
-		// echo "<pre>";
-		// print_r($database);
-		// echo "\n";
-		// print_r($data);
-		// echo "</pre>";
+		 /*
+		 echo "<pre>";
+		 print_r($database);
+		 echo "\n";
+		 print_r($data);
+		 echo "</pre>";
+		 */
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+	
+	/**
+	 * Get single request by system
+	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
+	 * @return array
+	 */
+	public function getSystemRequests($system, $finished)
+	{
+		// get requests from database
+		$this->db->query("SELECT * FROM rescuerequest 
+							WHERE system = :system and finished = :finished
+							ORDER BY requestdate DESC");
+		$this->db->bind(":system", $system);
+		$this->db->bind(":finished", $finished);
+		// $database->execute();
+		$data = $this->db->resultset();
+		/*
+		 echo "<pre>";
+		 //print_r($database);
+		 //echo "\n";
+		 print_r($data);
+		 echo "</pre>";
+		*/ 
 		$this->db->closeQuery();
 		
 		return $data;

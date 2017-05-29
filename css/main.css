@@ -87,6 +87,12 @@ div.centered {
 	border-radius: 0px 0px 6px 6px;
 }
 
+.sar {
+	background-color: #c9302c;
+	border-radius: 6px 6px 0px 0px;
+	color: white;
+}
+
 .field {
 	padding-bottom: 10px;
 }

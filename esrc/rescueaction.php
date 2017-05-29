@@ -46,6 +46,7 @@ $data['launcher'] = $_REQUEST['launcher'];
 $data['notes'] = $_REQUEST['notes'];
 
 $errors = [];
+$errmsg = '';
 
 
 if (!isset($data['launcher']))
@@ -104,22 +105,6 @@ else if ($action === 'Create')
 		// already an active SAR request for pilot 
 		$error[$errorCount++] = "Pilot has a request open!";
 		$dataOK = FALSE;
-		}
-	// system ok
-	if (!isset($system) || trim($system) === '')
-	{
-		// system information not set
-		$error[$errorCount++] = "System name is missing!";
-		$dataOK = FALSE;
-	}
-	else
-	{
-		if ($whsystem->validatename($system) == 1)
-		{
-			// system information is wrong
-			$error[$errorCount++] = "System name is no WH system!";
-			$dataOK = FALSE;
-		}
 	}
 	// all values are set
 	// same request is not active (system, pilot)
@@ -137,13 +122,22 @@ else if ($action === 'Create')
 		$database->endTransaction();
 	
 		// switch display to overview with current system
-		displayRequestOverview($data ['system'] );
+		displayRequestOverview($system);
 	}
 	else 
 	{
 		// data was wrong. Display input mask with wrong data
-// 		echo "Wrong data entered! Need fix";
-		require_once './rescue.php';
+		//require_once 'rescueoverview.php';
+		foreach ($error as $e)
+		{
+			$errmsg = $errmsg. Output::htmlEncodeString($e)."<br />";
+		}
+		$redirectURL = "rescueoverview.php?sys=". $system ."&errmsg=". urlencode($errmsg);
+		?>
+		<script>
+			window.location.replace("<?=$redirectURL?>")
+		</script>
+		<?php 
 	}
 }
 else if($action === 'Edit')
@@ -224,18 +218,14 @@ function displayManageRequest($requestID = NULL) {
  * @param system
  */
 function displayRequestOverview($system = NULL) {
-	$targetURL = './rescueoverview.php?';
-	$finished = $_REQUEST['finished'];
-	if (isset($finished) && $finished != '')
-	{
-		$targetURL .= 'finished=' . Output::htmlEncodeString ( $finished  ).'&';
-	}
+	$targetURL = 'rescueoverview.php?';
+	//$finished = $_REQUEST['finished'];
 	if (isset($system) && $system != '')
 	{
-		$targetURL .= 'system=' . Output::htmlEncodeString ( $system  );
+		$targetURL .= 'sys=' . Output::htmlEncodeString ( $system  );
 	}
 	header('Location: '.$targetURL);
-	echo '<a href="'.$targetURL.'">Rescue request overview</a>';
+	//echo '<a href="'.$targetURL.'">Rescue request overview</a>';
 }
 
 ?>

@@ -50,7 +50,7 @@ $data = $database->single();
 $database->closeQuery();
 $activeSAR = '';
 if ($data['cnt'] > 0) {
-	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span';
+	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
 }
 ?>
 <body class="white" style="background-color: black;">
@@ -325,7 +325,6 @@ if (!empty($system)) {
 			$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
 			echo '<td class="text-nowrap">'. $rowExp.'</td>';
 			echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
-			echo '</tr>';
 			echo '</tr>';
 		}
 		echo '</tbody>
