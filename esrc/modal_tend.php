@@ -35,8 +35,18 @@
 				<label class="control-label" for="status">Status</label>
 				<div class="radio">
 					<label for="status_1">
-						<input id="status_1" name="status" type="radio" value="Healthy">
-						<strong>Healthy</strong> = Anchored, safe, and full of supplies
+						<input id="status_1" name="status" type="radio" value="Healthy" <?php if (0 == $caches->isTendingAllowed($targetsystem)) {echo ' disabled="disabled" '; } ?> >
+						<?php if (1 == $caches->isTendingAllowed($targetsystem)) { ?>
+							<strong>Healthy</strong> = Anchored, safe, and full of supplies
+						<?php 
+						}
+						else 
+						{
+						?>
+							Tended within the last 24 hours.
+						<?php 
+						}
+						?>
 					</label>
 				</div>
 				<div class="radio">

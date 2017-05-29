@@ -115,12 +115,8 @@ if (isset($targetsystem) && trim($targetsystem) != '') {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
-		<?php if ($caches->isTendingAllowed($targetsystem)) { ?>
 		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
 			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
-		<?php } else { ?>
-		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
-		<?php  } ?>
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
