@@ -12,12 +12,14 @@ define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
+include_once '../class/caches.class.php';
 $cache = strtoupper ( $_REQUEST ["cache"] );
 
 try {
 	$db = new Database ();
 	
 	$systems = new Systems($db);
+	$caches = new Caches($db);
 	
 	if ($cache && strlen ( $cache ) == 7) {
 		// check for "No Sow" system
@@ -47,6 +49,11 @@ try {
 		}
 		// echo json_encode($row);
 		$result ['cache'] = $row;
+		
+		$result['tending'] = $caches->isTendingAllowed($cache);
+		
+// debug data structure
+// 		print_r($result);
 	} // $cache not present or wrong format
 else {
 		throw new Exception ( 'Invalid system: ' . $cache );
