@@ -159,13 +159,11 @@ class Rescue {
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();
-		 /*
-		 echo "<pre>";
-		 print_r($database);
-		 echo "\n";
-		 print_r($data);
-		 echo "</pre>";
-		 */
+// 		 echo "<pre>";
+// 		 print_r($database);
+// 		 echo "\n";
+// 		 print_r($data);
+// 		 echo "</pre>";
 		$this->db->closeQuery();
 		
 		return $data;
@@ -186,13 +184,11 @@ class Rescue {
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();
-		/*
-		 echo "<pre>";
-		 //print_r($database);
-		 //echo "\n";
-		 print_r($data);
-		 echo "</pre>";
-		*/ 
+// 		 echo "<pre>";
+// 		 print_r($database);
+// 		 echo "\n";
+// 		 print_r($data);
+// 		 echo "</pre>";
 		$this->db->closeQuery();
 		
 		return $data;
