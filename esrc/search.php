@@ -115,8 +115,14 @@ if (isset($targetsystem) && trim($targetsystem) != '') {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
+		<?php
+		$strTended = '';
+		if (0 == $caches->isTendingAllowed($targetsystem)) {
+			$strTended = ' <i class="white fa fa-clock-o"></i>';
+		}
+		?>
 		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
-			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
+			data-target="#TendModal">Tend<?=$strTended?></button>&nbsp;&nbsp;&nbsp;
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
