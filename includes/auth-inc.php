@@ -4,7 +4,7 @@ session_start();
 // - Set arrays of different page types
 // - If it's not in one of these arrays, it is a public page that does not require login to access
 $pgsAdmin    = array('/esrc/payoutadmin.php');
-$pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php');
+$pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php','/esrc/rescueoverview.php');
 
 //populate array of admin users
 $admins      = array('Thrice Hapus','Mynxee','Johnny Splunk');

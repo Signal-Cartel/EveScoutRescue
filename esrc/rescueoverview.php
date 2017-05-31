@@ -64,15 +64,6 @@ if (!empty($errmsg)) {
 	<div class="ws"></div>
 <?php
 }
-?>
-
-<div>
-	<a type="button" class="btn btn-danger"	role="button" data-toggle="modal" 
-		data-target="#ModalSARNew">New SAR</a>
-</div>
-<div class="ws"></div>
-
-<?php 
 
 /**
  * Translates the internal status value to a readable form.
@@ -162,8 +153,15 @@ function displayLine($row, $finished = 0, $system = NULL)
 	echo "</tr>";
 }
 
-if (!empty($system)) {
-	// get active requests from database
+if (!empty($system)) { ?>
+	
+	<div>
+		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
+			data-target="#ModalSARNew">New SAR</a>
+	</div>
+	<div class="ws"></div>
+	
+	<?php // get active requests from database
 	$data = $rescue->getSystemRequests($system, 0);
 	displayTable($data, 0, $system);
 	
