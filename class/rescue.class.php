@@ -155,7 +155,7 @@ class Rescue {
 	public function getRequests($finished = 0)
 	{
 		// get requests from database
-		$this->db->query("select id, requestdate, system, pilot, canrefit, launcher, status, finished from rescuerequest where finished = :finished order by requestdate");
+		$this->db->query("select * from rescuerequest where finished = :finished order by requestdate");
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();

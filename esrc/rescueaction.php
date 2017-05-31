@@ -67,17 +67,18 @@ if ($action === 'View')
 {
 	displayRequestOverview ( $system );
 }
-else if ($action === 'New')
-{
-	// display the new request page with (optional) preset system
-	$targetURL = './rescue.php';
-	if (isset($system))
-	{
-		$targetURL .= '?system=' . Output::htmlEncodeString ( $system );
-	}
-	header('Location: '.$targetURL);
-	echo '<a href="'.$targetURL.'">Create a new rescue request</a>';
-}
+// else if ($action === 'New')
+// {
+// 	// display the new request page with (optional) preset system
+// 	$targetURL = './rescue.php';
+// 	if (isset($system))
+// 	{
+// 		$targetURL .= '?system=' . Output::htmlEncodeString ( $system );
+// 	}
+// 	header('Location: '.$targetURL);
+// 	echo '<a href="'.$targetURL.'">Create a new rescue request</a>';
+// }
+
 // process create action
 else if ($action === 'Create')
 {
@@ -87,36 +88,31 @@ else if ($action === 'Create')
 	// add value checks!
 	$pilot = $_REQUEST['pilot'];
 	// check if pilot is set
-	if (isset($pilot))
-	{
+	if (isset($pilot)) {
 		// remove spaces
 		$pilot = trim($pilot);
 	}
 	
 	// check if pilot is set and no empty string
-	if (!isset($pilot) || trim($pilot) === '')
-	{
+	if (!isset($pilot) || trim($pilot) === '') {
 		// pilot information not set
 		$error[$errorCount++] = "Pilot name is missing!";
 		$dataOK = FALSE;
 	}
-	else if ($rescue->isRequestActive($pilot) > 0)
-	{
+	else if ($rescue->isRequestActive($pilot) > 0) {
 		// already an active SAR request for pilot 
 		$error[$errorCount++] = "Pilot has a request open!";
 		$dataOK = FALSE;
 	}
 	// all values are set
 	// same request is not active (system, pilot)
-	if ($dataOK)
-	{
+	if ($dataOK) {
 		$database->beginTransaction();
 	
 		$newRescueID = $rescue->createRequest($system, $pilot, $data['canrefit'], $data['launcher'], $charname);
 	
 		// insert rescue note if set
-		if (isset($data['notes']) && $data['notes'] != '')
-		{
+		if (isset($data['notes']) && $data['notes'] != '') {
 			$rescue->createRescueNote($newRescueID, $charname, $data['notes']);
 		}
 		$database->endTransaction();
@@ -124,12 +120,10 @@ else if ($action === 'Create')
 		// switch display to overview with current system
 		displayRequestOverview($system);
 	}
-	else 
-	{
+	else {
 		// data was wrong. Display input mask with wrong data
 		//require_once 'rescueoverview.php';
-		foreach ($error as $e)
-		{
+		foreach ($error as $e) {
 			$errmsg = $errmsg. Output::htmlEncodeString($e)."<br />";
 		}
 		$redirectURL = "rescueoverview.php?sys=". $system ."&errmsg=". urlencode($errmsg);
@@ -140,25 +134,25 @@ else if ($action === 'Create')
 		<?php 
 	}
 }
-else if($action === 'Edit')
-{
-	// display an existing request edit form
-	displayManageRequest ( $rescueID );
-}
-else if($action === 'AddNote')
-{
-	// insert rescue note
-	if (isset($data['notes']) && $data['notes'] != '')
-	{
-		$database->beginTransaction();
-		// get new rescue ID
+// else if($action === 'Edit')
+// {
+// 	// display an existing request edit form
+// 	displayManageRequest ( $rescueID );
+// }
+// else if($action === 'AddNote')
+// {
+// 	// insert rescue note
+// 	if (isset($data['notes']) && $data['notes'] != '')
+// 	{
+// 		$database->beginTransaction();
+// 		// get new rescue ID
 	
-		$rescue->createRescueNote($rescueID, $charname, $data['notes']);	
-		$database->endTransaction();
-	}
+// 		$rescue->createRescueNote($rescueID, $charname, $data['notes']);	
+// 		$database->endTransaction();
+// 	}
 	
-	displayManageRequest ( $rescueID );
-}
+// 	displayManageRequest ( $rescueID );
+// }
 else if ($action === 'UpdateRequest')
 {
 	// update request data
@@ -168,8 +162,7 @@ else if ($action === 'UpdateRequest')
 	// update status
 	$rescue->setStatus($rescueID, $_REQUEST['status'], $charname);
 	// check and set reminder date
-	if (isset($_REQUEST['contacted']))
-	{
+	if (isset($_REQUEST['contacted'])) {
 		$rescue->registerContact($rescueID);
 	}
 
@@ -177,20 +170,18 @@ else if ($action === 'UpdateRequest')
 	// get the set reminder days
 	$reminder = $_REQUEST['reminder'];
 	// check if a reminder is set
-	if (isset($reminder) && is_numeric(trim($reminder)))
-	{
+	if (isset($reminder) && is_numeric(trim($reminder))) {
 		$rescue->setReminder($rescueID, trim($reminder));
 	}
 	// NOTE: REMINDER STUFF IS NOT VISIBLE in UI currently
 	
 	// insert rescue note
-	if (isset($data['notes']) && $data['notes'] != '')
-	{
+	if (isset($data['notes']) && $data['notes'] != '') {
 		$rescue->createRescueNote($rescueID, $charname, $data['notes']);
 	}
 	$database->endTransaction();
 	
-	displayManageRequest ( $rescueID );
+	displayRequestOverview ( $_REQUEST['system'] );
 }
 else
 {
@@ -201,16 +192,16 @@ else
 /**
  * @param requestID
  */
-function displayManageRequest($requestID = NULL) {
-	// display request manage page again
-	$targetURL = './rescuemanage.php';
-	if (isset($requestID))
-	{
-		$targetURL .= '?request=' . Output::htmlEncodeString ( $requestID );
-	}
-	header('Location: '.$targetURL);
-	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($requestID).'</a>';
-}
+// function displayManageRequest($requestID = NULL) {
+// 	// display request manage page again
+// 	$targetURL = './rescuemanage.php';
+// 	if (isset($requestID))
+// 	{
+// 		$targetURL .= '?request=' . Output::htmlEncodeString ( $requestID );
+// 	}
+// 	header('Location: '.$targetURL);
+// 	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($requestID).'</a>';
+// }
 
 
 /**
@@ -220,9 +211,8 @@ function displayManageRequest($requestID = NULL) {
 function displayRequestOverview($system = NULL) {
 	$targetURL = 'rescueoverview.php?';
 	//$finished = $_REQUEST['finished'];
-	if (isset($system) && $system != '')
-	{
-		$targetURL .= 'sys=' . Output::htmlEncodeString ( $system  );
+	if (isset($system) && $system != '') {
+		$targetURL .= 'sys=' . Output::htmlEncodeString($system);
 	}
 	header('Location: '.$targetURL);
 	//echo '<a href="'.$targetURL.'">Rescue request overview</a>';

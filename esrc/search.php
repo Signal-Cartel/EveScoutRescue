@@ -14,14 +14,6 @@ include_once '../includes/auth-inc.php';
 	$pgtitle = 'Search';
 	include_once '../includes/head.php'; 
 	?>
-	<script>
-        $(document).ready(function() {
-            $('input.sys').typeahead({
-                name: 'sys',
-                remote: '../data/typeahead.php?type=system&query=%QUERY'
-            });
-        })
-    </script>
 </head>
 
 <?php
@@ -58,24 +50,7 @@ if ($data['cnt'] > 0) {
 
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
-	<div class="col-sm-8 black" style="text-align: center;">
-		<div class="row">
-			<div class="col-sm-3"></div>
-			<div class="col-sm-5" style="text-align: left;">
-				<form method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-					<div class="form-group">
-						<input type="text" name="sys" size="30" autoFocus="autoFocus" 
-							autocomplete="off" class="sys" placeholder="System Name" 
-							value="<?php echo isset($system) ? $system : '' ?>">
-					</div>
-					<div class="clearit">
-						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-				</form>
-			</div>
-			<div class="col-sm-4"></div>
-		</div>
-	</div>
+	<?php include_once 'top-middle.php'; ?>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
@@ -141,9 +116,7 @@ if (!empty($system)) {
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
-		<!-- clear result" link -->
-		<a href="?" class="btn btn-link" role="button">clear result</a>
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
 		</div>
 		</div>
 		</div>
@@ -220,9 +193,7 @@ if (!empty($system)) {
 			<!-- TW button -->
 			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
-			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
-			<!--  clear data button -->	
-			<a href="?" class="btn btn-link" role="button">clear result</a>
+			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
 			</div></div></div>
 
 			<?php 
@@ -236,7 +207,6 @@ if (!empty($system)) {
 					caches are not to be sown in <?=$system?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
-				<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 				<?php
 			}
@@ -250,7 +220,6 @@ if (!empty($system)) {
 			<div style="padding-left: 10px;">
 				<span class="sechead white">'<?=$system?> not a valid system name. 
 					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-					<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 		<?php
 		}

@@ -14,18 +14,6 @@ include_once '../includes/auth-inc.php';
 	$pgtitle = 'SAR request overview';
 	include_once '../includes/head.php'; 
 	?>
-	<script>
-        $(document).ready(function() {
-            $('input.sys').typeahead({
-                name: 'sys',
-                remote: '../data/typeahead.php?type=system&query=%QUERY'
-            });
-            $('input.targetsystem').typeahead({
-                name: 'targetsystem',
-                remote: '../data/typeahead.php?type=system&query=%QUERY'
-            });
-        })
-    </script>
 </head>
 
 <?php
@@ -53,24 +41,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
-	<div class="col-sm-8 black" style="text-align: center;">
-		<div class="row">
-			<div class="col-sm-3"></div>
-			<div class="col-sm-5" style="text-align: left;">
-				<form method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-					<div class="form-group">
-						<input type="text" name="sys" size="30" autoFocus="autoFocus" 
-							autocomplete="off" class="sys" placeholder="System Name" 
-							value="<?php echo isset($system) ? $system : '' ?>">
-					</div>
-					<div class="clearit">
-						<button type="submit" class="btn btn-md">Search</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-				</form>
-			</div>
-			<div class="col-sm-4"></div>
-		</div>
-	</div>
+	<?php include_once 'top-middle.php'; ?>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
@@ -150,13 +121,13 @@ function displayTable($data, $finished = 0, $system = NULL)
 		echo '<table class="table" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
-		echo '			<th>Started</th>';
+		echo '			<th>Created</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
 		echo '			<th>Pilot</th>';
-		echo '			<th>refit</th>';
-		echo '			<th>launcher</th>';
-		echo '			<th>status</th>';
-		echo '			<th>Manage</th>';
+		echo '			<th>Status</th>';
+		echo '			<th>Agent</th>';
+		echo '			<th>Last Contact</th>';
+		echo '			<th></th>';
 		echo '		</tr>';
 		echo '	</thead>';
 		echo '	<tbody>';
@@ -184,10 +155,10 @@ function displayLine($row, $finished = 0, $system = NULL)
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
 	echo (!empty($system)) ? '' : '<td style="background-color: #ccc;"><a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
-	echo "<td>".Output::htmlEncodeString($row['canrefit'])."</td>";
-	echo "<td>".Output::htmlEncodeString($row['launcher'])."</td>";
 	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
-	echo '<td><a href="rescueaction.php?action=Edit&request='.$row['id'].'">Manage the request</a></td>';
+	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
+	echo "<td>".Output::getEveDate($row['lastcontact'])."</td>";
+	echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.$system.'&amp;req='.$row['id'].'">Update</a></td>';
 	echo "</tr>";
 }
 
@@ -209,7 +180,15 @@ else {
 <!-- MODAL includes -->
 <?php
 include 'modal_sar_new.php';
+include 'modal_sar_manage.php';
 ?>
+
+<script type="text/javascript">
+	var url = window.location.href;
+	if(url.indexOf('req=') != -1) {
+	    $('#ModalSAREdit').modal('show');
+	}
+</script>
 
 </div>
 </body>
