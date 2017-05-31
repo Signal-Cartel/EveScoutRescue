@@ -1,5 +1,10 @@
 <?php
-$config = parse_ini_file('../../config/esr_dbconfig.ini');
+if (strpos($_SERVER['HTTP_HOST'],'dev') === FALSE) {
+	$config = parse_ini_file('../../config/esr_dbconfig.ini');
+}
+else {
+	$config = parse_ini_file('../../config/esr_dbconfig_dev.ini');
+}
 
 // check if a config is found
 if ($config === FALSE)
