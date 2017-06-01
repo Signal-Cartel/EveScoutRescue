@@ -14,6 +14,25 @@ include_once '../includes/auth-inc.php';
 	$pgtitle = 'SAR request overview';
 	include_once '../includes/head.php'; 
 	?>
+	
+	<style>
+		.sartable th, td {
+		    padding: 4px;
+		    vertical-align: text-top;
+		}
+		.request a {
+			color: aqua;
+		}
+		.request a:link {
+			color: aqua;
+		}
+		.request a:visited {
+			color: aqua;
+		}
+		.request a:hover {
+			color: aqua;
+		}
+	</style>
 </head>
 
 <?php
@@ -23,7 +42,7 @@ require_once '../class/output.class.php';
 
 $database = new Database();
 
-// create a cache object instance
+// create a rescue object instance
 $rescue = new Rescue($database);
 
 $system = '';
@@ -101,35 +120,37 @@ function translateStatus($status)
  * @param unknown $row
  * @param number $finished
  * @param unknown $system
+ * @param number $notes
  */
-function displayTable($data, $finished = 0, $system = NULL)
+function displayTable($data, $finished = 0, $system = NULL, $notes = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Finished';
 	
-	echo '<div>';
+	echo '<div class="request">';
 	echo '<span class="sechead">'. $strStatus .' Requests</span>';
-	if (!empty($data)) {
+	if (empty($data)) {
+		echo '<p>None for this system.</p>';
+	} 
+	else { 
 		echo '<table class="table" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
+		echo '			<th></th>';
 		echo '			<th>Created</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
 		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Agent</th>';
-		echo '			<th>Last Contact</th>';
-		echo '			<th></th>';
+		echo '			<th>Last&nbsp;Contact</th>';
+		echo ($notes == 0) ? '' : '<th>Notes</th>';
 		echo '		</tr>';
 		echo '	</thead>';
 		echo '	<tbody>';
 		foreach ($data as $row) {
-			displayLine($row, $finished, $system);
+			displayLine($row, $finished, $system, $notes);
 		}
 		echo '	</tbody>';
 		echo '</table>';
-	}
-	else {
-		echo '<p>None for this system.</p>';
 	}
 	echo '</div>';
 }
@@ -139,18 +160,43 @@ function displayTable($data, $finished = 0, $system = NULL)
  * @param unknown $row
  * @param number $finished
  * @param unknown $system
+ * @param number $notes
  */
-function displayLine($row, $finished = 0, $system = NULL)
+function displayLine($row, $finished = 0, $system = NULL, $notes = 0)
 {
 	echo "<tr>";
+	echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.$system.'&amp;req='.$row['id'].'">Update</a></td>';
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
-	echo (!empty($system)) ? '' : '<td style="background-color: #ccc;"><a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a></td>';
-	echo "<td>".Output::htmlEncodeString($row['pilot'])."</td>";
+	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a></td>';
+	echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. $row['pilot'] .'">'.Output::htmlEncodeString($row['pilot'])."</a></td>";
 	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
 	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
 	echo "<td>".Output::getEveDate($row['lastcontact'])."</td>";
-	echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.$system.'&amp;req='.$row['id'].'">Update</a></td>';
+	// NOTES
+	if ($notes == 1) {
+		echo '<td>';
+		displayNotes($row);
+		echo '</td>';
+	}
 	echo "</tr>";
+}
+
+/**
+ * Format notes as HTML within request table
+ * @param unknown $row
+ */
+function displayNotes($row)
+{
+	$database = new Database();
+	$rescue = new Rescue($database);
+	$notes = $rescue->getNotes($row['id']);
+	if (count($notes) > 0) {
+		foreach($notes as $note) {
+			echo '['. date("M-d", strtotime($note['notedate'])) .' // ';
+			echo Output::htmlEncodeString($note['agent']) .']<br />';
+			echo '&nbsp;&nbsp;&nbsp;'. Output::htmlEncodeString($note['note']) .'<br />';
+		}
+	}
 }
 
 if (!empty($system)) { ?>
@@ -163,7 +209,7 @@ if (!empty($system)) { ?>
 	
 	<?php // get active requests from database
 	$data = $rescue->getSystemRequests($system, 0);
-	displayTable($data, 0, $system);
+	displayTable($data, 0, $system, 1);
 	
 	// get finished requests from database
 	$data = $rescue->getSystemRequests($system, 1);
@@ -181,6 +227,7 @@ include 'modal_sar_new.php';
 include 'modal_sar_manage.php';
 ?>
 
+<!-- auto-display edit modal when "req" parameter provided in querystring -->
 <script type="text/javascript">
 	var url = window.location.href;
 	if(url.indexOf('req=') != -1) {

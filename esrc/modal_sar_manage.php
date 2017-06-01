@@ -59,29 +59,6 @@ $database->closeQuery();
 				</tr>
 			</table>
 			
-			<!-- NOTES -->
-			<?php 
-			$database->query("select notedate, agent, note from rescuenote where rescueid = :rescueid order by notedate desc");
-			$database->bind(":rescueid", $reqID);
-			$notes = $database->resultset();
-			$database->closeQuery();
-			if (count($notes) > 0) {
-			?>
-			<table class="black sartable">
-				<tr>
-					<th colspan="3">Notes</th>
-				</tr>
-				<?php foreach($notes as $note) { ?>
-				<tr>
-					<td align="top"><?=date("M-d", strtotime($note['notedate']))?></td>
-					<td align="top"><?=Output::htmlEncodeString($note['agent'])?></td>
-					<td><?=Output::htmlEncodeString($note['note'])?></td>
-				</tr>
-				<?php } // end foreach ?>
-			</table>
-			<?php
-			} // end count(rows)
-			?>
 			<hr>
 			<div class="field">
 				<label for="contacted">

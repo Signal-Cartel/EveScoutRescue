@@ -193,6 +193,27 @@ class Rescue {
 		
 		return $data;
 	}
+	
+	/**
+	 * Get all notes by request id
+	 * @return array
+	 */
+	public function getNotes($requestID)
+	{
+		// get notes from database
+		$this->db->query("SELECT notedate, agent, note FROM rescuenote
+							WHERE rescueid = :rescueid ORDER BY notedate DESC");
+		$this->db->bind(":rescueid", $requestID);
+		$data = $this->db->resultset();
+		// 		 echo "<pre>";
+		// 		 print_r($database);
+		// 		 echo "\n";
+		// 		 print_r($data);
+		// 		 echo "</pre>";
+		$this->db->closeQuery();
+		
+		return $data;
+	}
 
 }
 ?>
