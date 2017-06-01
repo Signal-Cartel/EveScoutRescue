@@ -38,6 +38,7 @@ include_once '../includes/auth-inc.php';
 <?php
 require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
+require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 
 $database = new Database();
@@ -199,7 +200,10 @@ function displayNotes($row)
 	}
 }
 
-if (!empty($system)) { ?>
+if (!empty($system)) { 
+	$systems = new Systems($database);
+	if ($systems->validatename($system) === 0) {
+	?>
 	
 	<div>
 		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
@@ -214,6 +218,19 @@ if (!empty($system)) { ?>
 	// get finished requests from database
 	$data = $rescue->getSystemRequests($system, 1);
 	displayTable($data, 1, $system);
+	}
+	// invalid system name
+	else { ?>
+		<div class="row">
+			<div class="col-sm-12">
+				<div style="padding-left: 10px;">
+					<span class="sechead white"><?=$system?> not a valid system name.
+						Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+				</div>
+			</div>
+		</div>
+			
+<?php }
 }
 else {
 	$data = $rescue->getRequests();
