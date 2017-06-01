@@ -1,6 +1,19 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	I was really blown away with how quickly your agents responded, 
+        	and I was very happy with my experience - you guys really helped 
+        	me out.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				skoll Odinkin<br />
+				<span style="font-size: 85%;">rescued on YC119-May-30</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	I was stranded in a wormhole I was exploring and was destroyed as I 
         	entered the system. The rescue pilot contacted me asking if I was 
         	in distress and I confirmed as such. The pilot walked me through 
