@@ -8,6 +8,7 @@ $pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php','/esrc/rescueover
 
 //populate array of admin users
 $admins      = array('Thrice Hapus','Mynxee','Johnny Splunk');
+$sarcoords   = array('Lucas Ballard','Igaze','Triffton Ambraelle');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {

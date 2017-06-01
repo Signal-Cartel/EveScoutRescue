@@ -14,7 +14,17 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-sm-4"></div>
+		<div class="col-sm-4" style="text-align: left;">
+			<?php 
+			if (isset($system) && $system!= '') {
+				$database = new Database();
+				$systems = new Systems($database);
+				// display wormhole info
+				$row = $systems->getWHInfo($system);
+				echo '<strong class="white">'.$row['Class'].'<br/>'.$row['Notes'].'</strong>';
+			}
+			?>
+		</div>
 	</div>
 </div>
 

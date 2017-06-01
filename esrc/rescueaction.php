@@ -20,26 +20,22 @@ require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 
-// determin current action
+// determine current action
 $action = $_REQUEST['action'];
 // check if action is set
-if (!isset($action))
-{
+if (!isset($action)) {
 	// no, set default start action
 	$action = 'View';
 }
 
 // check if a valid character name is set
-if (!isset($charname))
-{
+if (!isset($charname)) {
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
 
 // try to get data from request
-// $rescueID = $_REQUEST['request'];
 $rescueID = $_REQUEST['request'];
-
 $system = $_REQUEST['system'];
 $data['canrefit'] = $_REQUEST['canrefit'];
 $data['launcher'] = $_REQUEST['launcher'];
@@ -49,35 +45,17 @@ $errors = [];
 $errmsg = '';
 
 
-if (!isset($data['launcher']))
-{
-	$data['launcher'] = 0;
-}
-if (!isset($data['canrefit']))
-{
-	$data['canrefit'] = 0;
-}
+if (!isset($data['launcher'])) { $data['launcher'] = 0; }
+if (!isset($data['canrefit'])) { $data['canrefit'] = 0; }
 
 // create a database instance
 $database = new Database();
 $rescue = new Rescue($database);
 $whsystem = new Systems($database);
 
-if ($action === 'View')
-{
+if ($action === 'View') {
 	displayRequestOverview ( $system );
 }
-// else if ($action === 'New')
-// {
-// 	// display the new request page with (optional) preset system
-// 	$targetURL = './rescue.php';
-// 	if (isset($system))
-// 	{
-// 		$targetURL .= '?system=' . Output::htmlEncodeString ( $system );
-// 	}
-// 	header('Location: '.$targetURL);
-// 	echo '<a href="'.$targetURL.'">Create a new rescue request</a>';
-// }
 
 // process create action
 else if ($action === 'Create')
@@ -122,7 +100,6 @@ else if ($action === 'Create')
 	}
 	else {
 		// data was wrong. Display input mask with wrong data
-		//require_once 'rescueoverview.php';
 		foreach ($error as $e) {
 			$errmsg = $errmsg. Output::htmlEncodeString($e)."<br />";
 		}
@@ -134,25 +111,7 @@ else if ($action === 'Create')
 		<?php 
 	}
 }
-// else if($action === 'Edit')
-// {
-// 	// display an existing request edit form
-// 	displayManageRequest ( $rescueID );
-// }
-// else if($action === 'AddNote')
-// {
-// 	// insert rescue note
-// 	if (isset($data['notes']) && $data['notes'] != '')
-// 	{
-// 		$database->beginTransaction();
-// 		// get new rescue ID
-	
-// 		$rescue->createRescueNote($rescueID, $charname, $data['notes']);	
-// 		$database->endTransaction();
-// 	}
-	
-// 	displayManageRequest ( $rescueID );
-// }
+
 else if ($action === 'UpdateRequest')
 {
 	// update request data
@@ -188,34 +147,16 @@ else
 	echo "Unknown action: ".Output::htmlEncodeString($action);
 }
 
-
-/**
- * @param requestID
- */
-// function displayManageRequest($requestID = NULL) {
-// 	// display request manage page again
-// 	$targetURL = './rescuemanage.php';
-// 	if (isset($requestID))
-// 	{
-// 		$targetURL .= '?request=' . Output::htmlEncodeString ( $requestID );
-// 	}
-// 	header('Location: '.$targetURL);
-// 	echo '<a href="'.$targetURL.'">Edit rescue request '.Output::htmlEncodeString($requestID).'</a>';
-// }
-
-
 /**
  * Redirect to the request overview page
  * @param system
  */
 function displayRequestOverview($system = NULL) {
 	$targetURL = 'rescueoverview.php?';
-	//$finished = $_REQUEST['finished'];
 	if (isset($system) && $system != '') {
 		$targetURL .= 'sys=' . Output::htmlEncodeString($system);
 	}
 	header('Location: '.$targetURL);
-	//echo '<a href="'.$targetURL.'">Rescue request overview</a>';
 }
 
 ?>

@@ -62,7 +62,7 @@ $database->closeQuery();
 			<hr>
 			<div class="field">
 				<label for="contacted">
-					<strong>Check if contacted recently&nbsp;</strong>
+					<strong>Update "Last Contact" date to today?&nbsp;</strong>
 					<input id="contacted" name="contacted" type="checkbox" class="checkbox pull-right" value="1">
 				</label>
 			</div>
@@ -72,12 +72,13 @@ $database->closeQuery();
 					<?php if ($request['status'] === 'new') { ?>
 					<option value="new" selected="selected">new</option>
 					<?php } ?>
-					<option value="pending" <?php if ($request['status'] === 'pending') { echo ' selected="selected"'; } ?>>pending</option>
-					<option value="open" <?php if ($request['status'] === 'open') { echo ' selected="selected"'; } ?>>open</option>
+					<option value="pending" <?php if ($request['status'] === 'pending') { echo ' selected="selected"'; } ?>>Pending</option>
+					<option value="open" <?php if ($request['status'] === 'open') { echo ' selected="selected"'; } ?>>Open</option>
 					<option value="closed-rescued" <?php if ($request['status'] === 'closed-rescued') { echo ' selected="selected"'; } ?>>Closed - rescued</option>
 					<option value="closed-escaped" <?php if ($request['status'] === 'closed-escaped') { echo ' selected="selected"'; } ?>>Closed - escaped by self</option>
 					<option value="closed-escapedlocals" <?php if ($request['status'] === 'closed-escapedlocals') { echo ' selected="selected"'; } ?>>Closed - escaped by locals</option>
 					<option value="closed-destruct" <?php if ($request['status'] === 'closed-destruct') { echo ' selected="selected"'; } ?>>Closed - self destruct</option>
+					<option value="closed-destroyed" <?php if ($request['status'] === 'closed-destroyed') { echo ' selected="selected"'; } ?>>Closed - destroyed by locals/3rd party</option>
 					<option value="closed-noresponse" <?php if ($request['status'] === 'closed-noresponse') { echo ' selected="selected"'; } ?>>Closed - no response</option>
 				</select>
 			</div>

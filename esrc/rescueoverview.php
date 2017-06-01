@@ -5,13 +5,26 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
+// check if a valid character name is set
+if (!isset($charname))
+{
+	// no, set a dummy char name
+	$charname = 'charname_not_set';
+}
+// check for SAR Coordinator login
+$isCoord = 1;
+if (array_search($charname, $admins) === false) { 
+	if (array_search($charname, $sarcoords) === false) {
+		$isCoord = 0; 
+	}
+}
 
 ?>
 <html>
 
 <head>
 	<?php 
-	$pgtitle = 'SAR request overview';
+	$pgtitle = 'SAR Requests';
 	include_once '../includes/head.php'; 
 	?>
 	
@@ -106,11 +119,13 @@ function translateStatus($status)
 		break;
 		case 'closed-destruct' : $result = "Pilot used self destruct";
 		break;
+		case 'closed-destroyed' : $result = "Pilot capsule destroyed by locals/3rd party";
+		break;
 		case 'closed-noresponse' : $result = "Pilot did not respond";
 		break;
 		
 		default:
-			$result = $status;
+			$result = ucfirst($status);
 			break;
 	}
 	return $result;
@@ -122,8 +137,9 @@ function translateStatus($status)
  * @param number $finished
  * @param unknown $system
  * @param number $notes
+ * @param number $isCoord
  */
-function displayTable($data, $finished = 0, $system = NULL, $notes = 0)
+function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Finished';
 	
@@ -136,10 +152,13 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0)
 		echo '<table class="table" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
-		echo '			<th></th>';
+		// only display this column for finished requests if coord logged in
+		if (($isCoord == 1 && $finished == 1) || ($finished == 0)) {
+			echo '<th></th>';
+		}
 		echo '			<th>Created</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
-		echo '			<th>Pilot</th>';
+		echo '<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Agent</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
@@ -148,7 +167,7 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0)
 		echo '	</thead>';
 		echo '	<tbody>';
 		foreach ($data as $row) {
-			displayLine($row, $finished, $system, $notes);
+			displayLine($row, $finished, $system, $notes, $isCoord);
 		}
 		echo '	</tbody>';
 		echo '</table>';
@@ -162,14 +181,21 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0)
  * @param number $finished
  * @param unknown $system
  * @param number $notes
+ * @param number $isCoord
  */
-function displayLine($row, $finished = 0, $system = NULL, $notes = 0)
+function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
 {
 	echo "<tr>";
-	echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.$system.'&amp;req='.$row['id'].'">Update</a></td>';
+	// only display this column for finished requests if coord logged in
+	if (($isCoord == 1 && $finished == 1) || ($finished == 0)) {
+		echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
+				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
+	}
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
-	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a></td>';
-	echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. $row['pilot'] .'">'.Output::htmlEncodeString($row['pilot'])."</a></td>";
+	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.
+			Output::htmlEncodeString($row['system']).'</a></td>';
+	echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. 
+			$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
 	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
 	echo "<td>".Output::getEveDate($row['lastcontact'])."</td>";
@@ -213,11 +239,11 @@ if (!empty($system)) {
 	
 	<?php // get active requests from database
 	$data = $rescue->getSystemRequests($system, 0);
-	displayTable($data, 0, $system, 1);
+	displayTable($data, 0, $system, 1, $isCoord);
 	
 	// get finished requests from database
 	$data = $rescue->getSystemRequests($system, 1);
-	displayTable($data, 1, $system);
+	displayTable($data, 1, $system, 0, $isCoord);
 	}
 	// invalid system name
 	else { ?>
@@ -234,7 +260,7 @@ if (!empty($system)) {
 }
 else {
 	$data = $rescue->getRequests();
-	displayTable($data, 0, $system);
+	displayTable($data, 0, $system, 0, $isCoord);
 }
 ?>
 
@@ -249,6 +275,13 @@ include 'modal_sar_manage.php';
 	var url = window.location.href;
 	if(url.indexOf('req=') != -1) {
 	    $('#ModalSAREdit').modal('show');
+	}
+</script>
+<!-- auto-display new modal when "new" parameter provided in querystring -->
+<script type="text/javascript">
+	var url = window.location.href;
+	if(url.indexOf('new=') != -1) {
+	    $('#ModalSARNew').modal('show');
 	}
 </script>
 

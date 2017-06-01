@@ -11,7 +11,7 @@ include_once '../includes/auth-inc.php';
 
 <head>
 	<?php 
-	$pgtitle = 'Search';
+	$pgtitle = 'ESRC Search';
 	include_once '../includes/head.php'; 
 	?>
 </head>
@@ -25,8 +25,9 @@ require_once '../class/output.class.php';
 
 $database = new Database();
 
-// create a cache object instance
+// create object instances
 $caches = new Caches($database);
+$systems = new Systems($database);
 
 $system = '';
 if(isset($_REQUEST['sys'])) { 
@@ -113,10 +114,15 @@ if (!empty($system)) {
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
+		<!-- SAR New button -->
+		<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
+			role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
+			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
+			target="_blank">anoik.is</a>
 		</div>
 		</div>
 		</div>
@@ -173,7 +179,6 @@ if (!empty($system)) {
 		} //if (!empty($strNotes))
 	}
 	else {
-		$systems = new Systems($database);
 		//no results returned, so give an option to sow a new cache in this system
 		if ($systems->validatename($system) === 0)
 		{
@@ -190,6 +195,9 @@ if (!empty($system)) {
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
 				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
+			<!-- SAR New button -->
+			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
+				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
 			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
@@ -279,12 +287,10 @@ if (!empty($system)) {
 			}
 			
 			echo '<tr>';
-			// add 4 hours to convert to UTC (EVE) for display
-// 			$rowdate = (!empty($sowrow)) ? $sowrow['InitialSeedDate'] : $value['ActivityDate'];
 			$rowdate = $value['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
-			echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
+			echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
 			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
