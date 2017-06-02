@@ -79,7 +79,7 @@ if (!empty($errmsg)) {
 if (!empty($system)) {
 	// display result for the selected system
 	// get cache information from database
-	$row = $caches->getCacheInfo($system);
+	$row = $caches->getCacheInfo($targetsystem);
 	//only display the following if we got some results back
 	if (!empty($row))
 	{
@@ -105,12 +105,13 @@ if (!empty($system)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- TEND button -->
-		<?php if ($caches->isTendingAllowed($system)) { ?>
+		<?php
+		$strTended = '';
+		if (0 == $caches->isTendingAllowed($system)) {
+			$strTended = ' <i class="white fa fa-clock-o"></i>';
+		} ?>
 		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
-			data-target="#TendModal">Tend</button>&nbsp;&nbsp;&nbsp;
-		<?php } else { ?>
-		<span class="white"><b>No tending needed</b></span>&nbsp;&nbsp;&nbsp;
-		<?php  } ?>
+			data-target="#TendModal">Tend<?=$strTended?></button>&nbsp;&nbsp;&nbsp;
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
@@ -123,6 +124,8 @@ if (!empty($system)) {
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
 			target="_blank">anoik.is</a>
+		<!-- clear result" link -->
+		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
 		</div>
 		</div>
@@ -179,10 +182,10 @@ if (!empty($system)) {
 		} //if (!empty($strNotes))
 	}
 	else {
-		//no results returned, so give an option to sow a new cache in this system
-		if ($systems->validatename($system) === 0)
-		{
-			$lockedDate = $systems->locked($system);
+		// no results returned, so give an option to sow a new cache in this system
+		// check for valid system name
+		if ($systems->validatename($system) === 0) {
+			$lockedDate = $systems->locked($targetsystem);
 			
 			if (!isset($lockedDate))
 			{
@@ -199,9 +202,11 @@ if (!empty($system)) {
 			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
 				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
 			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
+			<!--  clear data button -->	
+			<a href="?" class="btn btn-link" role="button">clear result</a>
 			</div></div></div>
 
 			<?php 
@@ -212,7 +217,7 @@ if (!empty($system)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 				<span class="sechead white">Upon request of the current wormhole residents, 
-					caches are not to be sown in <?=$system?> until 
+					caches are not to be sown in <?=$targetsystem?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
 			</div></div></div>
@@ -238,7 +243,7 @@ if (!empty($system)) {
 	$database->query("SELECT * FROM activity
 						WHERE System = :system
 						ORDER By ActivityDate DESC");
-	$database->bind(':system', $system);
+	$database->bind(':system', $targetsystem);
 	$rows = $database->resultset();
 	$database->closeQuery();
 	if (!empty($rows)) {
@@ -321,7 +326,7 @@ else {
 	<!-- LEADER BOARDS -->
 	<div class="col-sm-4 white">
 		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
-		Current Week (Sunday through Saturday)</span>
+		Current Week (Sun-Sat)</span>
 		<!-- CURRENT WEEK LEADERBOARD -->
 		<table class="table" style="width: auto;">
 			<thead>

@@ -96,10 +96,10 @@ $database = new Database();
 $caches = new Caches($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
-	$system = htmlspecialchars($_REQUEST['targetsystem']);
+	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
 }
 elseif (isset($_REQUEST['system'])) {
-	$system = htmlspecialchars($_REQUEST["system"]);
+	$targetsystem = htmlspecialchars($_REQUEST["system"]);
 }
 ?>
 <body class="white">

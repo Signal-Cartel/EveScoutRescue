@@ -6,6 +6,7 @@
 	<link href="../css/sticky-footer.css" rel="stylesheet">
 	<link href="../css/datatables_custom.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- JS -->
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -27,6 +28,10 @@
 		body {
 			background: url(../img/<?php echo $_SESSION['selectedBg']; ?>) no-repeat;
 			background-attachment: fixed;
+			-webkit-background-size: cover;
+   			-moz-background-size: cover;
+   			-o-background-size: cover;
+   			background-size: cover;
 		}
 	-->
 	</style>

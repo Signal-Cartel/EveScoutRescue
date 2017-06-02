@@ -20,16 +20,12 @@ else {
     // Select redirect URL based on environment
 	if (strpos($_SERVER['HTTP_HOST'], 'dev') === false) {		// production
 		$redirect_uri="https%3A%2F%2Fevescoutrescue.com%2Fauth%2Fauthcallback.php";
-		if (!isset($_SESSION['auth_redirect'])) {
-			$_SESSION['auth_redirect']='https://evescoutrescue.com/';
-		}	
 	}
 	else {														// dev
 		$redirect_uri="http%3A%2F%2Fdev.evescoutrescue.com%2Fauth%2Fauthcallback.php";
-		if (!isset($_SESSION['auth_redirect'])) {
-			$_SESSION['auth_redirect']='http://dev.evescoutrescue.com/';
-		}
 	}
+	
+	$_SESSION['auth_redirect']='/';
 	$authsite='https://login.eveonline.com';
     $authurl='/oauth/authorize';
     $state=uniqid();

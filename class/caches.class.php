@@ -125,7 +125,7 @@ class Caches
 	/**
 	 * Check if a cache is allowed to be tender
 	 * @param unknown $system the system to check
-	 * @return void|mixed 0 - cache is not allowed to be tendet; 1- cache can be tended
+	 * @return void|mixed 0 - cache is not allowed to be tendet; 1 - cache can be tended
 	 */
 	public function isTendingAllowed($system)
 	{
@@ -136,7 +136,7 @@ class Caches
 		}
 
 		// select 0/1 from cache if time diff is >= 24 hours
-		$this->db->query("SELECT count(1) as cnt FROM cache WHERE System = :system AND Status <> 'Expired' and (time_to_sec(timediff(CURRENT_TIMESTAMP(), LastUpdated)) / 3600) >= 24");
+		$this->db->query("SELECT count(1) as cnt FROM cache WHERE System = :system AND ((Status = 'Healthy' and (time_to_sec(timediff(CURRENT_TIMESTAMP(), LastUpdated)) / 3600) >= 24) or (status = 'Upkeep Required' and ExpiresOn > CURRENT_DATE))");
 		$this->db->bind(':system', $system);
 		
 		$result = $this->db->single();
