@@ -4,10 +4,11 @@ session_start();
 // - Set arrays of different page types
 // - If it's not in one of these arrays, it is a public page that does not require login to access
 $pgsAdmin    = array('/esrc/payoutadmin.php');
-$pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php');
+$pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php','/esrc/rescueoverview.php');
 
 //populate array of admin users
 $admins      = array('Thrice Hapus','Mynxee','Johnny Splunk');
+$sarcoords   = array('Lucas Ballard','Igaze','Triffton Ambraelle');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {
@@ -18,19 +19,8 @@ if (isset($_SESSION['auth_characterid'])) {
 				  '<div><span class="white">' .$charname. '</span><br />' .
 				  '<span class="descr"><a href="../auth/logout.php">logout</a></span>' .
 				  '</div></div>';
-	//prepare footer with links for EvE-Scout pilots
-	if ($_SESSION['auth_characteralliance'] == 'EvE-Scout Enclave') {
-		$charfooter = '<footer class="footer">
-				       <div class="container">
-        		       <span class="text-muted">EvE-Scout: <a href="../esrc/search.php">ESRC Search</a>&nbsp;&nbsp;&nbsp;';
-		//additional footer links for admin users
-		if (in_array($charname, $admins)) {
-			$charfooter = $charfooter. 'Admin: <a href="../esrc/payoutadmin.php">Payouts</a>';
-		}
-		$charfooter = $charfooter. '</span></div></footer>';
-	}
-	
 }
+
 //populate display string for non-authenticated users
 else {
 	$chardiv  = '<a href="../auth/login.php">'.

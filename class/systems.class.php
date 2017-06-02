@@ -101,8 +101,7 @@ class Systems {
 	/**
 	 * Check the system to be locked
 	 *
-	 * @param $system the
-	 *        	system name to check
+	 * @param $system the system name to check
 	 * @return the date till the system is locked
 	 */
 	public function locked($system) {
@@ -142,6 +141,38 @@ class Systems {
 		$this->db->closeQuery ();
 		
 		return $result['locked'];
+	}
+	
+	/**
+	 * Returns the class and notes for a given wormhole system.
+	 * @param $system the system name to check
+	 * @return mixed
+	 */
+	public function getWHInfo($system)
+	{
+		// check if a system name is set
+		if (! isset ( $system )) {
+			// no, return error code
+			return;
+		}
+		
+		// check the DB for the system name
+		$sql = "SELECT Class, Notes FROM wh_systems WHERE System = :system";
+		// create query
+		$this->db->query ( $sql );
+		// and bind parameters
+		$this->db->bind ( ":system", $system );
+		// execute the query
+		$result = $this->db->single();
+// 				 echo "<pre>";
+// 				 print_r($database);
+// 				 echo "\n";
+// 				 print_r($result);
+// 				 echo "</pre>";
+		// close the query
+		$this->db->closeQuery ();
+		
+		return $result;
 	}
 }
 

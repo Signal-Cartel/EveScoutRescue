@@ -146,8 +146,5 @@ $ctractive = $caches->getActiveCount();
 </div>
 
 </div>
-
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
 </body>
 </html>

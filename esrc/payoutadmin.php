@@ -153,7 +153,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['Pilot'] .'">EG</a></td>';
-					echo '<td class="white" '. $actioncellformat .'>'. $value['EntryType'] .'</td>';
+					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
 							$ctrsow++;
@@ -166,7 +166,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							$ctradj++;
 							break;
 					}
-					echo '<td><a href="search.php?system='. $value['System'] .'" target="_blank">'. 
+					echo '<td><a href="search.php?sys='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
 					echo '<td><a target="_blank" 
 							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
