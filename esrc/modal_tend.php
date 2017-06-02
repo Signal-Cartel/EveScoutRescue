@@ -13,7 +13,7 @@
 				<!-- EXISTING CACHE INFO -->
 				<?php 
 				// get cache information from database
-				$row = $caches->getCacheInfo($targetsystem);
+				$row = $caches->getCacheInfo($system);
 				if (!empty($row)) {
 				?>
 					<strong>Existing Cache Info</strong><br />
@@ -28,15 +28,15 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label" for="sys_tend">System</label>
-				<input type="hidden" name="sys_tend" value="<?php echo $targetsystem ?>" />
-				<span class="sechead"><?php echo $targetsystem ?></span>
+				<input type="hidden" name="sys_tend" value="<?php echo $system ?>" />
+				<span class="sechead"><?php echo $system ?></span>
 			</div>
 			<div class="field">
 				<label class="control-label" for="status">Status</label>
 				<div class="radio">
 					<label for="status_1">
-						<input id="status_1" name="status" type="radio" value="Healthy" <?php if (0 == $caches->isTendingAllowed($targetsystem)) {echo ' disabled="disabled" '; } ?> >
-						<?php if (0 == $caches->isTendingAllowed($targetsystem)) { ?>
+						<input id="status_1" name="status" type="radio" value="Healthy" <?php if (0 == $caches->isTendingAllowed($system)) {echo ' disabled="disabled" '; } ?> >
+						<?php if (0 == $caches->isTendingAllowed($system)) { ?>
 							Tended within the last 24 hours.
 						<?php 
 						}

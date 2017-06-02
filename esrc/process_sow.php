@@ -72,7 +72,7 @@ if (isset($_POST['sys_sow'])) {
 
 	//display error message if there is one
 	if (!empty($errmsg)) {
-		$redirectURL = "search.php?system=". $system ."&errmsg=". urlencode($errmsg);
+		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
 		?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")
@@ -125,7 +125,7 @@ if (isset($_POST['sys_sow'])) {
 		$db->bind(':note', $sower_note);
 		$db->execute();
 		//redirect back to search page to show updated info
-		$redirectURL = "search.php?system=". $system;
+		$redirectURL = "search.php?sys=". $system;
 		?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")

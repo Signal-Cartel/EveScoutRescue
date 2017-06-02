@@ -14,8 +14,8 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 	      <div class="modal-body black">
 			<div class="form-group">
 				<label class="control-label" for="sys_sow">System: </label>
-				<input type="hidden" name="sys_sow" value="<?php echo $targetsystem ?>" />
-				<span class="sechead"><?php echo $targetsystem ?></span>
+				<input type="hidden" name="sys_sow" value="<?php echo $system ?>" />
+				<span class="sechead"><?php echo $system ?></span>
 			</div>
 			<!--This is the beginning of the swap fields-------------->
 			<div id="topfield">

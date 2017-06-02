@@ -12,8 +12,8 @@
 	      <div class="modal-body black">
 		  	<div class="form-group">
 				<label class="control-label" for="sys_adj">System: </label>
-				<input type="hidden" name="sys_adj" value="<?php echo $targetsystem ?>" />
-				<span class="sechead"><?php echo $targetsystem ?></span>
+				<input type="hidden" name="sys_adj" value="<?php echo $system ?>" />
+				<span class="sechead"><?php echo $system ?></span>
 			</div>
 			<div class="field">
 				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the Capsuleer who required rescue?</span></label>

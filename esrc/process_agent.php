@@ -46,7 +46,7 @@ if (isset($_POST['sys_adj'])) {
 
 	//display error message if there is one
 	if (!empty($errmsg)) {
-		$redirectURL = "search.php?system=". $system ."&errmsg=". urlencode($errmsg);
+		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
 		?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")
@@ -88,7 +88,7 @@ if (isset($_POST['sys_adj'])) {
 		$db->bind(':system', $system);
 		$db->execute();
 		
-		$redirectURL = "search.php?system=". $system;
+		$redirectURL = "search.php?sys=". $system;
 		?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")

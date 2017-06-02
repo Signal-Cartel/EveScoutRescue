@@ -106,7 +106,7 @@ class Leaderboard
 // 	public function getTopPilotsWeek(int $count)
 	public function getTopPilotsWeek($count)
 	{
-		if(gmdate('w', strtotime("now")) == 0) {
+		if (gmdate('w', strtotime("now")) == 0) {
 			$start = gmdate('Y-m-d', strtotime("now"));
 		}
 		else {
