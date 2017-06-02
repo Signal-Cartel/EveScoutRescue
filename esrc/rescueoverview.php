@@ -123,6 +123,8 @@ function translateStatus($status)
 		break;
 		case 'closed-noresponse' : $result = "Pilot did not respond";
 		break;
+		case 'closed-declined' : $result = "Request was not legitimate";
+		break;
 		
 		default:
 			$result = ucfirst($status);
