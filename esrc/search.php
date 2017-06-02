@@ -79,7 +79,7 @@ if (!empty($errmsg)) {
 if (!empty($system)) {
 	// display result for the selected system
 	// get cache information from database
-	$row = $caches->getCacheInfo($targetsystem);
+	$row = $caches->getCacheInfo($system);
 	//only display the following if we got some results back
 	if (!empty($row))
 	{
@@ -185,7 +185,7 @@ if (!empty($system)) {
 		// no results returned, so give an option to sow a new cache in this system
 		// check for valid system name
 		if ($systems->validatename($system) === 0) {
-			$lockedDate = $systems->locked($targetsystem);
+			$lockedDate = $systems->locked($system);
 			
 			if (!isset($lockedDate))
 			{
@@ -202,7 +202,7 @@ if (!empty($system)) {
 			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
 				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$targetsystem?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
 			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
 			<!--  clear data button -->	
@@ -217,7 +217,7 @@ if (!empty($system)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 				<span class="sechead white">Upon request of the current wormhole residents, 
-					caches are not to be sown in <?=$targetsystem?> until 
+					caches are not to be sown in <?=$system?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
 			</div></div></div>
@@ -243,7 +243,7 @@ if (!empty($system)) {
 	$database->query("SELECT * FROM activity
 						WHERE System = :system
 						ORDER By ActivityDate DESC");
-	$database->bind(':system', $targetsystem);
+	$database->bind(':system', $system);
 	$rows = $database->resultset();
 	$database->closeQuery();
 	if (!empty($rows)) {
