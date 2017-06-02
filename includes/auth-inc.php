@@ -19,19 +19,8 @@ if (isset($_SESSION['auth_characterid'])) {
 				  '<div><span class="white">' .$charname. '</span><br />' .
 				  '<span class="descr"><a href="../auth/logout.php">logout</a></span>' .
 				  '</div></div>';
-	//prepare footer with links for EvE-Scout pilots
-	if ($_SESSION['auth_characteralliance'] == 'EvE-Scout Enclave') {
-		$charfooter = '<footer class="footer">
-				       <div class="container">
-        		       <span class="text-muted">EvE-Scout: <a href="../esrc/search.php">ESRC Search</a>&nbsp;&nbsp;&nbsp;';
-		//additional footer links for admin users
-		if (in_array($charname, $admins)) {
-			$charfooter = $charfooter. 'Admin: <a href="../esrc/payoutadmin.php">Payouts</a>';
-		}
-		$charfooter = $charfooter. '</span></div></footer>';
-	}
-	
 }
+
 //populate display string for non-authenticated users
 else {
 	$chardiv  = '<a href="../auth/login.php">'.

@@ -141,7 +141,7 @@ function translateStatus($status)
  */
 function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
 {
-	$strStatus = ($finished == 0) ? 'Active' : 'Finished';
+	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
 	
 	echo '<div class="request">';
 	echo '<span class="sechead">'. $strStatus .' Requests</span>';
@@ -226,6 +226,7 @@ function displayNotes($row)
 	}
 }
 
+// display rescue requests for a specific system
 if (!empty($system)) { 
 	$systems = new Systems($database);
 	if ($systems->validatename($system) === 0) {
@@ -258,9 +259,29 @@ if (!empty($system)) {
 			
 <?php }
 }
+
+// no system selected, so display all requests
 else {
-	$data = $rescue->getRequests();
-	displayTable($data, 0, $system, 0, $isCoord);
+	// only display full list to SAR coordinators/admins
+	if ($isCoord == 1) {
+		//active requests
+		$data = $rescue->getRequests();
+		displayTable($data, 0, $system, 0, $isCoord);
+		
+		// closed requests
+		$data = $rescue->getRequests(1);
+		displayTable($data, 1, $system, 0, $isCoord);
+	}
+	// non-coordinators will see stats
+	else { ?>
+		<div class="row">
+			<div class="col-sm-12">
+				<div style="padding-left: 10px;">
+					<span class="sechead white">SAR stats coming soon!</span>
+				</div>
+			</div>
+		</div>
+	<?php }
 }
 ?>
 
