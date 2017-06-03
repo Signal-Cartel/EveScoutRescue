@@ -14,10 +14,6 @@ include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
 include_once '../class/caches.class.php';
 
-if (!isset($_SESSION['auth_copilot'])){
-	exit;
-}
-
 $cache = strtoupper ( $_REQUEST ["cache"] );
 
 try {
