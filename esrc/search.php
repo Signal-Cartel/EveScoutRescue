@@ -124,8 +124,6 @@ if (!empty($system)) {
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
 			target="_blank">anoik.is</a>
-		<!-- clear result" link -->
-		<a href="?" class="btn btn-link" role="button">clear result</a>
 		</div>
 		</div>
 		</div>
@@ -202,11 +200,11 @@ if (!empty($system)) {
 			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
 				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" 
+				class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 			<!-- anoik.is button -->
-			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" target="_blank">anoik.is</a>
-			<!--  clear data button -->	
-			<a href="?" class="btn btn-link" role="button">clear result</a>
+			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
+				role="button" target="_blank">anoik.is</a>
 			</div></div></div>
 
 			<?php 
