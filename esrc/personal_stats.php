@@ -5,6 +5,7 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
+require_once '../class/output.class.php';
 
 // if no pilot parameter, send to home page
 if (!isset($_REQUEST['pilot'])) {
@@ -130,8 +131,13 @@ elseif (isset($_REQUEST['system'])) {
 			<tbody>
 				<!-- CURRENT WEEK -->
 				<?php
-				$start = date('Y-m-d', strtotime('last Sunday', strtotime("now")));
-				$end = date('Y-m-d', strtotime("tomorrow"));
+				if(gmdate('w', strtotime("now")) == 0) {
+					$start = gmdate('Y-m-d', strtotime("now"));
+				}
+				else {
+					$start = gmdate('Y-m-d', strtotime('last Sunday'));
+				}
+				$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 				
 				$row = getPilotStats($start, $end, $pilot);
 				?>
@@ -142,7 +148,7 @@ elseif (isset($_REQUEST['system'])) {
 				<!-- LAST 30 DAYS -->
 				<?php
 				$start = date('Y-m-d', strtotime('-30 days', strtotime("now")));
-				$end = date('Y-m-d', strtotime("tomorrow"));
+				$end = date('Y-m-d', strtotime("+ 1 day"));
 				
 				$row = getPilotStats($start, $end, $pilot);
 				?>
@@ -237,13 +243,8 @@ elseif (isset($_REQUEST['system'])) {
 						default:
 							// ??
 					}
-					$eveyear = intval(date("Y", strtotime($value['ActivityDate'])))-1898;
-					//display records for only the last 30 days
 					echo '<tr>';
-					// add 4 hours to convert to UTC (EVE) for display
-					echo '<td>YC'. $eveyear .'-'. 
-							date("m-d H:i:s", strtotime($value['ActivityDate'])).
-						 '</td>';
+					echo '<td>'. date("Y-m-d H:i:s", strtotime($value['ActivityDate'])).'</td>';
 					echo '<td'. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';
 					echo '</tr>';
