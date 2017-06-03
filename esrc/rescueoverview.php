@@ -46,6 +46,15 @@ if (array_search($charname, $admins) === false) {
 			color: aqua;
 		}
 	</style>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $('#tblClosed').DataTable( {
+		        "order": [[ 1, "desc" ]],
+		        "pagingType": "full_numbers"
+		    } );
+		} );
+	</script>
 </head>
 
 <?php
@@ -151,7 +160,7 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '<p>None for this system.</p>';
 	} 
 	else { 
-		echo '<table class="table" style="width: auto;">';
+		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
 		// only display this column for finished requests if coord logged in
@@ -187,6 +196,7 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
  */
 function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
 {
+	$status = $row['status'];
 	echo "<tr>";
 	// only display this column for finished requests if coord logged in
 	if (($isCoord == 1 && $finished == 1) || ($finished == 0)) {
@@ -198,7 +208,22 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 			Output::htmlEncodeString($row['system']).'</a></td>';
 	echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. 
 			$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
-	echo "<td>".Output::htmlEncodeString(translateStatus($row['status']))."</td>";
+	// set status color
+	switch ($status) {
+		case 'new':
+			$statuscellformat = ' style="background-color:green;color:white;"';
+			break;
+		case 'pending':
+			$statuscellformat = ' style="background-color:yellow;color:black;"';
+			break;
+		default:
+			$statuscellformat = '';
+	}
+	if ($finished == 0 && strtotime($row['lastcontact']) < strtotime('-7 day')) {
+		$statuscellformat = ' style="background-color:orange;color:white;"';
+	}
+	echo '<td'. $statuscellformat .'>'.
+			Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
 	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
 	echo "<td>".Output::getEveDate($row['lastcontact'])."</td>";
 	// NOTES
