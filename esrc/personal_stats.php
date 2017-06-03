@@ -246,7 +246,7 @@ elseif (isset($_REQUEST['system'])) {
 					echo '<tr>';
 					echo '<td>'. date("Y-m-d H:i:s", strtotime($value['ActivityDate'])).'</td>';
 					echo '<td'. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
-					echo '<td><a href="search.php?system='. $value['System'].'">'. $value['System'] .'</a></td>';
+					echo '<td><a href="search.php?sys='. $value['System'].'">'. $value['System'] .'</a></td>';
 					echo '</tr>';
 				}
 				?>
