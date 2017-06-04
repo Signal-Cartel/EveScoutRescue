@@ -14,9 +14,21 @@ include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
 include_once '../class/caches.class.php';
 
-$cache = strtoupper ( $_REQUEST ["cache"] );
-
 try {
+	$cache = strtoupper ( $_REQUEST ["cache"] );
+	
+	session_start();
+	
+	if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['auth_copilot']))
+	{
+		$result['authorized'] = "Invalid session. Disabled or not allowed for copilot";
+// 		throw new Exception ( "Invalid session" );
+	}
+	else 
+	{
+		$result['authorized'] = 1;
+	}
+	
 	$db = new Database ();
 	
 	$systems = new Systems($db);
@@ -61,7 +73,7 @@ try {
 		
 		$result['tending'] = $caches->isTendingAllowed($cache);
 		
-// debug data structure
+// 		debug data structure
 // 		print_r($result);
 	} // $cache not present or wrong format
 else {
@@ -69,13 +81,13 @@ else {
 	}
 } catch ( Exception $e ) {
 	$errorMsg = $e->getMessage ();
-	if (($errorMsg != "invalid") && ($errorMsg != "none") || ! isset ( $errorMsg )) {
+// 	if (($errorMsg != "invalid") && ($errorMsg != "none") || ! isset ( $errorMsg )) {
 		// echo "error";
 		$result ['error'] = $errorMsg;
-	} else {
-		$result ['error'] = $errorMsg;
-		// echo 'Msg: '.$errorMsg;
-	}
+// 	} else {
+// 		$result ['error'] = $errorMsg;
+// 		// echo 'Msg: '.$errorMsg;
+// 	}
 }
 
 echo json_encode ( $result );
