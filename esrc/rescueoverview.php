@@ -51,7 +51,8 @@ if (array_search($charname, $admins) === false) {
 		$(document).ready(function() {
 		    $('#tblClosed').DataTable( {
 		        "order": [[ 1, "desc" ]],
-		        "pagingType": "full_numbers"
+		        "pagingType": "full_numbers",
+		        "dom": 'lfprtip'
 		    } );
 		} );
 	</script>
