@@ -60,8 +60,18 @@ include_once '../includes/head.php';
 				<div id="question4" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
 						<p>While our SAR pilots will do their very best to locate the wormhole system where you are stranded, we cannot offer any guarantees as to when or even if we will be able to locate you and effect a rescue. Due to the constant flux of wormhole connections, there is no way to be sure we will locate an entrance to your system in a timely fashion.</p>
-						<p>Please also note that SAR does <strong>not</strong>* conduct searches for specific wormholes, due to the Signal Cartel <a href="http://www.eve-scout.com/signal-cartel/">Credo</a>'s requirement of maintaining neutrality.</p>
-						<p class="small">*On occasion, we get a request to help a pilot find their way back into a wormhole where they have a POS or Citadel anchored. In such situations, and on a case by case basis, we may decide to perform this wormhole search. We will likely require proof of ownership (e.g., screenshots of the assets in question listed in the Corporation panel and emailed from the corporation's CEO). In all such cases, prior approval of alliance and/or corp leadership is required before we begin the wormhole search. Contact <a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice Hapus</a> to discuss further.</p>
+						<p>Please also note that SAR does <strong>not</strong> conduct searches for specific wormholes, due to the Signal Cartel <a href="http://www.eve-scout.com/signal-cartel/">Credo</a>'s requirement of maintaining neutrality. While we will not be able to help with these sorts of wormhole search requests, we are happy to recommend the following two services provided by other citizens of New Eden:</p>
+						<ul>
+							<li>
+								<a href="http://www.torpedodelivery.com/wormhole-location" 
+								target="_blank">Wingspan Delivery Services: Wormhole 
+								Location</a>
+							</li>
+							<li>
+								<a href="https://whsales.adarnauth.tech/" target="_blank">
+								Adarnauth Wormhole Sales</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

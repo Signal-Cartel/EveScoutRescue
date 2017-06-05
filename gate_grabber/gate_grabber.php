@@ -34,7 +34,7 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-
+ignore_user_abort(true);
 
 getSystems();
 
