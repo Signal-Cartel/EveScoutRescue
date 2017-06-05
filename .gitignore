@@ -56,4 +56,4 @@ doc
 *.bak
 *~
 curtime.php
-utilities/backup.sh
+utilities/
