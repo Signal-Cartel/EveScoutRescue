@@ -27,7 +27,7 @@ function getSystems()
 
     //get list of systems to run through
     $systems = mysqli_query($link, "SELECT * FROM systems where flag=0 LIMIT 200");
-    print_r($systems);
+
     foreach ($systems as $system) {
 
         //call system specific cron
@@ -53,7 +53,7 @@ function getSysInfo($system)
     $response = curl_exec($ch);
 
     $data = json_decode($response, true);
-
+//print_r($data);
     $gateArray = $data['stargates'];
 
     $sysName = $data['name'];
@@ -93,6 +93,13 @@ function getSysInfo($system)
 
         }
 
+    } elseif (count($gateArray)==0) {
+
+        $systemUpdate = "update systems set flag=1 where system='" . $system . "'";
+
+
+        $systemUp = mysqli_query($link, $systemUpdate) or trigger_error("Query Failed! SQL: $systemUpdate - Error: " . mysqli_error($link), E_USER_ERROR);
+
     }
     curl_close($ch);
 
@@ -125,13 +132,13 @@ function getGateInfo($gate, $system, $sysName)
 
     $external_id=$data2['destination']['stargate_id'];
 
-   $external_gate_name=explode(")",explode("(",$data2['name'])[1])[0];
+    $external_gate_name=explode(")",explode("(",$data2['name'])[1])[0];
 //insert gate specific data into gates table.
     $gateIn = "insert into gates (system_id,system_name,internal_gate_id,external_gate_id,external_gate_name)
 values('" . $system . "', '" . $sysName . "','" . $gate . "','" . $external_id . "','" . $external_gate_name . "')";
 
 
-$gateDown=mysqli_query($link,$gateIn) or trigger_error("Query Failed! SQL: $gateIn - Error: ".mysqli_error($link), E_USER_ERROR);
+    $gateDown=mysqli_query($link,$gateIn) or trigger_error("Query Failed! SQL: $gateIn - Error: ".mysqli_error($link), E_USER_ERROR);
 
 
 
