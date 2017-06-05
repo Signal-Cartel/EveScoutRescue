@@ -109,8 +109,11 @@ class Leaderboard
 		if (gmdate('w', strtotime("now")) == 0) {
 			$start = gmdate('Y-m-d', strtotime("now"));
 		}
+		elseif (gmdate('w', strtotime("now")) == 1) {
+			$start= gmdate('Y-m-d', strtotime("- 1 day"));
+		}
 		else {
-			$start = gmdate('Y-m-d', strtotime('last Sunday'));
+			$start = gmdate('Y-m-d', gmdate(strtotime('last Sunday')));
 		}
 		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 			

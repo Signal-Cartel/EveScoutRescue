@@ -1,10 +1,27 @@
 <?php
+$config = parse_ini_file('../../config/esr_dbconfig.ini');
+
+// check if a config is found
+if ($config === FALSE)
+{
+	echo "<p><b>No DB config found!</b></p>";
+	// add error logging here
+	exit(1);
+}
+
+//define db connection vars
+define("DB_HOST", $config['hostname']);
+define("DB_USER", $config['username']);
+define("DB_PASS", $config['password']);
+define("DB_NAME", $config['dbname']);
+
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-$user = 'root';
-$password = 'root';
-$db = 'eve';
-$host = 'localhost';
+$user = DB_USER;
+$password = DB_PASS;
+$db = DB_NAME;
+$host = DB_HOST;
 $port = 3306;
 global $link;
 

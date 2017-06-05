@@ -8,11 +8,14 @@ include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
 
 if (!isset($_POST['start'])) {
-	if(gmdate('w', strtotime("now")) == 0) {
+	if (gmdate('w', strtotime("now")) == 0) {
 		$start = gmdate('Y-m-d', strtotime("now"));
 	}
+	elseif (gmdate('w', strtotime("now")) == 1) {
+		$start= gmdate('Y-m-d', strtotime("- 1 day"));
+	}
 	else {
-		$start = gmdate('Y-m-d', strtotime('last Sunday'));
+		$start = gmdate('Y-m-d', gmdate(strtotime('last Sunday')));
 	}
 }
 
