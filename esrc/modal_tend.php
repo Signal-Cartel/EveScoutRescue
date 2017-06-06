@@ -19,8 +19,8 @@
 					<strong>Existing Cache Info</strong><br />
 					Location: <?=$row['Location']?><br />
 					Align: <?=$row['AlignedWith']?><br />
-					Distance: <?=$row['Distance']?><br />
-					Password: <?=$row['Password']?>
+					Distance: <?=Output::htmlEncodeString($row['Distance'])?><br />
+					Password: <?=Output::htmlEncodeString($row['Password'])?>
 				<?php 
 				}
 				?>
