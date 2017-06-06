@@ -111,8 +111,5 @@ $leaderBoard = new Leaderboard($database);
 </div>
 
 </div>
-
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
 </body>
 </html>
