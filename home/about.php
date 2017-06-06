@@ -66,44 +66,28 @@ $leaderBoard = new Leaderboard($database);
 					takes a team to make it all happen. Our current roster includes:</p>
 				<ul>
 					<li><a href="https://gate.eveonline.com/Profile/A%20Dead%20Parrot">A 
-						Dead Parrot</a> &mdash; Development</li>
+						Dead Parrot</a> &mdash; Development, Co-Pilot</li>
 					<li><a href="https://gate.eveonline.com/Profile/Igaze">Igaze</a> 
 						&mdash; Assistant Coordinator, SAR</li>
 					<li><a href="https://gate.eveonline.com/Profile/Lektro%20Illuminate"> 
-						Lektro Illuminate</a> &mdash; Design</li>
+						Lektro Illuminate</a> &mdash; Design &amp; CSS</li>
 					<li><a href="https://gate.eveonline.com/Profile/Lucas%20Ballard"> 
-						Lucas Ballard</a> &mdash; Logo Design</li>
+						Lucas Ballard</a> &mdash; Lead Coordinator, SAR &amp; 
+						Logo Design</li>
 					<li><a href="https://gate.eveonline.com/Profile/Orsel%20Solette">Orsel  
-						Solette</a> &mdash; Development</li>
+						Solette</a> &mdash; Development, ESR Data Tools</li>
+					<li><a href="https://gate.eveonline.com/Profile/Triffton%20Ambraelle">
+						Triffton Ambraelle</a> &mdash; Assistant Coordinator, SAR</li>
 				</ul>
 				<p>We also rely on a dedicated group of pilots to place and maintain our
 					rescue caches in space. All participating pilots over the last 30 days 
 					are listed to the right. These are the true unsung heroes of New Eden.</p>
-				<p>Of special note are our "Hall of Fame" pilots, who have placed or maintained 
-					over 100 caches each. They are listed below. If you ever see any of these 
-					pilots in Local, be sure to give them a wave. The next ship they save
-					might be yours!</p>
-				<table class="table" style="width: auto;">
-					<thead>
-						<tr>
-							<th>Pilot</th>
-							<th>Caches</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						$rows = $leaderBoard->getAllHigh(30);
-						
-						foreach ($rows as $value) {
-							if (intval($value['cnt']) < 100) { continue; }
-							echo '<tr>';
-							echo '<td>'. $value['Pilot'] .'</td>';
-							echo '<td align="right">'. $value['cnt'] .'</td>';
-							echo '</tr>';
-						}
-						?>
-					</tbody>
-				</table>
+				<p><span class="lead">Hall of Heroes</span><br />
+					Of special note are our	<a href="heroes.php">"Hall of Heroes"</a> pilots, 
+					who have placed or maintained a minimum of 100 caches each. If you ever 
+					see any of these pilots in Local, be sure to give them a wave. The next 
+					ship they save might be yours! <a href="heroes.php">Visit the Hall of 
+					Heroes now!</a></p>
 			</div>
 		</div>
 	</div>
@@ -116,7 +100,7 @@ $leaderBoard = new Leaderboard($database);
 				$a = 1;
 				foreach ($rows as $value) {
 					if (($a % 2) == 1) { echo '<tr>' ;}
-					echo '<td class="clean">&nbsp;&nbsp;'. $value['Pilot'] .'</td>';
+					echo '<td class="clean text-nowrap">&nbsp;&nbsp;'. $value['Pilot'] .'</td>';
 					if (($a % 2) == 0) { echo '</tr>' ;}
 					$a++;
 				}

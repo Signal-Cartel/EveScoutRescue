@@ -1,16 +1,3 @@
-<?php 
-// set timeout to a lower bound of 2 hours
-// (see https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php)
-//
-// server should keep session data for AT LEAST 2 hours
-ini_set('session.gc_maxlifetime', 7200);
-
-// each client should remember their session id for EXACTLY 2 hour
-session_set_cookie_params(7200);
-
-session_start(); // ready to go!
-?>
-
 	<meta http-equiv="Content-Language" content="en-us">
 	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
