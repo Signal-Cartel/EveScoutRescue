@@ -121,6 +121,8 @@ function translateStatus($status)
 	$result = "unknown";
 	switch ($status)
 	{
+		case 'system-located' : $result = "System Located";
+		break;
 		case 'closed-rescued' : $result = "Pilot rescued by SAR";
 		break;
 		case 'closed-escaped' : $result = "Pilot escaped by own action";

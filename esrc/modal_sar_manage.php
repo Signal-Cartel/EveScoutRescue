@@ -74,6 +74,7 @@ $database->closeQuery();
 					<?php } ?>
 					<option value="pending" <?php if ($request['status'] === 'pending') { echo ' selected="selected"'; } ?>>Pending</option>
 					<option value="open" <?php if ($request['status'] === 'open') { echo ' selected="selected"'; } ?>>Open</option>
+					<option value="system-located" <?php if ($request['status'] === 'system-located') { echo ' selected="selected"'; } ?>>System Located</option>
 					<option value="closed-rescued" <?php if ($request['status'] === 'closed-rescued') { echo ' selected="selected"'; } ?>>Closed - rescued</option>
 					<option value="closed-escaped" <?php if ($request['status'] === 'closed-escaped') { echo ' selected="selected"'; } ?>>Closed - escaped by self</option>
 					<option value="closed-escapedlocals" <?php if ($request['status'] === 'closed-escapedlocals') { echo ' selected="selected"'; } ?>>Closed - escaped by locals</option>
