@@ -88,14 +88,17 @@ function printESRCHeroes($type, $min, $max, $listMax)
 	// MegaCacher column
 	printESRCHeroes('MegaCacher', 300, 499, 30);
 	
+	// HyperCacher column
+	printESRCHeroes('HyperCacher', 500, 999, 10);
+	
 	// UltraCacher column
-	printESRCHeroes('UltraCacher', 500, 999, 10);
+	//printESRCHeroes('UltraCacher', 1000, 2999, 10);
 	
-	// Heroic Cacher column
-	//printESRCHeroes('Heroic Cacher', 1000, 2999, 10);
+	// HeroCacher column
+	//printESRCHeroes('HeroCacher', 3000, 4999, 5);
 	
-	// Insane Cacher column
-	//printESRCHeroes('Insane Cacher', 3000, 9999, 5);
+	// InsaneCacher column
+	//printESRCHeroes('HeroCacher', 5000, 9999, 5);
 	?>
 </div>
 
