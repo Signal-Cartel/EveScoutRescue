@@ -20,7 +20,7 @@ include_once '../includes/head.php';
 </div>
 <div class="ws"></div>
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-sm-8">
 		<div class="panel-group" id="faqAccordion">
 			<?php include_once '../faq/faq-q1.php'; ?>
 			<div class="panel panel-default">
@@ -33,6 +33,7 @@ include_once '../includes/head.php';
 					<div class="panel-body">
 						<p>The EvE-Scout Rescue Cache (ESRC) program, founded in early YC 118 by <a href="https://gate.eveonline.com/Profile/Forcha%20Alendare">Forcha Alendare</a>, provides a basic emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style.</p>
 						<p>ESRC is only one facet of the EvE-Scout Rescue division, a dedicated group of Signal Cartel pilots who have answered to call of service to the greater New Eden community. As well as being a service to the EVE community, this program provides Signal Cartel members an opportunity to expand their exploration experiences, wormhole lifestyle, and game play content.</p>
+						<p><img class="img-responsive img-rounded" src="../img/hope_comes_in_a_box.jpg" width="970px" /></p>
 					</div>
 				</div>
 			</div>
@@ -68,10 +69,14 @@ include_once '../includes/head.php';
 			<?php include_once '../faq/faq-q20.php'; ?>
 		</div>
 	</div>
-</div>
+	<div class="col-sm-4 white" style="text-align: center;">
+		<a href="https://t.co/bh5fiGamMD" target="_blank">
+			<img class="img-responsive img-rounded" src="../img/cache_in_system.jpg" width="320px" />
+		</a>
+		(thanks, <a href="https://t.co/bh5fiGamMD" target="_blank">@estedestirr</a>!)
+	</div>
 </div>
 
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
+</div>
 </body>
 </html>

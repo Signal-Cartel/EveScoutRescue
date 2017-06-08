@@ -62,23 +62,81 @@ $leaderBoard = new Leaderboard($database);
 				<p>Since then, the program has grown to what it is today. What started as one rescue 
 					program has now grown to become an entire division within Signal Cartel and 
 					encompasses both Search and Rescue operations and the original Rescue Cache 
-					program. While Thrice continues to oversee the division as a whole, it 
+					program. While Thrice oversees the division as a whole, it 
 					takes a team to make it all happen. Our current roster includes:</p>
-				<ul>
-					<li><a href="https://gate.eveonline.com/Profile/A%20Dead%20Parrot">A 
-						Dead Parrot</a> &mdash; Development, Co-Pilot</li>
-					<li><a href="https://gate.eveonline.com/Profile/Igaze">Igaze</a> 
-						&mdash; Assistant Coordinator, SAR</li>
-					<li><a href="https://gate.eveonline.com/Profile/Lektro%20Illuminate"> 
-						Lektro Illuminate</a> &mdash; Design &amp; CSS</li>
-					<li><a href="https://gate.eveonline.com/Profile/Lucas%20Ballard"> 
-						Lucas Ballard</a> &mdash; Lead Coordinator, SAR &amp; 
-						Logo Design</li>
-					<li><a href="https://gate.eveonline.com/Profile/Orsel%20Solette">Orsel  
-						Solette</a> &mdash; Development, ESR Data Tools</li>
-					<li><a href="https://gate.eveonline.com/Profile/Triffton%20Ambraelle">
-						Triffton Ambraelle</a> &mdash; Assistant Coordinator, SAR</li>
-				</ul>
+					
+				<div class="row">
+				  <div class="col-md-3">
+				    <div class="thumbnail text-center">
+				      <a href="https://gate.eveonline.com/Profile/A%20Dead%20Parrot">
+				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A Dead Parrot" style="width:100%">
+				        <div class="caption">
+				          <p><strong>A Dead Parrot</strong><br />Development<br />Co-Pilot</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Igaze">
+				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
+				        <div class="caption">
+				          <p><strong>Igaze</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Lektro%20Illuminate">
+				        <img src="https://image.eveonline.com/Character/2112082674_128.jpg" alt="Lektro" style="width:100%">
+				        <div class="caption">
+				          <p><strong>Lektro Illuminate</strong><br />Design<br />CSS</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Lucas%20Ballard">
+				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
+				        <div class="caption">
+				          <p><strong>Lucas Ballard</strong><br />Search &amp; Rescue<br />
+				          	Lead Coordinator</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				</div>
+				<div class="row">
+				  <div class="col-md-3">
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Orsel%20Solette">
+				        <img src="https://image.eveonline.com/Character/96975403_128.jpg" alt="Orsel" style="width:100%">
+				        <div class="caption">
+				          <p><strong>Orsel Solette</strong><br />Development<br />
+				          	ESR Data Tools</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Triffton%20Ambraelle">
+				        <img src="https://image.eveonline.com/Character/93697245_128.jpg" alt="Triffton" style="width:100%">
+				        <div class="caption">
+				          <p><strong>Triffton Ambraelle</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator</p>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				  </div>
+				</div>
 				<p>We also rely on a dedicated group of pilots to place and maintain our
 					rescue caches in space. All participating pilots over the last 30 days 
 					are listed to the right. These are the true unsung heroes of New Eden.</p>
