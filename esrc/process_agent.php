@@ -81,10 +81,10 @@ if (isset($_POST['sys_adj'])) {
 		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
 			
-		$db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = :lastupdated 
+		$db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated 
 					WHERE System = :system AND Status <> 'Expired'");
 		$db->bind(':note', $agent_note);
-		$db->bind(':lastupdated', $activitydate);
+// 		$db->bind(':lastupdated', $activitydate);
 		$db->bind(':system', $system);
 		$db->execute();
 		
