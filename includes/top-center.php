@@ -10,9 +10,12 @@
 				  <a class="btn btn-success btn-md" href="../esrc/search.php" 
 					role="button">ESRC</a>&nbsp;&nbsp;&nbsp;&nbsp;
 				  <a class="btn btn-success btn-md" href="../esrc/rescueoverview.php" 
-					role="button">SAR</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				  <a class="btn btn-warning btn-md" href="../copilot/" 
-					role="button">Allison / CoPilot</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+					role="button">SAR</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+			// only show Co-Pilot button if they are not already logged into Co-Pilot
+			if (!isset($_SESSION['auth_copilot'])) {
+				echo '<a class="btn btn-warning btn-md" href="../copilot/" 
+					role="button" target="_blank">Co-Pilot / Allison</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+			}
 			// additional button for admin users
 			if (in_array($charname, $admins)) {
 				echo '<a class="btn btn-danger btn-md" href="../esrc/payoutadmin.php" 
