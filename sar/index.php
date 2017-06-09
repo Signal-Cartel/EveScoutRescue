@@ -20,7 +20,7 @@ include_once '../includes/head.php';
 </div>
 <div class="ws"></div>
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-sm-8">
 		<div class="panel-group" id="faqAccordion">
 			<?php include_once '../faq/faq-q1.php'; ?>
 			<div class="panel panel-default">
@@ -79,10 +79,14 @@ include_once '../includes/head.php';
 			<?php include_once '../faq/faq-q20.php'; ?>
 		</div>
 	</div>
-</div>
+	<div class="col-sm-4 white" style="text-align: center;">
+		<a href="https://t.co/EgOnvx3qby" target="_blank">
+			<img class="img-responsive img-rounded" src="../img/SAR.jpg" width="320px" />
+		</a>
+		(thanks, <a href="https://t.co/EgOnvx3qby" target="_blank">@estedestirr</a>!)
+	</div>
 </div>
 
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
+</div>
 </body>
 </html>
