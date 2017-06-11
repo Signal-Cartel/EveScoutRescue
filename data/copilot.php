@@ -4,7 +4,7 @@
 // place this file in the 'data' folder and name it copilot.php
 // 
 // request format then will be
-// http://www.evescoutrescue.com/esrc/copilot.php?cache=J123456
+// http://www.evescoutrescue.com/data/copilot.php?cache=J123456
 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
@@ -80,14 +80,9 @@ else {
 		throw new Exception ( 'Invalid system: ' . $cache );
 	}
 } catch ( Exception $e ) {
-	$errorMsg = $e->getMessage ();
-// 	if (($errorMsg != "invalid") && ($errorMsg != "none") || ! isset ( $errorMsg )) {
-		// echo "error";
-		$result ['error'] = $errorMsg;
-// 	} else {
-// 		$result ['error'] = $errorMsg;
-// 		// echo 'Msg: '.$errorMsg;
-// 	}
+    // map an error message to a response field
+    $errorMsg = $e->getMessage ();
+    $result ['error'] = $errorMsg;
 }
 
 echo json_encode ( $result );
