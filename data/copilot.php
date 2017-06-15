@@ -13,6 +13,7 @@ define('ESRC', TRUE);
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
 include_once '../class/caches.class.php';
+include_once '../class/rescue.class.php';
 
 try {
 	$cache = strtoupper ( $_REQUEST ["cache"] );
@@ -33,6 +34,7 @@ try {
 	
 	$systems = new Systems($db);
 	$caches = new Caches($db);
+	$rescue = new Rescue($db);
 	
 	if ($cache && strlen ( $cache ) == 7) {
 		// check for "No Sow" system
@@ -62,14 +64,11 @@ try {
 		}
 		// echo json_encode($row);
 		$result ['cache'] = $row;
-		
-		$db->query ( "SELECT count(1) as cnt
- 						FROM rescuerequest
- 						WHERE system = :system and finished = 0" );
-		$db->bind ( ':system', $cache );
-		$row = $db->single ();
+		// report only open requests
+		$requests = $rescue->getSystemRequests($cache, 0);
 		// echo json_encode($row);
-		$result ['rescue'] = $row['cnt'];
+// 		$result ['rescue'] = $row['cnt'];
+		$result ['rescue'] = count($requests);
 		
 		$result['tending'] = $caches->isTendingAllowed($cache);
 		
