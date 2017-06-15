@@ -22,12 +22,27 @@ require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
+require_once '../class/rescue.class.php';
 
 $database = new Database();
+
+if (!isset($charname))
+{
+	// no, set a dummy char name
+	$charname = 'charname_not_set';
+}
+// check for SAR Coordinator login
+$isCoord = 1;
+if (array_search($charname, $admins) === false) {
+	if (array_search($charname, $sarcoords) === false) {
+		$isCoord = 0;
+	}
+}
 
 // create object instances
 $caches = new Caches($database);
 $systems = new Systems($database);
+$rescue = new Rescue($database);
 
 $system = '';
 if(isset($_REQUEST['sys'])) { 
@@ -36,13 +51,12 @@ if(isset($_REQUEST['sys'])) {
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
-// check for active SAR request
-$database->query("select count(1) as cnt from rescuerequest where finished = 0 and system = :system order by requestdate");
-$database->bind(":system", $system);
-$data = $database->single();
-$database->closeQuery();
+// get active SAR requests of current system
+$data = $rescue->getSystemRequests($system, 0, $isCoord);
+
 $activeSAR = '';
-if ($data['cnt'] > 0) {
+// check for active SAR request
+if (count($data) > 0) {
 	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
 }
 ?>
@@ -339,7 +353,7 @@ else {
 	
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
 					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
@@ -362,7 +376,7 @@ else {
 
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
 					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
@@ -386,7 +400,7 @@ else {
 				
 				foreach ($rows as $value) {
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
+					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
 					echo '<td align="right">'. $value['cnt'] .'</td>';
 					echo '</tr>';
 				}
@@ -411,11 +425,11 @@ else {
 				foreach ($rows as $value) {
 					//prepare personal stats link for logged-in pilot
 					$pilot = $value['Pilot'];
-					$ptxt = $pilot;
+					$ptxt = Output::htmlEncodeString($pilot);
 					$pformat = '';
 					if (isset($charname) && $pilot == $charname) {
 						$ptxt = '<a target="_blank" href="personal_stats.php?pilot='. 
-									urlencode($pilot) .'">'. $pilot .'</a>';
+									urlencode($pilot) .'">'. Output::htmlEncodeString($pilot) .'</a>';
 						$pformat = ' style="background-color: #cccccc;"';
 					}
 					//display records for only the last 30 days

@@ -60,7 +60,6 @@ class Rescue {
 		$this->db->execute();
 		// get new rescue ID
 		$rescueID = $this->db->lastInsertId();
-		// 	echo "<br> Creaded request: ".$rescueID.": Note:".$data['notes']."<br>";
 	
 		// return the new created rescue ID
 		return $rescueID;
@@ -159,36 +158,40 @@ class Rescue {
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();
-// 		 echo "<pre>";
-// 		 print_r($database);
-// 		 echo "\n";
-// 		 print_r($data);
-// 		 echo "</pre>";
 		$this->db->closeQuery();
 		
 		return $data;
 	}
 	
 	/**
-	 * Get single request by system
+	 * Get all requests by system
+	 * @param number $system - find request for the system
 	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
+	 * @param number $isCoord 0 - returns only open requests if search for open requests (default); 1 - returns all requests if search for open requests
 	 * @return array
 	 */
-	public function getSystemRequests($system, $finished)
+	public function getSystemRequests($system, $finished = 0, $isCoord = 0)
 	{
-		// get requests from database
-		$this->db->query("SELECT * FROM rescuerequest 
+		// set the default query
+		$sql = "SELECT * FROM rescuerequest 
 							WHERE system = :system and finished = :finished
-							ORDER BY requestdate DESC");
+							ORDER BY requestdate DESC";
+		
+		// check if search for open requests and user is NOT coordinator/admin
+		if ($finished == 0 && $isCoord == 0)
+		{
+			// select only open requests
+			$sql = "SELECT * FROM rescuerequest
+							WHERE system = :system and finished = :finished and status in( 'open', 'system-located')
+							ORDER BY requestdate DESC";
+		}
+		
+		// get requests from database
+		$this->db->query($sql);
 		$this->db->bind(":system", $system);
 		$this->db->bind(":finished", $finished);
 		// $database->execute();
 		$data = $this->db->resultset();
-// 		 echo "<pre>";
-// 		 print_r($database);
-// 		 echo "\n";
-// 		 print_r($data);
-// 		 echo "</pre>";
 		$this->db->closeQuery();
 		
 		return $data;
@@ -205,15 +208,9 @@ class Rescue {
 							WHERE rescueid = :rescueid ORDER BY notedate DESC");
 		$this->db->bind(":rescueid", $requestID);
 		$data = $this->db->resultset();
-		// 		 echo "<pre>";
-		// 		 print_r($database);
-		// 		 echo "\n";
-		// 		 print_r($data);
-		// 		 echo "</pre>";
 		$this->db->closeQuery();
 		
 		return $data;
 	}
-
 }
 ?>

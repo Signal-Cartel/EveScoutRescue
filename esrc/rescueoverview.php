@@ -206,11 +206,21 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 		echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
 				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 	}
+	// display request date
 	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
+	// display system information
 	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.
 			Output::htmlEncodeString($row['system']).'</a></td>';
-	echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. 
-			$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
+	// display pilot information
+	if ($isCoord == 0 && $finished == 1)
+	{
+		echo '<td><b>PROTECTED</b></td>';
+	}
+	else
+	{
+		echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. 
+				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
+	}
 	// set status color
 	switch ($status) {
 		case 'new':
@@ -269,11 +279,11 @@ if (!empty($system)) {
 	<div class="ws"></div>
 	
 	<?php // get active requests from database
-	$data = $rescue->getSystemRequests($system, 0);
+	$data = $rescue->getSystemRequests($system, 0, $isCoord);
 	displayTable($data, 0, $system, 1, $isCoord);
 	
 	// get finished requests from database
-	$data = $rescue->getSystemRequests($system, 1);
+	$data = $rescue->getSystemRequests($system, 1, $isCoord);
 	displayTable($data, 1, $system, 0, $isCoord);
 	}
 	// invalid system name
