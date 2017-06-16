@@ -174,6 +174,24 @@ class Systems {
 		
 		return $result;
 	}
+	
+	/**
+	 * Get all activitis of a system
+	 * @param unknown $system
+	 * @return string
+	 */
+	public function getSystemActivities($system)
+	{
+		$this->db->query("SELECT * FROM activity
+						WHERE System = :system
+						ORDER By ActivityDate DESC");
+		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+	
 }
 
 ?>

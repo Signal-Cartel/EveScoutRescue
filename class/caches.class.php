@@ -101,9 +101,8 @@ class Caches
 	}
 	
 	/**
-	 * Get values of a systems cache
+	 * Get values of a current system cache
 	 */
-// 	public function getCacheInfo(string $system)
 	public function getCacheInfo($system)
 	{
 		// check if a system is supplied
@@ -117,6 +116,20 @@ class Caches
 		
 		$result = $this->db->single();
 		
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+	
+	/**
+	 * Get all infos of a cache
+	 * @param $cacheID the id of the cache
+	 */
+	public function getCacheData($cacheID)
+	{
+		$this->db->query("SELECT * FROM cache WHERE CacheID = :id");
+		$this->db->bind(':id', $cacheID);
+		$result = $this->db->single();
 		$this->db->closeQuery();
 		
 		return $result;

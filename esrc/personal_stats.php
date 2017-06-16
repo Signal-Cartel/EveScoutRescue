@@ -5,7 +5,8 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
-require_once '../class/output.class.php';
+require_once '../class/db.class.php';
+require_once '../class/pilot.class.php';
 
 // if no pilot parameter, send to home page
 if (!isset($_REQUEST['pilot'])) {
@@ -21,43 +22,9 @@ if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 			header("Location: /");
 		}
 	}
-
 }
 
-function getPilotStats($start, $end, $pilot)
-{
-	$database = new Database();
-	$database->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
-					FROM activity
-					WHERE ActivityDate BETWEEN :start AND :end
-					AND Pilot = :pilot");
-	$database->bind(':start', $start);
-	$database->bind(':end', $end);
-	$database->bind(':pilot', $pilot);
-	
-	$result = $database->single();
-	
-	$database->closeQuery();
-	
-	return $result;
-}
-
-function getTypeCounts($pilot, $type)
-{
-	$database = new Database();
-	$database->query("SELECT COUNT(*) AS cnt
-					FROM activity
-					WHERE Pilot = :pilot AND EntryType = :type");
-	$database->bind(':pilot', $pilot);
-	$database->bind(':type', $type);
-	
-	$result = $database->single();
-	
-	$database->closeQuery();
-	
-	return $result;
-}
-
+// create a new database instance
 ?>
 <html>
 
@@ -86,15 +53,10 @@ function getTypeCounts($pilot, $type)
 </head>
 
 <?php
-require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
-require_once '../class/caches.class.php';
-require_once '../class/systems.class.php';
-
+// create a database object
 $database = new Database();
-
-// create a cache object instance
-$caches = new Caches($database);
+// create a pilot object instance
+$pilots = new Pilot($database);
 
 if(isset($_REQUEST['targetsystem'])) { 
 	$targetsystem = htmlspecialchars($_REQUEST['targetsystem']);
@@ -139,36 +101,34 @@ elseif (isset($_REQUEST['system'])) {
 				}
 				$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 				
-				$row = getPilotStats($start, $end, $pilot);
+				$count = $pilots->getActivityCount($pilot, $start, $end);
 				?>
 				<tr>
 					<td>Current Week (Sun-Sat)</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $count; ?></td>
 				</tr>
 				<!-- LAST 30 DAYS -->
 				<?php
 				$start = date('Y-m-d', strtotime('-30 days', strtotime("now")));
 				$end = date('Y-m-d', strtotime("+ 1 day"));
 				
-				$row = getPilotStats($start, $end, $pilot);
+				$count= $pilots->getActivityCount($pilot, $start, $end);
 				?>
 				<tr>
 					<td>Last 30 days</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $count; ?></td>
 				</tr>
 				<!-- ALL TIME -->
 				<?php
-				$database->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
-					FROM activity WHERE Pilot = :pilot");
-				$database->bind(':pilot', $pilot);
-				
-				$row = $database->single();
-				
-				$database->closeQuery();
+				// get all activities (complete time frame to use same method)
+				$start = date('Y-m-d', strtotime("1 Januar 2000"));
+				// tomorrow
+				$end = date('Y-m-d', strtotime("+ 1 day"));
+				$count = $pilots->getActivityCount($pilot, $start, $end);
 				?>
 				<tr>
 					<td>All Time</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $count; ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -182,25 +142,25 @@ elseif (isset($_REQUEST['system'])) {
 			</thead>
 			<tbody>
 				<?php
-				$row = getTypeCounts($pilot, 'sower');
+				$typeCounts = $pilots->getActivityTypeCount($pilot, 'sower')
 				?>
 				<tr>
 					<td style="background-color:#ccffcc;color:black;">Sower</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $typeCounts; ?></td>
 				</tr>
 				<?php
-				$row = getTypeCounts($pilot, 'tender');
+				$typeCounts = $pilots->getActivityTypeCount($pilot, 'tender')
 				?>
 				<tr>
 					<td style="background-color:#d1dffa;color:black;">Tender</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $typeCounts; ?></td>
 				</tr>
 				<?php
-				$row = getTypeCounts($pilot, 'adjunct');
+				$typeCounts = $pilots->getActivityTypeCount($pilot, 'adjunct')
 				?>
 				<tr>
 					<td style="background-color:#fffacd;color:black;">Adjunct</td>
-					<td align="right"><?php echo $row['cnt']; ?></td>
+					<td align="right"><?php echo $typeCounts; ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -217,16 +177,7 @@ elseif (isset($_REQUEST['system'])) {
 			</thead>
 			<tbody>
 				<?php
-				$database->query("SELECT ActivityDate, EntryType, System
-									FROM activity
-									WHERE Pilot = :pilot
-									ORDER BY ActivityDate DESC");
-				$database->bind(':pilot', $pilot);
-				
-				$rows = $database->resultset();
-				
-				$database->closeQuery();
-				
+				$rows = $pilots->getActivities($pilot);				
 				foreach ($rows as $value) {
 					// calculate action cell format
 					$actioncellformat= '';
