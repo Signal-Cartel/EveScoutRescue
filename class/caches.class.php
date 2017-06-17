@@ -103,7 +103,7 @@ class Caches
 	/**
 	 * Get values of a current system cache
 	 */
-	public function getCacheInfo($system)
+	public function getCacheInfo($system, $limited = FALSE)
 	{
 		// check if a system is supplied
 		if (!isset($system))
@@ -111,7 +111,19 @@ class Caches
 			return;
 		}
 		
-		$this->db->query("SELECT * FROM cache WHERE System = :system AND Status <> 'Expired'");
+		// check to return only limited information
+		if ($limited)
+		{
+			// yes
+			$sql = "SELECT c.System, Location, AlignedWith, Status, ExpiresOn, InitialSeedDate, LastUpdated FROM cache c
+						WHERE c.System = :system AND Status <> 'Expired'";
+		}
+		else
+		{
+			// not, return all cache infos
+			$sql = "SELECT * FROM cache WHERE System = :system AND Status <> 'Expired'";
+		}
+		$this->db->query($sql);
 		$this->db->bind(':system', $system);
 		
 		$result = $this->db->single();

@@ -157,18 +157,13 @@ class Systems {
 		}
 		
 		// check the DB for the system name
-		$sql = "SELECT Class, Notes FROM wh_systems WHERE System = :system";
+		$sql = "SELECT * FROM wh_systems WHERE System = :system";
 		// create query
 		$this->db->query ( $sql );
 		// and bind parameters
 		$this->db->bind ( ":system", $system );
 		// execute the query
 		$result = $this->db->single();
-// 				 echo "<pre>";
-// 				 print_r($database);
-// 				 echo "\n";
-// 				 print_r($result);
-// 				 echo "</pre>";
 		// close the query
 		$this->db->closeQuery ();
 		

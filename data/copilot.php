@@ -23,7 +23,7 @@ try {
 	if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['auth_copilot']))
 	{
 		$result['authorized'] = "Invalid session. Disabled or not allowed for copilot";
- 		throw new Exception ( "Invalid session" );
+//  		throw new Exception ( "Invalid session" );
 	}
 	else 
 	{
@@ -40,42 +40,27 @@ try {
 		// check for "No Sow" system
 		
 		if ($systems->validatename($cache) == 0) {
-			$db->query ( "SELECT *
-				FROM wh_systems
-				WHERE System = :system" );
-			$db->bind ( ':system', $cache );
-			$row = $db->single ();
+			$row = $systems->getWHInfo($cache);
 			// yes, add the system to the result
 			$result ['system'] = $row;
-			// echo json_encode($row);
 		} else {
 			throw new Exception ( 'Unknown system: ' . $cache );
 		}
+		
 		// we can sow here
 		// check for presence of a cache in system
-		$db->query ( "SELECT c.System, Location, AlignedWith, Status, ExpiresOn,
-							InitialSeedDate, LastUpdated
-						FROM cache c
-						WHERE c.System = :system AND Status <> 'Expired'" );
-		$db->bind ( ':system', $cache );
-		$row = $db->single ();
-		if (count ( $row ) < 1) {
-			throw new Exception ( "none" );
-		}
-		// echo json_encode($row);
+		$row = $caches->getCacheInfo($cache, TRUE);
 		$result ['cache'] = $row;
-		// report only open requests
+		
+		// report only open SAR requests
 		$requests = $rescue->getSystemRequests($cache, 0);
-		// echo json_encode($row);
-// 		$result ['rescue'] = $row['cnt'];
 		$result ['rescue'] = count($requests);
-		
+
+		// check if tending is allowed for cache		
 		$result['tending'] = $caches->isTendingAllowed($cache);
-		
-// 		debug data structure
-// 		print_r($result);
 	} // $cache not present or wrong format
-else {
+	else
+	{
 		throw new Exception ( 'Invalid system: ' . $cache );
 	}
 } catch ( Exception $e ) {
