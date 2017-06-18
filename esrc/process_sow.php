@@ -13,6 +13,7 @@ define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
+include_once '../class/caches.class.php';
 
  /**
   * Test provided input data to be valid.
@@ -34,6 +35,7 @@ if (isset($_POST['sys_sow'])) {
 	// yes, process the request
 	$db = new Database();
 	$systems = new Systems($db);
+	$caches= new Caches($db);
 	
 	$pilot = $activitydate= $system = $location = $alignedwith = $distance = '';
 	$password = $status = $aidedpilot = $notes = $errmsg = $entrytype = '';
@@ -48,7 +50,18 @@ if (isset($_POST['sys_sow'])) {
 	$password = test_input($_POST["password"]);
 	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : '';
 	$notes = test_input($_POST["notes"]);
-
+	
+	// check the system
+	if (isset($system))
+	{
+		// make the system uppercase
+		$system = strtoupper($system);
+	}
+	else
+	{
+		$errmsg = $errmsg . "No system name is set.";
+	}
+	
 	//FORM VALIDATION
 	$entrytype = 'sower';
 	
@@ -73,66 +86,28 @@ if (isset($_POST['sys_sow'])) {
 	//display error message if there is one
 	if (!empty($errmsg)) {
 		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
-		?>
-		<script>
-			window.location.replace("<?=$redirectURL?>")
-		</script>
-		<?php 
 	} 
-	
 	// otherwise, perform DB UPDATES
 	else {
-		// make the system ID uppercase
-		$system = strtoupper($system);
+		// create a new cache activity
+		$newID = $caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
 
-		//begin db transaction
-		$db->beginTransaction();
-		// insert to [activity] table
-		$db->query("INSERT INTO activity (Pilot, ActivityDate, EntryType, System, 
-					AidedPilot, Note, IP) 
-					VALUES (:pilot, :activitydate, :entrytype, :system, :aidedpilot, :note, :ip)");
-		$db->bind(':pilot', $pilot);
-		$db->bind(':activitydate', $activitydate);
-		$db->bind(':entrytype', $entrytype);
-		$db->bind(':system', $system);
-		$db->bind(':aidedpilot', $aidedpilot);
-		$db->bind(':note', $notes);
-		$db->bind(':ip', $_SERVER['REMOTE_ADDR']);
-		$db->execute();
-		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
-		$newID = $db->lastInsertId();
-		//end db transaction
-		$db->endTransaction();
-		//prepare note
+//prepare note
 		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
 		$sower_note = $noteDate . 'Sown by '. $pilot;
 		if (!empty($notes)) { $sower_note = $sower_note. "\n" . $notes; }
 		//perform [cache] insert
-		$db->query("INSERT INTO cache (CacheID, InitialSeedDate, System, Location, 
-						AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note) 
-					VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw, 
-						:status, :expdate, :lastupdated, :note)");
-		$db->bind(':cacheid', $newID);
-		$db->bind(':sowdate', $activitydate);
-		$db->bind(':system', $system);
-		$db->bind(':location', $location);
-		$db->bind(':aw', $alignedwith);
-		$db->bind(':distance', $distance);
-		$db->bind(':pw', $password);
-		$db->bind(':status', 'Healthy');
-		$db->bind(':expdate', gmdate("Y-m-d", strtotime("+30 days", time())));
-		$db->bind(':lastupdated', $activitydate);
-		$db->bind(':note', $sower_note);
-		$db->execute();
+		$caches->createCache($newID, $system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
+
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
-		?>
+	}
+	//END DB UPDATES
+	?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")
 		</script>
 		<?php 
-	}
-	//END DB UPDATES
 }
 
 ?>

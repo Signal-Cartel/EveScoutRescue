@@ -1,5 +1,9 @@
 <?php
 
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
 /**
  * Separate data entry code from data entry page content. 
  * 
@@ -8,6 +12,7 @@
  */
 
 include_once '../class/db.class.php';
+include_once '../class/caches.class.php';
 
  /**
   * Test provided input data to be valid.
@@ -38,6 +43,17 @@ if (isset($_POST['sys_tend'])) {
 	$status= test_input($_POST["status"]);
 	$notes = test_input($_POST["notes"]);
 
+	// check the system
+	if (isset($system))
+	{
+		// make the system uppercase
+		$system = strtoupper($system);
+	}
+	else
+	{
+		$errmsg = $errmsg . "No system name is set.";
+	}
+	
 	//FORM VALIDATION
 	$entrytype = 'tender';
 	if (empty($status)) { 
@@ -48,73 +64,39 @@ if (isset($_POST['sys_tend'])) {
 	//display error message if there is one
 	if (!empty($errmsg)) {
 		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
-		?>
-		<script>
-			window.location.replace("<?=$redirectURL?>")
-		</script>
-		<?php 
 	} 
-	
 	// otherwise, perform DB UPDATES
 	else {
-		// make the system ID uppercase
-		$system = strtoupper($system);
+		// create a new cache class
+		$caches = new Caches($db);
 
-		//begin db transaction
-		$db->beginTransaction();
-		// insert to [activity] table
-		$db->query("INSERT INTO activity (ActivityDate, Pilot, EntryType, System, AidedPilot, 
-						Note, IP) 
-					VALUES (:activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
-		$db->bind(':activitydate', $activitydate);
-		$db->bind(':pilot', $pilot);
-		$db->bind(':entrytype', $entrytype);
-		$db->bind(':system', $system);
-		$db->bind(':aidedpilot', $aidedpilot);
-		$db->bind(':note', $notes);
-		$db->bind(':ip', $_SERVER['REMOTE_ADDR']);
-		$db->execute();
-		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
-		$newID = $db->lastInsertId();
-		//end db transaction
-		$db->endTransaction();
+		// add new activity
+		$newID = $caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+
 		//prepare note for update
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
 		$tender_note = '<br />' . $noteDate . 'Tended by '. $pilot;
 		if (!empty($notes)) { $tender_note = $tender_note. '<br />' . $notes; }		
 		//perform [cache] update
+		
+		$caches->addNoteToCache($system, $tender_note);
+		
 		switch ($status) {
 			case 'Expired':
-				//FYI: daily process to update expired caches in [cache] is running via cron-job.org
-				$db->query("UPDATE cache SET Status = :status, Note = CONCAT(Note, :note),
-								LastUpdated = :lastupdated 
-							WHERE System = :system AND Status <> 'Expired'");
-				$db->bind(':status', $status);
-				$db->bind(':note', $tender_note);
-				$db->bind(':lastupdated', $activitydate);
-				$db->bind(':system', $system);
-				$db->execute();
+				$caches->expireCache($system);
 				break;
 			default:	//'Healthy', 'Upkeep Required'
-				$db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, 
-								Note = CONCAT(Note, :note), LastUpdated = :lastupdated  
-							WHERE System = :system AND Status <> 'Expired'");
-				$db->bind(':expdate', gmdate("Y-m-d", strtotime("+30 days", time())));
-				$db->bind(':status', $status);
-				$db->bind(':note', $tender_note);
-				$db->bind(':lastupdated', $activitydate);
-				$db->bind(':system', $system);
-				$db->execute();
+				$caches->updateExpireTime($system, $status, gmdate("Y-m-d", strtotime("+30 days", time())));
 		}
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
-		?>
-		<script>
-			window.location.replace("<?=$redirectURL?>")
-		</script>
-		<?php 
 	}
 	//END DB UPDATES
+	?>
+	<script>
+		window.location.replace("<?=$redirectURL?>")
+	</script>
+	<?php 
 }
 
 ?>

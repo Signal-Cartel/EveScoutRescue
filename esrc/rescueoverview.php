@@ -19,6 +19,14 @@ if (array_search($charname, $admins) === false) {
 	}
 }
 
+// *****************************************
+// debug code to set user as SAR coordinator
+//
+// Comment out the next line to make correct
+// handling!!!
+// $isCoord = 1;
+// *****************************************
+
 ?>
 <html>
 

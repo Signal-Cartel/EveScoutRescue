@@ -1,5 +1,9 @@
 <?php
 
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
 /**
  * Separate data entry code from data entry page content. 
  * 
@@ -8,6 +12,7 @@
  */
 
 include_once '../class/db.class.php';
+include_once '../class/caches.class.php';
 
  /**
   * Test provided input data to be valid.
@@ -37,6 +42,17 @@ if (isset($_POST['sys_adj'])) {
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
 
+	// check the system
+	if (isset($system))
+	{
+		// make the system uppercase
+		$system = strtoupper($system);
+	}
+	else 
+	{
+		$errmsg = $errmsg . "No system name is set.";
+	}
+	
 	//FORM VALIDATION
 	$entrytype = 'agent';
 	if (empty($aidedpilot)) { 
@@ -44,58 +60,31 @@ if (isset($_POST['sys_adj'])) {
 	}
 	//END FORM VALIDATION
 
-	//display error message if there is one
+	//display error message if there is an error
 	if (!empty($errmsg)) {
 		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
-		?>
-		<script>
-			window.location.replace("<?=$redirectURL?>")
-		</script>
-		<?php 
 	} 
-	
 	// otherwise, perform DB UPDATES
 	else {
-		// make the system ID uppercase
-		$system = strtoupper($system);
+		// create a new cache class
+		$caches = new Caches($db);
+		
+		// add a new agent activity
+		$caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
 
-		//begin db transaction
-		$db->beginTransaction();
-		// insert to [activity] table
-		$db->query("INSERT INTO activity (ActivityDate, Pilot, EntryType, System, 
-						AidedPilot, Note, IP) 
-					VALUES (:activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
-		$db->bind(':activitydate', $activitydate);
-		$db->bind(':pilot', $pilot);
-		$db->bind(':entrytype', $entrytype);
-		$db->bind(':system', $system);
-		$db->bind(':aidedpilot', $aidedpilot);
-		$db->bind(':note', $notes);
-		$db->bind(':ip', $_SERVER['REMOTE_ADDR']);
-		$db->execute();
-		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
-		$newID = $db->lastInsertId();
-		//end db transaction
-		$db->endTransaction();
+		// add note to cache
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
 		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
-			
-		$db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated 
-					WHERE System = :system AND Status <> 'Expired'");
-		$db->bind(':note', $agent_note);
-// 		$db->bind(':lastupdated', $activitydate);
-		$db->bind(':system', $system);
-		$db->execute();
+		$caches->addNoteToCache($system, $agent_note);
 		
 		$redirectURL = "search.php?sys=". $system;
-		?>
+	}
+	?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")
 		</script>
-		<?php 
-
-	}
+	<?php 
 	//END DB UPDATES
 }
 
