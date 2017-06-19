@@ -261,12 +261,13 @@ class Caches
 	 * Expire a cache in a syste,
 	 * @param unknown $system the system of the cache
 	 */
-	public function expireCache($system)
+	public function expireCache($system, $activitydate)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET Status = 'Expired'
+		$this->db->query("UPDATE cache SET Status = 'Expired', lastupdated = :lastupdated
 							WHERE System = :system AND Status <> 'Expired'");
 		$this->db->bind(':system', $system);
+		$this->db->bind(':lastupdated', $activitydate);
 		
 		$this->db->execute();
 		//end db transaction
@@ -280,14 +281,15 @@ class Caches
 	 * @param unknown $status the status to set
 	 * @param unknown $expires the expire date
 	 */
-	public function updateExpireTime($system, $status, $expires)
+	public function updateExpireTime($system, $status, $expires, $activitydate)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status
+		$this->db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, lastupdated = :lastupdated
 					WHERE System = :system AND Status <> 'Expired'");
 		$this->db->bind(':system', $system);
 		$this->db->bind(':status', $status);
 		$this->db->bind(':expdate', $expires);
+		$this->db->bind(':lastupdated', $activitydate);
 		
 		$this->db->execute();
 		//end db transaction
