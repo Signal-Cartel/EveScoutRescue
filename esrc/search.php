@@ -252,13 +252,8 @@ if (!empty($system)) {
 
 	//HISTORY
 	// see if there is historical data to display for this system
-	$database->query("SELECT * FROM activity
-						WHERE System = :system
-						ORDER By ActivityDate DESC");
-	$database->bind(':system', $system);
-	$rows = $database->resultset();
-	$database->closeQuery();
-	if (!empty($rows)) {
+	$systemActivities = $systems->getSystemActivities($system);
+	if (!empty($systemActivities)) {
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
@@ -277,17 +272,15 @@ if (!empty($system)) {
 					</tr>
 				</thead>
 				<tbody>';
-		foreach ($rows as $value) {
+		
+		foreach ($systemActivities as $activity) {
 			//get cache table data for sower records
 			$sowrow = '';
-			if ($value['EntryType'] == 'sower') {
-				$database->query("SELECT * FROM cache WHERE CacheID = :id");
-				$database->bind(':id', $value['ID']);
-				$sowrow = $database->single();
-				$database->closeQuery();
+			if ($activity['EntryType'] == 'sower') {
+				$sowrow = $caches->getCacheData($activity['ID']);
 			}
 			
-			switch ($value['EntryType']) {
+			switch ($activity['EntryType']) {
 				case 'sower':
 				case 'Sower':
 					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
@@ -304,10 +297,10 @@ if (!empty($system)) {
 			}
 			
 			echo '<tr>';
-			$rowdate = $value['ActivityDate'];
+			$rowdate = $activity['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
-			echo '<td class="text-nowrap">'. $value['Pilot'] .'</td>';
-			echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
+			echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
+			echo '<td class="white" '. $actioncellformat .'>'. ucfirst($activity['EntryType']) .'</td>';
 			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
 			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
@@ -316,7 +309,7 @@ if (!empty($system)) {
 			echo '<td class="text-nowrap">'. $rowDist.'</td>';
 			$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
 			echo '<td class="text-nowrap">'. $rowExp.'</td>';
-			echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
+			echo '<td class="white">'. Output::htmlEncodeString($activity['Note']) .'</td>';
 			echo '</tr>';
 		}
 		echo '</tbody>
@@ -332,7 +325,7 @@ else {
 	
 	<?php 
 		$leaderBoard = new Leaderboard($database);
-		$systems = new Systems($database);
+// 		$systems = new Systems($database);
 	?>
 	
 	<!-- LEADER BOARDS -->

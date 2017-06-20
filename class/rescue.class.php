@@ -212,5 +212,20 @@ class Rescue {
 		
 		return $data;
 	}
+	
+	/**
+	 * Get all fields of a request
+	 * @param unknown $requestID
+	 * @return unknown
+	 */
+	public function getRequest($requestID)
+	{
+		$this->db->query("select * from rescuerequest where id = :rescueid");
+		$this->db->bind(":rescueid", $requestID);
+		$row= $this->db->single();
+		$this->db->closeQuery();
+		
+		return $row;
+	}
 }
 ?>

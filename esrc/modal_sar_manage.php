@@ -5,10 +5,8 @@
 $database = new Database();
 // create the query
 $reqID = (isset($_REQUEST['req'])) ? $_REQUEST['req'] : '';
-$database->query("select * from rescuerequest where id = :rescueid");
-$database->bind(":rescueid", $reqID);
-$request = $database->single();
-$database->closeQuery();
+// get all rescue information
+$request = $rescue->getRequest($reqID);
 ?>
 
 <style>

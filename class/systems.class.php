@@ -157,23 +157,36 @@ class Systems {
 		}
 		
 		// check the DB for the system name
-		$sql = "SELECT Class, Notes FROM wh_systems WHERE System = :system";
+		$sql = "SELECT * FROM wh_systems WHERE System = :system";
 		// create query
 		$this->db->query ( $sql );
 		// and bind parameters
 		$this->db->bind ( ":system", $system );
 		// execute the query
 		$result = $this->db->single();
-// 				 echo "<pre>";
-// 				 print_r($database);
-// 				 echo "\n";
-// 				 print_r($result);
-// 				 echo "</pre>";
 		// close the query
 		$this->db->closeQuery ();
 		
 		return $result;
 	}
+	
+	/**
+	 * Get all activitis of a system
+	 * @param unknown $system
+	 * @return string
+	 */
+	public function getSystemActivities($system)
+	{
+		$this->db->query("SELECT * FROM activity
+						WHERE System = :system
+						ORDER By ActivityDate DESC");
+		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+	
 }
 
 ?>
