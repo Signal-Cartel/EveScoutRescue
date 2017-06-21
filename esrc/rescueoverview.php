@@ -215,7 +215,7 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 	}
 	// display request date
-	echo "<td>".Output::getEveDate($row['requestdate'])."</td>";
+	echo '<td style="text-nowrap">'. $row['requestdate'] .'</td>';
 	// display system information
 	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.
 			Output::htmlEncodeString($row['system']).'</a></td>';
@@ -246,7 +246,7 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 	echo '<td'. $statuscellformat .'>'.
 			Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
 	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
-	echo "<td>".Output::getEveDate($row['lastcontact'])."</td>";
+	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
 	// NOTES
 	if ($notes == 1) {
 		echo '<td>';
