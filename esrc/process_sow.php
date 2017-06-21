@@ -73,7 +73,7 @@ if (isset($_POST['sys_sow'])) {
 	// check if another pilot already sowed a cache
 	if (!empty($caches->getCacheInfo($system, TRUE)))
 	{
-		$errmsg = $errmsg . "A cache already exists in this system. You are to late.\n";
+		$errmsg = $errmsg . "A cache already exists in this system. Looks like someone beat you to it!\n";
 	}
 	
 	if (empty($location) || empty($alignedwith) || empty($distance) || empty($password)) {

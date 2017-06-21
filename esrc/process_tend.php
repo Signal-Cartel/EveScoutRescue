@@ -72,16 +72,15 @@ if (isset($_POST['sys_tend'])) {
 		if (empty($cacheInfo))
 		{
 			// no cache exists
-			$errmsg = $errmsg . "Cache is expired in the meantime.\n";
+			$errmsg = $errmsg . "No cache exists. It must have just expired!\n";
 		}
 		else if (0 == $caches->isTendingAllowed($system) && $status === 'Healthy')
 		{
-			$errmsg = $errmsg . "Cache is already tended by another pilot. Try another system please.\n";
+			$errmsg = $errmsg . "Cache has already been tended. Looks like someone else beat you to it!\n";
 		}
 		else if (($status === 'Expired' && $cacheInfo['Status'] == 'Expired') || ($status === 'Upkeep Required' && $cacheInfo['Status'] == 'Upkeep Required'))
 		{
-			// no cache exists
-			$errmsg = $errmsg . "Could not set cache to '".Output::htmlEncodeString($status)."' twice.\n";
+			$errmsg = $errmsg . "Could not set cache to '".Output::htmlEncodeString($status)."' as that is already its current status.\n";
 		}
 	}
 	//END FORM VALIDATION
