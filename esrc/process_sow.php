@@ -65,17 +65,23 @@ if (isset($_POST['sys_sow'])) {
 	//FORM VALIDATION
 	$entrytype = 'sower';
 	
+	// use the Systems class to validate the entered system name
+	if ($systems->validatename($system) != 0) {
+		$errmsg = $errmsg . "Invalid system name entered. Please select a valid system from the list.\n";
+	}
+	
+	// check if another pilot already sowed a cache
+	if (!empty($caches->getCacheInfo($system, TRUE)))
+	{
+		$errmsg = $errmsg . "A cache already exists in this system. You are to late.\n";
+	}
+	
 	if (empty($location) || empty($alignedwith) || empty($distance) || empty($password)) {
 		$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 	}
 	
 	if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && $location != 'See Notes') {
 		$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
-	}
-	
-	// use the Systems class to validate the entered system name
-	if ($systems->validatename($system) != 0) { 
-		$errmsg = $errmsg . "Invalid system name entered. Please select a valid system from the list.\n"; 
 	}
 	
 	if (22000 >= (int)$distance || (int)$distance >= 50000) { 
