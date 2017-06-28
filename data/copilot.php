@@ -42,6 +42,9 @@ try {
 		if ($systems->validatename($cache) == 0) {
 			$row = $systems->getWHInfo($cache);
 			// yes, add the system to the result
+			if (isset($row['Notes'])) {
+				$row['Notes'] = utf8_encode($row['Notes']);
+			}
 			$result ['system'] = $row;
 		} else {
 			throw new Exception ( 'Unknown system: ' . $cache );

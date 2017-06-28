@@ -21,7 +21,8 @@
 				$systems = new Systems($database);
 				// display wormhole info
 				$row = $systems->getWHInfo($system);
-				echo '<strong class="white">'.$row['Class'].'<br/>'.$row['Notes'].'</strong>';
+				echo '<strong class="white">'.$row['Class'].'<br/>'.
+					utf8_encode($row['Notes']).'</strong>';
 			}
 			?>
 		</div>
