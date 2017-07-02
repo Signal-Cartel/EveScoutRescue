@@ -38,9 +38,9 @@ $leaderBoard = new Leaderboard($database);
 				<h2 class="pull-left">Contribute</h2>
 			</div>
 			<div class="panel-body">
-				<p><a href="http://www.eve-scout.com/signal-cartel/">Signal Cartel</a>, 
+				<p><a href="http://www.signalcartel.com/">Signal Cartel</a>, 
 					the core corporation of the 
-					<a href="https://gate.eveonline.com/Alliance/EvE-Scout%20Enclave">EvE-Scout 
+					<a href="http://www.eve-scout.com/">EvE-Scout 
 					Enclave</a> alliance, is a neutral, non-profit entity that aims to 
 					provide a valuable public service to all of New Eden. As such, one 
 					of our primary initiatives is to look for and rescue capsuleers who 

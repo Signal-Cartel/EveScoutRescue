@@ -60,7 +60,7 @@ include_once '../includes/head.php';
 				<div id="question4" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
 						<p>While our SAR pilots will do their very best to locate the wormhole system where you are stranded, we cannot offer any guarantees as to when or even if we will be able to locate you and effect a rescue. Due to the constant flux of wormhole connections, there is no way to be sure we will locate an entrance to your system in a timely fashion.</p>
-						<p>Please also note that SAR does <strong>not</strong> conduct searches for specific wormholes, due to the Signal Cartel <a href="http://www.eve-scout.com/signal-cartel/">Credo</a>'s requirement of maintaining neutrality. While we will not be able to help with these sorts of wormhole search requests, we are happy to recommend the following two services provided by other citizens of New Eden:</p>
+						<p>Please also note that SAR does <strong>not</strong> conduct searches for specific wormholes, due to the Signal Cartel <a href="http://www.signalcartel.com/about">Credo</a>'s requirement of maintaining neutrality. While we will not be able to help with these sorts of wormhole search requests, we are happy to recommend the following two services provided by other citizens of New Eden:</p>
 						<ul>
 							<li>
 								<a href="http://www.torpedodelivery.com/wormhole-location" 

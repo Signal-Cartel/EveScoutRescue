@@ -1,6 +1,23 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	Thank you very much for rescuing me from a C5 deep in WH space. After I heard 
+        	from EvE-Scout, I was not believing the stories I was told, but I can now say 
+        	that everything was right. I contacted you guys and 2 days later I was safe in 
+        	high sec once again, without any obligations or anything else. Almost too good 
+        	to be real.<br /><br />
+        	It was professional, fast and a very nice contact which is why we play this game. 
+			Thank you again. <br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Mahyisty<br />
+				<span style="font-size: 85%;">rescued on YC119-Jun-14</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	I was really blown away with how quickly your agents responded, 
         	and I was very happy with my experience - you guys really helped 
         	me out.<br /><br />

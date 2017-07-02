@@ -54,7 +54,7 @@ $leaderBoard = new Leaderboard($database);
 					imagination of many Signal Cartel pilots.</p>
 				<p>In late YC118, Forcha decided to move on to activities that would potentially 
 					bring him into conflict with the 
-					<a href="http://www.eve-scout.com/signal-cartel/">Credo</a>, so he chose to  
+					<a href="http://www.signalcartel.com/about">Credo</a>, so he chose to  
 					leave the corp. The program languished without anyone tending it, and corp and 
 					alliance leadership decided it was too valuable to be allowed to wither 
 					away. <a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice 
