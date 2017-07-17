@@ -89,16 +89,6 @@ $leaderBoard = new Leaderboard($database);
 				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Lektro%20Illuminate">
-				        <img src="https://image.eveonline.com/Character/2112082674_128.jpg" alt="Lektro" style="width:100%">
-				        <div class="caption">
-				          <p><strong>Lektro Illuminate</strong><br />Design<br />CSS</p>
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-3 text-center">
-				    <div class="thumbnail">
 				      <a href="https://gate.eveonline.com/Profile/Lucas%20Ballard">
 				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
 				        <div class="caption">
@@ -110,8 +100,6 @@ $leaderBoard = new Leaderboard($database);
 				  </div>
 				</div>
 				<div class="row">
-				  <div class="col-md-3">
-				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
 				      <a href="https://gate.eveonline.com/Profile/Orsel%20Solette">
@@ -133,8 +121,6 @@ $leaderBoard = new Leaderboard($database);
 				        </div>
 				      </a>
 				    </div>
-				  </div>
-				  <div class="col-md-3 text-center">
 				  </div>
 				</div>
 				<p>We also rely on a dedicated group of pilots to place and maintain our
