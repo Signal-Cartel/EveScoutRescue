@@ -1,6 +1,40 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	I could not reconnect to my probes. I spotted a can that said something about 
+        	"EvE-Scout"... I thought it could be a trap -- this is EVE after all.<br /><br />
+			I got in touch with friendly people in the chat, got directions for how to locate 
+			the can, and got the probes. It felt almost unbelievable. Like a lifebuoy being 
+			thrown out to a person at sea.<br /><br />
+			It was a really cool experience and yet another thing that makes EVE a very special 
+			game.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				 Ilska<br />
+				<span style="font-size: 85%;">rescued on YC119-Jul-26</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I was stranded inside a wormhole. I asked for help on my corp channel and they told 
+        	me about a rescue corp.	I didn't believe that. I thought they were trying to kill 
+        	me, but I had nothing to lose. I was stranded anyway, with self-destruct my last 
+        	option, so I decided to speak with EvE-Scout Rescue. They helped me really fast 
+        	and without obligation,	so I refilled the rescue cache as a way to say thanks. I 
+        	was in high sec in no more than 15 minutes.<br /><br />
+        	Thanks, EvE-Scout Rescue. I really apreciate it.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Barba Negra ElPirata<br />
+				<span style="font-size: 85%;">rescued on YC119-Jul-09</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	Thank you very much for rescuing me from a C5 deep in WH space. After I heard 
         	from EvE-Scout, I was not believing the stories I was told, but I can now say 
         	that everything was right. I contacted you guys and 2 days later I was safe in 

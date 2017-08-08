@@ -281,8 +281,15 @@ if (!empty($system)) {
 	?>
 	
 	<div>
+		<!-- SAR New button -->
 		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
-			data-target="#ModalSARNew">New SAR</a>
+			data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
+		<!-- TW button -->
+		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
+			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<!-- anoik.is button -->
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
+			target="_blank">anoik.is</a>
 	</div>
 	<div class="ws"></div>
 	
