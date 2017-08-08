@@ -7,8 +7,8 @@ $pgsAdmin    = array('/esrc/payoutadmin.php');
 $pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php','/esrc/rescueoverview.php');
 
 //populate array of admin users
-$admins      = array('Thrice Hapus','Mynxee','Johnny Splunk');
-$sarcoords   = array('Lucas Ballard','Igaze','Triffton Ambraelle');
+$admins      = array('Thrice Hapus','Mynxee','Johnny Splunk','A Dead Parrot');
+$sarcoords   = array('Lucas Ballard','Igaze','Triffton Ambraelle','Grey Sojourn','Angel Lafisques');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {
