@@ -41,7 +41,7 @@ function printESRCHeroes($type, $min, $max, $listMax)
 	$database = new Database();
 	$leaderBoard = new Leaderboard($database);
 ?>
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<h2 style="text-align: center;"><?=$type?></h2>
 		<p style="text-align: center;">Awarded to pilots upon sowing or tending 
 			<?=$min?> rescue caches.<br />
@@ -92,7 +92,7 @@ function printESRCHeroes($type, $min, $max, $listMax)
 	printESRCHeroes('HyperCacher', 500, 999, 10);
 	
 	// UltraCacher column
-	//printESRCHeroes('UltraCacher', 1000, 2999, 10);
+	printESRCHeroes('UltraCacher', 1000, 2999, 10);
 	
 	// HeroCacher column
 	//printESRCHeroes('HeroCacher', 3000, 4999, 5);
