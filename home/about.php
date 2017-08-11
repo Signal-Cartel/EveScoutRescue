@@ -69,9 +69,31 @@ $leaderBoard = new Leaderboard($database);
 				  <div class="col-md-3">
 				    <div class="thumbnail text-center">
 				      <a href="https://gate.eveonline.com/Profile/A%20Dead%20Parrot">
-				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A Dead Parrot" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A.D. Parrot" style="width:100%">
 				        <div class="caption">
-				          <p><strong>A Dead Parrot</strong><br />Development<br />Co-Pilot</p>
+				          <strong>A Dead Parrot</strong><br />Co-Pilot<br />Development
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3">
+				    <div class="thumbnail text-center">
+				      <a href="https://gate.eveonline.com/Profile/Angel%20Lafisques">
+				        <img src="https://image.eveonline.com/Character/96736367_128.jpg" alt="Angel" style="width:100%">
+				        <div class="caption">
+				          <strong>Angel Lafisques</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Grey%20Sojourn">
+				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
+				        <div class="caption">
+				          <strong>Grey Sojourn</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
@@ -81,19 +103,8 @@ $leaderBoard = new Leaderboard($database);
 				      <a href="https://gate.eveonline.com/Profile/Igaze">
 				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
-				          <p><strong>Igaze</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator</p>
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-3 text-center">
-				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Lucas%20Ballard">
-				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
-				        <div class="caption">
-				          <p><strong>Lucas Ballard</strong><br />Search &amp; Rescue<br />
-				          	Lead Coordinator</p>
+				          <strong>Igaze</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
@@ -102,11 +113,21 @@ $leaderBoard = new Leaderboard($database);
 				<div class="row">
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
+				      <a href="https://gate.eveonline.com/Profile/Lucas%20Ballard">
+				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
+				        <div class="caption">
+				          <strong>Lucas Ballard</strong><br />Search &amp; Rescue<br />
+				          	Lead Coordinator
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
 				      <a href="https://gate.eveonline.com/Profile/Orsel%20Solette">
 				        <img src="https://image.eveonline.com/Character/96975403_128.jpg" alt="Orsel" style="width:100%">
 				        <div class="caption">
-				          <p><strong>Orsel Solette</strong><br />Development<br />
-				          	ESR Data Tools</p>
+				          <strong>Orsel Solette</strong><br />ESR Data Tools<br />Development
 				        </div>
 				      </a>
 				    </div>
@@ -116,8 +137,8 @@ $leaderBoard = new Leaderboard($database);
 				      <a href="https://gate.eveonline.com/Profile/Triffton%20Ambraelle">
 				        <img src="https://image.eveonline.com/Character/93697245_128.jpg" alt="Triffton" style="width:100%">
 				        <div class="caption">
-				          <p><strong>Triffton Ambraelle</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator</p>
+				          <strong>Triffton Ambraelle</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
