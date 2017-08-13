@@ -17,8 +17,8 @@
 					role="button" target="_blank">Co-Pilot / Allison</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 			}
 			// additional button for admin users
-			if (in_array($charname, $admins)) {
-				echo '<a class="btn btn-danger btn-md" href="../esrc/payoutadmin.php" 
+			if ($users->isAdmin($charname)) {
+					echo '<a class="btn btn-danger btn-md" href="../esrc/payoutadmin.php" 
 							role="button">ESRC Payout Admin</a>';
 			};
 		}

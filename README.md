@@ -69,6 +69,17 @@ Steps to setup a development system
        PRIMARY KEY (`id`)
      ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
      
+     -- first simple implementation till UI support
+     CREATE TABLE pilots (
+		`id` int NOT NULL AUTO_INCREMENT,
+		`pilot` varchar(64) COLLATE latin1_general_ci NOT NULL,
+		`task` varchar(64) COLLATE latin1_general_ci NOT NULL,
+		`active` int NOT NULL default 1,
+		primary key(`id`),
+		unique index pilotnames (`pilot`, `task`)
+	  ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+     
+     
 * copy the folders and files to the web site (ignore .git*, .settings, .project, .buildpath files and folders)
 
 * create a local "esr_dbconfig.ini" with the following entries

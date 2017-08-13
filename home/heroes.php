@@ -7,7 +7,10 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php'; 
 require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
+require_once '../class/users.class.php';
 
+$database = new Database();
+$users = new Users(database);
 ?>
 <html>
 
@@ -21,9 +24,11 @@ require_once '../class/leaderboard.class.php';
 <body class="white">
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-left.php'; ?>
-	<?php include_once '../includes/top-center.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
+<?php
+include_once '../includes/top-left.php';
+include_once '../includes/top-center.php';
+include_once '../includes/top-right.php';
+?>
 </div>
 <div class="ws"></div>
 
@@ -38,7 +43,6 @@ require_once '../class/leaderboard.class.php';
  */
 function printESRCHeroes($type, $min, $max, $listMax) 
 { 
-	$database = new Database();
 	$leaderBoard = new Leaderboard($database);
 ?>
 	<div class="col-sm-3">

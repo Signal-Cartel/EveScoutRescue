@@ -54,21 +54,24 @@ include_once '../includes/auth-inc.php';
 <body>
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-left.php'; ?>
-	<?php include_once '../includes/top-center.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
-</div>
 <?php
 require_once '../class/db.class.php';
 require_once '../class/caches.class.php';
+require_once '../class/users.class.php';
 
 $database = new Database();
 $caches = new Caches($database);
+$users = new User($database);
+
+include_once '../includes/top-left.php';
+include_once '../includes/top-center.php';
+include_once '../includes/top-right.php';
 
 $ctrrescues = $caches->getRescueTotalCount();
 
 $ctractive = $caches->getActiveCount();
 ?>
+</div>
 <div class="ws"></div>
 <div class="row">
 	<div class="col-sm-4" style="text-align: center;">

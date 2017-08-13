@@ -11,13 +11,6 @@ if (!isset($charname))
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
-// check for SAR Coordinator login
-$isCoord = 1;
-if (array_search($charname, $admins) === false) { 
-	if (array_search($charname, $sarcoords) === false) {
-		$isCoord = 0; 
-	}
-}
 
 // *****************************************
 // debug code to set user as SAR coordinator
@@ -71,8 +64,16 @@ require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
+require_once '../class/users.class.php';
 
+// create a new database connection
 $database = new Database();
+
+// create a user check instance
+$users = new Users($database);
+
+// check for SAR Coordinator login
+$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 // create a rescue object instance
 $rescue = new Rescue($database);
@@ -83,8 +84,6 @@ if (isset($_REQUEST['sys'])) {
 }
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
-
-// create an update action
 
 ?>
 <body class="white">
