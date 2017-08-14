@@ -61,7 +61,7 @@ require_once '../class/users.class.php';
 
 $database = new Database();
 $caches = new Caches($database);
-$users = new User($database);
+$users = new Users($database);
 
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';

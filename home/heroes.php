@@ -10,7 +10,7 @@ require_once '../class/leaderboard.class.php';
 require_once '../class/users.class.php';
 
 $database = new Database();
-$users = new Users(database);
+$users = new Users($database);
 ?>
 <html>
 
