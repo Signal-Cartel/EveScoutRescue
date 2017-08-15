@@ -7,24 +7,26 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 require_once '../class/db.class.php';
 require_once '../class/pilot.class.php';
+require_once '../class/users.class.php';
 
 // if no pilot parameter, send to home page
 if (!isset($_REQUEST['pilot'])) {
 	header("Location: /");
 }
+// create a database object
+$database = new Database();
+$users = new Users($database);
 
 if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 	$pilot = $_REQUEST['pilot'];
 	
 	// !!!comment out on localhost for testing!!!
 	if ($pilot != $charname) {
-		if (array_search($charname, $admins) === false) {
+		if ($users->isAdmin($charname)) {
 			header("Location: /");
 		}
 	}
 }
-
-// create a new database instance
 ?>
 <html>
 
@@ -53,8 +55,6 @@ if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 </head>
 
 <?php
-// create a database object
-$database = new Database();
 // create a pilot object instance
 $pilots = new Pilot($database);
 

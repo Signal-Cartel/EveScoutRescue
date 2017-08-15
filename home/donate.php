@@ -6,6 +6,13 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php'; 
 
+require_once '../class/db.class.php';
+require_once '../class/users.class.php';
+require_once '../class/leaderboard.class.php';
+
+$database = new Database();
+$leaderBoard = new Leaderboard($database);
+$users = new Users($database);
 ?>
 <html>
 
@@ -15,19 +22,14 @@ include_once '../includes/auth-inc.php';
 	include_once '../includes/head.php';
 	?>
 </head>
-<?php 
-require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
-
-$database = new Database();
-$leaderBoard = new Leaderboard($database);
-?>
 <body>
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-left.php'; ?>
-	<?php include_once '../includes/top-center.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
+<?php
+include_once '../includes/top-left.php';
+include_once '../includes/top-center.php';
+include_once '../includes/top-right.php';
+?>
 </div>
 <div class="ws"></div>
 

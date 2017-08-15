@@ -31,13 +31,11 @@ if (!isset($charname))
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
+// create a user check instance
+$users = new Users($database);
+
 // check for SAR Coordinator login
-$isCoord = 1;
-if (array_search($charname, $admins) === false) {
-	if (array_search($charname, $sarcoords) === false) {
-		$isCoord = 0;
-	}
-}
+$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 // create object instances
 $caches = new Caches($database);
