@@ -160,7 +160,7 @@ function translateStatus($status)
  * @param number $notes
  * @param number $isCoord
  */
-function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
+function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
 	
@@ -174,7 +174,7 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '	<thead>';
 		echo '		<tr>';
 		// only display this column for finished requests if coord logged in
-		if (($isCoord == 1 && $finished == 1) || ($finished == 0)) {
+		if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
 			echo '<th></th>';
 		}
 		echo '			<th>Created</th>';
@@ -188,7 +188,7 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '	</thead>';
 		echo '	<tbody>';
 		foreach ($data as $row) {
-			displayLine($row, $finished, $system, $notes, $isCoord);
+			displayLine($row, $finished, $system, $notes, $isCoord, $noUpdate);
 		}
 		echo '	</tbody>';
 		echo '</table>';
@@ -204,12 +204,12 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
  * @param number $notes
  * @param number $isCoord
  */
-function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0)
+function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $noUpdate = 0)
 {
 	$status = $row['status'];
 	echo "<tr>";
 	// only display this column for finished requests if coord logged in
-	if (($isCoord == 1 && $finished == 1) || ($finished == 0)) {
+	if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
 		echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
 				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 	}
@@ -331,7 +331,12 @@ else {
 		<div class="row">
 			<div class="col-sm-12">
 				<div style="padding-left: 10px;">
-					<span class="sechead white">SAR stats coming soon!</span>
+<?php
+	// get open requests only
+	$openRequests = $rescue->getOpenRequests();
+	// display open requests in finished mode (no updates allowed)
+	displayTable($openRequests, 0, NULL, 0, $isCoord, 1);
+?>
 				</div>
 			</div>
 		</div>
