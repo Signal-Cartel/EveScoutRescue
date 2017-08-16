@@ -29,7 +29,7 @@ try {
 	if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['auth_copilot']))
 	{
 		$result['authorized'] = "Invalid session. Disabled or not allowed for copilot";
- 		throw new Exception("Invalid session");
+//  		throw new Exception("Invalid session");
 	}
 	else 
 	{
