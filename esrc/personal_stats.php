@@ -17,12 +17,14 @@ if (!isset($_REQUEST['pilot'])) {
 $database = new Database();
 $users = new Users($database);
 
+// make sure pilot name is set
 if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 	$pilot = $_REQUEST['pilot'];
 	
+	// logged in pilot can see only their own stats, unless they are an Admin
 	// !!!comment out on localhost for testing!!!
 	if ($pilot != $charname) {
-		if ($users->isAdmin($charname)) {
+		if ($users->isAdmin($charname) === false) {
 			header("Location: /");
 		}
 	}
