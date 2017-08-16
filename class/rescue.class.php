@@ -164,6 +164,23 @@ class Rescue {
 	}
 	
 	/**
+	 * Get all requests by status
+	 * @param number $finished 0 - all open requests (default); 1 - alll finished requests
+	 * @return array
+	 */
+	public function getOpenRequests()
+	{
+		// get requests from database
+		$this->db->query("select * from rescuerequest where finished = 0 and status = 'open' order by requestdate");
+		$this->db->bind(":finished", $finished);
+		// $database->execute();
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+	
+		return $data;
+	}
+	
+	/**
 	 * Get all requests by system
 	 * @param number $system - find request for the system
 	 * @param number $finished 0 - all open requests (default); 1 - all finished requests

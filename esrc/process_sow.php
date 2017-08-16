@@ -14,6 +14,7 @@ define('ESRC', TRUE);
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
 include_once '../class/caches.class.php';
+include_once '../class/output.class.php';
 
  /**
   * Test provided input data to be valid.
@@ -84,8 +85,8 @@ if (isset($_POST['sys_sow'])) {
 		$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
 	}
 	
-	if (22000 >= (int)$distance || (int)$distance >= 50000) { 
-		$errmsg = $errmsg . "Distance must be a number between 22000 and 50000.\n"; 
+	if ((int)$distance < 22000 || (int)$distance > 50000) { 
+		$errmsg = $errmsg . "Distance (".Output::htmlEncodeString($distance).") must be a number between 22000 and 50000.\n"; 
 	}
 	//END FORM VALIDATION
 
