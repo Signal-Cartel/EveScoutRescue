@@ -67,7 +67,6 @@ CREATE TABLE `rescuenote` (
 	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
 
--- first simple implementation till UI support
 CREATE TABLE pilots (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`pilot` varchar(64) COLLATE latin1_general_ci NOT NULL,
@@ -77,7 +76,6 @@ CREATE TABLE pilots (
 	unique index pilotnames (`pilot`, `task`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
 ```
-
 * Copy the folders and files to the web site (ignore .git*, .settings, .project, .buildpath).
 * Create a local "esr_dbconfig.ini" with the following entries:
 ```ini
@@ -87,7 +85,7 @@ password=<dbPassword>
 dbname=<dbName>
 ```
 * Place config file one level above the "esrc" directory (out of range for web server document root).
-* Import the wormhole data ().
+* Import the wormhole data.
 * Import a data dump if you want to work with real data. Otherwise prepare some data on your own (we should provide a small demo data generate script). 
 
 Mysql 5.6 required:
