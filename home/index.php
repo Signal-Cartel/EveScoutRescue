@@ -41,11 +41,10 @@ include_once '../includes/auth-inc.php';
     <style>
     <!--
     	.carousel-content {
-		    color:white;
-		    display:flex;
+		    color: white;
+		    display: flex;
 		    text-align: left;
-		    padding-left: 20px;
-		    padding-right: 20px;
+		    padding: 20px;
 		}
     -->
     </style>
