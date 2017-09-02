@@ -52,7 +52,8 @@ include_once '../includes/auth-inc.php';
 
 <body>
 <div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
+<div class="ws"></div>
+<div class="row" id="header">
 <?php
 require_once '../class/db.class.php';
 require_once '../class/caches.class.php';
@@ -146,7 +147,7 @@ $ctractive = $caches->getActiveCount();
 		<iframe width="560" height="315" src="https://www.youtube.com/embed/y-V9a28ufoM?ecver=1" frameborder="0" allowfullscreen></iframe>
 	</div>
 </div>
-
+<div class="ws"></div>
 </div>
 </body>
 </html>
