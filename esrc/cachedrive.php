@@ -1,4 +1,10 @@
-<?php include_once '../includes/auth-inc.php'; ?>
+<?php 
+
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
+include_once '../includes/auth-inc.php'; ?>
 <html>
 
 <head>
@@ -44,8 +50,8 @@ require_once '../class/db.class.php';
 					<?php
 					//summary data
 					$db = new Database();
-					$start = date("Y-m-d H:i:s", strtotime('2017-07-01 00:00:00'));
-					$end = date("Y-m-d H:i:s", strtotime('2017-07-07 23:59:59'));
+					$start = date("Y-m-d H:i:s", strtotime('2017-09-03 00:00:00'));
+					$end = date("Y-m-d H:i:s", strtotime('2017-09-09 23:59:59'));
 					
 					//count of all actions performed in the specified period
 					$db->query("SELECT COUNT(*) as cnt

@@ -245,12 +245,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		</div>
 		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-			Actions this period: <?php echo $ctrtotact; ?><br />
-			Sowed: <?php echo $ctrsow; ?><br />
-			Tended: <?php echo $ctrtend; ?><br />
-			Adjunct: <?php echo $ctradj; ?><br /><br />
-			Total caches in space:<br />
-			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
 		</div>
 	</div>
 <?php
