@@ -156,7 +156,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
-							href="https://gate.eveonline.com/Profile/'. $value['Pilot'] .'">EG</a></td>';
+							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EG</a></td>';
 					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
@@ -173,7 +173,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					echo '<td><a href="search.php?sys='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
 					echo '<td><a target="_blank" 
-							href="https://gate.eveonline.com/Profile/'. $value['AidedPilot'] .'">'. 
+							href="https://evewho.com/pilot/'. $value['AidedPilot'] .'">'. 
 							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
 					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
 					echo '</tr>';

@@ -225,7 +225,7 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 	}
 	else
 	{
-		echo '<td><a target="_blank" href="https://gate.eveonline.com/Profile/'. 
+		echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	}
 	// set status color
