@@ -1,6 +1,46 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	I had to make an unexpected log off and when I came back I had lost my probes.
+			That was my first exploration run ever. I had made 100 mil in loot, so I looked 
+			for every way possible to save it. I asked around in the EvE-Scout channel and people 
+			were kind enough to teach me how to find a rescue cache. I couldn't believe my luck. 
+			It was an amazing experience, and I'm very grateful.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Everse Aivo<br />
+				<span style="font-size: 85%;">rescued on YC119-Sept-16</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	[Eve-Scout Rescue is] working hard. It's worth a lot in J-Space.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Yodik<br />
+				<span style="font-size: 85%;">rescued on YC119-Sept-12</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I was rescued after only 6 days of waiting! For me, being rescued 
+        	was a bit of a spiritual experience, because my EVE rescue paralled a real-life 
+        	rescue. Caring people in-game and IRL were helping at the same time!<br /><br />
+        	Thanks Signal Cartel pilots! Praise Bob!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Kakihara<br />
+				<span style="font-size: 85%;">rescued on YC119-Sept-04</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	I could not reconnect to my probes. I spotted a can that said something about 
         	"EvE-Scout"... I thought it could be a trap -- this is EVE after all.<br /><br />
 			I got in touch with friendly people in the chat, got directions for how to locate 
@@ -9,7 +49,7 @@
 			It was a really cool experience and yet another thing that makes EVE a very special 
 			game.<br /><br />
 			<span class="pull-right" style="text-align: right;">
-				 Ilska<br />
+				Ilska<br />
 				<span style="font-size: 85%;">rescued on YC119-Jul-26</span>
 			</span>
         </div>
