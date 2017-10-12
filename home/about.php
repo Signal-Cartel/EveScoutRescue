@@ -46,7 +46,7 @@ include_once '../includes/top-right.php';
 			</div>
 			<div class="panel-body">
 				<p>In early YC118, 
-					<a href="https://gate.eveonline.com/Profile/Forcha%20Alendare">Forcha 
+					<a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha 
 					Alendare</a> had a vision of a service that would provide a basic 
 					emergency resource kit for capsuleers stranded in wormholes, 
 					regardless of alliance, sovereignty, or play style. This vision
@@ -59,7 +59,7 @@ include_once '../includes/top-right.php';
 					<a href="http://www.signalcartel.com/about">Credo</a>, so he chose to  
 					leave the corp. The program languished without anyone tending it, and corp and 
 					alliance leadership decided it was too valuable to be allowed to wither 
-					away. <a href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice 
+					away. <a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice 
 					Hapus</a> was brought in to manage day-to-day operations.</p>
 				<p>Since then, the program has grown to what it is today. What started as one rescue 
 					program has now grown to become an entire division within Signal Cartel and 
@@ -70,7 +70,7 @@ include_once '../includes/top-right.php';
 				<div class="row">
 				  <div class="col-md-3">
 				    <div class="thumbnail text-center">
-				      <a href="https://gate.eveonline.com/Profile/A%20Dead%20Parrot">
+				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
 				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A.D. Parrot" style="width:100%">
 				        <div class="caption">
 				          <strong>A Dead Parrot</strong><br />Co-Pilot<br />Development
@@ -80,7 +80,7 @@ include_once '../includes/top-right.php';
 				  </div>
 				  <div class="col-md-3">
 				    <div class="thumbnail text-center">
-				      <a href="https://gate.eveonline.com/Profile/Angel%20Lafisques">
+				      <a href="https://evewho.com/pilot/Angel%20Lafisques">
 				        <img src="https://image.eveonline.com/Character/96736367_128.jpg" alt="Angel" style="width:100%">
 				        <div class="caption">
 				          <strong>Angel Lafisques</strong><br />Search &amp; Rescue<br />
@@ -91,7 +91,7 @@ include_once '../includes/top-right.php';
 				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Grey%20Sojourn">
+				      <a href="https://evewho.com/pilot/Grey%20Sojourn">
 				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
 				        <div class="caption">
 				          <strong>Grey Sojourn</strong><br />Search &amp; Rescue<br />
@@ -102,7 +102,7 @@ include_once '../includes/top-right.php';
 				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Igaze">
+				      <a href="https://evewho.com/pilot/Igaze">
 				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
 				          <strong>Igaze</strong><br />Search &amp; Rescue<br />
@@ -115,7 +115,7 @@ include_once '../includes/top-right.php';
 				<div class="row">
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Lucas%20Ballard">
+				      <a href="https://evewho.com/pilot/Lucas%20Ballard">
 				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
 				        <div class="caption">
 				          <strong>Lucas Ballard</strong><br />Search &amp; Rescue<br />
@@ -126,7 +126,7 @@ include_once '../includes/top-right.php';
 				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Orsel%20Solette">
+				      <a href="https://evewho.com/pilot/Orsel%20Solette">
 				        <img src="https://image.eveonline.com/Character/96975403_128.jpg" alt="Orsel" style="width:100%">
 				        <div class="caption">
 				          <strong>Orsel Solette</strong><br />ESR Data Tools<br />Development
@@ -136,7 +136,7 @@ include_once '../includes/top-right.php';
 				  </div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://gate.eveonline.com/Profile/Triffton%20Ambraelle">
+				      <a href="https://evewho.com/pilot/Triffton%20Ambraelle">
 				        <img src="https://image.eveonline.com/Character/93697245_128.jpg" alt="Triffton" style="width:100%">
 				        <div class="caption">
 				          <strong>Triffton Ambraelle</strong><br />Search &amp; Rescue<br />

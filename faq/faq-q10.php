@@ -20,7 +20,7 @@
 			<p>For further inquiries regarding EvE-Scout Rescue's initiatives or policies, or to
 				discuss any concerns you might have about rescue operations in the wormhole where
 				you reside, please contact <a 
-				href="https://gate.eveonline.com/Profile/Thrice%20Hapus">Thrice Hapus</a> 
+				href="https://evewho.com/pilot/Thrice%20Hapus">Thrice Hapus</a> 
 				via EVEMail.</p>
 		</div>
 	</div>

@@ -37,7 +37,7 @@ include_once '../includes/head.php';
 				</div>
 				<div id="question2" class="panel-collapse collapse" style="height: 0px;">
 					<div class="panel-body">
-						<p>The EvE-Scout Rescue Cache (ESRC) program, founded in early YC 118 by <a href="https://gate.eveonline.com/Profile/Forcha%20Alendare">Forcha Alendare</a>, provides a basic emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style.</p>
+						<p>The EvE-Scout Rescue Cache (ESRC) program, founded in early YC 118 by <a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha Alendare</a>, provides a basic emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style.</p>
 						<p>ESRC is only one facet of the EvE-Scout Rescue division, a dedicated group of Signal Cartel pilots who have answered to call of service to the greater New Eden community. As well as being a service to the EVE community, this program provides Signal Cartel members an opportunity to expand their exploration experiences, wormhole lifestyle, and game play content.</p>
 						<p><img class="img-responsive img-rounded" src="../img/hope_comes_in_a_box.jpg" width="970px" /></p>
 					</div>
