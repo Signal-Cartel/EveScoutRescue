@@ -52,7 +52,7 @@ include_once '../includes/top-right.php';
 				<p></p>
 				<hr class="half-rule">
 		  		<div class="row">
-			      <div class="col-sm-5 col-sm-offset-1" style="text-align: center;">
+			      <div class="col-sm-4" style="text-align: center;">
 			        <img src="../img/contribute-scouts.png">
 			        <h3>Let It Be</h3>
 			        <p>If you agree that no one should be stranded inside a wormhole due 
@@ -60,12 +60,21 @@ include_once '../includes/top-right.php';
 					by not destroying any rescue caches you find in wormhole space.<br />
 					We sincerely thank you for your	cooperation!</p>
 			      </div>
-			      <div class="col-sm-5" style="text-align: center;">
+			      <div class="col-sm-4" style="text-align: center;">
 			        <img src="../img/donate.png">
 			        <h3>Send Us a Tip</h3>
 			        <p>Consider sending us a tip as a thank you. Your donations go directly to reward our scouts.</p>
 			        <p><em><strong>Please send your donations to the in-game corp "<span style="color: #337ab7;">EvE-Scout</span>".</strong></em><br />
 			        	Be sure to indicate "ESR" or "Rescue" on the memo line.</p>
+			      </div>
+			      <div class="col-sm-4" style="text-align: center;">
+			        <img src="../img/wanted_final.png" height="195">
+			        <h3>Join Us</h3>
+			        <p>Is helping other capsuleers of more interest to you than blowing them up?
+						<br />Want to be part of an active exploration corp filled with neutral 
+						non-aggressors?<br/>If this sounds like a good fit for you, check out the 
+						<a href="https://www.signalcartel.com/about">Credo</a> and consider 
+						<a href="http://www.eve-scout.com/signal-cartel/how-to-join/">joining us</a>!</p>
 			      </div>
 			    </div>
 			</div>
