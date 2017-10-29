@@ -50,8 +50,8 @@ require_once '../class/db.class.php';
 					<?php
 					//summary data
 					$db = new Database();
-					$start = date("Y-m-d H:i:s", strtotime('2017-09-03 00:00:00'));
-					$end = date("Y-m-d H:i:s", strtotime('2017-09-09 23:59:59'));
+					$start = date("Y-m-d H:i:s", strtotime('2017-10-08 00:00:00'));
+					$end = date("Y-m-d H:i:s", strtotime('2017-10-22 23:59:59'));
 					
 					//count of all actions performed in the specified period
 					$db->query("SELECT COUNT(*) as cnt
