@@ -1,6 +1,53 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	My exit hole closed, I forgot probes, can't reconnect to them, d-scan won't pick 
+        	up a thing, except some EMERGENCY ONLY container in space. I don't want to suicide. 
+        	I joined the EvE-Scout channel and contacted random Signal Cartel member. This 
+        	cool saviour dude teaches me how to find the cache, I pick up probes, find exit 
+        	to low sec, bookmark it, come back to the cache to replace the probes, and thank 
+        	the dude again. It was fun!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Hansa Ashai<br />
+				<span style="font-size: 85%;">rescued on YC119-Oct-29</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	My experience was great. After losing probes due to disconnect, I was able to 
+        	reach out, access the cache, and find my exit within the hour.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Blim Blam Korblok<br />
+				<span style="font-size: 85%;">rescued on YC119-Oct-27</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I recently got stuck in a wormhole and lost my scanner probes to a disconnect. 
+        	I contacted them via the in-game channel and immediately people responded with 
+        	help offers. One person guided me to the rescue cache with the help of D-Scan. 
+        	I got some Scanner Probes and fireworks out of the cache. Soon I could finally make my 
+        	escape.<br /><br />
+			After experiencing their help and reading up on the alliance Credo I immediatly 
+			filled out the application form because I felt that this is what I want to do 
+			while playing EvE. Now I'm a proud member of Signal Cartel and EvE-Scout and 
+			do Bob's work.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Robo Fuzzy<br />
+				<span style="font-size: 85%;">rescued on YC119-Oct-12</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	I had to make an unexpected log off and when I came back I had lost my probes.
 			That was my first exploration run ever. I had made 100 mil in loot, so I looked 
 			for every way possible to save it. I asked around in the EvE-Scout channel and people 
