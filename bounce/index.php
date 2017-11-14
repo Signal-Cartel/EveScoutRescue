@@ -29,10 +29,10 @@ include_once '../includes/head.php';
 	<div class="col-sm-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<p class="lead">So, how do I go about finding a rescue cache or rescue frigate?</p>
+				<p class="lead">So, how do I go about finding a rescue cache?</p>
 			</div>
 			<div class="panel-body">
-				<p>The process to follow to locate the rescue cache or rescue frigate in space is fairly straightforward. We call it the "bounce method".</p>
+				<p>The process to follow to locate the rescue cache in space is fairly straightforward. We call it the "bounce method".</p>
 				<p><img src="../img/BounceMethod.jpg" width="900px" style="vertical-align: middle; max-width: 100%; height: auto;" /></p>
 				<ol>
 					<li>Warp to 100 km off the planet (the "Align Planet").</li>
@@ -43,13 +43,13 @@ include_once '../includes/head.php';
 					<li>When you leave warp, drop a second temporary bookmark and name it something like "T2". You just completed pass #1.</li>
 					<li>Time to start pass #2. Warp back to T1 bookmark.</li>
 					<li>During the warp, drop another temporary bookmark between T1 and T2. Name it "T3".</li>
-					<li>When you arrive at T1, check the distance from the Rescue Cache Planet. Is the distance between 22,000 and 50,000 km? If it is, check d-scan for the cache or frigate. If not, warp back to T3 and continue to next step.</li>
+					<li>When you arrive at T1, check the distance from the Rescue Cache Planet. Is the distance between 22,000 and 50,000 km? If it is, check d-scan for the cache. If not, warp back to T3 and continue to next step.</li>
 					<li>From T3, warp to T2. During the warp, drop a bookmark and name it "T4".</li>
 					<li>When you arrive at T2, you have completed pass #2.</li>
 					<li>Time to start pass #3. Warp to T4.</li>
-					<li>Repeat steps 6-10, warping to the nearest temporary bookmark with each pass and gradually approaching the desired distance. As soon as you are between 22,000 and 50,000 km from the Rescue Cache Planet, check d-scan for the cache or frigate. As soon as it appears on your overview, warp to it.</li>
+					<li>Repeat steps 6-10, warping to the nearest temporary bookmark with each pass and gradually approaching the desired distance. As soon as you are between 22,000 and 50,000 km from the Rescue Cache Planet, check d-scan for the cache. As soon as it appears on your overview, warp to it.</li>
 					<li>Someone in EvE-Scout channel will be able to give you the password to access the cache once you have located it.</li>
-					<li><strong>When you are finished using the cache or frigate, it would be very helpful if you could return all supplies to it and/or return it to the location where you found it so it can be ready for use by the next stranded pilot. Thank you!</strong>></li>
+					<li><strong>When you are finished using the cache, it would be very helpful if you could return all supplies to it and/or return it to the location where you found it so it can be ready for use by the next stranded pilot. Thank you!</strong></li>
 				</ol>
 			</div>
 		</div>
