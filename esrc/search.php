@@ -57,6 +57,19 @@ $activeSAR = '';
 if (count($data) > 0) {
 	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
 }
+
+// check that pilot is logged into ALLISON and is in system
+$pilotLocStat = '';
+if (isset($_SESSION['auth_char_location'])) {
+	if ($_SESSION['auth_char_location']  != $system) {
+		$pilotLocStat = 'not_in_system';
+		$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '. $system .' in order to tend this cache, but you are in '. $_SESSION['auth_char_location'].'"';
+	}
+}
+else {
+	$pilotLocStat = 'not_in_allison';
+	$strBtnAttrib = 'data-toggle="tooltip" title="You must be logged into ALLISON in order to enter ESRC data."';
+}
 ?>
 <body class="white" style="background-color: black;">
 <div class="container">
@@ -121,9 +134,14 @@ if (!empty($system)) {
 		$strTended = '';
 		if (0 == $caches->isTendingAllowed($system)) {
 			$strTended = ' <i class="white fa fa-clock-o"></i>';
-		} ?>
-		<button type="button" class="btn btn-primary" role="button" data-toggle="modal" 
-			data-target="#TendModal">Tend<?=$strTended?></button>&nbsp;&nbsp;&nbsp;
+		}
+		
+		//check pilot status
+		if ($pilotLocStat = '') { 
+			$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
+		}?>
+		<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
+			Tend<?=$strTended?></button>&nbsp;&nbsp;&nbsp;
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
 			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
@@ -205,9 +223,14 @@ if (!empty($system)) {
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
 			<!-- SOW button  -->
+			<?php 
+			//check pilot status
+			if ($pilotLocStat = '') { 
+				$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
+			} ?>
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
-			<button type="button" class="btn btn-success btn-lg" role="button" data-toggle="modal" 
-				data-target="#SowModal">Sow one now</button>&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-success btn-lg" role="button" <?=$strBtnAttrib?>>
+				Sow one now</button>&nbsp;&nbsp;&nbsp;
 			<!-- SAR New button -->
 			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
 				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
