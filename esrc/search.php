@@ -60,15 +60,18 @@ if (count($data) > 0) {
 
 // check that pilot is logged into ALLISON and is in system
 $pilotLocStat = '';
-if (isset($_SESSION['auth_char_location'])) {
-	if ($_SESSION['auth_char_location']  != $system) {
-		$pilotLocStat = 'not_in_system';
-		$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '. $system .' in order to tend this cache, but you are in '. $_SESSION['auth_char_location'].'"';
+// check does not apply to admins
+if ($users->isAdmin($charname) === false) {
+	if (isset($_SESSION['auth_char_location'])) {
+		if ($_SESSION['auth_char_location']  != $system) {
+			$pilotLocStat = 'not_in_system';
+			$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '. $system .' in order to perform this action, but you are in '. $_SESSION['auth_char_location'].'"';
+		}
 	}
-}
-else {
-	$pilotLocStat = 'not_in_allison';
-	$strBtnAttrib = 'data-toggle="tooltip" title="You must be logged into ALLISON in order to enter ESRC data."';
+	else {
+		$pilotLocStat = 'not_in_allison';
+		$strBtnAttrib = 'data-toggle="tooltip" title="You must be logged into ALLISON in order to enter ESRC data."';
+	}
 }
 ?>
 <body class="white" style="background-color: black;">
