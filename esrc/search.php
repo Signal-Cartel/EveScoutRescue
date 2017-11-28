@@ -137,7 +137,7 @@ if (!empty($system)) {
 		}
 		
 		//check pilot status
-		if ($pilotLocStat = '') { 
+		if ($pilotLocStat == '') { 
 			$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
 		}?>
 		<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
@@ -225,7 +225,7 @@ if (!empty($system)) {
 			<!-- SOW button  -->
 			<?php 
 			//check pilot status
-			if ($pilotLocStat = '') { 
+			if ($pilotLocStat == '') { 
 				$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
 			} ?>
 			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
