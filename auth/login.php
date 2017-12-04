@@ -7,7 +7,7 @@
 // secret.php contains clientid and secret key from 
 // https://developers.eveonline.com/applications
 
-require_once '../config/secret.php';	
+require_once '../../config/secret.php';	
 
 session_start();
 
@@ -16,16 +16,13 @@ if (isset($_SESSION['auth_characterid'])) {
     exit;
 } 
 else {
-    //Throw login redirect to EVE auth server
-    // Select redirect URL based on environment
-	if (strpos($_SERVER['HTTP_HOST'], 'dev') === false) {		// production
-		$redirect_uri="https%3A%2F%2Fevescoutrescue.com%2Fauth%2Fauthcallback.php";
-	}
-	else {														// dev
-		$redirect_uri="http%3A%2F%2Fdev.evescoutrescue.com%2Fauth%2Fauthcallback.php";
+	if (!isset($redirect_uri))
+	{
+		echo 'Redirect URI not configured.';
+		exit(1);
 	}
 	
-	$_SESSION['auth_redirect']='/';
+ 	$_SESSION['auth_redirect']=$appbase;
 	$authsite='https://login.eveonline.com';
     $authurl='/oauth/authorize';
     $state=uniqid();
@@ -34,9 +31,9 @@ else {
     session_write_close();
 	header(
         'Location:'.$authsite.$authurl
-        .'?response_type=code&redirect_uri='.$redirect_uri
+        .'?response_type=code&redirect_uri='.urlencode($redirect_uri)
         .'&client_id='.$clientid.'&scope=&state='.$state
     );
-    exit;
+	exit;
 }
 ?>

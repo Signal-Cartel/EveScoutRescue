@@ -4,7 +4,8 @@
 // secret.php contains clientid and secret key from
 // https://developers.eveonline.com/applications
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
+// require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
+require_once '../../config/secret.php';
 
 /**
  * Log an error in case authentication fails
@@ -23,8 +24,8 @@ session_start();
 //then sends its response to this script. We need to handle that response.
 
 // Make sure that the state matches the one set before the redirect.
-if (isset($_SESSION['auth_state']) and isset($_GET['state']) and 
-		$_SESSION['auth_state']==$_GET['state']) {
+if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and 
+		$_SESSION['auth_state']==$_REQUEST['state']) {
     
     //State matches, so we need to verify the authorization code we received from EVE SSO
     $url='https://login.eveonline.com/oauth/token';
