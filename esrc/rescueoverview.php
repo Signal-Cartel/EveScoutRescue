@@ -326,17 +326,13 @@ else {
 		$data = $rescue->getRequests(1);
 		displayTable($data, 1, $system, 0, $isCoord);
 	}
-	// non-coordinators will see stats
+	// non-coordinators will see stats, eventually
 	else { ?>
 		<div class="row">
 			<div class="col-sm-12">
 				<div style="padding-left: 10px;">
-<?php
-	// get open requests only
-	$openRequests = $rescue->getOpenRequests();
-	// display open requests in finished mode (no updates allowed)
-	displayTable($openRequests, 0, NULL, 0, $isCoord, 1);
-?>
+					For active SAR requests, click on ALLISON's "Pre-Flight" button<br /><br />
+					---> 
 				</div>
 			</div>
 		</div>
