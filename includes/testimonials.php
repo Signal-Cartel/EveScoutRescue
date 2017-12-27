@@ -1,6 +1,144 @@
 <div class="item active">
 	<div class="carousel-content">
     	<div style="width: 100%;">
+        	I lost probes due to a power outage and thought I was gonna have to pop my Tengu 
+        	and 500 mil ISK pod. I was relieved to find out that EvE-Scout Rescue exists. It 
+        	only took about 5 minutes from when I first posted in the EvE-Scout channel to 
+        	when I had a private conversation started with a mod and was on my way to finding 
+        	the cache.<br /><br />
+			I can't extend my gratitude enough for the help I received. I'll be sure to send 
+			some thanks your way in the form of ISK! My saviors!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Mavrik Kion<br />
+				<span style="font-size: 85%;">rescued on YC119-Dec-20</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I got out alive. I recommend your services majorly.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Michael Pergkk<br />
+				<span style="font-size: 85%;">rescued on YC119-Dec-15</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	It was a bad day from the start: forgot boosters, wrong drones, can't find a way 
+        	to null sec. I'm tired and log off. The next day, I realised that I forgot to 
+        	return probes and now I'm a true WH prisoner. Luckily, I had heard about 
+        	EvE-Scout Rescue! After five minutes, I was free!!! Really so amazing. Even in 
+        	K-space, people don't help you so fast and well. With such pilots, the game becomes 
+        	more than a game!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				xBocT Airuta<br />
+				<span style="font-size: 85%;">rescued on YC119-Dec-01</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	Thank you so much. The service was very fast and covert. You were able to get a 
+        	Rescue pilot to my location within about 15 minutes. That was good, considering 
+        	how lost I was and how deep in the holes I was. Being a new player, I would have 
+        	lost my mind and my new Astero the first flight out. Thanks again!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				thoth Shayiskhun<br />
+				<span style="font-size: 85%;">rescued on YC119-Nov-16</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I entered a wormhole and warped to a celestial. That's when I notice that I have 
+        	16 probes but no launcher -- and I forgot to bookmark my exit. I'm new to wormhole 
+        	space so the emptiness is disconcerting. For many the pod express is an option, 
+        	but as a new player the loss of a ship and my implants would really hurt.<br /><br />
+			Newbro Help sends me to the EvE-scout channel. Thankfully one of your pilots is 
+			on and close enough for a rescue. A little bit later I'm back home. It was never 
+			asked for, but I gave the pilot a tip for going out of their way to help a 
+			stranded explorer.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				anonymous pilot<br />
+				<span style="font-size: 85%;">rescued on YC119-Nov-15</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	Had to deal with RL and when I got back, I discovered the exit closed and my 
+        	buddies had moved on. I was stuck. D-Scan showed your rescue cache. One of your 
+        	team quickly responded with the password, and I retrieved the probes and launcher. 
+        	In the station, I was able to refit.<br /><br />
+			I could have self-destructed but it was fun to go with the option of a rescue 
+			cache. If I'm ever stuck with something expensive and no cache in system, I'd 
+			definitely be calling for a rescue.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Bustenose Upirilius<br />
+				<span style="font-size: 85%;">rescued on YC119-Nov-14</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	I wasn't able to reconnect to my probes and had forgotten to bookmark the wormhole 
+        	exit. I was told to contact EvE-Scout. Soon after, I was directed to a rescue 
+        	cache and was able to finally get out of the wormhole with the contents in the 
+        	cache. I am thankful for this service.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				tanner mon<br />
+				<span style="font-size: 85%;">rescued on YC119-Nov-08</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	A member of the Signal Cartel generously took the time to find a wormhole that led 
+        	to J121454 and jump in so that I could find the way out. I am very grateful for 
+        	this (I sent him a donation), and I really like the fact that such a group exists 
+        	in EVE.<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				Chucao<br />
+				<span style="font-size: 85%;">rescued on YC119-Nov-02</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
+        	Thanks again so much! What a crazy good service to have! I was stuck in w-space 
+        	after a long absence. The corp I was in was basically dead and had gotten rid of 
+        	all but the ship I was flying, which didn't have probes. I was about to pod myself 
+        	when I thought I'd ask in help channel, and someone guided me to your website and 
+        	channel.<br /><br />
+			What a savior it was! I kept my Tengu and implants and made it out to high sec 
+			k-space within 2 hours. Amazing!<br /><br />
+			<span class="pull-right" style="text-align: right;">
+				SpcJnky<br />
+				<span style="font-size: 85%;">rescued on YC119-Oct-29</span>
+			</span>
+        </div>
+    </div>
+</div>
+<div class="item">
+	<div class="carousel-content">
+    	<div style="width: 100%;">
         	My exit hole closed, I forgot probes, can't reconnect to them, d-scan won't pick 
         	up a thing, except some EMERGENCY ONLY container in space. I don't want to suicide. 
         	I joined the EvE-Scout channel and contacted random Signal Cartel member. This 
