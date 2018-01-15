@@ -33,7 +33,20 @@ $request = $rescue->getRequest($reqID);
 				</tr>
 				<tr>
 					<td align="right">Stranded Pilot:</td>
-					<td><strong><?=Output::htmlEncodeString($request['pilot'])?></strong></td>
+					<td><strong>
+						<?php 
+						// display pilot name only to coordinators
+						if ($isCoord == 0)
+						{
+							echo 'PROTECTED<br />';
+						}
+						else
+						{
+							echo Output::htmlEncodeString($request['pilot']).'<br />';
+						}
+						?>
+						</strong>
+					</td>
 				</tr>
 				<tr>
 					<td align="right">Request Created:</td>
@@ -58,6 +71,11 @@ $request = $rescue->getRequest($reqID);
 			</table>
 			
 			<hr>
+			<?php 
+			// display Last Contact checkbox and Status dropdown only to coordinators 
+			if ($isCoord == 1)
+			{
+			?>
 			<div class="field">
 				<label for="contacted">
 					<strong>Update "Last Contact" date to today?&nbsp;</strong>
@@ -83,6 +101,15 @@ $request = $rescue->getRequest($reqID);
 				</select>
 			</div>
 			<div class="ws"></div>
+			<?php 
+			}
+			else 
+			{
+			?>
+				<input type="hidden" name="status" id="status" value="<?=$request['status']?>">
+			<?php
+			}
+			?>
 		  	<div class="field">
 				<label class="control-label" for="notes">Enter a new note</label>
 				<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>

@@ -218,8 +218,8 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 	// display system information
 	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.
 			Output::htmlEncodeString($row['system']).'</a></td>';
-	// display pilot information
-	if ($isCoord == 0 && $finished == 1)
+	// display pilot information only to coordinators
+	if ($isCoord == 0)
 	{
 		echo '<td><b>PROTECTED</b></td>';
 	}
@@ -249,7 +249,7 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
 	// NOTES
 	if ($notes == 1) {
 		echo '<td>';
-		displayNotes($row);
+		displayNotes($row, $isCoord);
 		echo '</td>';
 	}
 	echo "</tr>";
@@ -259,7 +259,7 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
  * Format notes as HTML within request table
  * @param unknown $row
  */
-function displayNotes($row)
+function displayNotes($row, $isCoord = 0)
 {
 	$database = new Database();
 	$rescue = new Rescue($database);
@@ -268,7 +268,15 @@ function displayNotes($row)
 		foreach($notes as $note) {
 			echo '['. date("M-d", strtotime($note['notedate'])) .' // ';
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
-			echo '&nbsp;&nbsp;&nbsp;'. Output::htmlEncodeString($note['note']) .'<br />';
+			// display note detail only to coordinators
+			if ($isCoord == 0)
+			{
+				echo '&nbsp;&nbsp;&nbsp;PROTECTED<br />';
+			}
+			else
+			{
+				echo '&nbsp;&nbsp;&nbsp;'. Output::htmlEncodeString($note['note']) .'<br />';
+			}
 		}
 	}
 }

@@ -195,6 +195,7 @@ class Rescue {
 							ORDER BY requestdate DESC";
 		
 		// check if search for open requests and user is NOT coordinator/admin
+		/*
 		if ($finished == 0 && $isCoord == 0)
 		{
 			// select only open requests
@@ -202,6 +203,7 @@ class Rescue {
 							WHERE system = :system and finished = :finished and status in( 'open', 'system-located')
 							ORDER BY requestdate DESC";
 		}
+		*/
 		
 		// get requests from database
 		$this->db->query($sql);
