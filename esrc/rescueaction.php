@@ -106,7 +106,7 @@ else if ($action === 'Create')
 		$user = 'SAR System';
 		$alert = 1;
 		$skip_the_gif = 1;
-		$message = "A new SAR request has just been entered. [Overview page](https://evescoutrescue.com/esrc/rescueoverview.php)";
+		$message = "A new SAR request has just been entered by $charname. [Overview page](https://evescoutrescue.com/esrc/rescueoverview.php) - [Check Chains for $system](http://dev.evescoutrescue.com/copilot/data/chains?system=$system)";
 		$process = new Discord;
 		$result = $process->sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}

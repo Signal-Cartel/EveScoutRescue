@@ -324,27 +324,16 @@ if (!empty($system)) {
 
 // no system selected, so display all requests
 else {
-	// only display full list to SAR coordinators/admins
+	//active requests
+	$data = $rescue->getRequests();
+	displayTable($data, 0, $system, 0, $isCoord);
+	
+	// only display closed requests to coordinators
 	if ($isCoord == 1) {
-		//active requests
-		$data = $rescue->getRequests();
-		displayTable($data, 0, $system, 0, $isCoord);
-		
 		// closed requests
 		$data = $rescue->getRequests(1);
 		displayTable($data, 1, $system, 0, $isCoord);
 	}
-	// non-coordinators will see stats, eventually
-	else { ?>
-		<div class="row">
-			<div class="col-sm-12">
-				<div style="padding-left: 10px;">
-					For active SAR requests, click on ALLISON's "Pre-Flight" button<br /><br />
-					---> 
-				</div>
-			</div>
-		</div>
-	<?php }
 }
 ?>
 
