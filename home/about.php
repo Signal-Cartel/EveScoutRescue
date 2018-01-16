@@ -43,6 +43,11 @@ include_once '../includes/top-right.php';
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="pull-left">About Us</h2>
+				<div class="btn-group pull-right" style="padding-top: 12px;">
+			        <a class="btn btn-success btn-lg" 
+			        	href="https://www.signalcartel.com/?s=EvE-Scout+Rescue" role="button">
+			        	Rescue success stories!</a>
+			    </div>
 			</div>
 			<div class="panel-body">
 				<p>In early YC118, 
