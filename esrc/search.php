@@ -60,8 +60,9 @@ if (count($data) > 0) {
 
 // check that pilot is logged into ALLISON and is in system
 $pilotLocStat = '';
-// check does not apply to admins
-if ($users->isAdmin($charname) === false) {
+// check does not apply to SAR Coordinators
+if ($users->checkPermission($charname, 'SARCoordinator') === false) {
+//if ($users->isAdmin($charname) === false) {
 	if (isset($_SESSION['auth_char_location'])) {
 		if ($_SESSION['auth_char_location']  != $system) {
 			$pilotLocStat = 'not_in_system';

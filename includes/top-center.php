@@ -1,7 +1,8 @@
 <div class="col-sm-8 white" style="text-align: center;">
 	<span class="sechead"><?=$pgtitle?></span><br /><br />
 	<a class="btn btn-primary btn-md" href="about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>
+	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-primary btn-md" href="heroes.php" role="button">Hall of Heroes</a>
 	<?php 
 	// display these buttons only to EvE-Scout pilots
 	if (isset($_SESSION['auth_characteralliance'])) {

@@ -97,6 +97,18 @@ else if ($action === 'Create')
 	
 		// switch display to overview with current system
 		displayRequestOverview($system);
+		
+		// send notification to Discord
+		$root = $_SERVER['DOCUMENT_ROOT'].'/copilot/';
+		require_once($root . 'data/_discord_class.php');
+		$webHook = 'https://discordapp.com/api/webhooks/332632705542127616/svEATTzqXbaDUi7pa0Ybf_FTfH9byR2XV_LDVjAIcUcWkqCh6ncSVLKKLKnFAtYGFY_Q';
+		$audience = 'esr_coordinators';
+		$user = 'SAR System';
+		$alert = 1;
+		$skip_the_gif = 1;
+		$message = "A new SAR request has just been entered by $charname. [Overview page](https://evescoutrescue.com/esrc/rescueoverview.php) - [Check Chains for $system](http://evescoutrescue.com/copilot/data/chains?system=$system)";
+		$process = new Discord;
+		$result = $process->sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}
 	else {
 		// data was wrong. Display input mask with wrong data

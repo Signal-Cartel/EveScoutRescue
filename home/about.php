@@ -43,6 +43,11 @@ include_once '../includes/top-right.php';
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="pull-left">About Us</h2>
+				<div class="btn-group pull-right" style="padding-top: 12px;">
+			        <a class="btn btn-success btn-lg" 
+			        	href="https://www.signalcartel.com/?s=EvE-Scout+Rescue" role="button">
+			        	Rescue success stories!</a>
+			    </div>
 			</div>
 			<div class="panel-body">
 				<p>In early YC118, 
@@ -68,23 +73,41 @@ include_once '../includes/top-right.php';
 					takes a team to make it all happen. Our current roster includes:</p>
 					
 				<div class="row">
-				  <div class="col-md-3">
-				    <div class="thumbnail text-center">
-				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
-				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A.D. Parrot" style="width:100%">
+				  <h2 style="text-align:center">
+				  	Search and Rescue
+				  </h2>
+				</div>
+				<div class="row">
+				  <div class="col-md-4 text-center"></div>
+				  <div class="col-md-4 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/Lucas%20Ballard">
+				        <img src="https://image.eveonline.com/Character/96491034_256.jpg" alt="Lucas" style="width:100%">
 				        <div class="caption">
-				          <strong>A Dead Parrot</strong><br />Co-Pilot<br />Development
+				          <strong>Lucas Ballard</strong><br />Lead Coordinator
 				        </div>
 				      </a>
 				    </div>
 				  </div>
+				  <div class="col-md-4 text-center"></div>
+				</div>
+				<div class="row">
 				  <div class="col-md-3">
 				    <div class="thumbnail text-center">
 				      <a href="https://evewho.com/pilot/Angel%20Lafisques">
 				        <img src="https://image.eveonline.com/Character/96736367_128.jpg" alt="Angel" style="width:100%">
 				        <div class="caption">
-				          <strong>Angel Lafisques</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator
+				          <strong>Angel Lafisques</strong><br />Asst. Coordinator
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/Captain+Crinkle">
+				        <img src="https://image.eveonline.com/Character/97117031_256.jpg" alt="Captain Crinkle" style="width:100%">
+				        <div class="caption">
+				          <strong>Captain Crinkle</strong><br />Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
@@ -94,8 +117,7 @@ include_once '../includes/top-right.php';
 				      <a href="https://evewho.com/pilot/Grey%20Sojourn">
 				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
 				        <div class="caption">
-				          <strong>Grey Sojourn</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator
+				          <strong>Grey Sojourn</strong><br />Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
@@ -105,21 +127,44 @@ include_once '../includes/top-right.php';
 				      <a href="https://evewho.com/pilot/Igaze">
 				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
-				          <strong>Igaze</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator
+				          <strong>Igaze</strong><br />Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
 				  </div>
 				</div>
 				<div class="row">
-				  <div class="col-md-3 text-center">
+				  <h2 style="text-align:center">
+				  	Rescue Cache
+				  </h2>
+				</div>
+				<div class="row">
+				  <div class="col-md-4 text-center"></div>
+				  <div class="col-md-4 text-center">
 				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Lucas%20Ballard">
-				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
+				      <a href="https://evewho.com/pilot/Thrice%20Hapus">
+				        <img src="https://image.eveonline.com/Character/96079190_256.jpg" alt="Thrice" style="width:100%">
 				        <div class="caption">
-				          <strong>Lucas Ballard</strong><br />Search &amp; Rescue<br />
-				          	Lead Coordinator
+				          <strong>Thrice Hapus</strong><br />Coordinator
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-4 text-center"></div>
+				</div>
+				<div class="row">
+				  <h2 style="text-align:center">
+				  	Development
+				  </h2>
+				</div>
+				<div class="row">
+				  <div class="col-md-3"></div>
+				  <div class="col-md-3">
+				    <div class="thumbnail text-center">
+				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
+				        <img src="https://image.eveonline.com/Character/96765374_128.jpg" alt="A.D. Parrot" style="width:100%">
+				        <div class="caption">
+				          <strong>A Dead Parrot</strong><br />Co-Pilot
 				        </div>
 				      </a>
 				    </div>
@@ -129,11 +174,19 @@ include_once '../includes/top-right.php';
 				      <a href="https://evewho.com/pilot/Orsel%20Solette">
 				        <img src="https://image.eveonline.com/Character/96975403_128.jpg" alt="Orsel" style="width:100%">
 				        <div class="caption">
-				          <strong>Orsel Solette</strong><br />ESR Data Tools<br />Development
+				          <strong>Orsel Solette</strong><br />ESR Data Tools
 				        </div>
 				      </a>
 				    </div>
 				  </div>
+				  <div class="col-md-3"></div>
+				</div>
+				<div class="row">
+				  <h2 style="text-align:center">
+				  	Past Staff
+				  </h2>
+				</div>
+				<div class="row">
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Triffton%20Ambraelle">
@@ -146,15 +199,6 @@ include_once '../includes/top-right.php';
 				    </div>
 				  </div>
 				</div>
-				<p>We also rely on a dedicated group of pilots to place and maintain our
-					rescue caches in space. All participating pilots over the last 30 days 
-					are listed to the right. These are the true unsung heroes of New Eden.</p>
-				<p><span class="lead">Hall of Heroes</span><br />
-					Of special note are our	<a href="heroes.php">"Hall of Heroes"</a> pilots, 
-					who have placed or maintained a minimum of 100 caches each. If you ever 
-					see any of these pilots in Local, be sure to give them a wave. The next 
-					ship they save might be yours! <a href="heroes.php">Visit the Hall of 
-					Heroes now!</a></p>
 			</div>
 		</div>
 	</div>
