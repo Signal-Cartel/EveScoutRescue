@@ -19,6 +19,8 @@ require_once '../class/output.class.php';
 require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
+require_once '../class/discord.class.php';
+require_once '../class/config.class.php';
 
 // determine current action
 $action = $_REQUEST['action'];
@@ -99,16 +101,15 @@ else if ($action === 'Create')
 		displayRequestOverview($system);
 		
 		// send notification to Discord
-		$root = $_SERVER['DOCUMENT_ROOT'].'/copilot/';
-		require_once($root . 'data/_discord_class.php');
-		$webHook = 'https://discordapp.com/api/webhooks/332632705542127616/svEATTzqXbaDUi7pa0Ybf_FTfH9byR2XV_LDVjAIcUcWkqCh6ncSVLKKLKnFAtYGFY_Q';
-		$audience = 'esr_coordinators';
+		// discord webhook with token - channel and token part are part of config XXXX/abcdef
+		$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
 		$user = 'SAR System';
 		$alert = 1;
 		$skip_the_gif = 1;
-		$message = "A new SAR request has just been entered by $charname. [Overview page](https://evescoutrescue.com/esrc/rescueoverview.php) - [Check Chains for $system](http://evescoutrescue.com/copilot/data/chains?system=$system)";
-		$process = new Discord;
-		$result = $process->sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
+		// construct the message - URL is based on configuration
+		$message = "A new SAR request has just been entered by $charname. [Overview page](".Config::ROOT_PATH."esrc/rescueoverview.php) - [Check Chains for $system](http://evescoutrescue.com/copilot/data/chains?system=$system)";
+
+		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}
 	else {
 		// data was wrong. Display input mask with wrong data

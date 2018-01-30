@@ -194,8 +194,8 @@ class Rescue {
 							WHERE system = :system and finished = :finished
 							ORDER BY requestdate DESC";
 		
-		// check if search for open requests and user is NOT coordinator/admin
 		/*
+		// check if search for open requests and user is NOT coordinator/admin
 		if ($finished == 0 && $isCoord == 0)
 		{
 			// select only open requests

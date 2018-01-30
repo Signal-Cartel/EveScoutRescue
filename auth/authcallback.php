@@ -4,8 +4,7 @@
 // secret.php contains clientid and secret key from
 // https://developers.eveonline.com/applications
 
-// require_once($_SERVER['DOCUMENT_ROOT'].'/config/secret.php');
-require_once '../../config/secret.php';
+require_once '../class/config.class.php';
 
 /**
  * Log an error in case authentication fails
@@ -29,7 +28,7 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
     
     //State matches, so we need to verify the authorization code we received from EVE SSO
     $url='https://login.eveonline.com/oauth/token';
-    $header='Authorization: Basic '.base64_encode($clientid.':'.$secret);
+    $header='Authorization: Basic '.base64_encode(Config::AUTH_CLIENT_ID.':'.CONFIG::AUTH_SECRET);
     $code=$_GET['code'];
     //$state=$_GET['state'];
     $fields_string='';
@@ -91,7 +90,7 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		    	$_SESSION['auth_characterhash']=$response->CharacterOwnerHash;
 		    	//...and look up the character's alliance and corp details on the API
 		        $ch = curl_init();
-		        $lookup_url="https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=".$response->CharacterID;
+		        $lookup_url="https://esi.tech.ccp.is/latest/characters/".$_SESSION['auth_characterid']."/?datasource=tranquility";
 		        curl_setopt($ch, CURLOPT_URL, $lookup_url);
 		        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
 		        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -103,23 +102,21 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		        //Handle the response from our attempt to get character's alliance and corp from the API
 		        if ($result===false) {
 		        	echo 'Error code: 4<br />';
-		            auth_error('No such character on the API');
-		        } 
+		        	auth_error('No such character on the API');
+		        }
 		        else {
-			        //We got a response, so check to make sure we can use what we got back
-		        	$xml=simplexml_load_string($result);
-			        if (!isset($xml->result->rowset->row->attributes()["characterID"])) {
-			        	echo 'Error code: 5<br />';
-			        	auth_error("No character details returned from API");
-			        } 
-			        else {
-			        	//We got a result we can use, so set relevant session vars...
-			        	$_SESSION['auth_charactercorp'] = (string)$xml->result->rowset->row->attributes()["corporationName"];
-			            $_SESSION['auth_characteralliance'] = (string)$xml->result->rowset->row->attributes()["allianceName"];
-			            //$corporationID = (string)$xml->result->rowset->row->attributes()["corporationID"];
-			            //$allianceID = (string)$xml->result->rowset->row->attributes()["allianceID"];
-			        }
-				    session_write_close();
+		        	// 			        //We got a response, so check to make sure we can use what we got back
+		        	$response = json_decode($result);
+		        	if (!isset($response->corporation_id)) {
+		        		echo 'Error code: 5<br />';
+		        		auth_error("No character details returned from API");
+		        	}
+		        	else {
+		        		// We got a result we can use, so set relevant session vars...
+						$_SESSION ['auth_charactercorp'] = $response->corporation_id;
+        				$_SESSION ['auth_characteralliance'] = $response->alliance_id;
+		        	}
+		        	session_write_close();
 				    header('Location:'. $_SESSION['auth_redirect']);
 				    exit;
 		        }
@@ -130,5 +127,7 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
     echo "State is wrong. Did you make sure to actually hit the login url first?";
     error_log($_SESSION['auth_state']);
     error_log($_GET['state']);
+    // reset session for safety
+    session_unset();
 }
 ?>
