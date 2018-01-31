@@ -23,6 +23,7 @@ require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
+require_once '../class/config.class.php';
 
 $database = new Database();
 
@@ -60,9 +61,9 @@ if (count($data) > 0) {
 
 // check that pilot is logged into ALLISON and is in system
 $pilotLocStat = '';
-// check does not apply to SAR Coordinators
-if ($users->checkPermission($charname, 'SARCoordinator') === false) {
 //if ($users->isAdmin($charname) === false) {
+// check does not apply to SAR Coordinators
+if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::DEV_SYSTEM != 1)) {
 	if (isset($_SESSION['auth_char_location'])) {
 		if ($_SESSION['auth_char_location']  != $system) {
 			$pilotLocStat = 'not_in_system';

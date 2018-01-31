@@ -11,7 +11,7 @@ require_once '../class/users.class.php';
 
 // if no pilot parameter, send to home page
 if (!isset($_REQUEST['pilot'])) {
-	header("Location: /");
+	header("Location: ".Config::ROOT_PATH);
 }
 // create a database object
 $database = new Database();
@@ -25,7 +25,7 @@ if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 	// !!!comment out on localhost for testing!!!
 	if ($pilot != $charname) {
 		if ($users->isAdmin($charname) === false) {
-			header("Location: /");
+			header("Location: ".Config::ROOT_PATH);
 		}
 	}
 }

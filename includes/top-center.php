@@ -6,7 +6,7 @@
 	<?php 
 	// display these buttons only to EvE-Scout pilots
 	if (isset($_SESSION['auth_characteralliance'])) {
-		if ($_SESSION['auth_characteralliance'] == 'EvE-Scout Enclave') {
+		if ($_SESSION['auth_characteralliance'] == 99005130) {
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;
 				  <a class="btn btn-success btn-md" href="../esrc/search.php" 
 					role="button">ESRC</a>&nbsp;&nbsp;&nbsp;&nbsp;
