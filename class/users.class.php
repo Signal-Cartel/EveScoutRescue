@@ -84,4 +84,16 @@ class Users {
 // 		echo "$username $permission $active ". (($active) ? 1 : 0)." = ".$data['cnt']."<br>";
 		return ($data['cnt'] === 1) ? true : false;
 	}
+	
+	/**
+	 * Check if the user of the current session is part of the alliance
+	 * @return boolean
+	 */
+	public static function isAllianceUserSession()
+	{
+		if (session_status() == PHP_SESSION_NONE) {
+			session_start();
+		}
+		return $_SESSION['auth_characteralliance'] == 99005130;
+	}
 }

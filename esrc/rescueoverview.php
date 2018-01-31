@@ -5,6 +5,20 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
+include_once '../class/users.class.php';
+include_once '../class/config.class.php';
+
+// check if the user is alliance member
+if (!Users::isAllianceUserSession())
+{
+	// void the session entries on 'attack'
+	session_unset();
+	// no, redirect to home page
+	header("Location: ".Config::ROOT_PATH);
+	// stop processing
+	exit;
+}
+
 // check if a valid character name is set
 if (!isset($charname))
 {

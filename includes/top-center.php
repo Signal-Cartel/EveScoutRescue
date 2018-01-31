@@ -4,9 +4,10 @@
 	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="heroes.php" role="button">Hall of Heroes</a>
 	<?php 
+	require_once '../class/users.class.php';
 	// display these buttons only to EvE-Scout pilots
 	if (isset($_SESSION['auth_characteralliance'])) {
-		if ($_SESSION['auth_characteralliance'] == 99005130) {
+		if (Users::isAllianceUserSession()) {
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;
 				  <a class="btn btn-success btn-md" href="../esrc/search.php" 
 					role="button">ESRC</a>&nbsp;&nbsp;&nbsp;&nbsp;

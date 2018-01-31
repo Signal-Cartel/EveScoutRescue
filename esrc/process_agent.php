@@ -13,13 +13,25 @@ define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 include_once '../class/caches.class.php';
+include_once '../class/users.class.php';
+include_once '../class/config.class.php';
 
- /**
+// check if the user is alliance member
+if (!Users::isAllianceUserSession())
+{
+	// void the session entries on 'attack'
+	session_unset();
+	// no, redirect to home page
+	header("Location: ".Config::ROOT_PATH);
+	// stop processing
+	exit;
+}
+
+/**
   * Test provided input data to be valid.
  * @param unknown $data data to check
  * @return string processed and cleaned data
  */
-
 function test_input($data) 
 {
 	$data = trim($data);
