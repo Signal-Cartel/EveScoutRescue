@@ -1,6 +1,7 @@
 <?php
-session_start();
-
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
 require_once '../class/output.class.php';
 require_once '../class/db.class.php';
 require_once '../class/users.class.php';
@@ -9,7 +10,6 @@ require_once '../class/config.class.php';
 // - Set arrays of different page types
 // - If it's not in one of these arrays, it is a public page that does not require login to access
 $pgsAdmin    = array('/esrc/payoutadmin.php');
-$pgsAlliance = array('/esrc/data_entry.php','/esrc/search.php','/esrc/rescueoverview.php');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {
@@ -39,20 +39,6 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
 			//2. ...but user is not an admin, so redirect back to home
 			if ($users->isAdmin($charname) === false) {
 					header("Location: ".Config::ROOT_PATH);
-			}
-		}
-		//1b. ...and user is not logged in, so redirect
-		else {
-			login_redirect();
-		}
-	}
-	// We are on an Alliance-only page...
-	elseif (in_array($_SERVER['PHP_SELF'], $pgsAlliance)) {
-		//1a. ...and user is logged in...
-		if (isset($_SESSION['auth_characterid'])) {
-			//2. ...but user is not part of EvE-Scout alliance, so redirect back to home
-			if (!$_SESSION['auth_characteralliance'] == 99005130) {
-				header("Location: ".Config::ROOT_PATH);
 			}
 		}
 		//1b. ...and user is not logged in, so redirect
