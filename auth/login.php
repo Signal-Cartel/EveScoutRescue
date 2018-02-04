@@ -12,8 +12,11 @@ if (isset($_SESSION['auth_characterid'])) {
     exit;
 } 
 else {
-	
- 	$_SESSION['auth_redirect']=Config::ROOT_PATH;
+	// check if a session redirect PATH is already set
+	if (!isset($_SESSION['auth_redirect'])) {
+		// no, set a default redirect path
+		$_SESSION['auth_redirect']=Config::ROOT_PATH;
+	}
 	$authsite='https://login.eveonline.com';
     $authurl='/oauth/authorize';
     $state=uniqid();
