@@ -114,10 +114,9 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		        	else {
 		        		// We got a result we can use, so set relevant session vars...
 						$_SESSION ['auth_charactercorp'] = $response->corporation_id;
-        				//$_SESSION ['auth_characteralliance'] = $response->alliance_id;
-						if (isset($response->alliance_id) ? 
+						isset($response->alliance_id) ? 
 							$_SESSION['auth_characteralliance'] = $response->alliance_id : 
-							$_SESSION['auth_characteralliance'] = '');
+							$_SESSION['auth_characteralliance'] = '';
 		        	}
 		        	session_write_close();
 				    header('Location:'. $_SESSION['auth_redirect']);
