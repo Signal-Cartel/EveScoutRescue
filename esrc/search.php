@@ -11,10 +11,26 @@ include_once '../class/config.class.php';
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
 {
+	// check if last login was already a non auth user
+	if (isset($_SESSION['AUTH_NOALLIANCE']))
+	{
+		// set redirect to root path
+		$_redirect_uri = Config::ROOT_PATH;
+	}
+	else
+	{
+		// set redirect to requested path
+		$_redirect_uri = $_SERVER['REQUEST_URI'];
+	}
+
 	// void the session entries on 'attack'
 	session_unset();
+	// save the redirect URL to current page
+	$_SESSION['auth_redirect']=$_redirect_uri;
+	// set a flag for alliance user failure
+	$_SESSION['AUTH_NOALLIANCE'] = 1;
 	// no, redirect to home page
-	header("Location: ".Config::ROOT_PATH);
+	header("Location: ".Config::ROOT_PATH."auth/login.php");
 	// stop processing
 	exit;
 }
