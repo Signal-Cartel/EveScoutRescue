@@ -20,7 +20,7 @@
 					Location: <?=$row['Location']?><br />
 					Align: <?=$row['AlignedWith']?><br />
 					Distance: <?=Output::htmlEncodeString($row['Distance'])?><br />
-					Password: <?=Output::htmlEncodeString($row['Password'])?>
+					Password: <input type="text" value="<?=Output::htmlEncodeString($row['Password'])?>" onclick="select();document.execCommand('Copy'); " readonly/>
 				<?php 
 				}
 				?>
