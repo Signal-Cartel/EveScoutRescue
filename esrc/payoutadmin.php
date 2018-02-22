@@ -231,7 +231,10 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						echo '<tr>';
 						echo '<td><input type="text" value="'. $value['Pilot'] .'" /></td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
-						echo '<td><input type="text" value="'. round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" /></td>';
+						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
+									round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" />
+									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i>
+							  </td>';
 						echo '</tr>';
 					}
 					?>
@@ -250,6 +253,15 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 <?php
 	}
 ?>
-	</div>
+</div>
+
+<script type="text/javascript">
+	function SelectAllCopy(id) {
+	    document.getElementById(id).focus();
+	    document.getElementById(id).select();
+	    document.execCommand("Copy");
+	}
+</script>
+
 </body>
 </html>
