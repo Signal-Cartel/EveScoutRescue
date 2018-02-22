@@ -1,4 +1,5 @@
 <!-- Sower Modal Form -->
+
 <?php 
 $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 ?>
@@ -68,8 +69,11 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			</div>
 
 			<div class="field">
-				<label class="control-label" for="password">Password<span class="descr">What is the password for the secure container?</span></label>
-				<input type="text" class="form-control" id="password" name="password" />
+				<label class="control-label" for="password">Password<span class="descr">What is the 
+					password for the secure container? (Generated password is pre-filled. Click to 
+					paste your own password.)</span></label>
+				<input type="text" class="form-control" id="password" name="password" 
+					value="<?=$cachepass?>" maxlength="15" onclick="select();" />
 			</div>
 		  	<div class="field">
 				<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>

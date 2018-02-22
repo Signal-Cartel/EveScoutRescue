@@ -35,5 +35,15 @@
    			-o-background-size: cover;
    			background-size: cover;
 		}
+		
+		#copyclip {
+		  position: relative;
+		  z-index: 1;
+		  left: -25px;
+		  top: 1px;
+		  color: #7B7B7B;
+		  cursor: pointer;
+		  width: 0;
+		}
 	-->
 	</style>
