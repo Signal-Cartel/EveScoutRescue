@@ -20,7 +20,10 @@
 					Location: <?=$row['Location']?><br />
 					Align: <?=$row['AlignedWith']?><br />
 					Distance: <?=Output::htmlEncodeString($row['Distance'])?><br />
-					Password: <input type="text" value="<?=Output::htmlEncodeString($row['Password'])?>" onclick="select();document.execCommand('Copy'); " readonly/>
+					Password: <input type="text" id="cachepassTend" 
+								value="<?=Output::htmlEncodeString($row['Password'])?>" 
+								readonly /><i id="copyclip" class="fa fa-clipboard" 
+								onClick="SelectAllCopy('cachepassTend')"></i>
 				<?php 
 				}
 				?>

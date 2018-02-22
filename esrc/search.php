@@ -7,6 +7,10 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
+require_once '../class/password.class.php';
+
+// set password to use for new cache
+$cachepass = Password::generatePassword();
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
@@ -212,7 +216,10 @@ if (!empty($system)) {
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
-					<td><?=Output::htmlEncodeString($row['Password'])?></td>
+					<td><input type="text" id="cachepass1" style="color:black; width:125px;"
+							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
+							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass1')"></i><br />
+							click to copy <i class="fa fa-angle-up pull-right">&nbsp;&nbsp;&nbsp;</i></td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 					</tr>
@@ -273,6 +280,12 @@ if (!empty($system)) {
 			<!-- anoik.is button -->
 			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
 				role="button" target="_blank">anoik.is</a>
+			<br />
+			<!-- Password for new cache -->
+			<input type="text" id="cachepass2" style="color:black; width:125px;"
+				value="<?=$cachepass?>" readonly />
+				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass2')"></i> 
+				&lt;&lt; Copy password to use for new cache
 			</div></div></div>
 
 			<?php 
@@ -534,6 +547,14 @@ include 'modal_agent.php';
 include 'modal_tend.php';
 include 'modal_sow.php';
 ?>
+
+<script type="text/javascript">
+	function SelectAllCopy(id) {
+	    document.getElementById(id).focus();
+	    document.getElementById(id).select();
+	    document.execCommand("Copy");
+	}
+</script>
 
 </body>
 </html>
