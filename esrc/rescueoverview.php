@@ -162,6 +162,8 @@ function translateStatus($status)
 		break;
 		case 'closed-rescued' : $result = "Pilot rescued by SAR";
 		break;
+		case 'closed-esrc' : $result = "Pilot rescued by ESRC";
+		break;
 		case 'closed-escaped' : $result = "Pilot escaped by own action";
 		break;
 		case 'closed-escapedlocals' : $result = "Pilot rescued by locals";
