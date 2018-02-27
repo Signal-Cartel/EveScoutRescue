@@ -37,6 +37,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 			?>
 			<br /><br />
 			<span class="sechead white" style="font-weight: bold;">
+				<span style="color: gold;"><?php echo $ctrAllRescues; ?></span> Rescues
 			</span>
 		</div>
 	</div>
