@@ -86,6 +86,10 @@ $ctractive = $caches->getActiveCount();
 		<span class="white">
 			<span style="font-weight: bold; color: gold;"><?php echo round((intval($ctractive)/2603)*100,1); ?>% </span>
 			of all wormhole systems
+		</span><br /><br />
+		<span class="white">
+			<a class="btn btn-danger btn-lg" href="../911" role="button">Rescue 911</a><br />
+			Click to contact a Rescue Operator right away!
 		</span>
 	</div>
 	<div class="col-sm-8" style="text-align: center;">
