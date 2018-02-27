@@ -57,18 +57,21 @@ include_once '../includes/auth-inc.php';
 <?php
 require_once '../class/db.class.php';
 require_once '../class/caches.class.php';
+require_once '../class/rescue.class.php';
 require_once '../class/users.class.php';
 
 $database = new Database();
 $caches = new Caches($database);
 $users = new Users($database);
+$rescues = new Rescue($database);
 
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
 include_once '../includes/top-right.php';
 
-$ctrrescues = $caches->getRescueTotalCount();
-
+$ctrESRCrescues = $caches->getRescueTotalCount();
+$ctrSARrescues = $rescues->getRescueCount('closed-rescued');
+$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 $ctractive = $caches->getActiveCount();
 ?>
 </div>
@@ -77,7 +80,7 @@ $ctractive = $caches->getActiveCount();
 	<div class="col-sm-4" style="text-align: center;">
 		<span class="sechead white">
 			Confirmed Rescues: 
-			<span style="font-weight: bold; color: gold;"><?php echo $ctrrescues; ?></span>
+			<span style="font-weight: bold; color: gold;"><?php echo $ctrAllRescues; ?></span>
 		</span><br />
 		<span class="white">since YC119-Mar-18</span><br /><br />
 		<span class="sechead white">Total Active Caches: 
@@ -121,12 +124,14 @@ $ctractive = $caches->getActiveCount();
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="pull-left">Rescue Cache&nbsp;&nbsp;&nbsp;&nbsp;<img src="../img/cache.png" height="40px" /></h2>
-				<div class="btn-group pull-right" style="padding-top: 12px;">
-			        <a class="btn btn-primary btn-lg" href="../esrc/" role="button">Learn more</a>
+				<div class="sechead pull-right" style="padding-top: 12px;">
+			        <span style="font-weight: bold; color: #2c608f;"><?=$ctrESRCrescues?></span> rescues
 			    </div>
 			</div>
 			<div class="panel-body">
-				<p class="lead">Anchored throughout Anoikis, our rescue caches contain a probe launcher, core scanner probes, and even a hug or two. Perfect if you have a fitting service or just need probes.</p>
+				<p class="lead">Anchored throughout Anoikis, our rescue caches contain a probe 
+					launcher, core scanner probes, and even a hug or two. Perfect if you have a 
+					fitting service or just need probes. <a href="../esrc/">Learn more...</a></p>
 			</div>
 		</div>
 	</div>
@@ -134,12 +139,14 @@ $ctractive = $caches->getActiveCount();
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="pull-left">Search &amp; Rescue &nbsp;&nbsp;&nbsp;<img src="../img/search.png" height="40px" /></h2>
-				<div class="btn-group pull-right" style="padding-top: 7.5px;">
-			        <a class="btn btn-primary btn-lg" href="../sar/" role="button">Learn more</a>
+				<div class="sechead pull-right" style="padding-top: 7.5px;">
+			        <span style="font-weight: bold; color: #2c608f;"><?=$ctrSARrescues?></span> rescues
 			    </div>
 			</div>
 			<div class="panel-body">
-				<p class="lead">If we don't have a rescue cache in your current wormhole system, don't despair! Our Search and Rescue pilots will work hard to find you and scout you back to known space.</p>
+				<p class="lead">If we don't have a rescue cache in your current wormhole system, 
+					don't despair! Our Search and Rescue pilots will work hard to find you and 
+					scout you back to known space. <a href="../sar/">Learn more...</a></p>
 			</div>
 		</div>
 	</div>

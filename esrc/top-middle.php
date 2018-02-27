@@ -1,3 +1,15 @@
+<?php 
+// create object instances
+$db_top = new Database();
+$caches_top = new Caches($db_top);
+$systems_top = new Systems($db_top);
+$rescue_top = new Rescue($db_top);
+
+// get rescue counts
+$ctrESRCrescues = $caches_top->getRescueTotalCount();
+$ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
+$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+?>
 <div class="col-sm-8 black" style="text-align: center;">
 	<div class="row">
 		<div class="col-sm-3"></div>
@@ -17,14 +29,16 @@
 		<div class="col-sm-4" style="text-align: left;">
 			<?php 
 			if (isset($system) && $system!= '') {
-				$database = new Database();
-				$systems = new Systems($database);
 				// display wormhole info
-				$row = $systems->getWHInfo($system);
+				$row = $systems_top->getWHInfo($system);
 				echo '<strong class="white">'.$row['Class'].'<br/>'.
 					utf8_encode($row['Notes']).'</strong>';
 			}
 			?>
+			<br /><br />
+			<span class="sechead white" style="font-weight: bold;">
+				<span style="color: gold;"><?php echo $ctrAllRescues; ?></span> Rescues
+			</span>
 		</div>
 	</div>
 </div>

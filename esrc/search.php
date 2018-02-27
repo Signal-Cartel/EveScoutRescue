@@ -506,22 +506,16 @@ else {
 	<div class="col-sm-4 white">
 		<?php
 		$ctrrescues = $caches->getRescueTotalCount();
-
 		$ctrsown = $caches->getSownTotalCount();
-
 		$ctrtended = $caches->getTendTotalCount();
-
-		$ctrtot = $caches->getActionTotalCount();
-		
 		$ctractive = $caches->getActiveCount();
-		
 		$lockedSys = $systems->getLockedCount();
 		
 		$expireDays = 5;
 		$toexpire = $caches->expireInDays($expireDays);
 		?>
 		<span class="sechead" style="font-weight: bold; color: gold;">
-			Confirmed Rescues: <?php echo $ctrrescues; ?></span><br />
+			ESRC Rescues: <span style="color: white;"><?php echo $ctrrescues; ?></span></span><br />
 		<br />
 		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
 		<span class="sechead"><?php echo $ctractive; ?> of 2603 
@@ -530,8 +524,7 @@ else {
 		<span class="sechead">"No Sow" systems: <?php echo $lockedSys ?></span><br />
 		<span class="sechead">Expiring in <?=$expireDays?> days: <?php echo $toexpire; ?></span><br />
 		<br />
-		<span class="sechead" style="font-weight: bold;">All actions: 
-			<?php echo $ctrtot; ?></span><br />
+		<span class="sechead" style="font-weight: bold; color: gold;">All Time</span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
 		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as of YC119-Mar-18)

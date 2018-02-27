@@ -95,18 +95,17 @@ require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/users.class.php';
+require_once '../class/caches.class.php';
 
 // create a new database connection
 $database = new Database();
 
-// create a user check instance
+// create object instances
 $users = new Users($database);
+$rescue = new Rescue($database);
 
 // check for SAR Coordinator login
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
-
-// create a rescue object instance
-$rescue = new Rescue($database);
 
 $system = '';
 if (isset($_REQUEST['sys'])) {
@@ -193,8 +192,10 @@ function translateStatus($status)
 function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
+	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-8 ' : '';
 	
-	echo '<div class="request">';
+	echo '<div class="row">';
+	echo '<div class="'. $strcols .'request">';
 	echo '<span class="sechead">'. $strStatus .' Requests</span>';
 	if (empty($data)) {
 		echo '<p>None for this system.</p>';
@@ -223,6 +224,10 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '	</tbody>';
 		echo '</table>';
 	}
+	echo '</div>';
+	// only display stats at the top of the page next to the active requests table
+	if ($finished == 0 && empty($system)) { displayStats(); }
+	// close row
 	echo '</div>';
 }
 
@@ -311,6 +316,22 @@ function displayNotes($row, $isCoord = 0)
 	}
 }
 
+function displayStats()
+{
+	$database = new Database();
+	$rescue = new Rescue($database);
+	$ctrSARrescues = $rescue->getRescueCount('closed-rescued');
+	$SARWaitTime = $rescue->getSARWaitTime();
+	echo '<div class="col-sm-4">';
+	echo '<span class="sechead" style="font-weight: bold; color: gold;">
+			SAR Rescues: <span style="color: white;">'. $ctrSARrescues .'</span></span><br /><br />
+			<span class="sechead" style="font-weight: bold;">Average Wait Time for Rescue:</span><br />
+			<span class="sechead">'. round(intval($SARWaitTime)) .' days</span><br /><br />
+			<span class="sechead">Leaderboards</span><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coming soon!';
+	echo '</div>';
+}
+
 // display rescue requests for a specific system
 if (!empty($system)) { 
 	$systems = new Systems($database);
@@ -360,6 +381,7 @@ else {
 	
 	// only display closed requests to coordinators
 	if ($isCoord == 1) {
+		echo '<div class="ws"></div>';
 		// closed requests
 		$data = $rescue->getRequests(1);
 		displayTable($data, 1, $system, 0, $isCoord);

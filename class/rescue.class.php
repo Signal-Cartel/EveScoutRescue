@@ -246,5 +246,34 @@ class Rescue {
 		
 		return $row;
 	}
+	
+	/**
+	 * Get count of all successful rescues
+	 * @param unknown $rescuetype
+	 * @return unknown
+	 */
+	public function getRescueCount($rescuetype)
+	{
+		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest WHERE status = :rescuetype");
+		$this->db->bind(":rescuetype", $rescuetype);
+		$row= $this->db->single();
+		$this->db->closeQuery();
+		
+		return $row['cnt'];
+	}
+	
+	/**
+	 * Get average wait time for successful SAR rescues
+	 * @return unknown
+	 */
+	public function getSARWaitTime()
+	{
+		$this->db->query("SELECT avg(datediff(LastUpdated, requestdate)) as avgdays FROM 
+							rescuerequest WHERE status = 'closed-rescued'");
+		$row= $this->db->single();
+		$this->db->closeQuery();
+		
+		return $row['avgdays'];
+	}
 }
 ?>
