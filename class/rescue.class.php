@@ -71,7 +71,7 @@ class Rescue {
 	 * @param unknown $system
 	 * @param unknown $pilot
 	 * @param unknown $agentname
-	 * * @param unknown $status
+	 * @param unknown $status
 	 * @return unknown
 	 */
 	public function createESRCRequest($system, $pilot, $agentname, $status)
