@@ -66,6 +66,33 @@ class Rescue {
 	}
 	
 	/**
+	 * Create a new ESRC rescue request.
+	 *
+	 * @param unknown $system
+	 * @param unknown $pilot
+	 * @param unknown $agentname
+	 * * @param unknown $status
+	 * @return unknown
+	 */
+	public function createESRCRequest($system, $pilot, $agentname, $status)
+	{
+		$this->db->query("INSERT INTO rescuerequest(system, pilot, startagent, requestdate, 
+			finished, lastcontact, status) VALUES (:system, :pilot, :agent, now(), 1, now(), :status)");
+		$this->db->bind(":system", $system);
+		$this->db->bind(":pilot", $pilot);
+		$this->db->bind(":agent", $agentname);
+		$this->db->bind(":status", $status);
+		
+		// execute insert query
+		$this->db->execute();
+		// get new rescue ID
+		$rescueID = $this->db->lastInsertId();
+		
+		// return the new created rescue ID
+		return $rescueID;
+	}
+	
+	/**
 	 * Create a new note for a rescue request
 	 * @param unknown $rescueID
 	 * @param unknown $agentname

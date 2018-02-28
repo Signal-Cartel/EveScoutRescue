@@ -95,7 +95,7 @@ if (isset($_POST['sys_adj'])) {
 		$rescue = new Rescue($db);
 		// add a new Rescue record
 		$db->beginTransaction();
-		$newRescueID = $rescue->createRequest($system, $aidedpilot, 0, 0, $pilot);
+		$newRescueID = $rescue->createESRCRequest($system, $aidedpilot, $pilot, 'closed-esrc');
 		// insert rescue note if set
 		if (isset($notes) && $notes != '') {
 			$notes = 'ESRC - ' . $notes;
