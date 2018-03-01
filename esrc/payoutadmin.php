@@ -6,6 +6,7 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
+require_once '../class/output.class.php';
 
 if (!isset($_POST['start'])) {
 	if (gmdate('w', strtotime("now")) == 0) {
@@ -22,8 +23,6 @@ if (!isset($_POST['start'])) {
 if (!isset($_POST['end'])) {
 	$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 }
-
-require_once '../class/output.class.php';
 
 ?>
 <html>
@@ -140,7 +139,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						case 'tender':
 							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 							break;
-						case 'adjunct':
 						case 'agent':
 							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 							break;
@@ -165,7 +163,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						case 'tender':
 							$ctrtend++;
 							break;
-						case 'adjunct':
 						case 'agent':
 							$ctradj++;
 							break;
@@ -191,7 +188,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 			Actions this period: <?php echo $ctrtotact; ?><br />
 			Sowed: <?php echo $ctrsow; ?><br />
 			Tended: <?php echo $ctrtend; ?><br />
-			Adjunct: <?php echo $ctradj; ?><br /><br />
+			Agent: <?php echo $ctradj; ?><br /><br />
 			Total caches in space:<br />
 			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
 		</div>
@@ -201,7 +198,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
+		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType <> 'agent' 
+						AND ActivityDate BETWEEN :start AND :end");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
 		$row = $db->single();
@@ -221,7 +219,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				<tbody>
 					<?php
 					//summary data
-					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end GROUP BY Pilot");
+					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE EntryType <> 'agent'
+									AND ActivityDate BETWEEN :start AND :end GROUP BY Pilot");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();
@@ -229,7 +228,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					foreach ($rows as $value) {
 						$ctr++;
 						echo '<tr>';
-						echo '<td><input type="text" value="'. $value['Pilot'] .'" /></td>';
+						echo '<td><a target="_blank" 
+								href="https://evewho.com/pilot/'. $value['Pilot'] .'">'. 
+								Output::htmlEncodeString($value['Pilot']) .'</td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
 									round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" />
@@ -248,6 +249,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		</div>
 		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
+			<span style="font-weight: bold;">Payout Summary <span style="font-style: italic;">does NOT 
+				include</span> ESRC Agent records.</span> These are paid out via the SAR Payout Admin.
 		</div>
 	</div>
 <?php
