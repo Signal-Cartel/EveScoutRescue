@@ -158,10 +158,10 @@ elseif (isset($_REQUEST['system'])) {
 					<td align="right"><?php echo $typeCounts; ?></td>
 				</tr>
 				<?php
-				$typeCounts = $pilots->getActivityTypeCount($pilot, 'adjunct')
+				$typeCounts = $pilots->getActivityTypeCount($pilot, 'agent')
 				?>
 				<tr>
-					<td style="background-color:#fffacd;color:black;">Adjunct</td>
+					<td style="background-color:#fffacd;color:black;">Agent</td>
 					<td align="right"><?php echo $typeCounts; ?></td>
 				</tr>
 			</tbody>
@@ -190,7 +190,7 @@ elseif (isset($_REQUEST['system'])) {
 						case 'tender':
 							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
 							break;
-						case 'adjunct':
+						case 'agent':
 							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 							break;
 						default:

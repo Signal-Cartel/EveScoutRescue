@@ -88,19 +88,6 @@ class Caches
 	}
 	
 	/**
-	 * Get number of 'rescue' actions
-	 */
-	public function getRescueTotalCount()
-	{
-		$this->db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType = 'adjunct' OR EntryType = 'agent'");
-		$result = $this->db->single();
-	
-		$this->db->closeQuery();
-	
-		return $result['cnt'];
-	}
-	
-	/**
 	 * Get values of a current system cache
 	 */
 	public function getCacheInfo($system, $limited = FALSE)
