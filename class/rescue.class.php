@@ -291,16 +291,22 @@ class Rescue {
 	
 	/**
 	 * Get average wait time for successful SAR rescues
-	 * @return unknown
+	 * @return array $arrint - return array of integers for calculation
 	 */
 	public function getSARWaitTime()
 	{
-		$this->db->query("SELECT avg(datediff(LastUpdated, requestdate)) as avgdays FROM 
-							rescuerequest WHERE status = 'closed-rescued'");
-		$row= $this->db->single();
+		$this->db->query("SELECT datediff(LastUpdated, requestdate) as daystosar 
+							FROM rescuerequest WHERE status = 'closed-rescued'");
+		$data = $this->db->resultset();
 		$this->db->closeQuery();
 		
-		return $row['avgdays'];
+		$ctr = 0;
+		foreach ($data as $value) {
+			$arrint[$ctr] = $value['daystosar'];
+			$ctr++;
+		}
+		
+		return $arrint;
 	}
 }
 ?>

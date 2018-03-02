@@ -7,6 +7,7 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
+include_once '../class/mmmr.class.php';
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
@@ -323,13 +324,40 @@ function displayStats()
 	$database = new Database();
 	$rescue = new Rescue($database);
 	$ctrSARrescues = $rescue->getRescueCount('closed-rescued');
-	$SARWaitTime = $rescue->getSARWaitTime();
+	// get SAR wait time values array
+	$arrSARWaits = $rescue->getSARWaitTime();
+	
+	// then get mean, median, and mode
+	$SARWaitMean = mmmr($arrSARWaits);
+//	$SARWaitMedian = mmmr($arrSARWaits, 'median');
+	$SARWaitMode = mmmr($arrSARWaits, 'mode');
+	$SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 	echo '<div class="col-sm-4">';
 	echo '<span class="sechead" style="font-weight: bold; color: gold;">
 			SAR Rescues: <span style="color: white;">'. $ctrSARrescues .'</span></span><br /><br />
-			<span class="sechead" style="font-weight: bold;">Average Wait Time for Rescue:</span><br />
-			<span class="sechead">'. round(intval($SARWaitTime)) .' days</span><br /><br />
-			<span class="sechead">Leaderboards</span><br />
+			<span class="sechead" style="font-weight: bold;">Average Wait (days):</span><br />';
+
+	echo '<table id="tblSARWaitTime" class="table display" style="width: auto;">';
+	echo '	<thead>';
+	echo '		<tr>';
+	echo '			<th data-toggle="tooltip" data-placement="top" title="Excessively lengthy waits 
+						will skew this number higher">Mean</th>';
+//	echo '			<th data-toggle="tooltip" data-placement="top" title="Not sure how helpful
+//						this number actually is">Median</th>';
+	echo '			<th data-toggle="tooltip" data-placement="top" title="The most common wait time 
+						(percentage of rescues that happen in this number of days)">Mode</th>';
+	echo '		</tr>';
+	echo '	</thead>';
+	echo '	<tbody>';
+	echo '		<tr>';
+	echo '			<td style="text-align: center;">'. round(intval($SARWaitMean)) .'</td>';
+//	echo '			<td style="text-align: center;">'. round(intval($SARWaitMedian)) .'</td>';
+	echo '			<td style="text-align: center;">'. round(intval($SARWaitMode)) 
+						.' ('. round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100). '%)</td>';
+	echo '		</tr>';
+	echo '	</tbody>';
+	echo '</table>';
+	echo '<span class="sechead">Leaderboards</span><br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coming soon!';
 	echo '</div>';
 }
@@ -397,19 +425,23 @@ include 'modal_sar_new.php';
 include 'modal_sar_manage.php';
 ?>
 
-<!-- auto-display edit modal when "req" parameter provided in querystring -->
 <script type="text/javascript">
+	// auto-display edit modal when "req" parameter provided in querystring
 	var url = window.location.href;
 	if(url.indexOf('req=') != -1) {
 	    $('#ModalSAREdit').modal('show');
 	}
-</script>
-<!-- auto-display new modal when "new" parameter provided in querystring -->
-<script type="text/javascript">
+
+	// auto-display new modal when "new" parameter provided in querystring
 	var url = window.location.href;
 	if(url.indexOf('new=') != -1) {
 	    $('#ModalSARNew').modal('show');
 	}
+
+	// initialize tooltip display
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
+	});
 </script>
 
 </div>
