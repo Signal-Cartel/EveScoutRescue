@@ -69,7 +69,7 @@ include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
 include_once '../includes/top-right.php';
 
-$ctrESRCrescues = $caches->getRescueTotalCount();
+$ctrESRCrescues = $rescues->getRescueCount('closed-esrc');
 $ctrSARrescues = $rescues->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 $ctractive = $caches->getActiveCount();

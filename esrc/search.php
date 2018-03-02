@@ -52,6 +52,7 @@ if (!Users::isAllianceUserSession())
 <?php
 require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
+require_once '../class/leaderboard_sar.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
@@ -64,16 +65,15 @@ if (!isset($charname))
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
-// create a user check instance
-$users = new Users($database);
-
-// check for SAR Coordinator login
-$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 // create object instances
+$users = new Users($database);
 $caches = new Caches($database);
 $systems = new Systems($database);
 $rescue = new Rescue($database);
+
+// check for SAR Coordinator login
+$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 $system = '';
 if(isset($_REQUEST['sys'])) { 
@@ -387,86 +387,131 @@ if (!empty($system)) {
 // no system selected, so show summary stats
 }
 else {
+	$leaderBoard = new Leaderboard($database);
+	$sarleaderBoard = new SARLeaderboard($database);
 ?>
 <div class="row" id="allsystable">
-	
-	<?php 
-		$leaderBoard = new Leaderboard($database);
-// 		$systems = new Systems($database);
-	?>
-	
-	<!-- LEADER BOARDS -->
+<!-- LEADERBOARDS -->
 	<div class="col-sm-4 white">
-		<span class="sechead"><span style="font-weight: bold;">LEADER BOARD</span><br /><br />
-		Current Week (Sun-Sat)</span>
-		<!-- CURRENT WEEK LEADERBOARD -->
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$rows = $leaderBoard->getTopPilotsWeek(3);				
-	
-				foreach ($rows as $value) {
-					echo '<tr>';
-					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
-					echo '</tr>';
-				}
-				?>
-			</tbody>
-		</table>
-		<br />
-		<span class="sechead">Last 30 days</span>
-		<!-- LAST 30 DAYS LEADERBOARD -->
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-				$rows = $leaderBoard->getTopLastDays(5, 30);
-
-				foreach ($rows as $value) {
-					echo '<tr>';
-					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
-					echo '</tr>';
-				}
-			?>
-			</tbody>
-		</table>
-		<br />
-		<span class="sechead">All Time</span>
-		<!-- ALL TIME LEADERBOARD -->
-		<table class="table" style="width: auto;">
-			<thead>
-				<tr>
-					<th>Pilot</th>
-					<th>Total Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-
-				$rows = $leaderBoard->getAllHigh(10);
-				
-				foreach ($rows as $value) {
-					echo '<tr>';
-					echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
-					echo '</tr>';
-				}
-				?>
-			</tbody>
-		</table>
+	<!-- AGENT LEADERBOARD -->
+		<?php 
+		$daterangeALB = isset($daterangeALB) ? $daterangeALB: 'all';
+		$numberALB= isset($numberALB) ? $numberALB: '5';
+		$lblSelected = 'style="font-weight: bold; color: gold;"';
+		if (isset($_REQUEST['daterangeALB'])) { 
+			$daterangeALB = htmlspecialchars_decode($_REQUEST['daterangeALB']);
+		}
+		if (isset($_REQUEST['numberALB'])) {
+			$numberALB = htmlspecialchars_decode($_REQUEST['numberALB']);
+		}
+		?>
+		<!-- date range and number selection form -->
+		<span class="sechead" style="font-weight: bold;">AGENT LEADERS</span><br />
+		<form id="LBform" name="LBform" method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+			Top <input type="text" name="numberALB" size="2" autocomplete="off" class="black"
+					value="<?=$numberALB?>"><br />
+			<label class="radio-inline" <?php if ($daterangeALB == 'week') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeALB" value="week" 
+				<?php if ($daterangeALB == 'week') { echo 'checked'; } ?>>Current Week</label>
+			<label class="radio-inline" <?php if ($daterangeALB == '30d') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeALB" value="30d"
+				<?php if ($daterangeALB == '30d') { echo 'checked'; } ?>>Last 30 Days</label>
+			<label class="radio-inline" <?php if ($daterangeALB == 'all') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeALB" value="all"
+				<?php if ($daterangeALB == 'all') { echo 'checked'; } ?>>All Time</label>
+			<table class="table" style="width: auto;">
+				<thead>
+					<tr>
+						<th>Pilot</th>
+						<th>Total Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					switch ($daterangeALB) {
+						case 'week':
+							$rows = $sarleaderBoard->getTopPilotsWeek($numberALB, 'closed-esrc');
+							break;
+						case '30d':
+							$rows = $sarleaderBoard->getTopLastDays($numberALB, 30, 'closed-esrc');
+							break;
+						case 'all':
+						default:
+							$rows = $sarleaderBoard->getAllHigh($numberALB, 'closed-esrc');
+					}
+					
+					foreach ($rows as $value) {
+						echo '<tr>';
+						echo '<td>'. Output::htmlEncodeString($value['startagent']) .'</td>';
+						echo '<td align="right">'. $value['cnt'] .'</td>';
+						echo '</tr>';
+					}
+					?>
+				</tbody>
+			</table>
+			<br />
+		<!-- CURRENT WEEK SOW/TEND LEADERBOARD -->
+		<?php 
+		$daterangeSTLB = isset($daterangeSTLB) ? $daterangeSTLB: 'all';
+		$numberSTLB= isset($numberSTLB) ? $numberSTLB: '5';
+		if (isset($_REQUEST['daterangeSTLB'])) { 
+			$daterangeSTLB = htmlspecialchars_decode($_REQUEST['daterangeSTLB']);
+		}
+		if (isset($_REQUEST['numberSTLB'])) {
+			$numberSTLB = htmlspecialchars_decode($_REQUEST['numberSTLB']);
+		}
+		?>
+		<!-- date range and number selection form -->
+			<span class="sechead" style="font-weight: bold;">SOW / TEND LEADERS</span><br />
+			Top <input type="text" name="numberSTLB" size="2" autocomplete="off" class="black"
+					value="<?=$numberSTLB?>"><br />
+			<label class="radio-inline" <?php if ($daterangeSTLB == 'week') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeSTLB" value="week" 
+				<?php if ($daterangeSTLB== 'week') { echo 'checked'; } ?>>Current Week</label>
+			<label class="radio-inline" <?php if ($daterangeSTLB== '30d') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeSTLB" value="30d"
+				<?php if ($daterangeSTLB== '30d') { echo 'checked'; } ?>>Last 30 Days</label>
+			<label class="radio-inline" <?php if ($daterangeSTLB== 'all') { echo $lblSelected; } ?>>
+				<input type="radio" onchange="$('#LBform').submit();" 
+				name="daterangeSTLB" value="all"
+				<?php if ($daterangeSTLB== 'all') { echo 'checked'; } ?>>All Time</label>
+			<table class="table" style="width: auto;">
+				<thead>
+					<tr>
+						<th>Pilot</th>
+						<th>Total Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					switch ($daterangeSTLB) {
+						case 'week':
+							$rows = $leaderBoard->getTopPilotsWeek($numberSTLB);
+							break;
+						case '30d':
+							$rows = $leaderBoard->getTopLastDays($numberSTLB, 30);
+							break;
+						case 'all':
+						default:
+							$rows = $leaderBoard->getAllHigh($numberSTLB);
+					}
+		
+					foreach ($rows as $value) {
+						echo '<tr>';
+						echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
+						echo '<td align="right">'. $value['cnt'] .'</td>';
+						echo '</tr>';
+					}
+					?>
+				</tbody>
+			</table>
+			<input type="submit" style="visibility: hidden;" /> 
+		</form>
 	</div>
 	<div class="col-sm-4 white">
 		<!-- HALL OF HELP -->
@@ -505,7 +550,7 @@ else {
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-4 white">
 		<?php
-		$ctrrescues = $caches->getRescueTotalCount();
+		$ctrrescues = $rescue->getRescueCount('closed-esrc');
 		$ctrsown = $caches->getSownTotalCount();
 		$ctrtended = $caches->getTendTotalCount();
 		$ctractive = $caches->getActiveCount();

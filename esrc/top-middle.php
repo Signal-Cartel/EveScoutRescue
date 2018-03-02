@@ -1,12 +1,11 @@
 <?php 
 // create object instances
 $db_top = new Database();
-$caches_top = new Caches($db_top);
 $systems_top = new Systems($db_top);
 $rescue_top = new Rescue($db_top);
 
 // get rescue counts
-$ctrESRCrescues = $caches_top->getRescueTotalCount();
+$ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc');
 $ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 ?>
