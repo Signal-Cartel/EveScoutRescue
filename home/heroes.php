@@ -65,7 +65,8 @@ function printESRCHeroes($type, $min, $max, $listMax)
 			</thead>
 		<tbody>
 			<?php
-			$rows = $leaderBoard->getAllHigh(intval($listMax));
+			$daysdiff = round((time(tomorrow)- strtotime("2017-03-01")) / (60 * 60 * 24));
+			$rows = $leaderBoard->getTop(intval($listMax), $daysdiff);
 			
 			foreach ($rows as $value) {
 				if (intval($value['cnt']) < intval($min) || intval($value['cnt']) > intval($max)) { 
@@ -87,13 +88,13 @@ function printESRCHeroes($type, $min, $max, $listMax)
 <div class="row">
 	<?php 
 	// SuperCacher column
-	printESRCHeroes('SuperCacher', 100, 299, 100);
+	printESRCHeroes('SuperCacher', 100, 299, 200);
 	
 	// MegaCacher column
-	printESRCHeroes('MegaCacher', 300, 499, 30);
+	printESRCHeroes('MegaCacher', 300, 499, 50);
 	
 	// HyperCacher column
-	printESRCHeroes('HyperCacher', 500, 999, 10);
+	printESRCHeroes('HyperCacher', 500, 999, 20);
 	
 	// UltraCacher column
 	printESRCHeroes('UltraCacher', 1000, 2999, 10);

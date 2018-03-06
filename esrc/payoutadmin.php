@@ -198,8 +198,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE EntryType <> 'agent' 
-						AND ActivityDate BETWEEN :start AND :end");
+		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
 		$row = $db->single();
@@ -219,8 +218,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				<tbody>
 					<?php
 					//summary data
-					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE EntryType <> 'agent'
-									AND ActivityDate BETWEEN :start AND :end GROUP BY Pilot");
+					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate 
+									BETWEEN :start AND :end GROUP BY Pilot");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();
@@ -249,8 +248,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		</div>
 		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-			<span style="font-weight: bold;">Payout Summary <span style="font-style: italic;">does NOT 
-				include</span> ESRC Agent records.</span> These are paid out via the SAR Payout Admin.
 		</div>
 	</div>
 <?php

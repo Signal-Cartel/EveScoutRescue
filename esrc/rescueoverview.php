@@ -228,8 +228,8 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '</table>';
 	}
 	echo '</div>';
-	// only display stats at the top of the page next to the active requests table
-	if ($finished == 0 && empty($system)) { displayStats(); }
+	// display stats at the top of the page next to the active requests table
+	if ($finished == 0 && empty($system)) { include_once 'stats_sar.php'; }
 	// close row
 	echo '</div>';
 }
@@ -317,49 +317,6 @@ function displayNotes($row, $isCoord = 0)
 			}
 		}
 	}
-}
-
-function displayStats()
-{
-	$database = new Database();
-	$rescue = new Rescue($database);
-	$ctrSARrescues = $rescue->getRescueCount('closed-rescued');
-	// get SAR wait time values array
-	$arrSARWaits = $rescue->getSARWaitTime();
-	
-	// then get mean, median, and mode
-	$SARWaitMean = mmmr($arrSARWaits);
-//	$SARWaitMedian = mmmr($arrSARWaits, 'median');
-	$SARWaitMode = mmmr($arrSARWaits, 'mode');
-	$SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
-	echo '<div class="col-sm-4">';
-	echo '<span class="sechead" style="font-weight: bold; color: gold;">
-			SAR Rescues: <span style="color: white;">'. $ctrSARrescues .'</span></span><br /><br />
-			<span class="sechead" style="font-weight: bold;">Average Wait (days):</span><br />';
-
-	echo '<table id="tblSARWaitTime" class="table display" style="width: auto;">';
-	echo '	<thead>';
-	echo '		<tr>';
-	echo '			<th data-toggle="tooltip" data-placement="top" title="Excessively lengthy waits 
-						will skew this number higher">Mean</th>';
-//	echo '			<th data-toggle="tooltip" data-placement="top" title="Not sure how helpful
-//						this number actually is">Median</th>';
-	echo '			<th data-toggle="tooltip" data-placement="top" title="The most common wait time 
-						(percentage of rescues that happen in this number of days)">Mode</th>';
-	echo '		</tr>';
-	echo '	</thead>';
-	echo '	<tbody>';
-	echo '		<tr>';
-	echo '			<td style="text-align: center;">'. round(intval($SARWaitMean)) .'</td>';
-//	echo '			<td style="text-align: center;">'. round(intval($SARWaitMedian)) .'</td>';
-	echo '			<td style="text-align: center;">'. round(intval($SARWaitMode)) 
-						.' ('. round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100). '%)</td>';
-	echo '		</tr>';
-	echo '	</tbody>';
-	echo '</table>';
-	echo '<span class="sechead">Leaderboards</span><br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coming soon!';
-	echo '</div>';
 }
 
 // display rescue requests for a specific system

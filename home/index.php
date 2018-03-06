@@ -5,7 +5,11 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php'; 
-
+include_once '../class/mmmr.class.php';
+require_once '../class/db.class.php';
+require_once '../class/caches.class.php';
+require_once '../class/rescue.class.php';
+require_once '../class/users.class.php';
 ?>
 <html>
 
@@ -55,24 +59,23 @@ include_once '../includes/auth-inc.php';
 <div class="ws"></div>
 <div class="row" id="header">
 <?php
-require_once '../class/db.class.php';
-require_once '../class/caches.class.php';
-require_once '../class/rescue.class.php';
-require_once '../class/users.class.php';
+include_once '../includes/top-left.php';
+include_once '../includes/top-center.php';
+include_once '../includes/top-right.php';
 
 $database = new Database();
 $caches = new Caches($database);
 $users = new Users($database);
 $rescues = new Rescue($database);
 
-include_once '../includes/top-left.php';
-include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
-
 $ctrESRCrescues = $rescues->getRescueCount('closed-esrc');
 $ctrSARrescues = $rescues->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 $ctractive = $caches->getActiveCount();
+$arrSARWaits = $rescues->getSARWaitTime();
+$SARWaitMean = mmmr($arrSARWaits);
+$SARWaitMode = mmmr($arrSARWaits, 'mode');
+$SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 ?>
 </div>
 <div class="ws"></div>
@@ -90,10 +93,14 @@ $ctractive = $caches->getActiveCount();
 			<span style="font-weight: bold; color: gold;"><?php echo round((intval($ctractive)/2603)*100,1); ?>% </span>
 			of all wormhole systems
 		</span><br /><br />
+		<span class="sechead white">Average Wait Time: 
+			<span style="font-weight: bold; color: gold;"><?=round(intval($SARWaitMean))?> days</span>
+		</span><br /> 
 		<span class="white">
-			<a class="btn btn-danger btn-lg" href="../911" role="button">Rescue 911</a><br />
-			Click to contact a Rescue Operator right away!
-		</span>
+		<span style="font-weight: bold; color: gold;">
+			<?=round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%</span> 
+			of all rescues occur within <?=round(intval($SARWaitMode))?> days
+		</span><br /><br />
 	</div>
 	<div class="col-sm-8" style="text-align: center;">
 		<!-- TESTIMONIAL CAROUSEL -->
