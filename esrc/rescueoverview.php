@@ -7,6 +7,7 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
+include_once '../class/mmmr.class.php';
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
@@ -227,8 +228,8 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '</table>';
 	}
 	echo '</div>';
-	// only display stats at the top of the page next to the active requests table
-	if ($finished == 0 && empty($system)) { displayStats(); }
+	// display stats at the top of the page next to the active requests table
+	if ($finished == 0 && empty($system)) { include_once 'stats_sar.php'; }
 	// close row
 	echo '</div>';
 }
@@ -318,22 +319,6 @@ function displayNotes($row, $isCoord = 0)
 	}
 }
 
-function displayStats()
-{
-	$database = new Database();
-	$rescue = new Rescue($database);
-	$ctrSARrescues = $rescue->getRescueCount('closed-rescued');
-	$SARWaitTime = $rescue->getSARWaitTime();
-	echo '<div class="col-sm-4">';
-	echo '<span class="sechead" style="font-weight: bold; color: gold;">
-			SAR Rescues: <span style="color: white;">'. $ctrSARrescues .'</span></span><br /><br />
-			<span class="sechead" style="font-weight: bold;">Average Wait Time for Rescue:</span><br />
-			<span class="sechead">'. round(intval($SARWaitTime)) .' days</span><br /><br />
-			<span class="sechead">Leaderboards</span><br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coming soon!';
-	echo '</div>';
-}
-
 // display rescue requests for a specific system
 if (!empty($system)) { 
 	$systems = new Systems($database);
@@ -397,19 +382,23 @@ include 'modal_sar_new.php';
 include 'modal_sar_manage.php';
 ?>
 
-<!-- auto-display edit modal when "req" parameter provided in querystring -->
 <script type="text/javascript">
+	// auto-display edit modal when "req" parameter provided in querystring
 	var url = window.location.href;
 	if(url.indexOf('req=') != -1) {
 	    $('#ModalSAREdit').modal('show');
 	}
-</script>
-<!-- auto-display new modal when "new" parameter provided in querystring -->
-<script type="text/javascript">
+
+	// auto-display new modal when "new" parameter provided in querystring
 	var url = window.location.href;
 	if(url.indexOf('new=') != -1) {
 	    $('#ModalSARNew').modal('show');
 	}
+
+	// initialize tooltip display
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
+	});
 </script>
 
 </div>

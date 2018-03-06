@@ -1,5 +1,9 @@
+<?php 
+$users = new Users($database);
+?>
 <div class="col-sm-8 white" style="text-align: center;">
 	<span class="sechead"><?=$pgtitle?></span><br /><br />
+	<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="heroes.php" role="button">Hall of Heroes</a>
@@ -21,7 +25,7 @@
 			// additional button for admin users
 			if ($users->isAdmin($charname)) {
 					echo '<a class="btn btn-danger btn-md" href="../esrc/payoutadmin.php" 
-							role="button">ESRC Payout Admin</a>';
+							role="button">Admin</a>';
 			};
 		}
 	}

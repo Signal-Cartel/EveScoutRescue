@@ -92,17 +92,17 @@ include_once '../includes/top-right.php';
 				  <div class="col-md-4 text-center"></div>
 				</div>
 				<div class="row">
-				  <div class="col-md-3">
+				  <div class="col-md-4">
 				    <div class="thumbnail text-center">
 				      <a href="https://evewho.com/pilot/Angel%20Lafisques">
-				        <img src="https://image.eveonline.com/Character/96736367_128.jpg" alt="Angel" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/96736367_256.jpg" alt="Angel" style="width:100%">
 				        <div class="caption">
 				          <strong>Angel Lafisques</strong><br />Asst. Coordinator
 				        </div>
 				      </a>
 				    </div>
 				  </div>
-				  <div class="col-md-3 text-center">
+				  <div class="col-md-4 text-center">
 				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Captain+Crinkle">
 				        <img src="https://image.eveonline.com/Character/97117031_256.jpg" alt="Captain Crinkle" style="width:100%">
@@ -112,20 +112,10 @@ include_once '../includes/top-right.php';
 				      </a>
 				    </div>
 				  </div>
-				  <div class="col-md-3 text-center">
-				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Grey%20Sojourn">
-				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
-				        <div class="caption">
-				          <strong>Grey Sojourn</strong><br />Asst. Coordinator
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-3 text-center">
+				  <div class="col-md-4 text-center">
 				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Igaze">
-				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/1852974735_256.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
 				          <strong>Igaze</strong><br />Asst. Coordinator
 				        </div>
@@ -187,6 +177,7 @@ include_once '../includes/top-right.php';
 				  </h2>
 				</div>
 				<div class="row">
+				  <div class="col-md-3"></div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Triffton%20Ambraelle">
@@ -198,6 +189,18 @@ include_once '../includes/top-right.php';
 				      </a>
 				    </div>
 				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/Grey%20Sojourn">
+				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
+				        <div class="caption">
+				          <strong>Grey Sojourn</strong><br />Search &amp; Rescue<br />
+				          	Asst. Coordinator
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3"></div>
 				</div>
 			</div>
 		</div>

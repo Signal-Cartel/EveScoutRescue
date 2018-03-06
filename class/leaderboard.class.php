@@ -54,65 +54,20 @@ class Leaderboard
 		$this->db->bind(":limit", $count);
 		
 		$result = $this->db->resultset();
-		
 		$this->db->closeQuery();
 		
 		return $result;
 	}
 	
 	/**
-	 * Get list of top pilots by last days (default 30)
-	 * @param int $count number or high score places (default 3)
-	 * @param int $lastDays last days range (default 30)
+	 * Get list of top pilots within specified date range
+	 * @param int $count number or high score place
+	 * @param int $lastDays last days range
+	 * @return array $result - array of top pilots and related activity count
 	 */
-	public function getTopLastDays($count, $lastDays)
+	public function getTop($count, $lastDays = 30)
 	{
-		// check if parameter if wrong
-		if ($count <= 0)
-		{
-			// reset to at least one result
-			$count = 1;
-		}
-		
-		if ($lastDays <= 0)
-		{
-			$lastDays = 30;
-		}
-		
-		// prepare the query
 		$start = gmdate('Y-m-d', strtotime('-'.$lastDays.' days'));
-		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
-		$this->db->query("SELECT COUNT(*) AS cnt, Pilot
-					FROM activity
-					WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end
-					GROUP BY Pilot
-					ORDER BY cnt DESC limit :limit");
-		$this->db->bind(':start', $start);
-		$this->db->bind(':end', $end);
-		// bind the limit (default 5)
-		$this->db->bind(":limit", $count);
-
-		$result = $this->db->resultset();
-		
-		$this->db->closeQuery();
-		
-		return $result;
-	}
-	
-	/**
-	 * Get list of top pilots of current week
-	 */
-	public function getTopPilotsWeek($count)
-	{
-		if (gmdate('w', strtotime("now")) == 0) {
-			$start = gmdate('Y-m-d', strtotime("now"));
-		}
-		elseif (gmdate('w', strtotime("now")) == 1) {
-			$start= gmdate('Y-m-d', strtotime("- 1 day"));
-		}
-		else {
-			$start = gmdate('Y-m-d', gmdate(strtotime('last Sunday')));
-		}
 		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 			
 		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
@@ -125,7 +80,6 @@ class Leaderboard
 		$this->db->bind(':limit', $count);
 		
 		$result = $this->db->resultset();
-		
 		$this->db->closeQuery();
 		
 		return $result;
