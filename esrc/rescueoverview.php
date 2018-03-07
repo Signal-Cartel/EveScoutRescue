@@ -37,20 +37,10 @@ if (!Users::isAllianceUserSession())
 }
 
 // check if a valid character name is set
-if (!isset($charname))
-{
+if (!isset($charname)) {
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
-
-// *****************************************
-// debug code to set user as SAR coordinator
-//
-// Comment out the next line to make correct
-// handling!!!
-// $isCoord = 1;
-// *****************************************
-
 ?>
 <html>
 
@@ -117,20 +107,20 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
 ?>
 <body class="white">
-<div class="container">
-
-<div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-left.php'; ?>
-	<?php include_once 'top-middle.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
-</div>
-<div class="ws"></div>
-
-<ul class="nav nav-tabs">
-	<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
-	<li class="active"><a href="#">Search &amp; Rescue</a></li>
-</ul>
-<div class="ws"></div>
+	<div class="container">
+	
+	<div class="row" id="header" style="padding-top: 10px;">
+		<?php include_once '../includes/top-left.php'; ?>
+		<?php include_once 'top-middle.php'; ?>
+		<?php include_once '../includes/top-right.php'; ?>
+	</div>
+	<div class="ws"></div>
+	
+	<ul class="nav nav-tabs">
+		<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
+		<li class="active"><a href="#">Search &amp; Rescue</a></li>
+	</ul>
+	<div class="ws"></div>
 
 <?php
 // display error message if there is one
@@ -145,6 +135,92 @@ if (!empty($errmsg)) {
 <?php
 }
 
+// display rescue requests for a specific system
+if (!empty($system)) { 
+	$systems = new Systems($database);
+	if ($systems->validatename($system) === 0) {
+	?>
+	
+	<div>
+		<!-- SAR New button -->
+		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
+			data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
+		<!-- TW button -->
+		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
+			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+		<!-- anoik.is button -->
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
+			target="_blank">anoik.is</a>
+	</div>
+	<div class="ws"></div>
+	
+	<?php 
+	// get active requests from database
+	$data = $rescue->getSystemRequests($system, 0, $isCoord);
+	displayTable($data, $charname, 0, $system, 1, $isCoord, 0);
+	
+	// get finished requests from database
+	$data = $rescue->getSystemRequests($system, 1, $isCoord);
+	displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
+	}
+	// invalid system name
+	else { ?>
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="padding-left: 10px;">
+				<span class="sechead white"><?=$system?> not a valid system name.
+					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+			</div>
+		</div>
+	</div>
+<?php }
+}
+// no system selected, so display all requests
+else {
+	//active requests
+	$data = $rescue->getRequests();
+	displayTable($data, $charname, 0, $system, 0, $isCoord, 1);
+	
+	// only display closed requests to coordinators
+	if ($isCoord == 1) {
+		echo '<div class="ws"></div>';
+		// closed requests
+		$data = $rescue->getRequests(1);
+		displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
+	}
+}
+?>
+
+<!-- MODAL includes -->
+<?php
+include 'modal_sar_new.php';
+include 'modal_sar_manage.php';
+?>
+
+<script type="text/javascript">
+	// auto-display edit modal when "req" parameter provided in querystring
+	var url = window.location.href;
+	if(url.indexOf('req=') != -1) {
+	    $('#ModalSAREdit').modal('show');
+	}
+
+	// auto-display new modal when "new" parameter provided in querystring
+	var url = window.location.href;
+	if(url.indexOf('new=') != -1) {
+	    $('#ModalSARNew').modal('show');
+	}
+
+	// initialize tooltip display
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
+	});
+</script>
+
+</div>
+</body>
+</html>
+
+<?php 
 /**
  * Translates the internal status value to a readable form.
  * 
@@ -185,14 +261,17 @@ function translateStatus($status)
 }
 
 /**
- * Format a request as HTML table in output
- * @param unknown $row
- * @param number $finished
- * @param unknown $system
- * @param number $notes
- * @param number $isCoord
+ * Format input as HTML table in output
+ * @param unknown $data - array of row details
+ * @param number $finished - bit to filter on active/closed requests
+ * @param unknown $system - system to show info for (NULL shows all)
+ * @param number $notes - bit to toggle display of notes field
+ * @param number $isCoord - bit to indicate if logged-in user is coordinator
+ * @param number summary - bit to toggle summary/detailed table listing
+ * @param number noUpdate - bit to toggle Update button
  */
-function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $noUpdate = 0)
+function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, 
+	$summary = 1, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
 	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-8 ' : '';
@@ -207,22 +286,23 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
-		// only display this column for finished requests if coord logged in
+		// display Update button for finished requests only when coord logged in
 		if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
-			echo '<th></th>';
+			echo '		<th></th>';
 		}
-		echo '			<th>Created</th>';
+		echo '			<th>Opened</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
-		echo '<th>Pilot</th>';
+		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
-		echo '			<th>Agent</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
-		echo ($notes == 0) ? '' : '<th>Notes</th>';
+		echo ($summary == 1) ? '' : '<th>Dispatcher</th>';
+		echo ($summary == 1) ? '' : '<th>Locator</th>';
+		//echo ($summary == 1) ? '' : '<th>Rescue Pilot(s)</th>'; //to be added in a future release
 		echo '		</tr>';
 		echo '	</thead>';
 		echo '	<tbody>';
 		foreach ($data as $row) {
-			displayLine($row, $finished, $system, $notes, $isCoord, $noUpdate);
+			displayLine($row, $charname, $finished, $system, $notes, $isCoord, $summary, $noUpdate);
 		}
 		echo '	</tbody>';
 		echo '</table>';
@@ -235,60 +315,109 @@ function displayTable($data, $finished = 0, $system = NULL, $notes = 0, $isCoord
 }
 
 /**
- * Format a request as HTML table row in output
- * @param unknown $row
- * @param number $finished
- * @param unknown $system
- * @param number $notes
- * @param number $isCoord
+ * Format input as HTML table data row in output
+ * @param unknown $data - array of row details
+ * @param number $finished - bit to filter on active/closed requests
+ * @param unknown $system - system to show info for (NULL shows all)
+ * @param number $notes - bit to toggle display of notes field
+ * @param number $isCoord - bit to indicate if logged-in user is coordinator
+ * @param number summary - bit to toggle summary/detailed table listing
+ * @param number noUpdate - bit to toggle Update button
  */
-function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $noUpdate = 0)
+function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $summary, $noUpdate)
 {
+	// create a new database connection
+	$database = new Database();
+	// create object instances
+	$users = new Users($database);
+	$rescue = new Rescue($database);
+	
 	$status = $row['status'];
+	$colspan = 0;
+	
 	echo "<tr>";
-	// only display this column for finished requests if coord logged in
+	
+	// "Update" button - display only for finished requests if coord logged in
 	if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
 		echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
 				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 	}
-	// display request date
+	
+	// Opened - date request was created
+	$colspan++;
 	echo '<td style="text-nowrap">'. $row['requestdate'] .'</td>';
-	// display system information
-	echo (!empty($system)) ? '' : '<td><a href="?sys='.$row['system'].'">'.
-			Output::htmlEncodeString($row['system']).'</a></td>';
-	// display pilot information only to coordinators
-	if ($isCoord == 0)
-	{
+	
+	// System - name of J-space system
+	if (empty($system)) {
+		$colspan++;
+		echo '<td>';
+		echo '<a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a>';
+		echo '</td>';
+	}
+			
+	// Pilot - display stranded pilot's name only to coords and relevant agents
+	// check for related SAR Agent
+	$colspan++;
+	$isSARAgent = $users->isSARAgent($charname, $row['id']);
+	if ($isCoord == 0 && $isSARAgent == 0) {
 		echo '<td><b>PROTECTED</b></td>';
 	}
-	else
-	{
+	else {
 		echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	}
-	// set status color
+	
+	// Status 
+	// set status color: green = new, yellow = pending, orange = check-in needed
 	switch ($status) {
 		case 'new':
 			$statuscellformat = ' style="background-color:green;color:white;"';
-			break;
+		break;
 		case 'pending':
 			$statuscellformat = ' style="background-color:yellow;color:black;"';
-			break;
+		break;
 		default:
 			$statuscellformat = '';
+		break;
 	}
 	if ($finished == 0 && strtotime($row['lastcontact']) < strtotime('-7 day')) {
 		$statuscellformat = ' style="background-color:orange;color:white;"';
 	}
+	$colspan++;
 	echo '<td'. $statuscellformat .'>'.
 			Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
-	echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
+	
+	// Last Contact - display date of last contact with stranded pilot
+	$colspan++;
 	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
-	// NOTES
-	if ($notes == 1) {
+	
+	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
+	if ($summary == 0) {
+		// Dispatcher - display name of Signaleer who opened request
+		$colspan++;
+		echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
+		
+		// Locator - display name of Signaleer who located system (if any)
+		$colspan++;
 		echo '<td>';
-		displayNotes($row, $isCoord);
+		echo (empty($row['locateagent'])) ? 'N/A' : Output::htmlEncodeString($row['locateagent']);
 		echo '</td>';
+		
+		// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
+		// (to be added in a future update)
+		//$colspan++;
+		//echo '<td>Soon<sup>TM</sup>!</td>';
+		
+		// NOTES
+		if ($notes == 1 && ($isCoord == 1 || $isSARAgent == 1)) {
+			echo '</tr><tr>';
+			if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
+				echo '<td>&nbsp;</td>';
+			}
+			echo '<td colspan="'.$colspan.'">';
+			displayNotes($row, $isCoord, $isSARAgent);
+			echo '</td>';
+		}
 	}
 	echo "</tr>";
 }
@@ -297,110 +426,18 @@ function displayLine($row, $finished = 0, $system = NULL, $notes = 0, $isCoord =
  * Format notes as HTML within request table
  * @param unknown $row
  */
-function displayNotes($row, $isCoord = 0)
+function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 {
 	$database = new Database();
 	$rescue = new Rescue($database);
 	$notes = $rescue->getNotes($row['id']);
 	if (count($notes) > 0) {
 		foreach($notes as $note) {
+			echo '<div style="padding-left: 2em; text-indent: -2em;">';
 			echo '['. date("M-d", strtotime($note['notedate'])) .' // ';
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
-			// display note detail only to coordinators
-			if ($isCoord == 0)
-			{
-				echo '&nbsp;&nbsp;&nbsp;PROTECTED<br />';
-			}
-			else
-			{
-				echo '&nbsp;&nbsp;&nbsp;'. Output::htmlEncodeString($note['note']) .'<br />';
-			}
+			echo Output::htmlEncodeString($note['note']) .'<br />';
+			echo '</div><br />';
 		}
 	}
 }
-
-// display rescue requests for a specific system
-if (!empty($system)) { 
-	$systems = new Systems($database);
-	if ($systems->validatename($system) === 0) {
-	?>
-	
-	<div>
-		<!-- SAR New button -->
-		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
-			data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
-		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
-			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
-		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
-			target="_blank">anoik.is</a>
-	</div>
-	<div class="ws"></div>
-	
-	<?php // get active requests from database
-	$data = $rescue->getSystemRequests($system, 0, $isCoord);
-	displayTable($data, 0, $system, 1, $isCoord);
-	
-	// get finished requests from database
-	$data = $rescue->getSystemRequests($system, 1, $isCoord);
-	displayTable($data, 1, $system, 0, $isCoord);
-	}
-	// invalid system name
-	else { ?>
-		<div class="row">
-			<div class="col-sm-12">
-				<div style="padding-left: 10px;">
-					<span class="sechead white"><?=$system?> not a valid system name.
-						Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-				</div>
-			</div>
-		</div>
-			
-<?php }
-}
-
-// no system selected, so display all requests
-else {
-	//active requests
-	$data = $rescue->getRequests();
-	displayTable($data, 0, $system, 0, $isCoord);
-	
-	// only display closed requests to coordinators
-	if ($isCoord == 1) {
-		echo '<div class="ws"></div>';
-		// closed requests
-		$data = $rescue->getRequests(1);
-		displayTable($data, 1, $system, 0, $isCoord);
-	}
-}
-?>
-
-<!-- MODAL includes -->
-<?php
-include 'modal_sar_new.php';
-include 'modal_sar_manage.php';
-?>
-
-<script type="text/javascript">
-	// auto-display edit modal when "req" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('req=') != -1) {
-	    $('#ModalSAREdit').modal('show');
-	}
-
-	// auto-display new modal when "new" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('new=') != -1) {
-	    $('#ModalSARNew').modal('show');
-	}
-
-	// initialize tooltip display
-	$(document).ready(function(){
-	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
-	});
-</script>
-
-</div>
-</body>
-</html>

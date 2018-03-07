@@ -160,6 +160,21 @@ class Rescue {
 	}
 	
 	/**
+	 * Update the locateagent for the rescue request
+	 * @param unknown $rescueID - ID of record to update
+	 * @param unknown $locateagent - Name of pilot who located system
+	 */
+	public function setLocateAgent($rescueID, $locateagent)
+	{	
+		$this->db->query("UPDATE rescuerequest 
+							SET locateagent = :locateagent, status = 'system-located' 
+							WHERE id = :rescueid");
+		$this->db->bind(":locateagent", $locateagent);
+		$this->db->bind(":rescueid", $rescueID);
+		$this->db->execute();
+	}
+	
+	/**
 	 * Check if a SAR request is active for pilot
 	 * @return 0 if no request is active or 1 if one is active
 	 */
@@ -175,7 +190,7 @@ class Rescue {
 
 	/**
 	 * Get all requests by status
-	 * @param number $finished 0 - all open requests (default); 1 - alll finished requests
+	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
 	 * @return array
 	 */
 	public function getRequests($finished = 0)

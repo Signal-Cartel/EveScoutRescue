@@ -86,6 +86,24 @@ class Users {
 	}
 	
 	/**
+	 * Check if the user is a relevant agent on the SAR request.
+	 * @param unknown $username - the user name of the current user
+	 * @param unknown $rescueid - the id of the SAR request to check
+	 * @return boolean - return <code>TRUE</code> if the permission is set or <code>FALSE</code> otherwise
+	 */
+	public function isSARAgent($username, $rescueid)
+	{
+		$this->db->query("SELECT count(1) as cnt FROM rescuerequest WHERE id = :id 
+							AND (startagent = :pilot OR locateagent = :pilot2)");
+		$this->db->bind(":id", $rescueid);
+		$this->db->bind(":pilot", $username);
+		$this->db->bind(":pilot2", $username);
+		$data = $this->db->single();
+		$this->db->closeQuery();
+		return ($data['cnt'] === 1) ? true : false;
+	}
+	
+	/**
 	 * Check if the user of the current session is part of the alliance
 	 * @return boolean
 	 */
