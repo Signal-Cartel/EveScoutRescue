@@ -232,30 +232,31 @@ include 'modal_sar_manage.php';
 function translateStatus($status)
 {
 	$result = "unknown";
-	switch ($status)
-	{
+	switch ($status) {
 		case 'system-located' : $result = "System Located";
 		break;
-		case 'closed-rescued' : $result = "Pilot rescued by SAR";
+		case 'closed-rescued' : $result = "Rescued - SAR";
 		break;
-		case 'closed-esrc' : $result = "Pilot rescued by ESRC";
+		case 'closed-esrc' : $result = "Rescued - ESRC";
 		break;
-		case 'closed-escaped' : $result = "Pilot escaped by own action";
+		case 'closed-escaped' : $result = "Escaped by own action";
 		break;
-		case 'closed-escapedlocals' : $result = "Pilot rescued by locals";
+		case 'closed-escapedlocals' : $result = "Escaped via locals";
 		break;
-		case 'closed-destruct' : $result = "Pilot used self destruct";
+		case 'closed-destruct' : $result = "Self-destruct";
 		break;
-		case 'closed-destroyed' : $result = "Pilot capsule destroyed by locals/3rd party";
+		case 'closed-destroyed' : $result = "Destroyed by locals";
 		break;
-		case 'closed-noresponse' : $result = "Pilot did not respond";
+		case 'closed-noresponse' : $result = "No response";
 		break;
-		case 'closed-declined' : $result = "Request was not legitimate";
+		case 'closed-declined' : $result = "Declined - illegitimate";
+		break;
+		case 'closed-dup' : $result = "Declined - duplicate";
 		break;
 		
 		default:
 			$result = ucfirst($status);
-			break;
+		break;
 	}
 	return $result;
 }
