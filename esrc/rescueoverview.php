@@ -298,7 +298,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '			<th>Last&nbsp;Contact</th>';
 		echo ($summary == 1) ? '' : '<th>Dispatcher</th>';
 		echo ($summary == 1) ? '' : '<th>Locator</th>';
-		//echo ($summary == 1) ? '' : '<th>Rescue Pilot(s)</th>'; //to be added in a future release
+		echo ($summary == 1) ? '' : '<th>Rescue Pilot(s)</th>';
 		echo '		</tr>';
 		echo '	</thead>';
 		echo '	<tbody>';
@@ -360,7 +360,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// check for related SAR Agent
 	$colspan++;
 	$isSARAgent = $users->isSARAgent($charname, $row['id']);
-	if ($isCoord == 0 && $isSARAgent == 0) {
+	$isRescueAgent = $users->isRescueAgent($charname, $row['id']);
+	if ($isCoord == 0 && $isSARAgent == 0 && $isRescueAgent == 0) {
 		echo '<td><b>PROTECTED</b></td>';
 	}
 	else {
@@ -405,12 +406,16 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		echo '</td>';
 		
 		// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
-		// (to be added in a future update)
-		//$colspan++;
-		//echo '<td>Soon<sup>TM</sup>!</td>';
+		$colspan++;
+		$arrRescueAgents = $rescue->getRescueAgents($row['id']);
+		echo '<td>';
+		foreach ($arrRescueAgents as $value) {
+			echo $value['pilot'] .'<br />';
+		}
+		echo '</td>';
 		
 		// NOTES
-		if ($notes == 1 && ($isCoord == 1 || $isSARAgent == 1)) {
+		if ($notes == 1 && ($isCoord == 1 || $isSARAgent == 1 || $isRescueAgent == 1)) {
 			echo '</tr><tr>';
 			if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
 				echo '<td>&nbsp;</td>';

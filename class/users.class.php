@@ -86,7 +86,7 @@ class Users {
 	}
 	
 	/**
-	 * Check if the user is a relevant agent on the SAR request.
+	 * Check if the user is a relevant start/locate agent on the SAR request.
 	 * @param unknown $username - the user name of the current user
 	 * @param unknown $rescueid - the id of the SAR request to check
 	 * @return boolean - return <code>TRUE</code> if the permission is set or <code>FALSE</code> otherwise
@@ -98,6 +98,23 @@ class Users {
 		$this->db->bind(":id", $rescueid);
 		$this->db->bind(":pilot", $username);
 		$this->db->bind(":pilot2", $username);
+		$data = $this->db->single();
+		$this->db->closeQuery();
+		return ($data['cnt'] === 1) ? true : false;
+	}
+	
+	/**
+	 * Check if the user is a relevant rescue agent on the SAR request.
+	 * @param unknown $username - the user name of the current user
+	 * @param unknown $rescueid - the id of the SAR request to check
+	 * @return boolean - return <code>TRUE</code> if the permission is set or <code>FALSE</code> otherwise
+	 */
+	public function isRescueAgent($username, $rescueid)
+	{
+		$this->db->query("SELECT COUNT(1) as cnt FROM rescueagents WHERE reqid = :id
+							AND pilot = :pilot");
+		$this->db->bind(":id", $rescueid);
+		$this->db->bind(":pilot", $username);
 		$data = $this->db->single();
 		$this->db->closeQuery();
 		return ($data['cnt'] === 1) ? true : false;

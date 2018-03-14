@@ -175,6 +175,51 @@ class Rescue {
 	}
 	
 	/**
+	 * Add a rescueagent for the rescue request
+	 * @param unknown $rescueID - ID of request record to update
+	 * @param unknown $rescueeagent - Name of pilot who helped with rescue
+	 */
+	public function createRescueAgent($rescueID, $rescueagent)
+	{
+		$this->db->query("INSERT INTO rescueagents (reqid, pilot)
+							VALUES (:rescueid, :rescueagent)");
+		$this->db->bind(":rescueagent", $rescueagent);
+		$this->db->bind(":rescueid", $rescueID);
+		$this->db->execute();
+	}
+	
+	/**
+	 * Check if the given rescueagent already exists for the given rescue request
+	 * @param unknown $rescueID - ID of request record to update
+	 * @param unknown $rescueeagent - Name of pilot who helped with rescue
+	 * @return 0 if rescueagent does not exist or 1 if rescueagent does exist
+	 */
+	public function checkRescueAgent($rescueID, $rescueagent)
+	{
+		$this->db->query("SELECT COUNT(1) AS cnt FROM rescueagents 
+							WHERE pilot = :rescueagent AND reqid = :rescueid");
+		$this->db->bind(":rescueagent", $rescueagent);
+		$this->db->bind(":rescueid", $rescueID);
+		$result = $this->db->single();
+		
+		return $result['cnt'];
+	}
+	
+	/**
+	 * Get all rescueagents for the given rescue request
+	 * @param unknown $rescueID - ID of request record to update
+	 * @return array $result - details on all rescue agents for this SAR request
+	 */
+	public function getRescueAgents($rescueID)
+	{
+		$this->db->query("SELECT * FROM rescueagents WHERE reqid = :rescueid");
+		$this->db->bind(":rescueid", $rescueID);
+		$result = $this->db->resultset();
+		
+		return $result;
+	}
+	
+	/**
 	 * Check if a SAR request is active for pilot
 	 * @return 0 if no request is active or 1 if one is active
 	 */
