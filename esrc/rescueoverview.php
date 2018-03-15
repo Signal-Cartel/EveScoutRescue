@@ -230,7 +230,7 @@ function translateStatus($status)
 {
 	$result = "unknown";
 	switch ($status) {
-		case 'system-located' : $result = "System Located";
+		case 'system-located' : $result = "Located";
 		break;
 		case 'closed-rescued' : $result = "Rescued - SAR";
 		break;
