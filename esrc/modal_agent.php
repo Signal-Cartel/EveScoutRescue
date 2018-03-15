@@ -15,12 +15,19 @@
 				<input type="hidden" name="sys_adj" value="<?php echo $system ?>" />
 				<span class="sechead"><?php echo $system ?></span>
 			</div>
+			<div class="checkbox">
+			  	<label class="control-label" for="updateexp">
+			  		<input type="checkbox" id="updateexp" name="updateexp" value="1"> &lt;&lt; Check if 
+			  			cache was accessed</label>
+			</div>
 			<div class="field">
-				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the Capsuleer who required rescue?</span></label>
+				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What 
+					is the name of the Capsuleer who required rescue?</span></label>
 				<input type="text" class="form-control" id="aidedpilot" name="aidedpilot" />
 			</div>
 			<div class="field">
-				<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>
+				<label class="control-label" for="notes">Notes<span class="descr">Is there any other 
+					important information we need to know?</span></label>
 				<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
 			</div>
 	      </div>

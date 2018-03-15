@@ -217,8 +217,9 @@ if (!empty($system)) {
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
 					<td><input type="text" id="cachepass1" style="color:black; width:125px;"
 							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
-							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass1')"></i><br />
-							click to copy <i class="fa fa-angle-up pull-right">&nbsp;&nbsp;&nbsp;</i></td>
+							<i id="copyclip" class="fa fa-clipboard" 
+								onClick="SelectAllCopy('cachepass1')"></i>
+					</td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 					</tr>
@@ -280,11 +281,16 @@ if (!empty($system)) {
 			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
 				role="button" target="_blank">anoik.is</a>
 			<br />
+			<!-- Name for new cache -->
+			<input type="text" id="cachename2" style="color:black; width:650px; margin-top: 5px;"
+				value="EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel." readonly />
+				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachename2')"></i> 
+				&lt;&lt; Copy name<br />
 			<!-- Password for new cache -->
-			<input type="text" id="cachepass2" style="color:black; width:125px;"
+			<input type="text" id="cachepass2" style="color:black; width:125px; margin-top: 5px;"
 				value="<?=$cachepass?>" readonly />
 				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass2')"></i> 
-				&lt;&lt; Copy password to use for new cache
+				&lt;&lt; Copy password
 			</div></div></div>
 
 			<?php 

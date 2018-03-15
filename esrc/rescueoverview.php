@@ -182,12 +182,15 @@ else {
 	displayTable($data, $charname, 0, $system, 0, $isCoord, 1);
 	
 	// only display closed requests to coordinators
-	if ($isCoord == 1) {
+	// removed for now; this table was slowing down pageload times 
+	/* 
+	 if ($isCoord == 1) {
 		echo '<div class="ws"></div>';
 		// closed requests
 		$data = $rescue->getRequests(1);
 		displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
 	}
+	*/
 }
 ?>
 

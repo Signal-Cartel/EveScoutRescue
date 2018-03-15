@@ -54,15 +54,14 @@ if (isset($_POST['sys_adj'])) {
 	$system = test_input($_POST["sys_adj"]);
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
+	$updateexp = $_POST['updateexp'];
 
 	// check the system
-	if (isset($system))
-	{
+	if (isset($system)) {
 		// make the system uppercase
 		$system = strtoupper($system);
 	}
-	else 
-	{
+	else {
 		$errmsg = $errmsg . "No system name is set.";
 	}
 	
@@ -89,6 +88,10 @@ if (isset($_POST['sys_adj'])) {
 		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
 		$caches->addNoteToCache($system, $agent_note);
+		// update expiration date if needed
+		if (intval($updateexp) == 1) {
+			$caches->updateExpireTime($system, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+		}
 		
 		// RESCUE update
 		// create a new instance of Rescue class
