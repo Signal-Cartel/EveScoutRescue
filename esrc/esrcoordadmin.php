@@ -1,5 +1,4 @@
 <?php
-
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
@@ -16,7 +15,7 @@ if (!Users::isAllianceUserSession())
 	if (isset($_SESSION['AUTH_NOALLIANCE']))
 	{
 		// set redirect to root path
-		$_redirect_uri = Config::ROOT_PATH;	
+		$_redirect_uri = Config::ROOT_PATH;
 	}
 	else
 	{
@@ -42,6 +41,7 @@ if (!isset($charname)) {
 	$charname = 'charname_not_set';
 }
 ?>
+
 <html>
 
 <head>
@@ -117,103 +117,21 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	<div class="ws"></div>
 	
 	<ul class="nav nav-tabs">
-		<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
-		<li class="active"><a href="#">Search &amp; Rescue</a></li>
-		<?php 
-		if ($isCoord == 1) {
-			echo '<li><a href="esrcoordadmin.php">ESR Coordinator Admin</a></li>';
-		}
-		?>
+		<li><a href="search.php">Rescue Cache</a></li>
+		<li><a href="rescueoverview.php">Search &amp; Rescue</a></li>
+		<li class="active"><a href="#">ESR Coordinator Admin</a></li>
 	</ul>
-	<div class="ws"></div>
-
-<?php
-// display error message if there is one
-if (!empty($errmsg)) {
-?>
-	<div class="row" id="errormessage" style="background-color: #ff9999;">
-		<div class="col-sm-12 message">
-			<?php echo nl2br($errmsg); ?>
-		</div>
-	</div>
-	<div class="ws"></div>
-<?php
-}
-
-// display rescue requests for a specific system
-if (!empty($system)) { 
-	$systems = new Systems($database);
-	if ($systems->validatename($system) === 0) {
-	?>
-	
-	<div>
-		<!-- SAR New button -->
-		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
-			data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
-		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
-			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
-		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
-			target="_blank">anoik.is</a>
-	</div>
 	<div class="ws"></div>
 	
 	<?php 
-	// get active requests from database
-	$data = $rescue->getSystemRequests($system, 0, $isCoord);
-	displayTable($data, $charname, 0, $system, 1, $isCoord, 0);
-	
-	// get finished requests from database
-	$data = $rescue->getSystemRequests($system, 1, $isCoord);
-	displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
+	if ($isCoord == 1) {
+		echo '<div class="ws"></div>';
+		// closed requests
+		$data = $rescue->getRequests(1);
+		displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
 	}
-	// invalid system name
-	else { ?>
-	<div class="row">
-		<div class="col-sm-12">
-			<div style="padding-left: 10px;">
-				<span class="sechead white"><?=$system?> not a valid system name.
-					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-			</div>
-		</div>
+	?>
 	</div>
-<?php }
-}
-// no system selected, so display all requests
-else {
-	//active requests
-	$data = $rescue->getRequests();
-	displayTable($data, $charname, 0, $system, 0, $isCoord, 1);
-}
-?>
-
-<!-- MODAL includes -->
-<?php
-include 'modal_sar_new.php';
-include 'modal_sar_manage.php';
-?>
-
-<script type="text/javascript">
-	// auto-display edit modal when "req" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('req=') != -1) {
-	    $('#ModalSAREdit').modal('show');
-	}
-
-	// auto-display new modal when "new" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('new=') != -1) {
-	    $('#ModalSARNew').modal('show');
-	}
-
-	// initialize tooltip display
-	$(document).ready(function(){
-	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
-	});
-</script>
-
-</div>
 </body>
 </html>
 

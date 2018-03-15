@@ -120,6 +120,11 @@ if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::
 <ul  class="nav nav-tabs">
 	<li class="active"><a href="#" data-toggle="tab">Rescue Cache</a></li>
 	<li><a href="rescueoverview.php?sys=<?=$system?>">Search &amp; Rescue<?=$activeSAR?></a></li>
+	<?php 
+		if ($isCoord == 1) {
+			echo '<li><a href="esrcoordadmin.php">ESR Coordinator Admin</a></li>';
+		}
+	?>
 </ul>
 <div class="ws"></div>
  
