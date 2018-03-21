@@ -6,7 +6,6 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
-require_once '../class/output.class.php';
 
 if (!isset($_POST['start'])) {
 	if (gmdate('w', strtotime("now")) == 0) {
@@ -145,7 +144,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						default:
 							// ??
 					}
-					$eveyear = intval(date("Y", strtotime($value['ActivityDate'])))-1898;
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td class="white text-nowrap">'. 

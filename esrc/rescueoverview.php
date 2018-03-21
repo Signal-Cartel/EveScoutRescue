@@ -437,7 +437,7 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 	if (count($notes) > 0) {
 		foreach($notes as $note) {
 			echo '<div style="padding-left: 2em; text-indent: -2em;">';
-			echo '['. date("M-d", strtotime($note['notedate'])) .' // ';
+			echo '['. Output::getEveDatetime($note['notedate']) .' // ';
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
 			echo Output::htmlEncodeString($note['note']) .'<br />';
 			echo '</div><br />';
