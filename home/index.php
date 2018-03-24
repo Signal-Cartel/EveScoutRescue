@@ -99,7 +99,7 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		<span class="white">
 		<span style="font-weight: bold; color: gold;">
 			<?=round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%</span> 
-			of all rescues occur within <?=round(intval($SARWaitMode))?> days
+			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
 		</span><br /><br />
 	</div>
 	<div class="col-sm-8" style="text-align: center;">
