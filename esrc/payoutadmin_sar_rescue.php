@@ -6,6 +6,7 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
+require_once '../class/users.class.php';
 
 if (!isset($_POST['start'])) {
 	if (gmdate('w', strtotime("now")) == 0) {
@@ -103,17 +104,14 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						<th class="white">System</th>
 						<th class="white">Locator</th>
 						<th class="white">Rescuers</th>
-						<!-- <th class="white">Status</th> -->
 					</tr>
 				</thead>
 				<tbody>
 				<?php
-				//$ctrtotact = $ctropen = $ctrrescued = $ctrescaped = $ctrescapedlocals = 0;
-				//$ctrdestruct = $ctrdestroyed = $ctrnoresponse = $ctrdeclined = 0;
 				// pull all SAR rescues for specified period
 				$db->query("SELECT id, LastUpdated, pilot, system, locateagent
 							FROM rescuerequest
-							WHERE status = 'closed-rescued' AND requestdate BETWEEN :start AND :end
+							WHERE status = 'closed-rescued' AND LastUpdated BETWEEN :start AND :end
 							ORDER BY LastUpdated DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
@@ -159,69 +157,109 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		</div>
 		<div class="col-sm-2 white">
 			<?=gmdate('Y-m-d H:i:s', strtotime("now"))?> EVE<br /><br />
-			<strong>Total this period: <?=$ctrtotact?></strong><br />
-			Open: <?=$ctropen?><br />
-			Rescued: <?=$ctrrescued?><br />
-			Escaped by self: <?=$ctrescaped?><br />
-			Escaped by locals: <?=$ctrescapedlocals?><br />
-			Self-destruct: <?=$ctrdestruct?><br />
-			Destroyed by others: <?=$ctrdestroyed?><br />
-			No response: <?=$ctrnoresponse?><br />
-			Declined/illegitimate: <?=$ctrdeclined?>
 		</div>
 	</div>
 	<?php
 	}
 	//show payout data if "Payout" is checked
-	else {	
-		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(*) as cnt FROM rescuerequest 
-					WHERE status NOT IN ('closed-esrc', 'closed-dup')
-					AND requestdate BETWEEN :start AND :end");
-		$db->bind(':start', $start);
-		$db->bind(':end', $end);
-		$row = $db->single();
-
-		$ctrtot = $row['cnt'];
+	else {			
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-10">
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
-						<th class="white">Pilot</th>
-						<th class="white">Count</th>
+						<th class="white">System</th>
+						<th class="white">Locator</th>
+						<th class="white">Rescuer</th>
 						<th class="white">Payout</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
+					// create instance object
+					$user = new Users();
 					//summary data
-					$db->query("SELECT startagent, COUNT(*) as cnt FROM rescuerequest 
-								WHERE status NOT IN ('closed-esrc', 'closed-dup')
-								AND requestdate BETWEEN :start AND :end GROUP BY startagent");
+					$db->query("SELECT rr.id, rr.locateagent, rr.system, 
+									datediff(rr.LastUpdated, rr.requestdate) AS daystosar, w.Class
+								FROM rescuerequest rr, wh_systems w
+								WHERE rr.system = w.System
+								AND status = 'closed-rescued' 
+								AND LastUpdated BETWEEN :start AND :end
+								ORDER BY LastUpdated DESC");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();
-					$ctr = 0;
+					$ctr = $totamt = 0;
+					$basepay = 50000000; // base rate is 50 mil ISK
+					$dailyincrease = 10000000; // daily increase is 10 mil ISK
 					foreach ($rows as $value) {
+						// skip record if no locateagent listed
+						if (!empty($value['locateagent'])) {
 						$ctr++;
+						// get right-most number from WH class string for "WH Class multiplier"
+						$whclassmult = intval(substr($value['Class'], -1));
+						// max payout equation:
+						// (base x WH class multiplier) + (Days until rescued x daily increase amt)
+						$payoutmax = ($basepay*$whclassmult)+(intval($value['daystosar'])*$dailyincrease);
 						echo '<tr>';
+						echo '<td><a target="_blank"
+								href="rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
+								Output::htmlEncodeString(ucfirst($value['system'])) .'</a>
+								<span class="white">(50mil x '. 
+									intval(substr($value['Class'], -1)) .') + 
+									(10mil x '. intval($value['daystosar']).')
+								= '. number_format(intval($payoutmax)) .'</span></td>';
 						echo '<td><a target="_blank" 
-								href="https://evewho.com/pilot/'. $value['startagent'] .'">'. 
-								Output::htmlEncodeString($value['startagent']) .'</td>';
-						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
-						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
-									intval($value['cnt'])*1000000 .'" />
-									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i>
-							  </td>';
+								href="https://evewho.com/pilot/'. $value['locateagent'] .'">'. 
+								Output::htmlEncodeString($value['locateagent']) .'</a></td>';
+						echo '<td>&nbsp;</td>';
+						// Locator gets half of total payout amount; if ESR Coord, they get 0
+						$payoutloc = intval($payoutmax/2);
+						$actualpayloc = ($user->isSARCoordinator($value['locateagent']) === false) ?
+							$payoutloc : 0;	
+						echo '<td><input type="text" id="amt'.$ctr.'" width="100" value="'. 
+								$actualpayloc .'" /><i id="copyclip" class="fa fa-clipboard" 
+								onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
+						$totamt = $totamt + $actualpayloc;
 						echo '</tr>';
+						}
+						// pull all rescuers for specified system rescue, ordered oldest to newest
+						$db->query("SELECT pilot FROM rescueagents WHERE reqid = :id
+									ORDER BY EntryTime");
+						$db->bind(':id', $value['id']);
+						$arrRescuerPayout = $db->resultset();
+						$payoutres = 0;
+						foreach ($arrRescuerPayout as $val) {
+							// do not pay Locator a second time
+							if ($value['locateagent'] != $val['pilot']) {
+								$ctr++;
+								echo '<tr>';
+								echo '<td></td><td></td>';
+								echo '<td><a target="_blank" 
+										href="https://evewho.com/pilot/'. $val['pilot'] .'">'. 
+										Output::htmlEncodeString($val['pilot']) .'</a></td>';
+								// first rescuer gets half of locator pay, then half again for each successive rescuer
+								if ($payoutres == 0) {
+									$payoutres = intval($payoutloc/2);
+								} 
+								else {
+									$payoutres = intval($payoutres/2);
+								}
+								echo '<td><input type="text" id="amt'.$ctr.'" width="100" value="'. 
+										intval($payoutres) .'" /><i id="copyclip" class="fa 
+										fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
+								$totamt = $totamt + $payoutres;
+								echo '</tr>';
+							}
+						}
 					}
 					?>
 					<tr>
-						<td class="white" align="right">Participants: <?php echo $ctr; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL: </td>
-						<td class="white" align="right"><?php echo $ctrtot; ?></td>
-						<td></td>
+						<td class="white" align="right">Participants:</td>
+						<td class="white">&nbsp;<?=$ctr;?></td>
+						<td class="white" align="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL: </td>
+						<td class="white"><?=number_format($totamt);?> ISK</td>
 					</tr>
 				</tbody>
 			</table>
