@@ -52,21 +52,6 @@ if (!isset($_POST['end'])) {
 		        "pageLength": 15
 		    } );
 		} );
-
-		// refresh page every 10 minutes in order to stay logged in
-		var time = new Date().getTime();
-	    $(document.body).bind("mousemove keypress", function(e) {
-	         time = new Date().getTime();
-	    });
-
-	    function refresh() {
-	         if(new Date().getTime() - time >= 600000) 
-	             window.location.reload(true);
-	         else 
-	             setTimeout(refresh, 10000);
-	    }
-
-	    setTimeout(refresh, 10000);
 	</script>
 </head>
 
@@ -83,8 +68,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
 			<span style="font-size: 125%; font-weight: bold; color: white;">Payouts: 
-				ESRC &gt;&gt; 
-				<a href="payoutadmin_sar.php">SAR Dispatch</a> &gt;&gt; 
+				<a href="payoutadmin.php">ESRC</a> &gt;&gt; 
+				SAR Dispatch &gt;&gt; 
 				<a href="payoutadmin_sar_rescue.php">SAR Locate/Rescue</a></span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker">
@@ -118,15 +103,19 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						<th class="white">Type</th>
 						<th class="white">System</th>
 						<th class="white">Aided&nbsp;Pilot</th>
-						<th class="white" style="width: 35%;">Note</th>
+						<!-- <th class="white">Status</th> -->
 					</tr>
 				</thead>
 				<tbody>
 				<?php
-				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT * FROM activity 
-							WHERE ActivityDate BETWEEN :start AND :end 
-							ORDER By ActivityDate DESC");
+				$ctrtotact = $ctropen = $ctrrescued = $ctrescaped = $ctrescapedlocals = 0;
+				$ctrdestruct = $ctrdestroyed = $ctrnoresponse = $ctrdeclined = 0;
+				// pull all start agents aside from ESRC Agents and duplicates
+				$db->query("SELECT requestdate, startagent, status, system, pilot
+							FROM rescuerequest
+							WHERE status NOT IN ('closed-esrc', 'closed-dup') 
+								AND requestdate BETWEEN :start AND :end
+							ORDER BY requestdate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
@@ -134,6 +123,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					$ctrtotact++;
 					// calculate action cell format
 					$actioncellformat= '';
+					/*
 					switch ($value['EntryType']) {
 						case 'sower':
 							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
@@ -147,51 +137,69 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						default:
 							// ??
 					}
+					*/
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td class="white text-nowrap">'. 
-							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
+							date("Y-m-d", strtotime($value['requestdate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
-							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
-							$value['Pilot'] .'</a> - <a target="_blank" 
-							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EG</a></td>';
-					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
-					switch ($value['EntryType']) {
-						case 'sower':
-							$ctrsow++;
+							<a target="_blank" href="personal_stats.php?pilot='. 
+								urlencode($value['startagent']) .'">'. 
+								$value['startagent'] .'</a> - <a target="_blank" 
+								href="https://evewho.com/pilot/'. $value['startagent'] .'">EG</a></td>';
+					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['status']) .'</td>';
+					switch ($value['status']) {
+						case 'pending':
+						case 'open':
+						case 'system-located':
+							$ctropen++;
 							break;
-						case 'tender':
-							$ctrtend++;
+						case 'closed-rescued':
+							$ctrrescued++;
 							break;
-						case 'agent':
-							$ctradj++;
+						case 'closed-escaped':
+							$ctrescaped++;
+							break;
+						case 'closed-escapedlocals':
+							$ctrescapedlocals++;
+							break;
+						case 'closed-destruct':
+							$ctrdestruct++;
+							break;
+						case 'closed-destroyed':
+							$ctrdestroyed++;
+							break;
+						case 'closed-noresponse':
+							$ctrnoresponse++;
+							break;
+						case 'closed-declined':
+							$ctrdeclined++;
 							break;
 					}
-					echo '<td><a href="search.php?sys='. $value['System'] .'" target="_blank">'. 
-							$value['System'] .'</a></td>';
+					echo '<td><a href="rescueoverview.php?sys='. $value['system'] .'" target="_blank">'. 
+							$value['system'] .'</a></td>';
 					echo '<td><a target="_blank" 
-							href="https://evewho.com/pilot/'. $value['AidedPilot'] .'">'. 
-							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
-					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
+							href="https://evewho.com/pilot/'. $value['pilot'] .'">'. 
+							Output::htmlEncodeString($value['pilot']) .'</td>';
+					//echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
 					echo '</tr>';
 				}
-		
-				$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
-				$row = $db->single();
-				$ctrtot = $row['cnt'];
 				?>
 				</tbody>
 			</table>
 		</div>
 		<div class="col-sm-2 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-			Actions this period: <?php echo $ctrtotact; ?><br />
-			Sowed: <?php echo $ctrsow; ?><br />
-			Tended: <?php echo $ctrtend; ?><br />
-			Agent: <?php echo $ctradj; ?><br /><br />
-			Total caches in space:<br />
-			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
+			<?=gmdate('Y-m-d H:i:s', strtotime("now"))?> EVE<br /><br />
+			<strong>Total this period: <?=$ctrtotact?></strong><br />
+			Open: <?=$ctropen?><br />
+			Rescued: <?=$ctrrescued?><br />
+			Escaped by self: <?=$ctrescaped?><br />
+			Escaped by locals: <?=$ctrescapedlocals?><br />
+			Self-destruct: <?=$ctrdestruct?><br />
+			Destroyed by others: <?=$ctrdestroyed?><br />
+			No response: <?=$ctrnoresponse?><br />
+			Declined/illegitimate: <?=$ctrdeclined?>
 		</div>
 	</div>
 	<?php
@@ -199,7 +207,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
+		$db->query("SELECT COUNT(*) as cnt FROM rescuerequest 
+					WHERE status NOT IN ('closed-esrc', 'closed-dup')
+					AND requestdate BETWEEN :start AND :end");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
 		$row = $db->single();
@@ -219,8 +229,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				<tbody>
 					<?php
 					//summary data
-					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate 
-									BETWEEN :start AND :end GROUP BY Pilot");
+					$db->query("SELECT startagent, COUNT(*) as cnt FROM rescuerequest 
+								WHERE status NOT IN ('closed-esrc', 'closed-dup')
+								AND requestdate BETWEEN :start AND :end GROUP BY startagent");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();
@@ -229,11 +240,11 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 						$ctr++;
 						echo '<tr>';
 						echo '<td><a target="_blank" 
-								href="https://evewho.com/pilot/'. $value['Pilot'] .'">'. 
-								Output::htmlEncodeString($value['Pilot']) .'</td>';
+								href="https://evewho.com/pilot/'. $value['startagent'] .'">'. 
+								Output::htmlEncodeString($value['startagent']) .'</td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
-									round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" />
+									intval($value['cnt'])*1000000 .'" />
 									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i>
 							  </td>';
 						echo '</tr>';

@@ -267,7 +267,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	if (empty($system)) {
 		$colspan++;
 		echo '<td>';
-		echo '<a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a>';
+		echo '<a href="rescueoverview.php?sys='.$row['system'].'" target="_blank">'.
+				Output::htmlEncodeString($row['system']).'</a>';
 		echo '</td>';
 	}
 			

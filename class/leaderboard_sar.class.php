@@ -65,6 +65,23 @@ class SARLeaderboard
 	}
 	
 	/**
+	 * Get list of top successful rescue agents
+	 * @return $result
+	 */
+	public function getTopRescueAgents()
+	{
+		// prepare the query
+		$this->db->query("SELECT COUNT(ra.pilot) AS cnt, ra.pilot FROM rescuerequest rr, rescueagents ra 
+							WHERE rr.status = 'closed-rescued' AND rr.id=ra.reqid
+							GROUP BY ra.pilot
+							ORDER BY cnt DESC, ra.entrytime DESC");
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+	
+	/**
 	 * Get max days for successful rescue
 	 * @param unknown $rescuetype
 	 * @return unknown

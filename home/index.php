@@ -99,7 +99,7 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		<span class="white">
 		<span style="font-weight: bold; color: gold;">
 			<?=round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%</span> 
-			of all rescues occur within <?=round(intval($SARWaitMode))?> days
+			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
 		</span><br /><br />
 	</div>
 	<div class="col-sm-8" style="text-align: center;">
@@ -138,7 +138,10 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 			<div class="panel-body">
 				<p class="lead">Anchored throughout Anoikis, our rescue caches contain a probe 
 					launcher, core scanner probes, and even a hug or two. Perfect if you have a 
-					fitting service or just need probes. <a href="../esrc/">Learn more...</a></p>
+					fitting service or just need probes. <a href="esrc.php">Learn more...</a></p>
+				<p class="text-center">
+					<a class="btn btn-primary btn-md" href="heroes.php" role="button">Rescue Cache 
+						Hall of Fame</a></p>
 			</div>
 		</div>
 	</div>
@@ -153,16 +156,12 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 			<div class="panel-body">
 				<p class="lead">If we don't have a rescue cache in your current wormhole system, 
 					don't despair! Our Search and Rescue pilots will work hard to find you and 
-					scout you back to known space. <a href="../sar/">Learn more...</a></p>
+					scout you back to known space. <a href="sar.php">Learn more...</a></p>
+				<p class="text-center">
+					<a class="btn btn-primary btn-md" href="heroes_sar.php" role="button">Search and 
+						Rescue Hall of Fame</a></p>
 			</div>
 		</div>
-	</div>
-</div>
-<div class="ws"></div>
-<div class="row">
-	<div class="col-sm-12" style="text-align: center;">
-		<span class="sechead" style="color: gold;">As seen on the o7 Show:</span><br />
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/y-V9a28ufoM?ecver=1" frameborder="0" allowfullscreen></iframe>
 	</div>
 </div>
 <div class="ws"></div>

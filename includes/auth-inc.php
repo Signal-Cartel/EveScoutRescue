@@ -9,7 +9,7 @@ require_once '../class/config.class.php';
 
 // - Set arrays of different page types
 // - If it's not in one of these arrays, it is a public page that does not require login to access
-$pgsAdmin    = array('/esrc/payoutadmin.php');
+$pgsAdmin    = array('/esrc/payoutadmin.php','/esrc/payoutadmin_sar.php','/esrc/payoutadmin_sar_rescue.php');
 
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {

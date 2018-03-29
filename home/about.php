@@ -74,73 +74,74 @@ include_once '../includes/top-right.php';
 					
 				<div class="row">
 				  <h2 style="text-align:center">
-				  	Search and Rescue
+				  	EvE-Scout Rescue Coordinators
 				  </h2>
 				</div>
 				<div class="row">
-				  <div class="col-md-4 text-center"></div>
-				  <div class="col-md-4 text-center">
-				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Lucas%20Ballard">
-				        <img src="https://image.eveonline.com/Character/96491034_256.jpg" alt="Lucas" style="width:100%">
-				        <div class="caption">
-				          <strong>Lucas Ballard</strong><br />Lead Coordinator
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-4 text-center"></div>
-				</div>
-				<div class="row">
-				  <div class="col-md-4">
+				  <div class="col-md-3">
 				    <div class="thumbnail text-center">
-				      <a href="https://evewho.com/pilot/Angel%20Lafisques">
-				        <img src="https://image.eveonline.com/Character/96736367_256.jpg" alt="Angel" style="width:100%">
+				      <a href="https://evewho.com/pilot/Lucas%20Ballard">
+				        <img src="https://image.eveonline.com/Character/96491034_128.jpg" alt="Lucas" style="width:100%">
 				        <div class="caption">
-				          <strong>Angel Lafisques</strong><br />Asst. Coordinator
+				          <strong>Lucas Ballard</strong>
 				        </div>
 				      </a>
 				    </div>
 				  </div>
-				  <div class="col-md-4 text-center">
-				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Captain+Crinkle">
-				        <img src="https://image.eveonline.com/Character/97117031_256.jpg" alt="Captain Crinkle" style="width:100%">
-				        <div class="caption">
-				          <strong>Captain Crinkle</strong><br />Asst. Coordinator
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-4 text-center">
+				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Igaze">
-				        <img src="https://image.eveonline.com/Character/1852974735_256.jpg" alt="Igaze" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/1852974735_128.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
-				          <strong>Igaze</strong><br />Asst. Coordinator
+				          <strong>Igaze</strong>
 				        </div>
 				      </a>
 				    </div>
 				  </div>
-				</div>
-				<div class="row">
-				  <h2 style="text-align:center">
-				  	Rescue Cache
-				  </h2>
-				</div>
-				<div class="row">
-				  <div class="col-md-4 text-center"></div>
-				  <div class="col-md-4 text-center">
+				  <div class="col-md-3">
+				    <div class="thumbnail text-center">
+				      <a href="https://evewho.com/pilot/Angel%20Lafisques">
+				        <img src="https://image.eveonline.com/Character/96736367_128.jpg" alt="Angel" style="width:100%">
+				        <div class="caption">
+				          <strong>Angel Lafisques</strong>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Thrice%20Hapus">
-				        <img src="https://image.eveonline.com/Character/96079190_256.jpg" alt="Thrice" style="width:100%">
+				      <a href="https://evewho.com/pilot/Captain+Crinkle">
+				        <img src="https://image.eveonline.com/Character/97117031_128.jpg" alt="Captain Crinkle" style="width:100%">
 				        <div class="caption">
-				          <strong>Thrice Hapus</strong><br />Coordinator
+				          <strong>Captain Crinkle</strong>
 				        </div>
 				      </a>
 				    </div>
 				  </div>
-				  <div class="col-md-4 text-center"></div>
+				</div>
+				<div class="row">
+				  <div class="col-md-3">&nbsp;</div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/DaydreamBeliever">
+				        <img src="https://image.eveonline.com/Character/1456347483_128.jpg" alt="DaydreamBeliever" style="width:100%">
+				        <div class="caption">
+				          <strong>DaydreamBeliever</strong>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/Triffton%20Ambraelle">
+				        <img src="https://image.eveonline.com/Character/93697245_128.jpg" alt="Triffton" style="width:100%">
+				        <div class="caption">
+				          <strong>Triffton Ambraelle</strong>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-3">&nbsp;</div>
 				</div>
 				<div class="row">
 				  <h2 style="text-align:center">
@@ -164,7 +165,7 @@ include_once '../includes/top-right.php';
 				      <a href="https://evewho.com/pilot/Orsel%20Solette">
 				        <img src="https://image.eveonline.com/Character/96975403_128.jpg" alt="Orsel" style="width:100%">
 				        <div class="caption">
-				          <strong>Orsel Solette</strong><br />ESR Data Tools
+				          <strong>Orsel Solette</strong><br />Data Tools
 				        </div>
 				      </a>
 				    </div>
@@ -180,17 +181,6 @@ include_once '../includes/top-right.php';
 				  <div class="col-md-3"></div>
 				  <div class="col-md-3 text-center">
 				    <div class="thumbnail">
-				      <a href="https://evewho.com/pilot/Triffton%20Ambraelle">
-				        <img src="https://image.eveonline.com/Character/93697245_128.jpg" alt="Triffton" style="width:100%">
-				        <div class="caption">
-				          <strong>Triffton Ambraelle</strong><br />Search &amp; Rescue<br />
-				          	Asst. Coordinator
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-3 text-center">
-				    <div class="thumbnail">
 				      <a href="https://evewho.com/pilot/Grey%20Sojourn">
 				        <img src="https://image.eveonline.com/Character/95693840_128.jpg" alt="Grey" style="width:100%">
 				        <div class="caption">
@@ -201,6 +191,26 @@ include_once '../includes/top-right.php';
 				    </div>
 				  </div>
 				  <div class="col-md-3"></div>
+				  <div class="col-md-3"></div>
+				</div>
+				<div class="row">
+				  <h2 style="text-align:center">
+				  	Management
+				  </h2>
+				</div>
+				<div class="row">
+				  <div class="col-md-4"></div>
+				  <div class="col-md-4 text-center">
+				    <div class="thumbnail">
+				      <a href="https://evewho.com/pilot/Thrice+Hapus">
+				        <img src="https://image.eveonline.com/Character/96079190_256.jpg" alt="Thrice" style="width:100%">
+				        <div class="caption">
+				          <strong>Thrice Hapus</strong>
+				        </div>
+				      </a>
+				    </div>
+				  </div>
+				  <div class="col-md-4"></div>
 				</div>
 			</div>
 		</div>

@@ -5,8 +5,7 @@ $users = new Users($database);
 	<span class="sechead"><?=$pgtitle?></span><br /><br />
 	<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="btn btn-primary btn-md" href="heroes.php" role="button">Hall of Heroes</a>
+	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>
 	<?php 
 	require_once '../class/users.class.php';
 	// display these buttons only to EvE-Scout pilots
