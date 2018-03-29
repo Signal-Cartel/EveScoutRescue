@@ -73,17 +73,17 @@ if (isset($_REQUEST['numberLB'])) {
 	<form id="LBform" name="LBform" method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 		<select class="form-control" name="LBtype" onchange="$('#LBform').submit();" 
 			style="width: auto; margin: 5px;">
-		    <option value="helpful"<?php if ($typeLB == 'helpful') { echo ' selected'; } ?>>Most 
-		    	Helpful Rescue Operators</option>
+		    <option value="helpful"<?php if ($typeLB == 'helpful') { echo ' selected'; } ?>>
+		    	Most Helpful 911 Operators</option>
 		    <option value="mostsuccesrc"<?php if ($typeLB == 'mostsuccesrc') { echo ' selected'; } 
 		    	?>>Most Successful ESRC Agents</option>
-		    <option value="mostsuccsar"<?php if ($typeLB == 'mostsuccsar') { echo ' selected'; } 
-		    	?>>Most Successful SAR Operators</option>
-		   <!-- <option value="mostloc"<?php if ($typeLB == 'mostloc') { echo ' selected'; } ?>>
-		    	Most Locates</option>
+		    <option value="mostsuccdisp"<?php if ($typeLB == 'mostsuccdisp') { echo ' selected'; } 
+		    	?>>Most Successful SAR Dispatchers</option>
+		    <option value="mostloc"<?php if ($typeLB == 'mostloc') { echo ' selected'; } ?>>
+		    	Most SAR Locates</option>
 		    <option value="mostsuccloc"<?php if ($typeLB == 'mostsuccloc') { echo ' selected'; } ?>>
-		    	Most Successful Locates</option>
-		    <option value="mostsar"<?php if ($typeLB == 'mostsar') { echo ' selected'; } ?>>
+		    	Most Successful SAR Locates</option>
+		    <!-- <option value="mostsar"<?php if ($typeLB == 'mostsar') { echo ' selected'; } ?>>
 		    	Most Attempted Rescues</option>
 		    <option value="mostsuccsar"<?php if ($typeLB == 'mostsuccsar') { echo ' selected'; } ?>>
 		    	Most Successful Rescues</option> -->
@@ -110,7 +110,7 @@ if (isset($_REQUEST['numberLB'])) {
 					$agenttype = 'startagent';
 					$rows = $sarleaderBoard->getTop('%%', $agenttype, $numberLB, $daysrangeLB);
 				break;
-				case 'mostsuccsar':
+				case 'mostsuccdisp':
 					$agenttype = 'startagent';
 					$rows = $sarleaderBoard->getTop('closed-rescued', $agenttype, $numberLB, 
 						$daysrangeLB);
@@ -123,9 +123,10 @@ if (isset($_REQUEST['numberLB'])) {
 				case 'mostloc':
 					$agenttype = 'locateagent';
 					$rows = $sarleaderBoard->getTop('%%', $agenttype, $numberLB, $daysrangeLB);
+				break;
 				case 'mostsuccloc':
 					$agenttype = 'locateagent';
-					$rows = $sarleaderBoard->getTop('closed-esrc', $agenttype, $numberLB, 
+					$rows = $sarleaderBoard->getTop('closed-rescued', $agenttype, $numberLB, 
 						$daysrangeLB);
 				break;
 				case 'mostsar':
@@ -146,10 +147,13 @@ if (isset($_REQUEST['numberLB'])) {
 			
 			// display the specified LB
 			foreach ($rows as $value) {
-				echo '<tr>';
-				echo 	'<td>'. Output::htmlEncodeString($value[$agenttype]) .'</td>';
-				echo 	'<td align="right">'. $value['cnt'] .'</td>';
-				echo '</tr>';
+				// do not display rows with no agent name
+				if (!empty($value[$agenttype])) {
+					echo '<tr>';
+					echo 	'<td>'. Output::htmlEncodeString($value[$agenttype]) .'</td>';
+					echo 	'<td align="right">'. $value['cnt'] .'</td>';
+					echo '</tr>';
+				}
 			}
 			?>
 		</tbody>
