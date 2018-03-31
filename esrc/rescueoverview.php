@@ -155,7 +155,10 @@ if (!empty($system)) {
 			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
-			target="_blank">anoik.is</a>
+			target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+		<!-- web evemail client button -->
+		<a href="https://evescoutrescue.com/copilot/mail/" class="btn btn-info" role="button" 
+			target="_blank">EVEMail</a>
 	</div>
 	<div class="ws"></div>
 	
