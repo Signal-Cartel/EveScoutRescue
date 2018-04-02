@@ -39,7 +39,8 @@ include_once '../includes/head.php';
 					<li>Warp to 100 km off the second planet (the "Rescue Cache Planet").</li>
 					<li>During the warp, drop a temporary bookmark at ~100,000km to 50,000km of the Rescue Cache Planet and name it something like "T1". This initial bookmark is designed to reduce travel time and to gather a sense of bearing (speed, drop distance, etc.). Placement of this first bookmark is critical for reducing the number of bounces you will need to make. Here is a handy guideline to follow:<br />
 						- 5AU/s ships: Submit BM when flying past 1,000,000 km to drop a BM around 40,000 km in space<br />
-						- 3AU/s ships: Submit BM when flying between 100,000 and 200,000 km to drop a BM around 40,000 km in space</li>
+						- 3AU/s ships: Submit BM when flying between 100,000 and 200,000 km to drop a BM around 40,000 km in space<br /></li>
+						<i>Note:</i> When setting bookmarks, name them the distance from the location planet (i.e. "23,801km", "42,087km"). This will quickly allow you identify which bookmarks are closest to each side of the cache. Keep bouncing and setting bookmarks between these bookmarks and delete those that are farther away until you can warp to the cache. In these steps, bookmark names of "T1", "T2," etc. are used for convenience. 
 					<li>When you leave warp, drop a second temporary bookmark and name it something like "T2". You just completed pass #1.</li>
 					<li>Time to start pass #2. Warp back to T1 bookmark.</li>
 					<li>During the warp, drop another temporary bookmark between T1 and T2. Name it "T3".</li>
