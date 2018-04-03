@@ -352,7 +352,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	if (empty($system)) {
 		$colspan++;
 		echo '<td>';
-		echo '<a href="?sys='.$row['system'].'">'.Output::htmlEncodeString($row['system']).'</a>';
+		echo '<a href="?sys='.ucfirst($row['system']).'">'.
+				Output::htmlEncodeString(ucfirst($row['system'])).'</a>';
 		echo '</td>';
 	}
 			
