@@ -241,9 +241,11 @@ class Rescue {
 	public function getRequests($finished = 0)
 	{
 		// get requests from database
-		$this->db->query("select * from rescuerequest where finished = :finished order by requestdate");
+		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class 
+							FROM rescuerequest rr, wh_systems w
+							WHERE rr.system = w.System AND rr.finished = :finished 
+							ORDER BY rr.requestdate");
 		$this->db->bind(":finished", $finished);
-		// $database->execute();
 		$data = $this->db->resultset();
 		$this->db->closeQuery();
 		
@@ -260,7 +262,6 @@ class Rescue {
 		// get requests from database
 		$this->db->query("select * from rescuerequest where finished = 0 and status = 'open' order by requestdate");
 		$this->db->bind(":finished", $finished);
-		// $database->execute();
 		$data = $this->db->resultset();
 		$this->db->closeQuery();
 	
@@ -277,21 +278,8 @@ class Rescue {
 	public function getSystemRequests($system, $finished = 0, $isCoord = 0)
 	{
 		// set the default query
-		$sql = "SELECT * FROM rescuerequest 
-							WHERE system = :system and finished = :finished
-							ORDER BY requestdate DESC";
-		
-		/*
-		// check if search for open requests and user is NOT coordinator/admin
-		if ($finished == 0 && $isCoord == 0)
-		{
-			// select only open requests
-			$sql = "SELECT * FROM rescuerequest
-							WHERE system = :system and finished = :finished and status in( 'open', 'system-located')
-							ORDER BY requestdate DESC";
-		}
-		*/
-		
+		$sql = "SELECT * FROM rescuerequest WHERE system = :system AND finished = :finished
+					ORDER BY requestdate DESC";
 		// get requests from database
 		$this->db->query($sql);
 		$this->db->bind(":system", $system);

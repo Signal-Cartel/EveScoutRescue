@@ -275,7 +275,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	$summary = 1, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
-	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-8 ' : '';
+	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-12 ' : '';
 	
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
@@ -284,6 +284,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '<p>None for this system.</p>';
 	} 
 	else { 
+		//echo print_r($data); // for testing
 		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
@@ -296,6 +297,9 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
+		// display this column only on "summary" table
+		echo ($summary == 0) ? '' : '<th>Bounty (ISK)</th>';
+		// display these three columns only on "detail" table
 		echo ($summary == 1) ? '' : '<th>Dispatcher</th>';
 		echo ($summary == 1) ? '' : '<th>Locator</th>';
 		echo ($summary == 1) ? '' : '<th>Rescue Pilot(s)</th>';
@@ -309,10 +313,10 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '</table>';
 	}
 	echo '</div>';
-	// display stats at the top of the page next to the active requests table
-	if ($finished == 0 && empty($system)) { include_once 'stats_sar.php'; }
 	// close row
 	echo '</div>';
+	// display stats under the "overview" active requests table
+	if ($finished == 0 && empty($system)) { include_once 'stats_sar.php'; }
 }
 
 /**
@@ -393,6 +397,19 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
 	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
+	
+	// Bounty - display max payout available for a successful locate/rescue in this system
+	// display only in "summary" tables
+	if ($summary == 1) {
+		$colspan++;
+		$basepay = 50000000; // base rate is 50 mil ISK
+		$dailyincrease = 10000000; // daily increase is 10 mil ISK
+		// get right-most number from WH class string for "WH Class multiplier"
+		$whclassmult = intval(substr($row['Class'], -1));
+		// (base x WH class multiplier) + (Days until rescued x daily increase amt)
+		$payoutmax = ($basepay*$whclassmult)+(intval($row['daysopen'])*$dailyincrease);
+		echo '<td style="text-nowrap">'. number_format(intval($payoutmax)) .'</td>';
+	}
 	
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 	if ($summary == 0) {
