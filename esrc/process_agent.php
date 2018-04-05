@@ -55,6 +55,7 @@ if (isset($_POST['sys_adj'])) {
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
 	$updateexp = $_POST['updateexp'];
+	$succesrc = $_POST['succesrc'];
 
 	// check the system
 	if (isset($system)) {
@@ -94,17 +95,20 @@ if (isset($_POST['sys_adj'])) {
 		}
 		
 		// RESCUE update
-		// create a new instance of Rescue class
-		$rescue = new Rescue($db);
-		// add a new Rescue record
-		$db->beginTransaction();
-		$newRescueID = $rescue->createESRCRequest($system, $aidedpilot, $pilot, 'closed-esrc');
-		// insert rescue note if set
-		if (isset($notes) && $notes != '') {
-			$notes = 'ESRC - ' . $notes;
-			$rescue->createRescueNote($newRescueID, $pilot, $notes);
+		// add a Rescue record only if rescue was successful; Agent note will serve for all others
+		if (intval($succesrc) == 1) {
+			// create a new instance of Rescue class
+			$rescue = new Rescue($db);
+			// add a new Rescue record
+			$db->beginTransaction();
+			$newRescueID = $rescue->createESRCRequest($system, $aidedpilot, $pilot, 'closed-esrc');
+			// insert rescue note if set
+			if (isset($notes) && $notes != '') {
+				$notes = 'ESRC - ' . $notes;
+				$rescue->createRescueNote($newRescueID, $pilot, $notes);
+			}
+			$db->endTransaction();
 		}
-		$db->endTransaction();
 		
 		// refresh page to display newly entered data
 		$redirectURL = "search.php?sys=". $system;

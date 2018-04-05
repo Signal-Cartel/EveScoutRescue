@@ -17,12 +17,17 @@
 			</div>
 			<div class="checkbox">
 			  	<label class="control-label" for="updateexp">
-			  		<input type="checkbox" id="updateexp" name="updateexp" value="1"> &lt;&lt; Check if 
-			  			cache was accessed</label>
+			  		<input type="checkbox" id="updateexp" name="updateexp" value="1"> Cache was 
+			  			accessed</label>
+			</div>
+			<div class="checkbox">
+			  	<label class="control-label" for="succesrc">
+			  		<input type="checkbox" id="succesrc" name="succesrc" value="1"> Pilot was able 
+			  			to successfully exit system thanks to the rescue cache</label>
 			</div>
 			<div class="field">
 				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What 
-					is the name of the Capsuleer who required rescue?</span></label>
+					is the name of the Capsuleer who required assistance?</span></label>
 				<input type="text" class="form-control" id="aidedpilot" name="aidedpilot" />
 			</div>
 			<div class="field">
