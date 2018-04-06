@@ -408,7 +408,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		$whclassmult = intval(substr($row['Class'], -1));
 		// (base x WH class multiplier) + (Days until rescued x daily increase amt)
 		$payoutmax = ($basepay*$whclassmult)+(intval($row['daysopen'])*$dailyincrease);
-		echo '<td style="text-nowrap">'. number_format(intval($payoutmax)) .'</td>';
+		echo '<td style="text-nowrap">'. number_format(intval($payoutmax/2)) .'</td>';
 	}
 	
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
