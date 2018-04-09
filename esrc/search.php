@@ -96,9 +96,11 @@ $pilotLocStat = '';
 // check does not apply to SAR Coordinators
 if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::DEV_SYSTEM != 1)) {
 	if (isset($_SESSION['auth_char_location'])) {
-		if ($_SESSION['auth_char_location']  != $system) {
+		if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
 			$pilotLocStat = 'not_in_system';
-			$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '. $system .' in order to perform this action, but you are in '. $_SESSION['auth_char_location'].'"';
+			$strBtnAttrib = 'data-toggle="tooltip" title="You must be in or one jump out from '.
+				$system .' in order to perform this action, but you are in '. 
+				$_SESSION['auth_char_location'].'"';
 		}
 	}
 	else {

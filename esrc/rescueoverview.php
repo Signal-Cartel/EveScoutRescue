@@ -294,6 +294,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		}
 		echo '			<th>Opened</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
+		echo (!empty($system)) ? '' : '<th>Class</th>';
 		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
@@ -359,6 +360,12 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		echo '<a href="?sys='.ucfirst($row['system']).'">'.
 				Output::htmlEncodeString(ucfirst($row['system'])).'</a>';
 		echo '</td>';
+	}
+	
+	// Class - class of J-space system
+	if (empty($system)) {
+		$colspan++;
+		echo '<td>'. Output::htmlEncodeString($row['Class']).'</td>';
 	}
 			
 	// Pilot - display stranded pilot's name only to coords and relevant agents
