@@ -77,6 +77,16 @@ include_once '../includes/top-right.php';
 				  	EvE-Scout Rescue Coordinators
 				  </h2>
 				</div>
+				<?php 
+				/*
+				$arrPilots = $users->getUsersByRole('%%');
+				foreach ($arrPilots as $val) {
+					if ($val['task'] == 'SARCoordinator') {
+						echo $val['pilot'] .' ';
+					}
+				}
+				*/
+				?>
 				<div class="row">
 				  <div class="col-md-3">
 				    <div class="thumbnail text-center">

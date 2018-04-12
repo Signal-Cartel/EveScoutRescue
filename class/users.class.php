@@ -121,6 +121,24 @@ class Users {
 	}
 	
 	/**
+	 * Get list of all users by role, can filter for specific role
+	 * @param string $role the specific role we want a list of users for, use '%%' for not specified
+	 * @param boolean $active active filter, default to "true"
+	 * @return array return list of users
+	 */
+	public function getUsersByRole($role, $active = true)
+	{
+		$this->db->query("SELECT * FROM pilots WHERE task LIKE :role AND active = :active");
+		$this->db->bind(":role", $role);
+		$this->db->bind(":active", ($active) ? 1 : 0);
+		// get the resultset
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+	
+	/**
 	 * Check if the user of the current session is part of the alliance
 	 * @return boolean
 	 */
