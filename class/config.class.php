@@ -22,6 +22,7 @@ define("ROOTPATH", $sysconfig['rootPath']);
 define("AUTHCALLBACK", $sysconfig['authCallback']);
 define("AUTHCLIENTID", $sysconfig['clientID']);
 define("AUTHSECRET", $sysconfig['authSecret']);
+define("USERAGENT", $sysconfig['userAgent']);
 define("DEVSYSTEM", $sysconfig['devSystem']);
 define("DISCORDCOORD", $sysconfig['discordCoordChannel']);
 /**
@@ -36,6 +37,8 @@ class Config
 	const AUTH_CLIENT_ID = AUTHCLIENTID;
 	
 	const AUTH_SECRET = AUTHSECRET;
+	
+	const USER_AGENT = USERAGENT;
 	
 	const DEV_SYSTEM = DEVSYSTEM;
 	
