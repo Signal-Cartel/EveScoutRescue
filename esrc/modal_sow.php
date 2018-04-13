@@ -63,10 +63,19 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			</script>
 			<!--This is the end of the swap fields------------------------>
 
-			<div class="field">
+			<!-- <div class="field">
 				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
 				<input type="text" class="form-control " id="distance" name="distance" type="number" />
+			</div> -->
+			<div class="field form-group">
+				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
+				<input class="form-control " id="distance" name="distance" type="number" min="22000" max="50000" step="1" required/>
 			</div>
+			<script>
+			  $( document ).ready(function() {
+			    $("#sowform").validator();
+			  });
+			</script>
 
 			<div class="field">
 				<label class="control-label" for="password">Password<span class="descr">What is the 
