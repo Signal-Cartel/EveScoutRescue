@@ -130,19 +130,12 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		        	// create objects 
 		        	$database = new Database();
 		        	// check for user in db
-		        	$database->query("SELECT corporationname, corporationticker, user.corporationid,
-						    alliancename, allianceticker, corporation.allianceid, characterid,
-							characterownerhash, user.id
-						    FROM user
-						    JOIN corporation ON user.corporationid = corporation.corporationid
-						    JOIN alliance ON corporation.allianceid = alliance.allianceid
-						    WHERE user.characterid = :characterid
+		        	$database->query("SELECT * FROM user WHERE user.characterid = :characterid
 						    AND characterownerhash = :characterhash");
 		        	$database->bind(":characterid", $_SESSION['auth_characterid']);
 		        	$database->bind(":characterhash", $_SESSION['auth_characterhash']);
 		        	// get the result line
 		        	$userRecord = $database->single();
-		        	//debug($userRecord);
 		        	// close the query
 		        	$database->closeQuery();
 		        	// if user is not in db, add them
@@ -158,12 +151,92 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		        		$database->execute();
 		        		error_log("user added to db");
 		        	}
-		        	// if user is in db, check for new corp
-		        	// NEED CODE HERE
-		        	// check for corp/alliance in db; if not present, add them
-		        	// NEED CODE HERE
+		        	// if user is in db, check for new corp and update if needed
+		        	else {
+		        		if ($userRecord['corporationid'] != $_SESSION ['auth_charactercorp']) {
+		        			error_log('User has new corporation...');
+		        			$database->query('UPDATE user SET corporationid = :corporationid, 
+								WHERE characterid = :characterid AND characterhash = :characterhash');
+		        			$database->bind(":corporationid", $_SESSION ['auth_charactercorp']);
+		        			$database->bind(":characterid", $_SESSION['auth_characterid']);
+		        			$database->bind(":characterhash", $_SESSION['auth_characterhash']);
+		        			$database->execute();
+		        			error_log("Corporation updated for user.");
+			        	}
+		        	}
+		        	// check for alliance in db; if not present, add it
+		        	$database->query("SELECT allianceid, allianceticker FROM alliance 
+						WHERE allianceid = :allianceid");
+		        	$database->bind(":allianceid", $_SESSION['auth_characteralliance']);
+		        	// get the result line
+		        	$allianceRecord = $database->single();
+		        	// close the query
+		        	$database->closeQuery();
+		        	// if alliance is not in db, add it
+		        	if (empty($allianceRecord)) {
+		        		error_log('Getting alliance details...');
+		        		$ch = curl_init();
+		        		$lookup_url="https://esi.tech.ccp.is/latest/alliances/".
+		        			$_SESSION['auth_characteralliance']."/?datasource=tranquility";
+		        		curl_setopt($ch, CURLOPT_URL, $lookup_url);
+		        		curl_setopt($ch, CURLOPT_USERAGENT, Config::USER_AGENT);
+		        		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		        		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+		        		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		        		$result = curl_exec($ch);
+		        		curl_close($ch);
+		        		$alliance_data = json_decode($result);
+		        		$allianceticker = $alliance_data->ticker;
+		        		$alliancename = $alliance_data->name;
+		        		
+		        		error_log('Creating alliance details...');
+		        		$database->query('INSERT INTO alliance (allianceid, alliancename, allianceticker) 
+                    		VALUES (:allianceid, :alliancename, :allianceticker)');
+		        		$database->bind(":allianceid", $_SESSION['auth_characteralliance']);
+		        		$database->bind(":alliancename", $alliancename);
+		        		$database->bind(":allianceticker", $allianceticker);
+		        		$database->execute();
+		        		error_log("alliance added to db");
+		        	}
+		        	
+		        	// check for corp in db; if not present, add it
+		        	$database->query("SELECT corporationid, corporationticker FROM corporation 
+						WHERE corporationid = :corporationid");
+		        	$database->bind(":corporationid", $_SESSION['auth_charactercorp']);
+		        	// get the result line
+		        	$corpRecord = $database->single();
+		        	// close the query
+		        	$database->closeQuery();
+		        	// if corp is not in db, add it
+		        	if (empty($corpRecord)) {
+		        		error_log('Getting corporation details...');
+		        		$ch = curl_init();
+		        		$lookup_url="https://esi.tech.ccp.is/latest/corporations/".
+				        	$_SESSION ['auth_charactercorp']."/?datasource=tranquility";
+				        curl_setopt($ch, CURLOPT_URL, $lookup_url);
+				        curl_setopt($ch, CURLOPT_USERAGENT, Config::USER_AGENT);
+				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+				        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+				        $result = curl_exec($ch);
+				        curl_close($ch);
+				        $corp_data = json_decode($result);
+				        $corpticker = $corp_data->ticker;
+				        $corpname = $corp_data->name;
+				        		
+				        error_log('Creating corporation details...');
+				        $database->query('INSERT INTO corporation
+                			(corporationid, corporationname, corporationticker, allianceid)
+                			VALUES (:corporationid, :corporationname, :corporationticker, :allianceid)');
+				        $database->bind(":corporationid", $_SESSION['auth_charactercorp']);
+				        $database->bind(":corporationname", $corpname);
+				        $database->bind(":corporationticker", $corpticker);
+				        $database->bind(":allianceid", $_SESSION['auth_characteralliance']);
+				        $database->execute();
+				        error_log("corporation added to db");
+		        	}
 
-		        	// Auth complete; redirect user
+		        	// Auth and DB updates complete; redirect user
 		        	session_write_close();
 				    header('Location:'. $_SESSION['auth_redirect']);
 				    exit;
