@@ -155,7 +155,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
-							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EG</a></td>';
+							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
@@ -228,9 +228,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					foreach ($rows as $value) {
 						$ctr++;
 						echo '<tr>';
-						echo '<td><a target="_blank" 
-								href="https://evewho.com/pilot/'. $value['Pilot'] .'">'. 
-								Output::htmlEncodeString($value['Pilot']) .'</td>';
+						echo '<td><a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a target="_blank" 
+							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
 									round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" />
