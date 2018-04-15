@@ -126,114 +126,28 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 							$_SESSION['auth_characteralliance'] = '';
 		        	}
 		        	
-		        	// Check if user is in db, and add if needed
-		        	// create objects 
-		        	$database = new Database();
-		        	// check for user in db
-		        	$database->query("SELECT * FROM user WHERE user.characterid = :characterid
-						    AND characterownerhash = :characterhash");
-		        	$database->bind(":characterid", $_SESSION['auth_characterid']);
-		        	$database->bind(":characterhash", $_SESSION['auth_characterhash']);
-		        	// get the result line
-		        	$userRecord = $database->single();
-		        	// close the query
-		        	$database->closeQuery();
-		        	// if user is not in db, add them
-		        	if (empty($userRecord)) {
-		        		error_log('Creating user details...');
-		        		$database->query('INSERT INTO user (characterid, characterownerhash,
-							character_name,corporationid) VALUES (:characterid, :characterhash, 
-							:charactername, :corporationid)');
-		        		$database->bind(":characterid", $_SESSION['auth_characterid']);
-		        		$database->bind(":characterhash", $_SESSION['auth_characterhash']);
-		        		$database->bind(":charactername", $_SESSION['auth_charactername']);
-		        		$database->bind(":corporationid", $_SESSION ['auth_charactercorp']);
-		        		$database->execute();
-		        		error_log("user added to db");
-		        	}
-		        	// if user is in db, check for new corp and update if needed
-		        	else {
-		        		if ($userRecord['corporationid'] != $_SESSION ['auth_charactercorp']) {
-		        			error_log('User has new corporation...');
-		        			$database->query('UPDATE user SET corporationid = :corporationid, 
-								WHERE characterid = :characterid AND characterhash = :characterhash');
-		        			$database->bind(":corporationid", $_SESSION ['auth_charactercorp']);
-		        			$database->bind(":characterid", $_SESSION['auth_characterid']);
-		        			$database->bind(":characterhash", $_SESSION['auth_characterhash']);
-		        			$database->execute();
-		        			error_log("Corporation updated for user.");
-			        	}
-		        	}
-		        	// check for alliance in db; if not present, add it
-		        	$database->query("SELECT allianceid, allianceticker FROM alliance 
-						WHERE allianceid = :allianceid");
-		        	$database->bind(":allianceid", $_SESSION['auth_characteralliance']);
-		        	// get the result line
-		        	$allianceRecord = $database->single();
-		        	// close the query
-		        	$database->closeQuery();
-		        	// if alliance is not in db, add it
-		        	if (empty($allianceRecord)) {
-		        		error_log('Getting alliance details...');
-		        		$ch = curl_init();
-		        		$lookup_url="https://esi.tech.ccp.is/latest/alliances/".
-		        			$_SESSION['auth_characteralliance']."/?datasource=tranquility";
-		        		curl_setopt($ch, CURLOPT_URL, $lookup_url);
-		        		curl_setopt($ch, CURLOPT_USERAGENT, Config::USER_AGENT);
-		        		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		        		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		        		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		        		$result = curl_exec($ch);
-		        		curl_close($ch);
-		        		$alliance_data = json_decode($result);
-		        		$allianceticker = $alliance_data->ticker;
-		        		$alliancename = $alliance_data->name;
-		        		
-		        		error_log('Creating alliance details...');
-		        		$database->query('INSERT INTO alliance (allianceid, alliancename, allianceticker) 
-                    		VALUES (:allianceid, :alliancename, :allianceticker)');
-		        		$database->bind(":allianceid", $_SESSION['auth_characteralliance']);
-		        		$database->bind(":alliancename", $alliancename);
-		        		$database->bind(":allianceticker", $allianceticker);
-		        		$database->execute();
-		        		error_log("alliance added to db");
-		        	}
-		        	
-		        	// check for corp in db; if not present, add it
-		        	$database->query("SELECT corporationid, corporationticker FROM corporation 
-						WHERE corporationid = :corporationid");
-		        	$database->bind(":corporationid", $_SESSION['auth_charactercorp']);
-		        	// get the result line
-		        	$corpRecord = $database->single();
-		        	// close the query
-		        	$database->closeQuery();
-		        	// if corp is not in db, add it
-		        	if (empty($corpRecord)) {
-		        		error_log('Getting corporation details...');
-		        		$ch = curl_init();
-		        		$lookup_url="https://esi.tech.ccp.is/latest/corporations/".
-				        	$_SESSION ['auth_charactercorp']."/?datasource=tranquility";
-				        curl_setopt($ch, CURLOPT_URL, $lookup_url);
-				        curl_setopt($ch, CURLOPT_USERAGENT, Config::USER_AGENT);
-				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-				        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-				        $result = curl_exec($ch);
-				        curl_close($ch);
-				        $corp_data = json_decode($result);
-				        $corpticker = $corp_data->ticker;
-				        $corpname = $corp_data->name;
-				        		
-				        error_log('Creating corporation details...');
-				        $database->query('INSERT INTO corporation
-                			(corporationid, corporationname, corporationticker, allianceid)
-                			VALUES (:corporationid, :corporationname, :corporationticker, :allianceid)');
-				        $database->bind(":corporationid", $_SESSION['auth_charactercorp']);
-				        $database->bind(":corporationname", $corpname);
-				        $database->bind(":corporationticker", $corpticker);
-				        $database->bind(":allianceid", $_SESSION['auth_characteralliance']);
-				        $database->execute();
-				        error_log("corporation added to db");
+		        	// DB updates
+		        	// data/auth_db.php?charid=123456&charhash=abcdef&charname=Joe%20Dokes&corpid=120002154454&allianceid=254678954621
+		        	$ch = curl_init();
+		        	// preserve any "+"s in character hash
+		        	$encCharHash = str_replace("+", "%2B", $_SESSION['auth_characterhash']);
+		        	// build URL
+		        	$lookup_url= $_SERVER['HTTPS'] ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] .
+		        		'/data/auth_db.php?charid=' . $_SESSION['auth_characterid'] .
+		        		'&charhash=' . $encCharHash .
+		        		'&charname=' . urlencode($_SESSION['auth_charactername']) .
+		        		'&corpid=' . $_SESSION['auth_charactercorp'] .
+		        		'&allianceid=' . $_SESSION['auth_characteralliance'];
+		        	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//ignore the SSL error
+		        	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);//follow redirect from Thrice's 303
+		        	curl_setopt($ch, CURLOPT_URL, $lookup_url);
+		        	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		        	$result = curl_exec($ch);
+		        	//var_dump($result);
+		        	//exit;
+		        	curl_close($ch);
+		        	if ($result == false) {
+		        		//curl error
 		        	}
 
 		        	// Auth and DB updates complete; redirect user

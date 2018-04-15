@@ -20,9 +20,9 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			</div>
 			<!--This is the beginning of the swap fields-------------->
 			<div id="topfield">
-				<div class="field">
+				<div class="field form-group">
 					<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="location" name="location">
+					<select class="form-control" id="location" name="location" required>
 						<option value="">- Select -</option>
 						<?php
 						foreach ($locopts as $val) {
@@ -36,9 +36,9 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 				<a class="btn btn-success btn-xs" tabindex="99" role="button"href="javascript: swapThem();">Location&lt;-&gt;Align</a>
 			</div>
 			<div id="bottomfield" >
-				<div class="field">
+				<div class="field form-group">
 					<label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="alignedwith" name="alignedwith" >
+					<select class="form-control" id="alignedwith" name="alignedwith" required>
 						<option value="">- Select -</option>
 						<?php 
 						foreach ($locopts as $val) {
@@ -63,28 +63,19 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			</script>
 			<!--This is the end of the swap fields------------------------>
 
-			<!-- <div class="field">
-				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
-				<input type="text" class="form-control " id="distance" name="distance" type="number" />
-			</div> -->
 			<div class="field form-group">
 				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
 				<input class="form-control " id="distance" name="distance" type="number" min="22000" max="50000" step="1" required/>
 			</div>
-			<script>
-			  $( document ).ready(function() {
-			    $("#sowform").validator();
-			  });
-			</script>
 
-			<div class="field">
+			<div class="field form-group">
 				<label class="control-label" for="password">Password<span class="descr">What is the 
 					password for the secure container? (Generated password is pre-filled. Click to 
 					paste your own password.)</span></label>
 				<input type="text" class="form-control" id="password" name="password" 
-					value="<?=$cachepass?>" maxlength="15" onclick="select();" />
+					value="<?=$cachepass?>" maxlength="15" onclick="select();" required />
 			</div>
-		  	<div class="field">
+		  	<div class="field form-group">
 				<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>
 				<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
 			</div>
@@ -94,7 +85,12 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 				<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
 			    <button type="submit" class="btn btn-info">Submit</button>
 			</div>
-	      </div>
+	      </div>   
+			<script>
+			  $( document ).ready(function() {
+			    $("#sowform").validator();
+			  });
+			</script>
       </form>
     </div>
 

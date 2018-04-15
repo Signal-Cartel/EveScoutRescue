@@ -111,6 +111,7 @@ $leaderBoard = new Leaderboard($database);
 		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
 		<span class="sechead"><?php echo $ctractive; ?> of 2603 
 			(<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
+			<?php echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . gmdate('Y-m-d H:i:s', strtotime("now"));?><br />
 		<br />
 		<span class="sechead">"No Sow" systems: <?php echo $lockedSys ?></span><br />
 		<span class="sechead">Expiring in <?=$expireDays?> days: <?php echo $toexpire; ?></span><br />
