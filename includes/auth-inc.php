@@ -7,10 +7,6 @@ require_once '../class/db.class.php';
 require_once '../class/users.class.php';
 require_once '../class/config.class.php';
 
-// - Set arrays of different page types
-// - If it's not in one of these arrays, it is a public page that does not require login to access
-$pgsAdmin    = array('/esrc/payoutadmin.php','/esrc/payoutadmin_sar.php','/esrc/payoutadmin_sar_rescue.php');
-
 //populate display strings for authenticated users
 if (isset($_SESSION['auth_characterid'])) {
 	$charimg    = '<img src="https://image.eveonline.com/Character/'.
@@ -31,10 +27,10 @@ else {
 // Only run through auth routines if we are NOT on localhost
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
 	// We are on an admin page...
-	if (in_array($_SERVER['PHP_SELF'], $pgsAdmin)) {
+	if (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) {
 		//1a. ...and user is logged in...
  		if (isset($_SESSION['auth_characterid'])) {
-				$database = new Database();
+			$database = new Database();
 			$users = new Users($database);
 			//2. ...but user is not an admin, so redirect back to home
 			if ($users->isAdmin($charname) === false) {

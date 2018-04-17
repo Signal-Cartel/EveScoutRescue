@@ -123,6 +123,10 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		  	</a>
 		</div>
 		<!-- END TESTIMONIAL CAROUSEL -->
+		<a class="btn btn-primary btn-md" href="testimonial_submit.php" role="button">Submit Your 
+			Testimonial</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-primary btn-md" href="testimonials_list.php" role="button">Read All 
+			Testimonials</a>
 	</div>
 </div>
 <div class="ws"></div>

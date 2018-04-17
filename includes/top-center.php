@@ -23,7 +23,7 @@ $users = new Users($database);
 			}
 			// additional button for admin users
 			if ($users->isAdmin($charname)) {
-					echo '<a class="btn btn-danger btn-md" href="../esrc/payoutadmin.php" 
+					echo '<a class="btn btn-danger btn-md" href="../admin/index.php" 
 							role="button">Admin</a>';
 			};
 		}
