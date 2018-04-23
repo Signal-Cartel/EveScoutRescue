@@ -106,7 +106,7 @@ if (isset($_REQUEST['sys'])) {
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
 ?>
-<body class="white">
+<body class="white" style="background-color: black;">
 	<div class="container">
 	
 	<div class="row" id="header" style="padding-top: 10px;">
