@@ -4,6 +4,12 @@ body {
     background-color: black;
 }
 
+body::before {
+    content: ' ';
+    position: fixed;
+    will-change: transform;
+}
+
 .clearit {
 	clear: both;
 }

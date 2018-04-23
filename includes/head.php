@@ -2,7 +2,7 @@
 	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
 	<!-- CSS -->
-	<link href="../css/main.css" rel="stylesheet">
+	<link href="../css/main.css?v=<?=filemtime('../css/main.css')?>" rel="stylesheet">
 	<link href="../css/sticky-footer.css" rel="stylesheet">
 	<link href="../css/datatables_custom.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
