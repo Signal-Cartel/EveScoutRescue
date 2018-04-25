@@ -16,7 +16,8 @@ require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
 
 // set password to use for new cache
-$cachepass = Password::generatePassword();
+// if "pass" parameter is passed in, use that for password instead
+$cachepass = (isset($_REQUEST['pass'])) ? $_REQUEST['pass'] : Password::generatePassword();
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())

@@ -105,7 +105,7 @@ if (isset($_POST['sys_sow'])) {
 
 	//display error message if there is one
 	if (!empty($errmsg)) {
-		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
+		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg)."&pass=". urlencode($password);
 	} 
 	// otherwise, perform DB UPDATES
 	else {

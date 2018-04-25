@@ -22,7 +22,7 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			<div id="topfield">
 				<div class="field form-group">
 					<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="location" name="location" required>
+					<select class="form-control" id="location" name="location" onchange="validatePlanets()" required>
 						<option value="">- Select -</option>
 						<?php
 						foreach ($locopts as $val) {
@@ -33,12 +33,12 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 				</div>
 			</div><!-- End topfield -->
 			<div class="pull-right">					
-				<a class="btn btn-success btn-xs" tabindex="99" role="button"href="javascript: swapThem();">Location&lt;-&gt;Align</a>
+				<a class="btn btn-success btn-xs" tabindex="99" role="button" href="javascript: swapThem();">Location&lt;-&gt;Align</a>
 			</div>
 			<div id="bottomfield" >
 				<div class="field form-group">
 					<label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="alignedwith" name="alignedwith" required>
+					<select class="form-control" id="alignedwith" name="alignedwith" onchange="validatePlanets()" required>
 						<option value="">- Select -</option>
 						<?php 
 						foreach ($locopts as $val) {
@@ -48,19 +48,6 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 					</select>
 				</div>
 			</div><!-- end bottomfield -->
-			
-			<script>
-			function swapThem(){
-				var tophtm = document.getElementById("topfield").innerHTML;
-				var bottomhtm = document.getElementById("bottomfield").innerHTML;
-				document.getElementById("topfield").innerHTML = bottomhtm;
-				document.getElementById("bottomfield").innerHTML = tophtm;
-				LocOnTop = !LocOnTop;
-				if (typeof(Storage) !== "undefined"){
-					localStorage.LocOnTop = LocOnTop;
-				}	
-			}
-			</script>
 			<!--This is the end of the swap fields------------------------>
 
 			<div class="field form-group">
@@ -86,13 +73,35 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 			    <button type="submit" class="btn btn-info">Submit</button>
 			</div>
 	      </div>   
-			<script>
-			  $( document ).ready(function() {
-			    $("#sowform").validator();
-			  });
-			</script>
       </form>
     </div>
 
   </div>
 </div>
+
+<script>
+  $( document ).ready(function() {
+    $("#sowform").validator();
+  });
+
+  function validatePlanets()
+  { 
+	  var location = document.getElementById("location"); 
+	  var align = document.getElementById("alignedwith"); 
+	  if (location.value == align.value) {
+		  alert("Location planet and align planet must be different."); 
+	  }
+  }
+
+  function swapThem()
+  {
+		var tophtm = document.getElementById("topfield").innerHTML;
+		var bottomhtm = document.getElementById("bottomfield").innerHTML;
+		document.getElementById("topfield").innerHTML = bottomhtm;
+		document.getElementById("bottomfield").innerHTML = tophtm;
+		LocOnTop = !LocOnTop;
+		if (typeof(Storage) !== "undefined"){
+			localStorage.LocOnTop = LocOnTop;
+		}	
+	}
+</script>
