@@ -84,6 +84,20 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
     $("#sowform").validator();
   });
 
+  if (typeof(Storage) !== "undefined"){
+      if (localStorage.LocOnTop) {
+          LocOnTop = (localStorage.LocOnTop == 'true');
+      }
+      else{
+          localStorage.LocOnTop = 'true';
+          LocOnTop = true;
+      }
+      if (!LocOnTop){LocOnTop = true; swapThem();}
+  }
+  else{
+      LocOnTop = true;
+  }
+
   function validatePlanets()
   { 
 	  var location = document.getElementById("location"); 
