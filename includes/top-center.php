@@ -19,7 +19,7 @@ $users = new Users($database);
 			// only show Co-Pilot button if they are not already logged into Co-Pilot
 			if (!isset($_SESSION['auth_copilot'])) {
 				echo '<a class="btn btn-warning btn-md" href="../copilot/" 
-					role="button" target="_blank">Co-Pilot / Allison</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+					role="button" target="_blank">Allison</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 			}
 			// additional button for admin users
 			if ($users->isAdmin($charname)) {

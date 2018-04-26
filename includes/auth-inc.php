@@ -12,10 +12,11 @@ if (isset($_SESSION['auth_characterid'])) {
 	$charimg    = '<img src="https://image.eveonline.com/Character/'.
 				$_SESSION['auth_characterid'].'_64.jpg">';
 	$charname   = $_SESSION['auth_charactername'];
-	$chardiv    = '<div style="text-align: center;">'.$charimg.'<br />' .
-				  '<div><span class="white">' .Output::htmlEncodeString($charname). '</span><br />' .
-				  '<span class="descr"><a href="../auth/logout.php">logout</a></span>' .
-				  '</div></div>';
+	$logoutlink = (isset($_SESSION['auth_copilot'])) ? '' : '<span class="descr"><a href="../auth/logout.php">logout</a></span>';
+	$chardiv    = '<div style="text-align: center;"><a href="../esrc/personal_stats.php?pilot=' . 
+				  urlencode($charname) . '" target="_blank">'.$charimg.'<br />' . 
+				  '<div><span class="white">' . Output::htmlEncodeString($charname) . 
+				  '</span></a><br />' . $logoutlink . '</div></div>';
 }
 
 //populate display string for non-authenticated users
