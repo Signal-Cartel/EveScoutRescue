@@ -2,9 +2,10 @@
 	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
 	<!-- CSS -->
-	<link href="../css/main.css?v=<?=filemtime('../css/main.css')?>" rel="stylesheet">
-	<link href="../css/sticky-footer.css" rel="stylesheet">
-	<link href="../css/datatables_custom.css" rel="stylesheet">
+	<link rel="stylesheet" href="../css/main.css?v=<?=filemtime('../css/main.css')?>">
+	<link rel="stylesheet" href="../css/sticky-footer.css">
+	<link rel="stylesheet" href="../css/datatables_custom.css">
+	<link rel="stylesheet" href="../css/pikaday.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!-- Favicon -->
@@ -15,6 +16,8 @@
 	<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="../js/typeahead.js"></script>
     <script src="../js/validator.js"></script>
+    <script src="../js/moment.min.js"></script>
+	<script src="../js/pikaday.js"></script> <!-- https://dbushell.com/Pikaday/ -->
     <!-- All background images courtesy of EvE-Scout Observatory:
     		- http://observatory.eve-scout.com/
     		- https://www.flickr.com/photos/eve-scout/ -->

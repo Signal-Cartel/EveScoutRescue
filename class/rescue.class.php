@@ -1,5 +1,6 @@
 <?php
 // use database class
+require_once '../class/db.class.php';
 
 // check if called from an allowed page
 if (!defined('ESRC'))
@@ -8,7 +9,24 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-require_once '../class/db.class.php';
+// for debug only
+/*
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+*/
+
+function debug($variable){
+	if(is_array($variable)){
+		echo "<pre>";
+		print_r($variable);
+		echo "</pre>";
+		exit();
+	}
+	else{
+		echo ($variable);
+		exit();
+	}
+}
 
 /**
  * Class to manage and search SAR requests. 
@@ -325,12 +343,20 @@ class Rescue {
 	/**
 	 * Get count of all successful rescues
 	 * @param unknown $rescuetype
+	 * @param string $start - start date for search
+	 * @param string $end - end date for search
 	 * @return unknown
 	 */
-	public function getRescueCount($rescuetype)
+	public function getRescueCount($rescuetype, $start, $end)
 	{
-		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest WHERE status = :rescuetype");
+		// set start and end dates to defaults for "all time" if not passed into function
+		$start = (isset($start)) ? $start : '2017-03-18';
+		$end = (isset($end)) ? $end : date('Y-m-d', strtotime('now'));
+		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest 
+			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end");
 		$this->db->bind(":rescuetype", $rescuetype);
+		$this->db->bind(":start", $start);
+		$this->db->bind(":end", $end);
 		$row= $this->db->single();
 		$this->db->closeQuery();
 		
