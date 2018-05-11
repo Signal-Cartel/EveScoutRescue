@@ -85,7 +85,6 @@ require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
-require_once '../class/users.class.php';
 require_once '../class/caches.class.php';
 
 // create a new database connection
@@ -472,3 +471,4 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 		}
 	}
 }
+?>

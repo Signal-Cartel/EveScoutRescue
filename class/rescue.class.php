@@ -13,7 +13,6 @@ if (!defined('ESRC'))
 /*
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-*/
 
 function debug($variable){
 	if(is_array($variable)){
@@ -27,6 +26,7 @@ function debug($variable){
 		exit();
 	}
 }
+*/
 
 /**
  * Class to manage and search SAR requests. 
@@ -252,18 +252,24 @@ class Rescue {
 	}
 
 	/**
-	 * Get all requests by status
+	 * Get all requests by status and date
 	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
 	 * @return array
 	 */
-	public function getRequests($finished = 0)
+	public function getRequests($finished = 0, $start = '', $end = '')
 	{
+		// set start and end dates to defaults for "all time" if not passed into function
+		$start = (empty($start)) ? '2017-03-18' : $start;
+		$end = (empty($end)) ? date('Y-m-d', strtotime('now')) : $end;
 		// get requests from database
 		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class 
 							FROM rescuerequest rr, wh_systems w
 							WHERE rr.system = w.System AND rr.finished = :finished 
+							AND rr.lastcontact BETWEEN :start AND :end
 							ORDER BY rr.requestdate");
 		$this->db->bind(":finished", $finished);
+		$this->db->bind(":start", $start);
+		$this->db->bind(":end", $end);
 		$data = $this->db->resultset();
 		$this->db->closeQuery();
 		
@@ -347,11 +353,11 @@ class Rescue {
 	 * @param string $end - end date for search
 	 * @return unknown
 	 */
-	public function getRescueCount($rescuetype, $start, $end)
+	public function getRescueCount($rescuetype, $start = '', $end = '')
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
-		$start = (isset($start)) ? $start : '2017-03-18';
-		$end = (isset($end)) ? $end : date('Y-m-d', strtotime('now'));
+		$start = (empty($start)) ? '2017-03-18' : $start;
+		$end = (empty($end)) ? date('Y-m-d', strtotime('now')) : $end;
 		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest 
 			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end");
 		$this->db->bind(":rescuetype", $rescuetype);

@@ -4,12 +4,6 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-// for debug only
-/*
- error_reporting(E_ALL);
- ini_set('display_errors', 'on');
-*/
-
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
@@ -47,6 +41,30 @@ if (!Users::isAllianceUserSession())
 	exit;
 }
 
+?>
+<html>
+
+<head>
+	<?php 
+	$pgtitle = 'ESR Stats - Rescues Tabular Detail';
+	include_once '../includes/head.php'; 
+	?>
+	<style>
+	<!--
+		table {
+			table-layout: fixed;
+			word-wrap: break-word;
+		}
+		a,
+		a:visited,
+		a:hover {
+			color: aqua;
+		}
+	-->
+	</style>
+</head>
+
+<?php
 // create object instances
 $database = new Database();
 $users = new Users($database);
@@ -63,6 +81,15 @@ if (!isset($charname))
 
 // check for SAR Coordinator login
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
+
+// get rescue type from request and handle for bad input
+$rescuetype = '';
+if(isset($_REQUEST['type'])) { 
+	$rescuetype= htmlspecialchars_decode($_REQUEST['type']);
+}
+if ($rescuetype != 'ESRC' && $rescuetype != 'SAR') {
+	$rescuetype = '';
+}
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
@@ -83,7 +110,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$startYear = intval(substr($arrStart[0], -3)) + 1898;
 	$startMonth = intval(date('m', strtotime($arrStart[1])));
 	$startDay = intval($arrStart[2]);
-	$start = gmdate('Y-m-d', strtotime($startYear. '-' . $startMonth. '-' . $startDay));
+	$start = gmdate('Y-m-d', strtotime($startYear. '-' . $startMonth. '-' . $startDay));	
 	
 	// end date
 	$arrEnd = explode('-', $_REQUEST['end']);
@@ -96,75 +123,14 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
 	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
 }
-?>
-<html>
 
-<head>
-	<?php 
-	$pgtitle = 'ESR Stats';
-	include_once '../includes/head.php'; 
-	?>
-	<style>
-	<!--
-		table {
-			table-layout: fixed;
-			word-wrap: break-word;
-		}
-		a,
-		a:visited,
-		a:hover {
-			color: aqua;
-		}
-	-->
-	</style>
-	
-	<!--Load the AJAX API-->
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript">
-		// Load the Visualization API and the piechart package.
-		google.charts.load('current', {'packages':['corechart']});
-		// Draw charts on page load
-		google.charts.setOnLoadCallback(drawEsrcParticipationChart);
-		google.charts.setOnLoadCallback(drawSarParticipationChart);
-		
-		function drawEsrcParticipationChart(type) {
-		  if (typeof type === "undefined") { type = 'Overall'; }
-		  var jsonData = $.ajax({
-		      url: "../stats/stats_data_esrc_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
-		      dataType: "json", async: false }).responseText;		          
-		  // Create our data table out of JSON data loaded from server.
-		  var data = new google.visualization.DataTable(jsonData);
-		  // set chart options
-		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
-			  legendTextStyle: { color: 'white' }, backgroundColor: 'black' };
-		  // Instantiate and draw our chart, passing in some options.
-		  var chart = new google.visualization.PieChart(document.getElementById('esrcParticipation'));
-		  chart.draw(data, options);
-		}
-
-		function drawSarParticipationChart(type) {
-		  if (typeof type === "undefined") { type = 'Rescuers'; }
-		  var jsonData = $.ajax({
-		      url: "../stats/stats_data_sar_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
-		      dataType: "json", async: false }).responseText;		          
-		  // Create our data table out of JSON data loaded from server.
-		  var data = new google.visualization.DataTable(jsonData);
-		  // set chart options
-		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
-			  legendTextStyle: { color: 'white' }, backgroundColor: 'black' };
-		  // Instantiate and draw our chart, passing in some options.
-		  var chart = new google.visualization.PieChart(document.getElementById('sarParticipation'));
-		  chart.draw(data, options);
-		}
-	</script>
-</head>
-
-<?php
 // get rescue counts
 $ctrESRCrescues = $rescue->getRescueCount('closed-esrc', $start, $end);
 $ctrSARrescues = $rescue->getRescueCount('closed-rescued', $start, $end);
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+
+// get all successful rescues for time period
+$arrRescueDetail = $rescue->getRequests(1, $start, $end);
 ?>
 
 <body class="white" style="background-color: black;">
@@ -172,6 +138,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
+	<!-- DATEPICKER -->
 	<div class="col-sm-8 black" style="text-align: center;">
 		<div class="row">
 			<div class="col-sm-12" style="text-align: center;">
@@ -187,6 +154,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 					<div class="checkbox">
 						<label class="white"><input type="checkbox" name="personal" value="yes"> Personal Stats</label>
 					</div>
+					<input type="hidden" name="type" id="type" value="<?=$rescuetype?>">
 					&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Get Stats</button>
 				</form>
 			</div>
@@ -196,6 +164,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 </div>
 <div class="ws"></div>
 
+<!-- NAVIGATION TABS -->
 <ul  class="nav nav-tabs">
 	<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
 	<li><a href="rescueoverview.php?sys=<?=$system?>">Search &amp; Rescue</a></li>
@@ -225,126 +194,95 @@ if (!empty($errmsg)) {
 	<div class="row">
 		<div class="col-sm-12 text-center">
 			<h3>
-				<span class="sechead white" style="font-weight: bold;">Total Rescues:&nbsp; 
-					<span style="color: gold;"><?php echo $ctrAllRescues; ?></span>
+				<span class="sechead white" style="font-weight: bold;"><?=$rescuetype?> Rescues:&nbsp; 
+					<span style="color: gold;"><?=${'ctr'.$rescuetype.'rescues'}?></span>
 				</span>
 			</h3>
 		</div>
 	</div>
 	<div class="row">
-	<!-- ESRC STATS BEGIN -->
-		<div class="col-sm-6">
-		<!-- ESRC STATS HEADER -->
-			<div class="sechead white text-center" style="font-weight: bold;">ESRC Rescues:&nbsp; 
-				<span style="color: gold;"><?php echo $ctrESRCrescues; ?></span>
-				<?php 
-				// Possible future expansion: Link to detail table at stats_rescues_tables.php
-				?>
-			</div>
-			<div class="ws"></div>
-			<!-- ESRC PARTICIPANT COUNTS BEGIN -->
+		<div class="col-sm-12">
+			<!-- ESRC RESCUES DETAIL TABLE BEGIN -->
 			<?php 
-			// get unique participants from db
-			$database->query("SELECT DISTINCT(Pilot) FROM activity 
-								WHERE ActivityDate BETWEEN :start AND :end");
-			$database->bind(":start", $start);
-			$database->bind(":end", $end);
-			$arrEsrcUniqueParticipants = $database->resultset();
-			$database->closeQuery();
-			// set participant counter
-			$ctrEsrcUniqueParticipants = count($arrEsrcUniqueParticipants);
+			// display ESRC Rescue detail table
+			displayTable($arrRescueDetail, 'closed-esrc');
+			// FIX NEEDED: Table sorts dates alphabetically, probably due to EVE formatting
+			// Need to fix this so that EVE format is displayed but sorting happens on natural date
 			?>
-			
-			<div class="white text-center"><strong>
-				<span style="color: gold;"><?=$ctrEsrcUniqueParticipants?></span> Participants</strong>
-				<br />
-				<a href="javascript:drawEsrcParticipationChart('Overall')">Overall</a> &nbsp;&nbsp;&nbsp; 
-				<a href="javascript:drawEsrcParticipationChart('Agents')">Agents</a> &nbsp;&nbsp;&nbsp; 
-				<a href="javascript:drawEsrcParticipationChart('Sowers')">Sowers</a> &nbsp;&nbsp;&nbsp; 
-				<a href="javascript:drawEsrcParticipationChart('Tenders')">Tenders</a>
-			</div>
-			<div class="ws"></div>
-			<div id="esrcParticipation" style="width: 550px; height:300px;"></div>
-			<!-- ESRC PARTICIPANT COUNTS END -->
+			<!-- ESRC RESCUES DETAIL TABLE END -->
 		</div>
-	<!-- ESRC STATS END -->
-		<!-- <div class="col-sm-2"></div>  -->
-	<!-- SAR STATS BEGIN -->
-		<div class="col-sm-6">
-		<!-- SAR STATS HEADER -->
-			<div class="sechead white text-center" style="font-weight: bold;">SAR Rescues:&nbsp; 
-				<span style="color: gold;"><?php echo $ctrSARrescues; ?></span>
-				<?php 
-				// Possible future expansion: Link to detail table at stats_rescues_tables.php
-				?>
-			</div>
-			<div class="ws"></div>
-			<!-- SAR PARTICIPANT COUNTS BEGIN -->
-			<?php 
-			// get unique participants from db
-			// Dispatchers
-			$database->query("SELECT startagent FROM rescuerequest GROUP BY startagent 
-								ORDER BY COUNT(startagent) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
-			$arrSarUniqueDispatchers = $database->resultset();
-			$database->closeQuery();
-			$i = 0;
-			foreach ($arrSarUniqueDispatchers as $row) {
-				$arrSarUD[$i] = $row['startagent'];
-				$i++;
-			}
-			
-			// Locators
-			$database->query("SELECT locateagent FROM rescuerequest GROUP BY locateagent 
-								ORDER BY COUNT(locateagent) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
-			$arrSarUniqueLocators = $database->resultset();
-			$database->closeQuery();
-			$i = 0;
-			foreach ($arrSarUniqueLocators as $row) {
-				$arrSarUL[$i] = $row['locateagent'];
-				$i++;
-			}
-			
-			// Rescuers
-			$database->query("SELECT pilot FROM rescueagents GROUP BY pilot 
-								ORDER BY COUNT(pilot) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
-			$arrSarUniqueRescuers = $database->resultset();
-			$database->closeQuery();
-			$i = 0;
-			foreach ($arrSarUniqueRescuers as $row) {
-				$arrSarUR[$i] = $row['pilot'];
-				$i++;
-			}
-			
-			// merge arrays of SAR participants and de-dupe list to get uniques
-			$arrSarParticipants = array_merge($arrSarUD, $arrSarUL, $arrSarUR);
-			$arrSarUniqueParticipants = array_unique($arrSarParticipants);
-			// set unique SAR participant counter
-			$ctrSarUniqueParticipants = count($arrSarUniqueParticipants);
-			
-			?>
-			
-			<div class="white text-center"><strong>
-				<span style="color: gold;"><?=$ctrSarUniqueParticipants?></span> Participants</strong>
-				<br /> 
-				<a href="javascript:drawSarParticipationChart('Dispatchers')">Dispatchers</a> &nbsp;&nbsp;&nbsp; 
-				<a href="javascript:drawSarParticipationChart('Locators')">Locators</a> &nbsp;&nbsp;&nbsp; 
-				<a href="javascript:drawSarParticipationChart('Rescuers')">Rescuers</a>
-			</div>
-			<div class="ws"></div>
-			<div id="sarParticipation" style="width: 550px; height:300px;"></div>
-			<!-- SAR PARTICIPANT COUNTS END -->
-		</div>
-	<!-- SAR STATS END -->
 	</div>
 	<div class="ws"></div>
 <!-- STATS END -->
 </div>
+
+<?php 
+/**
+ * Format input as HTML table in output
+ * @param array $data - array of row details
+ * @param string $type - ESRC ("closed-esrc") or SAR ("closed-rescued")
+ */
+ function displayTable($data, $type)
+ {
+ 	$database = new Database();
+ 	$rescue = new Rescue($database);
+ 	
+ 	echo '<div class="row">';
+ 	echo '<div class="col-sm-12 request">';
+ 	if (empty($data)) {
+ 		echo '<p>None for the selected date range.</p>';
+ 	}
+ 	else {
+ 		echo '<table id="tblRescueDetail'. $type .'" class="table" style="width: auto;">';
+ 		echo '	<thead>';
+ 		echo '		<tr>';
+ 		echo '			<th>Date</th>';
+ 		echo '			<th>System</th>';
+ 		echo ($type == 'closed-esrc') ? '<th>Agent</th>' : '<th>Dispatcher</th>';
+ 		echo ($type == 'closed-rescued') ? '<th>Locator</th>' : ''; // SAR-only column
+ 		echo ($type == 'closed-rescued') ? '<th>Rescuer(s)</th>' : ''; // SAR-only column
+ 		echo '		</tr>';
+ 		echo '	</thead>';
+ 		echo '	<tbody>';
+ 		foreach ($data as $row) {
+ 			if ($row['status'] == $type) {
+	 			echo '<tr>';
+	 			
+	 			// Date when rescue occurred
+	 			echo '	<td style="text-nowrap">'. Output::getEveDate($row['lastcontact']) .'</td>';
+	 			
+	 			// System
+	 			echo '	<td><a href="rescueoverview.php?sys='.$row['system'].'" target="_blank">'.
+	 	 						Output::htmlEncodeString($row['system']).'</a></td>';
+	 			
+	 	 		// Dispatcher/Agent - name of Signaleer who opened request
+	 	 		echo '	<td>' . Output::htmlEncodeString($row['startagent']) . '</td>';
+	 			
+	 	 		// SAR-only columns
+	 	 		if ($type == 'closed-rescued') { 	 				
+	 	 			// Locator - display name of Signaleer who located system (if any)
+	 	 			echo (empty($row['locateagent'])) ? '<td>&nbsp;</td>' : '<td>' .
+	 	 				Output::htmlEncodeString($row['locateagent']) . '</td>';
+	 	 				
+	 	 			// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
+	 	 			$arrRescueAgents = $rescue->getRescueAgents($row['id']);
+	 	 			echo '<td>';
+	 	 			foreach ($arrRescueAgents as $value) {
+	 	 				echo $value['pilot'] .'<br />';
+	 	 			}
+	 	 			echo '</td>';
+	 	 		}
+	 	 		echo '</tr>';
+ 			}
+ 		}
+ 		echo '	</tbody>';
+ 		echo '</table>';
+ 	}
+ 	echo '</div>';
+ 	// close row
+ 	echo '</div>';
+ }
+?>
 
 <script type="text/javascript">
 	// datepicker
@@ -406,22 +344,23 @@ if (!empty($errmsg)) {
         endDate = _endDate;
         updateEndDate();
     }
-</script>
 
-<?php 
-function debug($variable){
-	if(is_array($variable)){
-		echo "<pre>";
-		print_r($variable);
-		echo "</pre>";
-		exit();
-	}
-	else{
-		echo ($variable);
-		exit();
-	}
-}
-?>
+    // ESRC datatable
+    $(document).ready(function() {
+	    $('#tblRescueDetailclosed-esrc').DataTable( {
+	        "order": [[ 0, "desc" ]],
+	        "pagingType": "full_numbers"
+	    } );
+	} );
+
+ 	// SAR datatable
+    $(document).ready(function() {
+	    $('#tblRescueDetailclosed-rescued').DataTable( {
+	        "order": [[ 0, "desc" ]],
+	        "pagingType": "full_numbers"
+	    } );
+	} );
+</script>
 
 </body>
 </html>

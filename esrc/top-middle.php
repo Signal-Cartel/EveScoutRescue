@@ -5,7 +5,7 @@ $systems_top = new Systems($db_top);
 $rescue_top = new Rescue($db_top);
 
 // get rescue counts
-$ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc');
+$ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc', '', '');
 $ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 ?>
