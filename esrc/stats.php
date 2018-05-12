@@ -283,10 +283,11 @@ if (!empty($errmsg)) {
 			<?php 
 			// get unique participants from db
 			// Dispatchers
-			$database->query("SELECT startagent FROM rescuerequest GROUP BY startagent 
-								ORDER BY COUNT(startagent) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
+			$database->query("SELECT startagent FROM rescuerequest 
+								WHERE requestdate BETWEEN :start AND :end
+								GROUP BY startagent ORDER BY COUNT(startagent) DESC");
+			$database->bind(":start", $start);
+			$database->bind(":end", $end);
 			$arrSarUniqueDispatchers = $database->resultset();
 			$database->closeQuery();
 			$i = 0;
@@ -296,10 +297,11 @@ if (!empty($errmsg)) {
 			}
 			
 			// Locators
-			$database->query("SELECT locateagent FROM rescuerequest GROUP BY locateagent 
-								ORDER BY COUNT(locateagent) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
+			$database->query("SELECT locateagent FROM rescuerequest
+								WHERE lastcontact BETWEEN :start AND :end
+								GROUP BY locateagent  ORDER BY COUNT(locateagent) DESC");
+			$database->bind(":start", $start);
+			$database->bind(":end", $end);
 			$arrSarUniqueLocators = $database->resultset();
 			$database->closeQuery();
 			$i = 0;
@@ -309,10 +311,11 @@ if (!empty($errmsg)) {
 			}
 			
 			// Rescuers
-			$database->query("SELECT pilot FROM rescueagents GROUP BY pilot 
-								ORDER BY COUNT(pilot) DESC");
-			//$database->bind(":start", $start);
-			//$database->bind(":end", $end);
+			$database->query("SELECT pilot FROM rescueagents  
+								WHERE entrytime BETWEEN :start AND :end
+								GROUP BY pilot ORDER BY COUNT(pilot) DESC");
+			$database->bind(":start", $start);
+			$database->bind(":end", $end);
 			$arrSarUniqueRescuers = $database->resultset();
 			$database->closeQuery();
 			$i = 0;
