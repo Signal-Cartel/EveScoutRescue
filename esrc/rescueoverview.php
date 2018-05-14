@@ -85,7 +85,6 @@ require_once '../class/db.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
-require_once '../class/users.class.php';
 require_once '../class/caches.class.php';
 
 // create a new database connection
@@ -115,16 +114,8 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
-	
-	<ul class="nav nav-tabs">
-		<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
-		<li class="active"><a href="#">Search &amp; Rescue</a></li>
-		<?php 
-		if ($isCoord == 1) {
-			echo '<li><a href="esrcoordadmin.php">ESR Coordinator Admin</a></li>';
-		}
-		?>
-	</ul>
+	<!-- NAVIGATION TABS -->
+	<?php include_once 'navtabs.php'; ?>
 	<div class="ws"></div>
 
 <?php
@@ -472,3 +463,4 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 		}
 	}
 }
+?>
