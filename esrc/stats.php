@@ -330,12 +330,26 @@ if (!empty($errmsg)) {
 				$i++;
 			}
 			
-			// merge arrays of SAR participants and de-dupe list to get uniques
-			$arrSarParticipants = array_merge($arrSarUD, $arrSarUL, $arrSarUR);
-			$arrSarUniqueParticipants = array_unique($arrSarParticipants);
-			// set unique SAR participant counter
-			$ctrSarUniqueParticipants = count($arrSarUniqueParticipants);
-			
+			// merge arrays of SAR participants
+			$arrArrays = array();
+			$arrArrays[0] = $arrSarUD;
+			$arrArrays[1] = $arrSarUL;
+			$arrArrays[2] = $arrSarUR;
+			$arrSarParticipants = array();
+			foreach ($arrArrays as $arr) {
+				if (is_array($arr)) {
+					$arrSarParticipants = array_merge($arrSarParticipants, $arr);
+				}
+			}
+			// de-dupe list to get uniques
+			if (is_array($arrSarParticipants)) {
+				$arrSarUniqueParticipants = array_unique($arrSarParticipants);
+				// set unique SAR participant counter
+				$ctrSarUniqueParticipants = count($arrSarUniqueParticipants);
+			}
+			else {
+				$ctrSarUniqueParticipants = 0;
+			}
 			?>
 			
 			<div class="white text-center"><strong>
