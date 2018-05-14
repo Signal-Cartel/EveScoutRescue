@@ -115,12 +115,8 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
-	
-	<ul class="nav nav-tabs">
-		<li><a href="search.php">Rescue Cache</a></li>
-		<li><a href="rescueoverview.php">Search &amp; Rescue</a></li>
-		<li class="active"><a href="#">ESR Coordinator Admin</a></li>
-	</ul>
+	<!-- NAVIGATION TABS -->
+	<?php include_once 'navtabs.php'; ?>
 	<div class="ws"></div>
 	
 	<?php 

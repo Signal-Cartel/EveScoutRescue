@@ -119,16 +119,8 @@ if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
-
-<ul  class="nav nav-tabs">
-	<li class="active"><a href="#" data-toggle="tab">Rescue Cache</a></li>
-	<li><a href="rescueoverview.php?sys=<?=$system?>">Search &amp; Rescue<?=$activeSAR?></a></li>
-	<?php 
-		if ($isCoord == 1) {
-			echo '<li><a href="esrcoordadmin.php">ESR Coordinator Admin</a></li>';
-		}
-	?>
-</ul>
+<!-- NAVIGATION TABS -->
+<?php include_once 'navtabs.php'; ?>
 <div class="ws"></div>
  
 <?php

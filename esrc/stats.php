@@ -96,6 +96,12 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
 	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
 }
+
+// set stats type to display
+$stat_type = 'participants';
+if (isset($_REQUEST['stat_type'])) {
+	$stat_type = $_REQUEST['stat_type'];
+}
 ?>
 <html>
 
@@ -137,7 +143,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		  var data = new google.visualization.DataTable(jsonData);
 		  // set chart options
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
-			  legendTextStyle: { color: 'white' }, backgroundColor: 'black' };
+			  legendTextStyle: { color: 'white' }, backgroundColor: 'black', chartArea: {width: '90%'}};
 		  // Instantiate and draw our chart, passing in some options.
 		  var chart = new google.visualization.PieChart(document.getElementById('esrcParticipation'));
 		  chart.draw(data, options);
@@ -152,7 +158,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		  var data = new google.visualization.DataTable(jsonData);
 		  // set chart options
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
-			  legendTextStyle: { color: 'white' }, backgroundColor: 'black' };
+			  legendTextStyle: { color: 'white' }, backgroundColor: 'black', chartArea: {width: '90%'}};
 		  // Instantiate and draw our chart, passing in some options.
 		  var chart = new google.visualization.PieChart(document.getElementById('sarParticipation'));
 		  chart.draw(data, options);
@@ -174,38 +180,49 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 	<?php include_once '../includes/top-left.php'; ?>
 	<div class="col-sm-8 black" style="text-align: center;">
 		<div class="row">
-			<div class="col-sm-12" style="text-align: center;">
+			<div class="col-sm-8" style="text-align: center;">
 				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-					<div class="input-daterange input-group" id="datepicker">
+					<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
 						<input type="text" class="input-sm form-control" name="start" id="start" 
 							value="<?php echo isset($startPD) ? $startPD : '' ?>" />
 						<span class="input-group-addon">to</span>
 						<input type="text" class="input-sm form-control" name="end" id="end" 
 							value="<?php echo isset($endPD) ? $endPD : '' ?>" />
 					</div>
-					<div class="ws"></div>
-					<div class="checkbox">
-						<label class="white"><input type="checkbox" name="personal" value="yes"> Personal Stats</label>
+					<label class="radio-inline white"><input type="radio" name="stat_type" 
+						value="caches"<?php echo ($stat_type == 'caches' ? 'checked="checked"' : '') ?>
+						disabled="disabled">Caches</label>
+					<label class="radio-inline white"><input type="radio" name="stat_type" 
+						value="participants"<?php echo ($stat_type == 'participants' ? 'checked="checked"' : '') ?>>
+						Participants</label>
+					<label class="radio-inline white"><input type="radio" name="stat_type" 
+						value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>
+						disabled="disabled">Records</label>
+					<label class="radio-inline white"><input type="radio" name="stat_type" 
+						value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>
+						disabled="disabled">Personal</label>
+					<div style="margin-top: 5px;">
+						<button type="submit" class="btn btn-sm">Get Stats</button>
 					</div>
-					&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Get Stats</button>
 				</form>
+			</div>
+			<div class="col-sm-4" style="text-align: center;">
+				<div class="sechead white" style="font-weight: bold;">RESCUES:&nbsp; 
+					<span style="color: gold;"><?php echo $ctrAllRescues; ?></span>
+				</div>
+				<div class="white text-center" style="font-weight: bold;">ESRC:&nbsp; 
+					<span style="color: gold;"><?php echo $ctrESRCrescues; ?></span>
+					&nbsp;&nbsp;&nbsp;&nbsp; SAR:&nbsp; 
+					<span style="color: gold;"><?php echo $ctrSARrescues; ?></span>
+				</div>
 			</div>
 		</div>
 	</div>
 	<?php include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
-
-<ul  class="nav nav-tabs">
-	<li><a href="search.php?sys=<?=$system?>">Rescue Cache</a></li>
-	<li><a href="rescueoverview.php?sys=<?=$system?>">Search &amp; Rescue</a></li>
-	<li class="active"><a href="#" data-toggle="tab">Statistics</a></li>
-	<?php 
-		if ($isCoord == 1) {
-			echo '<li><a href="esrcoordadmin.php">ESR Coordinator Admin</a></li>';
-		}
-	?>
-</ul>
+<!-- NAVIGATION TABS -->
+<?php include_once 'navtabs.php'; ?>
 <div class="ws"></div>
  
 <?php
@@ -221,27 +238,26 @@ if (!empty($errmsg)) {
 <?php
 }
 ?>
-<!-- STATS BEGIN -->
+	<!-- STATS TITLE -->
 	<div class="row">
-		<div class="col-sm-12 text-center">
-			<h3>
-				<span class="sechead white" style="font-weight: bold;">Total Rescues:&nbsp; 
-					<span style="color: gold;"><?php echo $ctrAllRescues; ?></span>
-				</span>
-			</h3>
+		<div class="col-sm-12">
+			<div class="sechead white text-center" style="font-weight: bold;">
+				<?php echo strtoupper($stat_type);?>
+			</div>
 		</div>
 	</div>
+	<div class="ws"></div>
 	<div class="row">
-	<!-- ESRC STATS BEGIN -->
+	<!-- STATS DISPLAY BEGINS -->
+	<?php 
+	switch ($stat_type) {
+		case 'caches':
+			// do stuff
+			break;
+		case 'participants':
+	?>
 		<div class="col-sm-6">
-		<!-- ESRC STATS HEADER -->
-			<div class="sechead white text-center" style="font-weight: bold;">ESRC Rescues:&nbsp; 
-				<span style="color: gold;"><?php echo $ctrESRCrescues; ?></span>
-				<?php 
-				// Possible future expansion: Link to detail table at stats_rescues_tables.php
-				?>
-			</div>
-			<div class="ws"></div>
+			<div class="sechead white text-center" style="font-weight: bold;">ESRC</div>
 			<!-- ESRC PARTICIPANT COUNTS BEGIN -->
 			<?php 
 			// get unique participants from db
@@ -264,21 +280,11 @@ if (!empty($errmsg)) {
 				<a href="javascript:drawEsrcParticipationChart('Tenders')">Tenders</a>
 			</div>
 			<div class="ws"></div>
-			<div id="esrcParticipation" style="width: 550px; height:300px;"></div>
+			<div id="esrcParticipation" class="text-center" style="width: 450px; height:300px;"></div>
 			<!-- ESRC PARTICIPANT COUNTS END -->
 		</div>
-	<!-- ESRC STATS END -->
-		<!-- <div class="col-sm-2"></div>  -->
-	<!-- SAR STATS BEGIN -->
 		<div class="col-sm-6">
-		<!-- SAR STATS HEADER -->
-			<div class="sechead white text-center" style="font-weight: bold;">SAR Rescues:&nbsp; 
-				<span style="color: gold;"><?php echo $ctrSARrescues; ?></span>
-				<?php 
-				// Possible future expansion: Link to detail table at stats_rescues_tables.php
-				?>
-			</div>
-			<div class="ws"></div>
+			<div class="sechead white text-center" style="font-weight: bold;">SAR</div>
 			<!-- SAR PARTICIPANT COUNTS BEGIN -->
 			<?php 
 			// get unique participants from db
@@ -340,13 +346,23 @@ if (!empty($errmsg)) {
 				<a href="javascript:drawSarParticipationChart('Rescuers')">Rescuers</a>
 			</div>
 			<div class="ws"></div>
-			<div id="sarParticipation" style="width: 550px; height:300px;"></div>
+			<div id="sarParticipation" style="width: 450px; height:300px;"></div>
 			<!-- SAR PARTICIPANT COUNTS END -->
 		</div>
+	<?php 
+			break;
+		case 'records':
+			// do stuff
+			break;
+		case 'personal':
+			// do stuff
+			break;
+	}
+	?>
 	<!-- SAR STATS END -->
+<!-- STATS DISPLAY END -->
 	</div>
 	<div class="ws"></div>
-<!-- STATS END -->
 </div>
 
 <script type="text/javascript">
