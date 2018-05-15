@@ -130,7 +130,34 @@ if (isset($_REQUEST['stat_type'])) {
 	<script type="text/javascript">
 		// Load the Visualization API and the piechart package.
 		google.charts.load('current', {'packages':['corechart']});
+	
+		<?php 
+		// load only the charts we need for the specified $stat_type
+		switch ($stat_type) {
+			case 'caches':
+		?>
 		// Draw charts on page load
+		google.charts.setOnLoadCallback(drawEsrcCachesChart);
+		//google.charts.setOnLoadCallback(drawSarBountiesChart);
+		
+		function drawEsrcCachesChart(type) {
+			var jsonData = $.ajax({
+				url: "../stats/stats_data_esrc_caches.php?start=<?=$start?>&end=<?=$end?>",
+				dataType: "json", async: false }).responseText;
+				// Create our data table out of JSON data loaded from server.
+				var data = new google.visualization.DataTable(jsonData);
+				// set chart options
+				var options = { title: 'Rescue Cache Activity', titleTextStyle: { color: 'white', fontSize: 16 },
+				legendTextStyle: { color: 'white' }, backgroundColor: 'black', 
+				hAxis: { textStyle: {color: 'white'} },	vAxis: { textStyle: {color: 'white'} }, isStacked: true };
+				// Instantiate and draw our chart, passing in some options.
+				var chart = new google.visualization.ColumnChart(document.getElementById('esrcCaches'));
+				chart.draw(data, options);
+			}
+		<?php 
+				break;
+			case 'participants':
+		?>
 		google.charts.setOnLoadCallback(drawEsrcParticipationChart);
 		google.charts.setOnLoadCallback(drawSarParticipationChart);
 		
@@ -139,12 +166,9 @@ if (isset($_REQUEST['stat_type'])) {
 		  var jsonData = $.ajax({
 		      url: "../stats/stats_data_esrc_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
 		      dataType: "json", async: false }).responseText;		          
-		  // Create our data table out of JSON data loaded from server.
 		  var data = new google.visualization.DataTable(jsonData);
-		  // set chart options
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
 			  legendTextStyle: { color: 'white' }, backgroundColor: 'black', chartArea: {width: '90%'}};
-		  // Instantiate and draw our chart, passing in some options.
 		  var chart = new google.visualization.PieChart(document.getElementById('esrcParticipation'));
 		  chart.draw(data, options);
 		}
@@ -154,15 +178,22 @@ if (isset($_REQUEST['stat_type'])) {
 		  var jsonData = $.ajax({
 		      url: "../stats/stats_data_sar_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
 		      dataType: "json", async: false }).responseText;		          
-		  // Create our data table out of JSON data loaded from server.
 		  var data = new google.visualization.DataTable(jsonData);
-		  // set chart options
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
 			  legendTextStyle: { color: 'white' }, backgroundColor: 'black', chartArea: {width: '90%'}};
-		  // Instantiate and draw our chart, passing in some options.
 		  var chart = new google.visualization.PieChart(document.getElementById('sarParticipation'));
 		  chart.draw(data, options);
 		}
+		<?php 
+				break;
+			case 'records':
+				// do stuff
+				break;
+			case 'personal':
+				// do stuff
+				break;
+		}
+		?>
 	</script>
 </head>
 
@@ -189,18 +220,20 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 						<input type="text" class="input-sm form-control" name="end" id="end" 
 							value="<?php echo isset($endPD) ? $endPD : '' ?>" />
 					</div>
-					<label class="radio-inline white"><input type="radio" name="stat_type" 
-						value="caches"<?php echo ($stat_type == 'caches' ? 'checked="checked"' : '') ?>
-						disabled="disabled">Caches</label>
-					<label class="radio-inline white"><input type="radio" name="stat_type" 
-						value="participants"<?php echo ($stat_type == 'participants' ? 'checked="checked"' : '') ?>>
-						Participants</label>
-					<label class="radio-inline white"><input type="radio" name="stat_type" 
-						value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>
-						disabled="disabled">Records</label>
-					<label class="radio-inline white"><input type="radio" name="stat_type" 
-						value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>
-						disabled="disabled">Personal</label>
+					<div class="input-group">
+						<label class="radio-inline white"><input type="radio" name="stat_type" 
+							value="caches"<?php echo ($stat_type == 'caches' ? 'checked="checked"' : '') ?>>
+							Caches</label>
+						<label class="radio-inline white"><input type="radio" name="stat_type" 
+							value="participants"<?php echo ($stat_type == 'participants' ? 'checked="checked"' : '') ?>>
+							Participants</label>
+						<label class="radio-inline white"><input type="radio" name="stat_type" 
+							value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>
+							disabled="disabled">Records</label>
+						<label class="radio-inline white"><input type="radio" name="stat_type" 
+							value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>
+							disabled="disabled">Personal</label>
+					</div>
 					<div style="margin-top: 5px;">
 						<button type="submit" class="btn btn-sm">Get Stats</button>
 					</div>
@@ -252,7 +285,11 @@ if (!empty($errmsg)) {
 	<?php 
 	switch ($stat_type) {
 		case 'caches':
-			// do stuff
+	?>
+		<div class="col-sm-12">
+			<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto"></div>
+		</div>
+	<?php 
 			break;
 		case 'participants':
 	?>
