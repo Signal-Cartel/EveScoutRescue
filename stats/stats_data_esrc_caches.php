@@ -12,11 +12,14 @@ switch ($_REQUEST['type']) {
 		break;
 	case 'Weekly':
 		$sql = "SELECT YEARWEEK(ActivityDate) AS ActivityDate, SUM(Sown) AS Sown, 
+					SUM(Tended) AS Tended, MAX(ActiveCaches) AS ActiveCaches FROM cache_activity	
 				WHERE ActivityDate BETWEEN :start AND :end
 				GROUP BY YEARWEEK(ActivityDate) ORDER BY YEARWEEK(ActivityDate)";
 		break;
 	case 'Monthly':
 		$sql = 'SELECT CONCAT(YEAR(ActivityDate), "-", MONTHNAME(ActivityDate)) AS ActivityDate, 
+					SUM(Sown) AS Sown, SUM(Tended) AS Tended, MAX(ActiveCaches) AS ActiveCaches 
+				FROM cache_activity WHERE ActivityDate BETWEEN :start AND :end
 				GROUP BY YEAR(ActivityDate), MONTH(ActivityDate) 
 				ORDER BY YEAR(ActivityDate), MONTH(ActivityDate)';
 		break;
