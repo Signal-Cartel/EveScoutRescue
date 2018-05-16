@@ -148,7 +148,10 @@ class Caches
 		}
 
 		// select 0/1 from cache if time diff is >= 24 hours
-		$this->db->query("SELECT count(1) as cnt FROM cache WHERE System = :system AND ((Status = 'Healthy' and (time_to_sec(timediff(CURRENT_TIMESTAMP(), LastUpdated)) / 3600) >= 24) or (status = 'Upkeep Required' and ExpiresOn >= CURRENT_DATE))");
+		$this->db->query("SELECT count(1) as cnt FROM cache 
+			WHERE System = :system AND ((Status = 'Healthy' AND 
+			(time_to_sec(timediff(UTC_TIMESTAMP(), LastUpdated)) / 3600) >= 24) OR 
+			(status = 'Upkeep Required' and ExpiresOn >= UTC_TIMESTAMP))");
 		$this->db->bind(':system', $system);
 		
 		$result = $this->db->single();
@@ -165,7 +168,7 @@ class Caches
 	 */
 	public function expireInDays($days)
 	{
-		// check if parametzer is set
+		// check if parameter is set
 		if (!isset($days))
 		{
 			// no, set default 5 days

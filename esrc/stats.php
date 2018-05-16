@@ -138,18 +138,23 @@ if (isset($_REQUEST['stat_type'])) {
 		?>
 		// Draw charts on page load
 		google.charts.setOnLoadCallback(drawEsrcCachesChart);
-		//google.charts.setOnLoadCallback(drawSarBountiesChart);
 		
 		function drawEsrcCachesChart(type) {
+			if (typeof type === "undefined") { type = 'Daily'; }
 			var jsonData = $.ajax({
-				url: "../stats/stats_data_esrc_caches.php?start=<?=$start?>&end=<?=$end?>",
+				url: "../stats/stats_data_esrc_caches.php?start=<?=$start?>&end=<?=$end?>&type=" + type,
 				dataType: "json", async: false }).responseText;
 				// Create our data table out of JSON data loaded from server.
 				var data = new google.visualization.DataTable(jsonData);
 				// set chart options
-				var options = { title: 'Rescue Cache Activity', titleTextStyle: { color: 'white', fontSize: 16 },
+				var options = { title: 'Rescue Cache Activity (' + type + ')', titleTextStyle: { color: 'white', fontSize: 16 },
 				legendTextStyle: { color: 'white' }, backgroundColor: 'black', 
-				hAxis: { textStyle: {color: 'white'} },	vAxis: { textStyle: {color: 'white'} }, isStacked: true };
+				hAxis: { textStyle: {color: 'white'} },	vAxis: { textStyle: {color: 'white'} }, isStacked: true,
+				series: {0: {targetAxisIndex:0}, 1: {targetAxisIndex:0}, 
+					2: {type:'line', color: 'limegreen', targetAxisIndex:1, interpolateNulls: true} },
+				vAxes: {0: {title: 'Sows/Tends', titleTextStyle: {color:'white'}, logScale: false}, 
+					1: {title: 'Active Caches', titleTextStyle: {color:'white'}, logScale: false} }
+				 };
 				// Instantiate and draw our chart, passing in some options.
 				var chart = new google.visualization.ColumnChart(document.getElementById('esrcCaches'));
 				chart.draw(data, options);
@@ -287,6 +292,12 @@ if (!empty($errmsg)) {
 		case 'caches':
 	?>
 		<div class="col-sm-12">
+			<div class="white text-center">
+				<a href="javascript:drawEsrcCachesChart('Daily')">Daily</a> &nbsp;&nbsp;&nbsp; 
+				<a href="javascript:drawEsrcCachesChart('Weekly')">Weekly</a> &nbsp;&nbsp;&nbsp; 
+				<a href="javascript:drawEsrcCachesChart('Monthly')">Monthly</a>
+			</div>
+			<div class="ws"></div>
 			<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto"></div>
 		</div>
 	<?php 

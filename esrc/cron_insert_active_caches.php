@@ -29,6 +29,7 @@ $db->query("SELECT DATE(`ActivityDate`) AS `day`,
 			GROUP  BY DATE(`ActivityDate`)");
 $db->bind(':yesterday', $yesterday);
 $result = $db->single();
+$db->closeQuery();
 // run update
 $db->query("UPDATE cache_activity SET Sown = :sown, Tended = :tended
 			WHERE ActivityDate = :yesterday");
