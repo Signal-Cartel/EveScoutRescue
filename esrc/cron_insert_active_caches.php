@@ -32,7 +32,7 @@ $result = $db->single();
 $db->closeQuery();
 // run update
 $db->query("UPDATE cache_activity SET Sown = :sown, Tended = :tended
-			WHERE ActivityDate = :yesterday");
+			WHERE DATE(ActivityDate) = :yesterday");
 $db->bind(':sown', $result['Sown']);
 $db->bind(':tended', $result['Tended']);
 $db->bind(':yesterday', $result['day']);
@@ -44,7 +44,7 @@ if (!empty($errmsg)) {
 else {
 	echo 'There are '. $cnt .' active caches as of ' . date("Y-m-d", strtotime("now")) . '. Sweet!';
 	echo '<br />';
-	echo 'On ' . $yesterday. ', ' . $result['Sown'] . 'caches were sown and ' . 
-		$result['Tended'] . 'were tended. Nice!';
+	echo 'On ' . $yesterday. ', ' . $result['Sown'] . ' caches were sown and ' . 
+		$result['Tended'] . ' were tended. Nice!';
 }
 ?>

@@ -66,6 +66,16 @@ $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
+// set stats type to display
+$stat_type = 'participants';
+if (isset($_REQUEST['stat_type'])) { $stat_type = $_REQUEST['stat_type']; }
+
+// set Records timeframe
+if ($stat_type == 'records') {
+	$timeframe = 'All-Time';
+	if (isset($_REQUEST['timeframe'])) { $timeframe = $_REQUEST['timeframe']; }
+}
+
 // if start and end dates are not set, set them to default values
 if (!isset($_REQUEST['start'])) {
 	$start = gmdate('Y-m-d', strtotime("- 7 day"));
@@ -96,12 +106,6 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
 	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
 }
-
-// set stats type to display
-$stat_type = 'participants';
-if (isset($_REQUEST['stat_type'])) {
-	$stat_type = $_REQUEST['stat_type'];
-}
 ?>
 <html>
 
@@ -120,6 +124,11 @@ if (isset($_REQUEST['stat_type'])) {
 		a:visited,
 		a:hover {
 			color: aqua;
+		}
+		.btn-info a,
+		a:visited,
+		a:hover {
+			color: white;
 		}
 	-->
 	</style>
@@ -192,7 +201,9 @@ if (isset($_REQUEST['stat_type'])) {
 		<?php 
 				break;
 			case 'records':
-				// do stuff
+		?>
+		// prep datatable (?)
+		<?php 
 				break;
 			case 'personal':
 				// do stuff
@@ -202,18 +213,53 @@ if (isset($_REQUEST['stat_type'])) {
 	</script>
 </head>
 
-<?php
-// get rescue counts
-$ctrESRCrescues = $rescue->getRescueCount('closed-esrc', $start, $end);
-$ctrSARrescues = $rescue->getRescueCount('closed-rescued', $start, $end);
-$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
-?>
-
 <body class="white" style="background-color: black;">
 <div class="container">
 
 <div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-left.php'; ?>
+<?php 	
+// top left
+include_once '../includes/top-left.php'; 
+// top middle
+// show a different header form for Records display
+if ($stat_type == 'records') {
+?>
+	<div class="col-sm-8 black" style="text-align: center;">
+		<div class="row">
+			<br />
+			<div class="col-sm-6" style="text-align: center;">
+				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+					<div class="form-group" id="timeframe" style="margin-bottom: 5px;">
+						<select class="form-control" id="timeframe" name="timeframe">
+							<option value="Daily"<?php echo ($timeframe == 'Daily') ? ' selected="selected"' : '';?>>
+								In a Single Day</option>
+							<option value="Weekly"<?php echo ($timeframe == 'Weekly') ? ' selected="selected"' : '';?>>
+								In a Single Week</option>
+							<option value="Monthly"<?php echo ($timeframe == 'Monthly') ? ' selected="selected"' : '';?>>
+								In a Single Month</option>
+							<option value="All-Time"<?php echo ($timeframe == 'All-Time') ? ' selected="selected"' : '';?>>
+								Greatest Of All Time</option>
+						</select>
+						<input type="hidden" name="stat_type" value="records" />
+						<button type="submit" class="btn btn-sm">Get Records</button>
+					</div>
+				</form>
+			</div>
+			<div class="col-sm-6" style="text-align: center;">
+				<a href="stats.php?stat_type=caches" class="btn btn-info" role="button">Caches</a> &nbsp;&nbsp;&nbsp;
+				<a href="stats.php?stat_type=participants" class="btn btn-info" role="button">Participants</a> &nbsp;&nbsp;&nbsp;
+				<a href="#" class="btn btn-info" role="button">Personal</a>
+			</div>
+		</div>
+	</div>
+<?php 
+}
+else {
+	// get rescue counts
+	$ctrESRCrescues = $rescue->getRescueCount('closed-esrc', $start, $end);
+	$ctrSARrescues = $rescue->getRescueCount('closed-rescued', $start, $end);
+	$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+?>
 	<div class="col-sm-8 black" style="text-align: center;">
 		<div class="row">
 			<div class="col-sm-8" style="text-align: center;">
@@ -233,8 +279,8 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 							value="participants"<?php echo ($stat_type == 'participants' ? 'checked="checked"' : '') ?>>
 							Participants</label>
 						<label class="radio-inline white"><input type="radio" name="stat_type" 
-							value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>
-							disabled="disabled">Records</label>
+							value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>>
+							Records</label>
 						<label class="radio-inline white"><input type="radio" name="stat_type" 
 							value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>
 							disabled="disabled">Personal</label>
@@ -256,7 +302,10 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 			</div>
 		</div>
 	</div>
-	<?php include_once '../includes/top-right.php'; ?>
+<?php 
+}
+// top right
+include_once '../includes/top-right.php'; ?>
 </div>
 <div class="ws"></div>
 <!-- NAVIGATION TABS -->
@@ -414,7 +463,172 @@ if (!empty($errmsg)) {
 	<?php 
 			break;
 		case 'records':
-			// do stuff
+	?>
+		<div class="col-sm-12">
+			<div class="sechead white" style="font-weight: bold; color: gold;">OVERALL</div>
+			<div class="ws"></div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>By Corp</th>
+						<th>Count</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+			<?php 
+			// get Record rescue counts
+			switch ($timeframe) {
+				case 'Daily':
+					// most rescues on a single day
+					$sql = 'SELECT startagent, count(*) AS Rescues, DATE(lastcontact)
+							FROM rescuerequest
+							WHERE Status = "closed-esrc"
+							GROUP BY startagent, DATE(lastcontact)
+							ORDER BY Rescues DESC';
+					// maybe run these by hand and just have this be updated every so often?
+					// very difficult to automate this!
+					break;
+				case 'Weekly':
+					
+					break;
+				case 'Monthly':
+					
+					break;
+				case 'All-Time':
+				default:
+					$ctrESRCrescues = $rescue->getRescueCount('closed-esrc', '2017-03-18', $end);
+					$ctrSARrescues = $rescue->getRescueCount('closed-rescued', '2017-03-18', $end);
+					$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+					$dateAllRescues = 'N/A';
+					break;
+			}
+			?>
+						<td>Most Rescues</td>
+						<td><?=$ctrAllRescues?></td>
+						<td><?=$dateAllRescues?></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="ws"></div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>By Pilot</th>
+						<th>Count</th>
+						<th>Name</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Most Rescues</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-12">
+			<div class="sechead white" style="font-weight: bold; color: gold;">ESRC</div>
+			<div class="ws"></div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>By Corp</th>
+						<th>Count</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Most Strandees Rescued</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Strandees Served</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Participants</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most ESRC Activity</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Caches Tended</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Caches Sown</td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<br/>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>By Pilot</th>
+						<th>Count</th>
+						<th>Name</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Most Strandees Rescued</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Strandees Served</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Participants</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most ESRC Activity</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Caches Tended</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Most Caches Sown</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-12">
+			<div class="sechead white text-center" style="font-weight: bold;">SAR</div>
+		</div>
+	<?php 
 			break;
 		case 'personal':
 			// do stuff
