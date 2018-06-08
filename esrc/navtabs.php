@@ -15,7 +15,7 @@ else {
 // SAR TAB
 if (strpos($_SERVER['PHP_SELF'], 'rescueoverview.php') === false) {
 	// inactive
-	echo '<li><a href="rescueoverview.php?sys=' . $system . '">Search &amp; Rescue</a></li>';
+	echo '<li><a href="rescueoverview.php?sys=' . $system . '">Search &amp; Rescue' . $activeSAR . '</a></li>';
 }
 else {
 	// active
