@@ -51,7 +51,7 @@ function printSARHeroes($type, $min, $max, $arrPilotCnt)
 			<?php 
 			$filename = '../img/'. $type .'.PNG';
 			if (file_exists($filename)) {
-				echo '<img src="'. $filename .'">';
+				echo '<img src="'. $filename .'" height="228">';
 			}
 			?>
 		</p>
@@ -90,7 +90,7 @@ $rows = $leaderBoard->getTopRescueAgents();
 	printSARHeroes('Bronze Lifesaver', 1, 9, $rows);
 	
 	// Silver Medal column
-	//printSARHeroes('Silver Lifesaver', 10, 49, $rows);
+	printSARHeroes('Silver Lifesaver', 10, 49, $rows);
 	
 	// Gold Medal column
 	//printSARHeroes('Gold Lifesaver', 50, 999, $rows);
