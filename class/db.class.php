@@ -3,7 +3,8 @@ if (strpos($_SERVER['HTTP_HOST'],'dev') === FALSE) {
 	$config = parse_ini_file('../../config/esr_dbconfig.ini');
 }
 else {
-	$config = parse_ini_file('../../config/esr_dbconfig_dev.ini');
+	$configpath = preg_replace('/\/htdocs\/.*$/', '', $_SERVER['REDIRECT_DOCUMENT_ROOT']) . '/htdocs/config/esr_dbconfig_dev.ini';
+	$config = parse_ini_file($configpath);
 }
 
 // check if a config is found
