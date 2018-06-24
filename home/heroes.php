@@ -52,7 +52,7 @@ function printESRCHeroes($type, $min, $max, $listMax)
 			<?php 
 			$filename = '../img/'. $type .'.PNG';
 			if (file_exists($filename)) {
-				echo '<img src="'. $filename .'">';
+				echo '<img height="216" src="'. $filename .'">';
 			}
 			?>
 		</p>
@@ -87,23 +87,27 @@ function printESRCHeroes($type, $min, $max, $listMax)
 
 <div class="row">
 	<?php 
-	// SuperCacher column
-	printESRCHeroes('SuperCacher', 100, 299, 200);
-	
+	// HeroCacher column
+	printESRCHeroes('HeroicCacher', 3000, 4999, 5);
+
+	// UltraCacher column
+	printESRCHeroes('UltraCacher', 1000, 2999, 10);
+
+	// HyperCacher column
+	printESRCHeroes('HyperCacher', 500, 999, 20);
+
 	// MegaCacher column
 	printESRCHeroes('MegaCacher', 300, 499, 50);
 	
-	// HyperCacher column
-	printESRCHeroes('HyperCacher', 500, 999, 20);
-	
-	// UltraCacher column
-	printESRCHeroes('UltraCacher', 1000, 2999, 10);
-	
-	// HeroCacher column
-	//printESRCHeroes('HeroCacher', 3000, 4999, 5);
-	
 	// InsaneCacher column
 	//printESRCHeroes('HeroCacher', 5000, 9999, 5);
+	?>
+</div>
+
+<div class="row">
+	<?php 
+	// SuperCacher column
+	printESRCHeroes('SuperCacher', 100, 299, 200);
 	?>
 </div>
 
