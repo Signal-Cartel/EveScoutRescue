@@ -71,6 +71,7 @@ $users = new Users($database);
 $caches = new Caches($database);
 $systems = new Systems($database);
 $rescue = new Rescue($database);
+$leaderBoard = new Leaderboard($database);
 
 // check for SAR Coordinator login
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
@@ -91,17 +92,30 @@ if (count($data) > 0) {
 	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
 }
 
-// check that pilot is logged into ALLISON and is in system
+// CONFIRM PILOT'S IN-GAME LOCATION
 $pilotLocStat = '';
-//if ($users->isAdmin($charname) === false) {
-// check does not apply to SAR Coordinators
+// does not apply to SAR Coordinators
 if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::DEV_SYSTEM != 1)) {
+	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
-		if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
-			$pilotLocStat = 'not_in_system';
-			$strBtnAttrib = 'data-toggle="tooltip" title="You must be in or one jump out from '.
-				$system .' in order to perform this action, but you are in '. 
-				$_SESSION['auth_char_location'].'"';
+		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
+		$daysdiff = round((time(tomorrow)- strtotime("2017-03-01")) / (60 * 60 * 24));
+		$rows = $leaderBoard->getTop(1000, $daysdiff);
+		$bitPilotMatch = 0;
+		foreach ($rows as $value) {
+			if ($charname ==  $value['Pilot']) {
+				$bitPilotMatch = 1;
+				break;
+			}
+		}
+		if ($bitPilotMatch == 0) {
+			// otherwise, pilot may only sow/tend caches for a system they are verified to be present in
+			if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
+				$pilotLocStat = 'not_in_system';
+				$strBtnAttrib = 'data-toggle="tooltip" title="You must be in or one jump out from '.
+					$system .' in order to perform this action, but you are in '. 
+					$_SESSION['auth_char_location'].'"';
+			}
 		}
 	}
 	else {
