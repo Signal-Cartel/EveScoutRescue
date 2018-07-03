@@ -176,9 +176,12 @@ if (!empty($system)) {
 		// save notes as separate var
 		$strNotes = Output::htmlEncodeString($row['Note']);
 		?>
+		<!-- action button row -->
 		<div class="row" id="systableheader">
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
+		<!-- System Name display -->
+		<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		<!-- TEND button -->
 		<?php
 		$strTended = '';
@@ -207,7 +210,7 @@ if (!empty($system)) {
 		</div>
 		</div>
 		</div>
-		
+		<div class="ws"></div>
 		<div class="row" id="systable">
 			<div class="col-sm-12">
 				<!-- DETAIL RECORD -->
@@ -276,13 +279,15 @@ if (!empty($system)) {
 			<div class="row" id="systableheader">
 			<div class="col-sm-12">
 			<div style="padding-left: 10px;">
+			<!-- System Name display -->
+			<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
 			<!-- SOW button  -->
 			<?php 
 			//check pilot status
 			if ($pilotLocStat == '') { 
 				$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
 			} ?>
-			<span class="sechead white">No cache exists for this system.</span>&nbsp;&nbsp;&nbsp;
+			<span class="sechead white">No cache</span>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-success btn-lg" role="button" <?=$strBtnAttrib?>>
 				Sow one now</button>&nbsp;&nbsp;&nbsp;
 			<!-- SAR New button -->

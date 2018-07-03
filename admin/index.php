@@ -16,6 +16,8 @@ include_once '../includes/auth-inc.php';
 <a href="payoutadmin.php">Payouts</a>
 <br /><br />
 <a href="testimonials_admin.php">Testimonials</a>
+<br /><br />
+<a href="stats_records_admin.php">Stats Records</a>
 
 </body>
 </html>

@@ -138,6 +138,8 @@ if (!empty($system)) {
 	?>
 	
 	<div>
+		<!-- System Name display -->
+		<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		<!-- SAR New button -->
 		<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
 			data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;

@@ -70,10 +70,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 $stat_type = 'participants';
 if (isset($_REQUEST['stat_type'])) { $stat_type = $_REQUEST['stat_type']; }
 
-// set Records timeframe
+// set Records parameters
 if ($stat_type == 'records') {
 	$timeframe = 'All-Time';
+	$record_group = 'corp';
 	if (isset($_REQUEST['timeframe'])) { $timeframe = $_REQUEST['timeframe']; }
+	if (isset($_REQUEST['record_group'])) { $record_group = $_REQUEST['record_group']; }
 }
 
 // if start and end dates are not set, set them to default values
@@ -231,17 +233,25 @@ if ($stat_type == 'records') {
 				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="form-group" id="timeframe" style="margin-bottom: 5px;">
 						<select class="form-control" id="timeframe" name="timeframe">
-							<option value="Daily"<?php echo ($timeframe == 'Daily') ? ' selected="selected"' : '';?>>
+							<option value="Day"<?php echo ($timeframe == 'Day') ? ' selected="selected"' : '';?>>
 								In a Single Day</option>
-							<option value="Weekly"<?php echo ($timeframe == 'Weekly') ? ' selected="selected"' : '';?>>
+							<option value="Week"<?php echo ($timeframe == 'Week') ? ' selected="selected"' : '';?>>
 								In a Single Week</option>
-							<option value="Monthly"<?php echo ($timeframe == 'Monthly') ? ' selected="selected"' : '';?>>
+							<option value="Month"<?php echo ($timeframe == 'Month') ? ' selected="selected"' : '';?>>
 								In a Single Month</option>
 							<option value="All-Time"<?php echo ($timeframe == 'All-Time') ? ' selected="selected"' : '';?>>
 								Greatest Of All Time</option>
 						</select>
 						<input type="hidden" name="stat_type" value="records" />
 						<button type="submit" class="btn btn-sm">Get Records</button>
+					</div>
+					<div class="input-group">
+						<label class="radio-inline white"><input type="radio" name="record_group" 
+							value="corp"<?php echo ($record_group == 'corp' ? 'checked="checked"' : '') ?>>
+							Corporation</label>
+						<label class="radio-inline white"><input type="radio" name="record_group" 
+							value="ind"<?php echo ($record_group == 'ind' ? 'checked="checked"' : '') ?>>
+							Individual</label>
 					</div>
 				</form>
 			</div>
@@ -353,6 +363,7 @@ if (!empty($errmsg)) {
 			break;
 		case 'participants':
 	?>
+		<!-- PARTICIPANT COUNTS BEGIN -->
 		<div class="col-sm-6">
 			<div class="sechead white text-center" style="font-weight: bold;">ESRC</div>
 			<!-- ESRC PARTICIPANT COUNTS BEGIN -->
@@ -460,174 +471,88 @@ if (!empty($errmsg)) {
 			<div id="sarParticipation" style="width: 450px; height:300px;"></div>
 			<!-- SAR PARTICIPANT COUNTS END -->
 		</div>
+		<!-- PARTICIPANT COUNTS END -->
 	<?php 
 			break;
 		case 'records':
 	?>
+		<!-- RECORDS STATS BEGIN -->
 		<div class="col-sm-12">
-			<div class="sechead white" style="font-weight: bold; color: gold;">OVERALL</div>
-			<div class="ws"></div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>By Corp</th>
-						<th>Count</th>
-						<th>Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
+			<?php
+			// set records last update date
+			$database->query("SELECT MAX(RecordDate) AS MaxDate FROM stats_records");
+			$recMaxDate = $database->single();
+			$database->closeQuery();
+			?>
+			<div class="white text-center"><?php echo ($timeframe == 'All-Time' ? '' : 'In a Single') ?> <?=$timeframe?> 
+				by <?php echo ($record_group == 'corp' ? 'Corporation' : 'Individual Pilot') ?>
+				<br />as of <?=Output::getEveDate($recMaxDate["MaxDate"])?></div>
+
 			<?php 
 			// get Record rescue counts
-			switch ($timeframe) {
-				case 'Daily':
-					// most rescues on a single day
-					$sql = 'SELECT startagent, count(*) AS Rescues, DATE(lastcontact)
-							FROM rescuerequest
-							WHERE Status = "closed-esrc"
-							GROUP BY startagent, DATE(lastcontact)
-							ORDER BY Rescues DESC';
-					// maybe run these by hand and just have this be updated every so often?
-					// very difficult to automate this!
-					break;
-				case 'Weekly':
-					
-					break;
-				case 'Monthly':
-					
-					break;
-				case 'All-Time':
-				default:
-					$ctrESRCrescues = $rescue->getRescueCount('closed-esrc', '2017-03-18', $end);
-					$ctrSARrescues = $rescue->getRescueCount('closed-rescued', '2017-03-18', $end);
-					$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
-					$dateAllRescues = 'N/A';
-					break;
+			$sql = '';
+			if ($record_group == 'ind') { $sql = 'NOT'; }
+			$database->query("SELECT * FROM stats_records
+								WHERE PilotName IS ". $sql ." NULL AND Period = :timeframe
+								ORDER BY Type, Name, Period, RecordDate DESC");
+			$database->bind(":timeframe", $timeframe);
+			$arrStatsRecords = $database->resultset();
+			$database->closeQuery();
+
+			$recType = '';
+			foreach ($arrStatsRecords as $row) {
+				// start new section if we've reached a new Type
+				if ($recType != $row["Type"]) {
+					// end previous table
+					if ($recType != '') {
+						echo '	</tbody>';
+						echo '</table>';
+						echo '<div class="ws"></div>';
+					}
+
+					// draw new section header
+					echo '<div class="sechead white" style="font-weight: bold; color: gold;">'. $row["Type"] .'</div>';
+
+					// draw new table header
+					echo '<table class="table">';
+					echo '	<thead>';
+					echo '		<tr>';
+					echo '			<th>Record Category</th>';
+					echo '			<th>Count</th>';
+					if ($record_group == 'ind') { echo '<th>Pilot</th>'; }
+					echo '			<th>Date</th>';
+					echo '		</tr>';
+					echo '	</thead>';
+					echo '<tbody>';
+				}
+
+				// iterate through data rows
+				echo '<tr>';
+				echo '	<td>'. $row["Name"] .'</td>';
+				echo '	<td>'. $row["Count"] .'</td>';
+				if ($record_group == 'ind') { echo '<td>'. $row["PilotName"] .'</td>'; }
+				// handle date display
+				switch ($timeframe) {
+					case 'Week':
+						echo '<td>week of '. Output::getEveDate($row["RecordDate"]) .'</td>';
+						break;
+					case 'Month':
+						echo '<td>'. substr(Output::getEveDate($row["RecordDate"]), 0, -3) .'</td>';
+						break;
+					default:
+						echo '<td>'. Output::getEveDate($row["RecordDate"]) .'</td>';
+						break;
+				}
+				echo '</tr>';
+
+				// update $recType to current Type
+				$recType = $row["Type"];
 			}
 			?>
-						<td>Most Rescues</td>
-						<td><?=$ctrAllRescues?></td>
-						<td><?=$dateAllRescues?></td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="ws"></div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>By Pilot</th>
-						<th>Count</th>
-						<th>Name</th>
-						<th>Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Most Rescues</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-12">
-			<div class="sechead white" style="font-weight: bold; color: gold;">ESRC</div>
-			<div class="ws"></div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>By Corp</th>
-						<th>Count</th>
-						<th>Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Most Strandees Rescued</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Strandees Served</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Participants</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most ESRC Activity</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Caches Tended</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Caches Sown</td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-			<br/>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>By Pilot</th>
-						<th>Count</th>
-						<th>Name</th>
-						<th>Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Most Strandees Rescued</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Strandees Served</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Participants</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most ESRC Activity</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Caches Tended</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Most Caches Sown</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="col-sm-12">
-			<div class="sechead white text-center" style="font-weight: bold;">SAR</div>
-		</div>
+		<!-- RECORDS STATS END -->
 	<?php 
 			break;
 		case 'personal':
@@ -635,7 +560,6 @@ if (!empty($errmsg)) {
 			break;
 	}
 	?>
-	<!-- SAR STATS END -->
 <!-- STATS DISPLAY END -->
 	</div>
 	<div class="ws"></div>
