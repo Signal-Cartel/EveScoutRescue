@@ -19,6 +19,7 @@ require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
+require_once '../class/pilot.class.php';
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
@@ -53,6 +54,7 @@ $users = new Users($database);
 $caches = new Caches($database);
 $systems = new Systems($database);
 $rescue = new Rescue($database);
+$pilots = new Pilot($database);
 
 // set character name
 if (!isset($charname))
@@ -116,6 +118,16 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$pgtitle = 'ESR Stats';
 	include_once '../includes/head.php'; 
 	?>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#tblPersonalESRC').DataTable( {
+				"order": [[ 0, "desc" ]],
+				"pagingType": "full_numbers"
+			} );
+		} );
+	</script>
+
 	<style>
 	<!--
 		table {
@@ -137,7 +149,6 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	
 	<!--Load the AJAX API-->
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript">
 		// Load the Visualization API and the piechart package.
 		google.charts.load('current', {'packages':['corechart']});
@@ -203,9 +214,6 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		<?php 
 				break;
 			case 'records':
-		?>
-		// prep datatable (?)
-		<?php 
 				break;
 			case 'personal':
 				// do stuff
@@ -258,7 +266,7 @@ if ($stat_type == 'records') {
 			<div class="col-sm-6" style="text-align: center;">
 				<a href="stats.php?stat_type=caches" class="btn btn-info" role="button">Caches</a> &nbsp;&nbsp;&nbsp;
 				<a href="stats.php?stat_type=participants" class="btn btn-info" role="button">Participants</a> &nbsp;&nbsp;&nbsp;
-				<a href="#" class="btn btn-info" role="button">Personal</a>
+				<a href="stats.php?stat_type=personal" class="btn btn-info" role="button">Personal</a>
 			</div>
 		</div>
 	</div>
@@ -292,10 +300,10 @@ else {
 							value="records"<?php echo ($stat_type == 'records' ? 'checked="checked"' : '') ?>>
 							Records</label>
 						<label class="radio-inline white"><input type="radio" name="stat_type" 
-							value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>
-							disabled="disabled">Personal</label>
+							value="personal"<?php echo ($stat_type == 'personal' ? 'checked="checked"' : '') ?>>Personal</label>
 					</div>
 					<div style="margin-top: 5px;">
+						<input type="hidden" name="pilot" value="<?=$charname?>" />
 						<button type="submit" class="btn btn-sm">Get Stats</button>
 					</div>
 				</form>
@@ -556,7 +564,133 @@ if (!empty($errmsg)) {
 	<?php 
 			break;
 		case 'personal':
-			// do stuff
+	?>
+		
+		<!-- COUNTERS -->
+		<div class="col-sm-4 white">
+			<span class="sechead">ESRC Activity Count</span><br /><br />
+			<table class="table" style="width: auto;">
+				<thead>
+					<tr>
+						<th>Period</th>
+						<th>Count</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- CURRENT WEEK -->
+					<?php
+					if(gmdate('w', strtotime("now")) == 0) {
+						$start = gmdate('Y-m-d', strtotime("now"));
+					}
+					else {
+						$start = gmdate('Y-m-d', strtotime('last Sunday'));
+					}
+					$end = gmdate('Y-m-d', strtotime("+ 1 day"));
+					
+					$count = $pilots->getActivityCount($charname, $start, $end);
+					?>
+					<tr>
+						<td>Current Week (Sun-Sat)</td>
+						<td align="right"><?php echo $count; ?></td>
+					</tr>
+					<!-- LAST 30 DAYS -->
+					<?php
+					$start = date('Y-m-d', strtotime('-30 days', strtotime("now")));
+					$end = date('Y-m-d', strtotime("+ 1 day"));
+					
+					$count= $pilots->getActivityCount($charname, $start, $end);
+					?>
+					<tr>
+						<td>Last 30 days</td>
+						<td align="right"><?php echo $count; ?></td>
+					</tr>
+					<!-- ALL TIME -->
+					<?php
+					// get all activities (complete time frame to use same method)
+					$start = date('Y-m-d', strtotime("1 January 2000"));
+					// tomorrow
+					$end = date('Y-m-d', strtotime("+ 1 day"));
+					$count = $pilots->getActivityCount($charname, $start, $end);
+					?>
+					<tr>
+						<td>All Time</td>
+						<td align="right"><?php echo $count; ?></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- BY TYPE -->
+			<table class="table" style="width: auto;">
+				<thead>
+					<tr>
+						<th>Action Type</th>
+						<th>Count</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					$typeCounts = $pilots->getActivityTypeCount($charname, 'sower')
+					?>
+					<tr>
+						<td style="background-color:#ccffcc;color:black;">Sower</td>
+						<td align="right"><?php echo $typeCounts; ?></td>
+					</tr>
+					<?php
+					$typeCounts = $pilots->getActivityTypeCount($charname, 'tender')
+					?>
+					<tr>
+						<td style="background-color:#d1dffa;color:black;">Tender</td>
+						<td align="right"><?php echo $typeCounts; ?></td>
+					</tr>
+					<?php
+					$typeCounts = $pilots->getActivityTypeCount($charname, 'agent')
+					?>
+					<tr>
+						<td style="background-color:#fffacd;color:black;">Agent</td>
+						<td align="right"><?php echo $typeCounts; ?></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-8 white">
+			<!-- FULL LISTING -->
+			<table id="tblPersonalESRC" class="table">
+				<thead>
+					<tr>
+						<th>Timestamp</th>
+						<th>Action</th>
+						<th>System</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					$rows = $pilots->getActivities($charname);				
+					foreach ($rows as $value) {
+						// calculate action cell format
+						$actioncellformat= '';
+						switch ($value['EntryType']) {
+							case 'sower':
+								$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+								break;
+							case 'tender':
+								$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+								break;
+							case 'agent':
+								$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+								break;
+							default:
+								// ??
+						}
+						echo '<tr>';
+						echo '<td>'. date("Y-m-d H:i:s", strtotime($value['ActivityDate'])).'</td>';
+						echo '<td'. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
+						echo '<td><a href="search.php?sys='. $value['System'].'">'. $value['System'] .'</a></td>';
+						echo '</tr>';
+					}
+					?>
+				</tbody>
+			</table>
+		</div>
+	<?php
 			break;
 	}
 	?>
