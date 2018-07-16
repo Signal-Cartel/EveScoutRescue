@@ -3,24 +3,39 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-
+require_once '../class/db.class.php';
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
 
-if (!isset($_POST['start'])) {
-	if (gmdate('w', strtotime("now")) == 0) {
-		$start = gmdate('Y-m-d', strtotime("now"));
-	}
-	elseif (gmdate('w', strtotime("now")) == 1) {
-		$start= gmdate('Y-m-d', strtotime("- 1 day"));
-	}
-	else {
-		$start = gmdate('Y-m-d', gmdate(strtotime('last Sunday')));
-	}
+// if start and end dates are not set, set them to default values
+if (!isset($_REQUEST['start'])) {
+	$start = gmdate('Y-m-d', strtotime("- 7 day"));
+	$startPD = gmdate('Y-M-d', strtotime("- 7 day")); // formatted for Pikaday widget
+}
+if (!isset($_REQUEST['end'])) {
+	$end = gmdate('Y-m-d', strtotime("now"));
+	$endPD = gmdate('Y-M-d', strtotime("now")); // formatted for Pikaday widget
 }
 
-if (!isset($_POST['end'])) {
-	$end = gmdate('Y-m-d', strtotime("+ 1 day"));
+// set start and end dates to submitted values (GET or POST)
+if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
+	// start date
+	$arrStart = explode('-', $_REQUEST['start']);
+	$startYear = intval(substr($arrStart[0], -3)) + 1898;
+	$startMonth = intval(date('m', strtotime($arrStart[1])));
+	$startDay = intval($arrStart[2]);
+	$start = gmdate('Y-m-d', strtotime($startYear. '-' . $startMonth. '-' . $startDay));
+	
+	// end date
+	$arrEnd = explode('-', $_REQUEST['end']);
+	$endYear = intval(substr($arrEnd[0], -3)) + 1898;
+	$endMonth = intval(date('m', strtotime($arrEnd[1])));
+	$endDay = intval($arrEnd[2]);
+	$end = gmdate('Y-m-d', strtotime($endYear. '-' . $endMonth. '-' . $endDay));
+	
+	// special string for Pikaday widget
+	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
+	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
 }
 
 ?>
@@ -55,13 +70,6 @@ if (!isset($_POST['end'])) {
 	</script>
 </head>
 
-<?php
-require_once '../class/db.class.php';
-if (isset($_POST['start']) && isset($_POST['end'])) { 
-	$start = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['start'])));
-	$end = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['end'])));
-}
-?>
 <body>
 <div class="container">
 	<div class="row" id="header" style="padding-top: 10px;">
@@ -72,10 +80,12 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				SAR Dispatch &gt;&gt; 
 				<a href="payoutadmin_sar_rescue.php">SAR Locate/Rescue</a></span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-				<div class="input-daterange input-group" id="datepicker">
-					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? $start : '' ?>" />
+				<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
+					<input type="text" class="input-sm form-control" name="start" id="start" 
+						value="<?php echo isset($startPD) ? $startPD : '' ?>" />
 					<span class="input-group-addon">to</span>
-					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? $end : '' ?>" />
+					<input type="text" class="input-sm form-control" name="end" id="end" 
+						value="<?php echo isset($endPD) ? $endPD : '' ?>" />
 				</div>
 				<div class="checkbox">
 					<label class="white"><input type="checkbox" name="details" value="yes"> Payout</label>
@@ -123,21 +133,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					$ctrtotact++;
 					// calculate action cell format
 					$actioncellformat= '';
-					/*
-					switch ($value['EntryType']) {
-						case 'sower':
-							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
-							break;
-						case 'tender':
-							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
-							break;
-						case 'agent':
-							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
-							break;
-						default:
-							// ??
-					}
-					*/
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td class="white text-nowrap">'. 
@@ -266,6 +261,68 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	}
 ?>
 </div>
+
+<script type="text/javascript">
+	// datepicker
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    var startDate,
+    endDate,
+    updateStartDate = function() {
+        startPicker.setStartRange(startDate);
+        endPicker.setStartRange(startDate);
+        endPicker.setMinDate(startDate);
+    },
+    updateEndDate = function() {
+        startPicker.setEndRange(endDate);
+        startPicker.setMaxDate(endDate);
+        endPicker.setEndRange(endDate);
+    },
+    startPicker = new Pikaday({
+        field: document.getElementById('start'),
+        minDate: new Date('03/18/2017'),
+        showMonthAfterYear: true,
+        format: 'YYYY-MMM-DD',
+        toString(date, format) {
+            const day = ("0" + date.getDate()).slice(-2);
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear() - 1898;
+            return `YC${year}-${month}-${day}`;
+        },
+        onSelect: function() {
+            startDate = this.getDate();
+            updateStartDate();
+        }
+    }),
+    endPicker = new Pikaday({
+        field: document.getElementById('end'),
+        minDate: new Date('03/18/2017'),
+        showMonthAfterYear: true,
+        format: 'YYYY-MMM-DD',
+        toString(date, format) {
+            const day = ("0" + date.getDate()).slice(-2);
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear() - 1898;
+            return `YC${year}-${month}-${day}`;
+        },
+        onSelect: function() {
+            endDate = this.getDate();
+            updateEndDate();
+        }
+    }),
+    _startDate = startPicker.getDate(),
+    _endDate = endPicker.getDate();
+
+    if (_startDate) {
+        startDate = _startDate;
+        updateStartDate();
+    }
+
+    if (_endDate) {
+        endDate = _endDate;
+        updateEndDate();
+    }
+</script>
 
 <script type="text/javascript">
 	function SelectAllCopy(id) {
