@@ -1,15 +1,34 @@
 <?php 
-
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-include_once '../includes/auth-inc.php'; ?>
+
+include_once '../includes/auth-inc.php';
+require_once '../class/output.class.php';
+
+if (!isset($_POST['start'])) {
+	if (gmdate('w', strtotime("now")) == 0) {
+		$start = gmdate('Y-m-d', strtotime("now"));
+	}
+	elseif (gmdate('w', strtotime("now")) == 1) {
+		$start= gmdate('Y-m-d', strtotime("- 1 day"));
+	}
+	else {
+		$start = gmdate('Y-m-d', gmdate(strtotime('last Sunday')));
+	}
+}
+
+if (!isset($_POST['end'])) {
+	$end = gmdate('Y-m-d', strtotime("+ 1 day"));
+}
+
+?>
 <html>
 
 <head>
 	<?php
-	$pgtitle = 'Cache Drive';
+	$pgtitle = 'witchking42 ESRC Contest';
 	include_once '../includes/head.php'; 
 	?>
 	<style>
@@ -18,117 +37,129 @@ include_once '../includes/auth-inc.php'; ?>
 			table-layout: fixed;
 			word-wrap: break-word;
 		}
+		a,
+		a:visited,
+		a:hover {
+			color: aqua;
+		}
 	-->
 	</style>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $('#example').DataTable( {
+		        "order": [[ 0, "desc" ]],
+		        "pagingType": "full_numbers",
+		        "pageLength": 15
+		    } );
+		} );
+	</script>
 </head>
 
 <?php
 require_once '../class/db.class.php';
+if (isset($_POST['start']) && isset($_POST['end'])) { 
+	$start = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['start'])));
+	$end = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['end'])));
+}
 ?>
-<body class="white">
+<body>
 <div class="container">
 	<div class="row" id="header" style="padding-top: 10px;">
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
-			<span style="font-size: 125%; font-weight: bold; color: white;">Cache Drive Totals</span>
+			<span style="font-size: 125%; font-weight: bold; color: white;">witchking42's ESRC Contest</span><br />
+			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+				<div class="input-daterange input-group" id="datepicker">
+					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? $start : '' ?>" />
+					<span class="input-group-addon">to</span>
+					<input type="text" class="input-sm form-control" name="end" value="<?php echo isset($end) ? $end : '' ?>" />
+				</div>
+				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button>
+			</form>
 		</div>
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
+	<?php
+	// display results for the selected date range
+	$db = new Database();
+	?>	
+
 	<div class="row" id="systable">
-		<!-- OVERALL TABLE -->
-		<div class="col-sm-3">
-			<span class="sechead">OVERALL</span><br /><br />
-			<table class="table" style="width: auto;">
+		<div class="col-sm-12">
+			<table id="example" class="table display" style="width: auto;">
 				<thead>
 					<tr>
-						<th>Pilot</th>
-						<th>Count</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					//summary data
-					$db = new Database();
-					$start = date("Y-m-d H:i:s", strtotime('2017-10-08 00:00:00'));
-					$end = date("Y-m-d H:i:s", strtotime('2017-10-22 23:59:59'));
-					
-					//count of all actions performed in the specified period
-					$db->query("SELECT COUNT(*) as cnt
-								FROM activity
-								WHERE ActivityDate BETWEEN :start AND :end");
-					$db->bind(':start', $start);
-					$db->bind(':end', $end);
-					$row = $db->single();
-					
-					$ctrtot = $row['cnt'];
-					
-					//overall count, by pilot, desc order on total count
-					$db->query("SELECT Pilot, COUNT(*) as cnt 
-								FROM activity WHERE ActivityDate BETWEEN :start AND :end 
-								GROUP BY Pilot
-								ORDER BY cnt DESC");
-					$db->bind(':start', $start);
-					$db->bind(':end', $end);
-					$rows = $db->resultset();
-					$ctr = 0;
-					foreach ($rows as $value) {
-						$ctr++;
-						echo '<tr>';
-						echo '<td>'. $value['Pilot'] .'</td>';
-						echo '<td align="right">'. $value['cnt'] .'</td>';
-						echo '</tr>';
-					} ?>
-					<tr>
-						<td>Participants: <?php echo $ctr; ?></td>
-						<td align="right"><?php echo $ctrtot; ?></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		
-		<!-- WORMHOLE CLASSES TABLE -->
-		<div class="col-sm-3">
-			<?php 
-			//loop through six times, one for each WH class
-			for ($i = 1; $i <= 6; $i++) { ?>
-			<!-- C1 -->
-			<span class="sechead" style="color: gold;">C<?php echo $i; ?> Wormholes</span><br /><br />
-			<table class="table" style="width: auto;">
-				<thead>
-					<tr>
-						<th>Pilot</th>
-						<th>Count</th>
+						<th class="white">Date</th>
+						<th class="white">Pilot</th>
+						<th class="white">Type</th>
+						<th class="white">Count</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
-				//overall count, by pilot, by wormhole class, desc order on total count
-				$db->query("SELECT Pilot, COUNT(*) as cnt 
-							FROM activity a, wh_systems wh
-							WHERE ActivityDate BETWEEN :start AND :end
-							AND wh.System = a.System AND wh.Class = 'Class ". $i ."'
-							GROUP BY Pilot
-							ORDER BY cnt DESC
-							LIMIT 1");
+				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
+				$db->query("SELECT ActivityDate, Pilot, EntryType, COUNT(Pilot) AS Count FROM activity 
+							WHERE ActivityDate BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
+                            GROUP BY Pilot, EntryType, ActivityDate");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
-				//$db->bind(':i', $i);
 				$rows = $db->resultset();
-				$ctr = 0;
 				foreach ($rows as $value) {
-					$ctr++;
+					$ctrtotact++;
+					// calculate action cell format
+					$actioncellformat= '';
+					switch ($value['EntryType']) {
+						case 'sower':
+							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+							break;
+						case 'tender':
+							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+							break;
+						case 'agent':
+							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+							break;
+						default:
+							// ??
+					}
 					echo '<tr>';
-					echo '<td>'. $value['Pilot'] .'</td>';
-					echo '<td align="right">'. $value['cnt'] .'</td>';
+					// add 4 hours to convert to UTC (EVE) for display
+					echo '<td class="white text-nowrap">'. 
+							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
+						 '</td>';
+					echo '<td class="text-nowrap">
+							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a target="_blank" 
+							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
+					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
+					switch ($value['EntryType']) {
+						case 'sower':
+							$ctrsow++;
+							break;
+						case 'tender':
+							$ctrtend++;
+							break;
+						case 'agent':
+							$ctradj++;
+							break;
+					}
+					echo '<td align="right" class="white">'. $value['Count'] .'</td>';
 					echo '</tr>';
-				} ?>
+				}
+				?>
 				</tbody>
 			</table>
-			<?php } ?>
 		</div>
-		
 	</div>
-	</div>
+</div>
+
+<script type="text/javascript">
+	function SelectAllCopy(id) {
+	    document.getElementById(id).focus();
+	    document.getElementById(id).select();
+	    document.execCommand("Copy");
+	}
+</script>
+
 </body>
 </html>
