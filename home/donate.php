@@ -53,7 +53,7 @@ include_once '../includes/top-right.php';
 				<hr class="half-rule">
 		  		<div class="row">
 			      <div class="col-sm-4" style="text-align: center;">
-			        <img src="../img/contribute-scouts.png">
+			        <img src="../img/cache-lg.png" height="190">
 			        <h3>Let It Be</h3>
 			        <p>If you agree that no one should be stranded inside a wormhole due 
 					to server problems or socket disconnects, please support this initiative 
