@@ -13,6 +13,7 @@ $stat = isset($_REQUEST['stat']) ? $_REQUEST['stat'] : 0;
 
 // handle form submit
 if (isset($_POST['testimonial'])) {
+	// delete testimonial
 	if (isset($_POST['delete'])) {
 		$db->beginTransaction();
 		$db->query("DELETE FROM testimonials WHERE ID = :id");
@@ -20,10 +21,12 @@ if (isset($_POST['testimonial'])) {
 		$db->execute();
 		$db->endTransaction();
 	}
+	// edit testimonial
 	else {
 		$app = isset($_POST['approved']) ? 1 : 0;
 		$db->beginTransaction();
-		$db->query("UPDATE testimonials SET Note = :note, Approved = :app WHERE ID = :id");
+		$db->query("UPDATE testimonials SET Pilot = :pilot, Note = :note, Approved = :app WHERE ID = :id");
+		$db->bind(':pilot', $_POST['pilot']);
 		$db->bind(':note', $_POST['testimonial']);
 		$db->bind(':app', $app);
 		$db->bind(':id', $_POST['ID']);
@@ -123,7 +126,7 @@ if (isset($_POST['testimonial'])) {
 		
 			<form name="testform" id="testform" action="testimonials_admin.php" method="POST">
 		      <div class="white">
-				Pilot: <strong><?=$row['Pilot']?></strong> 
+				Pilot: <strong><input class="black" type="text" name="pilot" value="<?=$row['Pilot']?>"></strong> 
 					(<?php echo ($row['Anon'] == 1) ? 'A' : 'Not a'; ?>nonymous)<br />
 				Rescue Method: <strong><?php echo $row['Type'];?></strong><br /><br />
 				
