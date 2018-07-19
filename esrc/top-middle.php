@@ -15,7 +15,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 		<div class="col-sm-5" style="text-align: left;">
 			<form method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="form-group">
-					<input type="text" name="sys" size="30" autoFocus="autoFocus" 
+					<input type="text" name="sys" size="30" autoFocus="autoFocus" onclick="this.select()"
 						autocomplete="off" class="sys" placeholder="System Name" 
 						value="<?php echo isset($system) ? $system : '' ?>">
 				</div>

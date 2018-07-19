@@ -78,7 +78,7 @@ $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 $system = '';
 if(isset($_REQUEST['sys'])) { 
-	$system = htmlspecialchars_decode($_REQUEST['sys']);
+	$system = ucfirst(htmlspecialchars_decode($_REQUEST['sys']));
 }
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
