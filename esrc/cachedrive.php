@@ -49,7 +49,14 @@ if (!isset($_POST['end'])) {
 		    $('#example').DataTable( {
 		        "order": [[ 0, "desc" ]],
 		        "pagingType": "full_numbers",
-		        "pageLength": 15
+		        "pageLength": 10
+		    } );
+		} );
+		$(document).ready(function() {
+		    $('#example2').DataTable( {
+		        "order": [[ 0, "desc" ]],
+		        "pagingType": "full_numbers",
+		        "pageLength": 10
 		    } );
 		} );
 	</script>
@@ -86,8 +93,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	?>	
 
 	<div class="row" id="systable">
-		<div class="col-sm-12">
-			<table id="example" class="table display" style="width: auto;">
+		<div class="col-sm-6">
+			<p class="sechead white">GROUPED BY DAY</p>
+			<table id="example2" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Date</th>
@@ -99,9 +107,72 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				<tbody>
 				<?php
 				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT ActivityDate, Pilot, EntryType, COUNT(Pilot) AS Count FROM activity 
-							WHERE ActivityDate BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
-                            GROUP BY Pilot, EntryType, ActivityDate");
+				$db->query("SELECT DATE(ActivityDate) AS ActionDate, Pilot, EntryType, COUNT(Pilot) AS Count FROM activity 
+							WHERE DATE(ActivityDate) BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
+                            GROUP BY Pilot, EntryType, ActionDate");
+				$db->bind(':start', $start);
+				$db->bind(':end', $end);
+				$rows = $db->resultset();
+				foreach ($rows as $value) {
+					$ctrtotact++;
+					// calculate action cell format
+					$actioncellformat= '';
+					switch ($value['EntryType']) {
+						case 'sower':
+							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+							break;
+						case 'tender':
+							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+							break;
+						case 'agent':
+							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+							break;
+						default:
+							// ??
+					}
+					echo '<tr>';
+					// add 4 hours to convert to UTC (EVE) for display
+					echo '<td class="white text-nowrap">'. 
+							date("Y-m-d", strtotime($value['ActionDate'])) .
+						 '</td>';
+					echo '<td class="text-nowrap">
+							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a target="_blank" 
+							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
+					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
+					switch ($value['EntryType']) {
+						case 'sower':
+							$ctrsow++;
+							break;
+						case 'tender':
+							$ctrtend++;
+							break;
+						case 'agent':
+							$ctradj++;
+							break;
+					}
+					echo '<td align="right" class="white">'. $value['Count'] .'</td>';
+					echo '</tr>';
+				}
+				?>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<p class="sechead white">UNGROUPED</p>
+			<table id="example" class="table display" style="width: auto;">
+				<thead>
+					<tr>
+						<th class="white">Date</th>
+						<th class="white">Pilot</th>
+						<th class="white">Type</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
+				$db->query("SELECT ActivityDate, Pilot, EntryType FROM activity 
+							WHERE ActivityDate BETWEEN :start AND :end And EntryType IN ('sower', 'tender')");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
@@ -143,7 +214,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							$ctradj++;
 							break;
 					}
-					echo '<td align="right" class="white">'. $value['Count'] .'</td>';
 					echo '</tr>';
 				}
 				?>

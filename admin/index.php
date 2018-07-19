@@ -13,11 +13,16 @@ include_once '../includes/auth-inc.php';
 
 <body>
 
-<a href="payoutadmin.php">Payouts</a>
-<br /><br />
 <a href="testimonials_admin.php">Testimonials</a>
 <br /><br />
+<a href="payoutadmin.php">Payouts</a>
+<br /><br />
+<br /><br />
+
 <a href="stats_records_admin.php">Stats Records</a>
+<br /><br />
+<a href="user_roles_admin.php">User Roles</a>
+<br /><br />
 
 </body>
 </html>
