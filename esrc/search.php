@@ -156,8 +156,7 @@ if (!empty($system)) {
 	// get cache information from database
 	$row = $caches->getCacheInfo($system);
 	//only display the following if we got some results back
-	if (!empty($row))
-	{
+	if (!empty($row)) {
 		// calculate status cell format
 		$statuscellformat = '';
 		switch ($row ['Status']) {
@@ -206,7 +205,16 @@ if (!empty($system)) {
 			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
-			target="_blank">anoik.is</a>
+			target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+		<!-- Edit button, if relevant -->
+		<?php
+		//edit function only available to Coordinators and recent sowers
+		$isRecentSower = $caches->isRecentSower($charname, $system);
+		if ($isCoord || $isRecentSower) {
+		echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal" 
+			data-target="#EditModal">Edit Cache</button>';
+		}
+		?>
 		</div>
 		</div>
 		</div>
@@ -419,6 +427,7 @@ else {
 include 'modal_agent.php';
 include 'modal_tend.php';
 include 'modal_sow.php';
+include 'modal_edit.php';
 ?>
 
 <script type="text/javascript">

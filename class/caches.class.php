@@ -262,7 +262,6 @@ class Caches
 		$this->db->execute();
 		//end db transaction
 		$this->db->endTransaction();
-		
 	}
 	
 	/**
@@ -284,7 +283,6 @@ class Caches
 		$this->db->execute();
 		//end db transaction
 		$this->db->endTransaction();
-		
 	}
 	
 	/**
@@ -319,6 +317,46 @@ class Caches
 		$this->db->execute ();
 		//end db transaction
 		$this->db->endTransaction();
+	}
+
+	/**
+	 * Edit existing cache info for the given system
+	 * @param unknown $cacheid
+	 * @param unknown $location
+	 * @param unknown $alignedwith
+	 * @param unknown $distance
+	 * @param unknown $password
+	 */
+	public function updateCache($cacheid, $location, $alignedwith, $distance, $password)
+	{
+		$this->db->beginTransaction();
+		$this->db->query ("UPDATE cache SET Location = :location, AlignedWith = :aw, Distance = :distance, 
+					Password = :pw WHERE CacheID = :cacheid");
+		$this->db->bind ( ':cacheid', $cacheid);
+		$this->db->bind ( ':location', $location );
+		$this->db->bind ( ':aw', $alignedwith );
+		$this->db->bind ( ':distance', $distance );
+		$this->db->bind ( ':pw', $password );
+		$this->db->execute ();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+
+	/**
+	 * Check if the user is a recent sower in given system.
+	 * @param unknown $username - the user name of the current user
+	 * @param unknown $system - the system in question
+	 * @return boolean - return <code>TRUE</code> if the status is true or <code>FALSE</code> otherwise
+	 */
+	public function isRecentSower($username, $system)
+	{
+		$this->db->query("SELECT count(1) as cnt FROM `activity` WHERE System = :system AND Pilot = :pilot 
+			AND EntryType = 'sower' AND ActivityDate > DATE_SUB(NOW(), INTERVAL 1 DAY)");
+		$this->db->bind(":system", $system);
+		$this->db->bind(":pilot", $username);
+		$data = $this->db->single();
+		$this->db->closeQuery();
+		return ($data['cnt'] === 1) ? true : false;
 	}
 }
 ?>
