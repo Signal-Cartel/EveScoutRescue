@@ -128,7 +128,8 @@ class Users {
 	 */
 	public function getUsersByRole($role, $active = true)
 	{
-		$this->db->query("SELECT * FROM pilots WHERE task LIKE :role AND active = :active");
+		$this->db->query("SELECT * FROM user_roles ur, user u WHERE ur.userid = u.id AND ur.roleid LIKE :role 
+			AND ur.active = :active ORDER BY ur.username");
 		$this->db->bind(":role", $role);
 		$this->db->bind(":active", ($active) ? 1 : 0);
 		// get the resultset
