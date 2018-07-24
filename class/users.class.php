@@ -47,7 +47,7 @@ class Users {
 	 */
 	public function isSARCoordinator($username)
 	{
-		$result = $this->checkPermission($username, "SARCoordinator");
+		$result = $this->checkPermission($username, "ESR Coordinator");
 		
 		return $result;
 	}
@@ -67,12 +67,12 @@ class Users {
 	/**
 	 * Internal permission check function.
 	 * @param unknown $username the user name of the current user
-	 * @param unknown $permission the permission to check
+	 * @param unknown $permission the role to check
 	 * @return boolean return <code>TRUE</code> if the permission is set and <code>FALSE</code> otherwise
 	 */
 	public function checkPermission($username, $permission, $active = true)
 	{
-		$this->db->query("select count(1) as cnt from pilots where pilot = :pilot and task = :task and active = :active");
+		$this->db->query("select count(1) as cnt from user_roles where username = :pilot and rolename = :task and active = :active");
 		$this->db->bind(":pilot", $username);
 		$this->db->bind(":task", $permission);
 		$this->db->bind(":active", ($active) ? 1 : 0);
