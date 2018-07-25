@@ -96,5 +96,20 @@ class Pilot
 		
 		return $rows;
 	}
+
+	/**
+	 * Get medals for given medal type
+	 * @param unknown $medalid
+	 * @return unknown
+	 */
+	public function getMedals($medalid)
+	{
+		$this->db->query("SELECT * FROM `medals` WHERE medalid = :medalid ORDER BY dateawarded DESC, pilot");
+		$this->db->bind(":medalid", $medalid);
+		$rows = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $rows;
+	}
 }
 ?>

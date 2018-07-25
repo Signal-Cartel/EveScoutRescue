@@ -6,11 +6,16 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php'; 
 require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
-require_once '../class/users.class.php';
+require_once '../class/pilot.class.php';
+require_once '../class/output.class.php';
 
 $database = new Database();
-$users = new Users($database);
+$pilot = new Pilot($database);
+$rowsSuper = $pilot->getMedals('1');
+$rowsMega = $pilot->getMedals('2');
+$rowsHyper = $pilot->getMedals('3');
+$rowsUltra = $pilot->getMedals('4');
+$rowsHeroic = $pilot->getMedals('5');
 ?>
 <html>
 
@@ -41,11 +46,10 @@ include_once '../includes/top-right.php';
  * @param int $listMax the maximum number of pilots to list
  * @return prepared HTML for a certain hero category
  */
-function printESRCHeroes($type, $min, $max, $listMax) 
+function printESRCHeroes($type, $min, $rows) 
 { 
-	$leaderBoard = new Leaderboard($database);
 ?>
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<h2 style="text-align: center;"><?=$type?></h2>
 		<p style="text-align: center;">Awarded to pilots upon sowing or tending 
 			<?=$min?> rescue caches.<br />
@@ -60,21 +64,15 @@ function printESRCHeroes($type, $min, $max, $listMax)
 			<thead>
 				<tr>
 					<th>Pilot</th>
-					<th>Caches</th>
+					<th>Date Awarded</th>
 				</tr>
 			</thead>
 		<tbody>
 			<?php
-			$daysdiff = round((time(tomorrow)- strtotime("2017-03-01")) / (60 * 60 * 24));
-			$rows = $leaderBoard->getTop(intval($listMax), $daysdiff);
-			
 			foreach ($rows as $value) {
-				if (intval($value['cnt']) < intval($min) || intval($value['cnt']) > intval($max)) { 
-					continue; 
-				}
 				echo '<tr>';
-				echo '	<td>'. $value['Pilot'] .'</td>';
-				echo '	<td align="right">'. $value['cnt'] .'</td>';
+				echo '	<td>'. $value['pilot'] .'</td>';
+				echo '	<td>'. Output::getEVEdate($value['dateawarded']) .'</td>';
 				echo '</tr>';
 			}
 			?>
@@ -88,26 +86,23 @@ function printESRCHeroes($type, $min, $max, $listMax)
 <div class="row">
 	<?php 
 	// HeroCacher column
-	printESRCHeroes('HeroicCacher', 3000, 4999, 5);
+	printESRCHeroes('HeroicCacher', 3000, $rowsHeroic);
 
 	// UltraCacher column
-	printESRCHeroes('UltraCacher', 1000, 2999, 10);
+	printESRCHeroes('UltraCacher', 1000, $rowsUltra);
 
 	// HyperCacher column
-	printESRCHeroes('HyperCacher', 500, 999, 20);
-
-	// MegaCacher column
-	printESRCHeroes('MegaCacher', 300, 499, 50);
-	
-	// InsaneCacher column
-	//printESRCHeroes('HeroCacher', 5000, 9999, 5);
+	printESRCHeroes('HyperCacher', 500, $rowsHyper);
 	?>
 </div>
 
 <div class="row">
 	<?php 
+	// MegaCacher column
+	printESRCHeroes('MegaCacher', 300, $rowsMega);
+
 	// SuperCacher column
-	printESRCHeroes('SuperCacher', 100, 299, 200);
+	printESRCHeroes('SuperCacher', 100, $rowsSuper);
 	?>
 </div>
 

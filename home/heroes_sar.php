@@ -4,13 +4,21 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
+// for debug only
+/*
+ error_reporting(E_ALL);
+ ini_set('display_errors', 'on');
+*/
+
 include_once '../includes/auth-inc.php'; 
 require_once '../class/db.class.php';
-require_once '../class/leaderboard_sar.class.php';
-require_once '../class/users.class.php';
+require_once '../class/pilot.class.php';
+require_once '../class/output.class.php';
 
 $database = new Database();
-$users = new Users($database);
+$pilot = new Pilot($database);
+$rowsBronze = $pilot->getMedals('11');
+$rowsSilver = $pilot->getMedals('12');
 ?>
 <html>
 
@@ -41,7 +49,7 @@ include_once '../includes/top-right.php';
  * @param int $listMax the maximum number of pilots to list
  * @return prepared HTML for a certain hero category
  */
-function printSARHeroes($type, $min, $max, $arrPilotCnt) 
+function printSARHeroes($type, $min, $arrPilotCnt) 
 { 
 ?>
 	<div class="col-sm-4">
@@ -59,18 +67,15 @@ function printSARHeroes($type, $min, $max, $arrPilotCnt)
 			<thead>
 				<tr>
 					<th>Pilot</th>
-					<th>Rescues</th>
+					<th>Date Awarded</th>
 				</tr>
 			</thead>
 			<tbody>
 			<?php
 			foreach ($arrPilotCnt as $value) {
-				if (intval($value['cnt']) < intval($min) || intval($value['cnt']) > intval($max)) { 
-					continue; 
-				}
 				echo '<tr>';
 				echo '	<td>'. $value['pilot'] .'</td>';
-				echo '	<td align="right">'. $value['cnt'] .'</td>';
+				echo '	<td>'. Output::getEVEdate($value['dateawarded']) .'</td>';
 				echo '</tr>';
 			}
 			?>
@@ -79,24 +84,36 @@ function printSARHeroes($type, $min, $max, $arrPilotCnt)
 	</div>
 <?php 
 }
-
-$leaderBoard = new SARLeaderboard($database);
-$rows = $leaderBoard->getTopRescueAgents();
 ?>
 
 <div class="row">
 	<?php 
 	// Bronze Medal column
-	printSARHeroes('Bronze Lifesaver', 1, 9, $rows);
+	printSARHeroes('Bronze Lifesaver', 1, $rowsBronze);
 	
 	// Silver Medal column
-	printSARHeroes('Silver Lifesaver', 10, 49, $rows);
+	printSARHeroes('Silver Lifesaver', 10, $rowsSilver);
 	
 	// Gold Medal column
-	//printSARHeroes('Gold Lifesaver', 50, 999, $rows);
+	//printSARHeroes('Gold Lifesaver', 50, $rows);
 	?>
 </div>
 
 </div>
 </body>
 </html>
+
+<?php 
+function debug($variable){
+	if(is_array($variable)){
+		echo "<pre>";
+		print_r($variable);
+		echo "</pre>";
+		exit();
+	}
+	else{
+		echo ($variable);
+		exit();
+	}
+}
+?>
