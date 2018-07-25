@@ -10,6 +10,22 @@ require_once '../class/db.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/rescue.class.php';
 require_once '../class/users.class.php';
+
+$database = new Database();
+$caches = new Caches($database);
+$users = new Users($database);
+$rescues = new Rescue($database);
+
+$ctrESRCrescues = $rescues->getRescueCount('closed-esrc');
+$ctrSARrescues = $rescues->getRescueCount('closed-rescued');
+$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+$ctractive = $caches->getActiveCount();
+$arrSARWaits = $rescues->getSARWaitTime();
+$SARWaitMean = mmmr($arrSARWaits);
+$SARWaitMode = mmmr($arrSARWaits, 'mode');
+$SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
+$daysBack = "7";
+$ctrSystems = $caches->getSystemsVisited($daysBack);
 ?>
 <html>
 
@@ -62,20 +78,6 @@ require_once '../class/users.class.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
 include_once '../includes/top-right.php';
-
-$database = new Database();
-$caches = new Caches($database);
-$users = new Users($database);
-$rescues = new Rescue($database);
-
-$ctrESRCrescues = $rescues->getRescueCount('closed-esrc');
-$ctrSARrescues = $rescues->getRescueCount('closed-rescued');
-$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
-$ctractive = $caches->getActiveCount();
-$arrSARWaits = $rescues->getSARWaitTime();
-$SARWaitMean = mmmr($arrSARWaits);
-$SARWaitMode = mmmr($arrSARWaits, 'mode');
-$SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 ?>
 </div>
 <div class="ws"></div>
@@ -100,6 +102,12 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		<span style="font-weight: bold; color: gold;">
 			<?=round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%</span> 
 			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
+		</span><br /><br />
+		<span class="sechead white">
+			<span style="font-weight: bold; color: gold;"><?=intval($ctrSystems)?></span> 
+			J-space Systems</span><br /> 
+		<span class="white">
+			visited by our Rescue pilots in the last <span style="font-weight: bold; color: gold;"><?=intval($daysBack)?></span> days
 		</span><br /><br />
 	</div>
 	<div class="col-sm-8" style="text-align: center;">

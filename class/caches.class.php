@@ -358,5 +358,20 @@ class Caches
 		$this->db->closeQuery();
 		return ($data['cnt'] === 1) ? true : false;
 	}
+
+	/**
+	 * Count of # of systems where sowing/tending have occurred in the given time period.
+	 * @param int $daysBack - the number of days back we want the count to go (e.g., "7" would count the last week)
+	 * @return int $cnt - return the number of systems
+	 */
+	public function getSystemsVisited($daysBack)
+	{
+		$this->db->query("SELECT COUNT(DISTINCT System) AS cnt FROM `activity` 
+			WHERE ActivityDate >= (CURDATE() - INTERVAL :daysBack DAY)");
+		$this->db->bind(":daysBack", $daysBack);
+		$data = $this->db->single();
+		$this->db->closeQuery();
+		return $data['cnt'];
+	}
 }
 ?>
