@@ -85,7 +85,7 @@ class Systems {
 		}
 		
 		// check the DB for the system name
-		$sql = "select count(1) as cnt from wh_systems where system = :system";
+		$sql = "SELECT count(1) as cnt from wh_systems where system = :system";
 		// create query
 		$this->db->query ( $sql );
 		// and bind parameters
@@ -112,7 +112,8 @@ class Systems {
 		}
 		
 		// check the DB for the system name
-		$sql = "select DoNotSowUntil as locked from wh_systems where system = :system and DoNotSowUntil is not null and DoNotSowUntil >= CURRENT_DATE()";
+		$sql = "SELECT DoNotSowUntil as locked from wh_systems 
+			where system = :system and DoNotSowUntil is not null and DoNotSowUntil >= CURRENT_DATE()";
 		// create query
 		$this->db->query ( $sql );
 		// and bind parameters
@@ -132,7 +133,7 @@ class Systems {
 	public function getLockedCount()
 	{
 		// check the DB for the system name
-		$sql = "select count(1) as locked from wh_systems where DoNotSowUntil is not null and DoNotSowUntil > CURRENT_DATE()";
+		$sql = "SELECT count(1) as locked from wh_systems where DoNotSowUntil is not null and DoNotSowUntil > CURRENT_DATE()";
 		// create query
 		$this->db->query ( $sql );
 		// execute the query
@@ -171,15 +172,46 @@ class Systems {
 	}
 	
 	/**
-	 * Get all activitis of a system
+	 * Get all activities of a system
 	 * @param unknown $system
 	 * @return string
 	 */
 	public function getSystemActivities($system)
 	{
-		$this->db->query("SELECT * FROM activity
-						WHERE System = :system
-						ORDER By ActivityDate DESC");
+		$this->db->query("SELECT * FROM activity WHERE System = :system ORDER By ActivityDate DESC");
+		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+
+	/**
+	 * Add system note
+	 * @param unknown $system
+	 * @param unknown $charname
+	 * @param unknown $note
+	 */
+	public function addSystemNote($system, $charname, $note)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("INSERT INTO systemnote (systemname, noteby, note) VALUES (:systemname, :username, :note)");
+		$this->db->bind(':systemname', $system);
+		$this->db->bind(':username', $charname);
+		$this->db->bind(':note', $note);
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+
+	/**
+	 * Get system notes
+	 * @param unknown $system
+	 * @return string
+	 */
+	public function getSystemNotes($system)
+	{
+		$this->db->query("SELECT * FROM systemnote WHERE systemname = :system ORDER By notedate DESC");
 		$this->db->bind(':system', $system);
 		$result = $this->db->resultset();
 		$this->db->closeQuery();

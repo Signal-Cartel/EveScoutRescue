@@ -99,6 +99,12 @@ div.centered {
 	color: white;
 }
 
+.sysnotes {
+	background-color: #504d4d;
+	border-radius: 6px 6px 0px 0px;
+	color: white;
+}
+
 .field {
 	padding-bottom: 10px;
 }

@@ -21,6 +21,8 @@ include_once '../includes/auth-inc.php';
 <br /><br />
 <br /><br />
 
+<a href="no_sow_admin.php">No Sow</a>
+<br /><br />
 <a href="stats_records_admin.php">Stats Records</a>
 <br /><br />
 <a href="user_roles_admin.php">User Roles</a>
