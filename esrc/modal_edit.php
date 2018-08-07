@@ -67,7 +67,7 @@ if (isset($_POST['sys_edit'])) {
 		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
 		$edit_note = '<br />' . $noteDate . 'Cache info updated by '. $editPilot;
 		if (!empty($editNewNote)) { $edit_note = $edit_note. "\n" . $editNewNote; }
-        $caches->addNoteToCache($editSystem, $edit_note);
+        $caches->addNoteToCache($editCacheid, $edit_note);
 
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $editSystem;

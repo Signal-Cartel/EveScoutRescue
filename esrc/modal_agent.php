@@ -1,4 +1,9 @@
 <!-- Agent Modal Form -->
+<?php
+// get active cache info
+$rowAgent = $caches->getCacheInfo($system);
+$cacheid = $rowAgent['CacheID'];
+?>
 <div id="AgentModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -38,7 +43,8 @@
 	      </div>
 	      <div class="modal-footer">
 	        <div class="form-actions">
-				<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
+					<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
+					<input type="hidden" name="CacheID" value="<?=$row['CacheID']?>" />
 			    <button type="submit" class="btn btn-info">Submit</button>
 			</div>
 	      </div>

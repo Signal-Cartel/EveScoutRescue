@@ -194,25 +194,21 @@ class Caches
 	
 	/**
 	 * Create a new activity for a system
-	 * 
-	 * !!! Noe: Activity is not really assigned to a cache or a system. It related to a cache
-	 * within a system. This may be changed later with DB structure change.
-	 * 
 	 * @param $system the name of the Systems
 	 * @param $pilot the creating pilot
 	 * @param $entrytype the type of the entry (... <add values here> ...)
 	 * @param $activitydate the date of the activity
 	 * @param $notes notes to add
 	 * @param $aidedpilot the aided pilot for agent records
-	 * @return string the ID of the created activity
 	 */
-	public function addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot)
+	public function addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot)
 	{
 		$this->db->beginTransaction();
 		// insert to [activity] table
-		$this->db->query("INSERT INTO activity (ActivityDate, Pilot, EntryType, System,
+		$this->db->query("INSERT INTO activity (CacheID, ActivityDate, Pilot, EntryType, System,
 						AidedPilot, Note, IP)
-					VALUES (:activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+					VALUES (:cacheid, :activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':activitydate', $activitydate);
 		$this->db->bind(':pilot', $pilot);
 		$this->db->bind(':entrytype', $entrytype);
@@ -222,11 +218,11 @@ class Caches
 		$this->db->bind(':ip', $_SERVER['REMOTE_ADDR']);
 		$this->db->execute();
 		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
-		$newID = $this->db->lastInsertId();
+		//$newID = $this->db->lastInsertId();
 		//end db transaction
 		$this->db->endTransaction();
 		
-		return $newID;
+		//return $newID;
 	}
 	
 	/**
@@ -234,12 +230,11 @@ class Caches
 	 * @param unknown $system the current cache of the system
 	 * @param unknown $noteText the text to add
 	 */
-	public function addNoteToCache($system, $noteText)
+	public function addNoteToCache($cacheid, $noteText)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated
-					WHERE System = :system AND Status <> 'Expired'");
-		$this->db->bind(':system', $system);
+		$this->db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated WHERE CacheID = :cacheid");
+		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':note', $noteText);
 
 		$this->db->execute();
@@ -251,12 +246,11 @@ class Caches
 	 * Expire a cache in a syste,
 	 * @param unknown $system the system of the cache
 	 */
-	public function expireCache($system, $activitydate)
+	public function expireCache($cacheid, $activitydate)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET Status = 'Expired', lastupdated = :lastupdated
-							WHERE System = :system AND Status <> 'Expired'");
-		$this->db->bind(':system', $system);
+		$this->db->query("UPDATE cache SET Status = 'Expired', lastupdated = :lastupdated WHERE CacheID = :cacheid");
+		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':lastupdated', $activitydate);
 		
 		$this->db->execute();
@@ -270,12 +264,12 @@ class Caches
 	 * @param unknown $status the status to set
 	 * @param unknown $expires the expire date
 	 */
-	public function updateExpireTime($system, $status, $expires, $activitydate)
+	public function updateExpireTime($cacheid, $status, $expires, $activitydate)
 	{
 		$this->db->beginTransaction();
 		$this->db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, lastupdated = :lastupdated
-					WHERE System = :system AND Status <> 'Expired'");
-		$this->db->bind(':system', $system);
+					WHERE CacheID = :cacheid");
+		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':status', $status);
 		$this->db->bind(':expdate', $expires);
 		$this->db->bind(':lastupdated', $activitydate);
@@ -296,14 +290,12 @@ class Caches
 	 * @param unknown $activitydate
 	 * @param unknown $sower_note
 	 */
-	public function createCache($cacheID, $system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note)
+	public function createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note)
 	{
 		$this->db->beginTransaction();
-		$this->db->query ("INSERT INTO cache (CacheID, InitialSeedDate, System, Location,
-						AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note)
-					VALUES (:cacheid, :sowdate, :system, :location, :aw, :distance, :pw,
-						:status, :expdate, :lastupdated, :note)" );
-		$this->db->bind ( ':cacheid', $cacheID);
+		$this->db->query ("INSERT INTO cache (InitialSeedDate, System, Location,
+			AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note)
+			VALUES (:sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :lastupdated, :note)" );
 		$this->db->bind ( ':sowdate', $activitydate );
 		$this->db->bind ( ':system', $system );
 		$this->db->bind ( ':location', $location );
@@ -315,8 +307,12 @@ class Caches
 		$this->db->bind ( ':lastupdated', $activitydate );
 		$this->db->bind ( ':note', $sower_note );
 		$this->db->execute ();
+		//get ID from newly inserted cache ID for use in [activity] record insert/update
+		$newID = $this->db->lastInsertId();
 		//end db transaction
 		$this->db->endTransaction();
+
+		return $newID;
 	}
 
 	/**
@@ -348,11 +344,11 @@ class Caches
 	 * @param unknown $system - the system in question
 	 * @return boolean - return <code>TRUE</code> if the status is true or <code>FALSE</code> otherwise
 	 */
-	public function isRecentSower($username, $system)
+	public function isRecentSower($username, $cacheid)
 	{
-		$this->db->query("SELECT count(1) as cnt FROM `activity` WHERE System = :system AND Pilot = :pilot 
+		$this->db->query("SELECT count(1) as cnt FROM `activity` WHERE CacheID = :cacheid AND Pilot = :pilot 
 			AND EntryType = 'sower' AND ActivityDate > DATE_SUB(NOW(), INTERVAL 1 DAY)");
-		$this->db->bind(":system", $system);
+		$this->db->bind(":cacheid", $cacheid);
 		$this->db->bind(":pilot", $username);
 		$data = $this->db->single();
 		$this->db->closeQuery();

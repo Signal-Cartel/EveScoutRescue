@@ -209,7 +209,7 @@ if (!empty($system)) {
 		<!-- Edit button, if relevant -->
 		<?php
 		//edit function only available to Coordinators and recent sowers
-		$isRecentSower = $caches->isRecentSower($charname, $system);
+		$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
 		if ($isCoord || $isRecentSower) {
 		echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal" 
 			data-target="#EditModal">Edit Cache</button>';
@@ -376,7 +376,7 @@ if (!empty($system)) {
 			//get cache table data for sower records
 			$sowrow = '';
 			if ($activity['EntryType'] == 'sower') {
-				$sowrow = $caches->getCacheData($activity['ID']);
+				$sowrow = $caches->getCacheData($activity['CacheID']);
 			}
 			
 			switch ($activity['EntryType']) {

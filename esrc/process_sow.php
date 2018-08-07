@@ -109,15 +109,16 @@ if (isset($_POST['sys_sow'])) {
 	} 
 	// otherwise, perform DB UPDATES
 	else {
-		// create a new cache activity
-		$newID = $caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
-
-//prepare note
+		//prepare note
 		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
 		$sower_note = $noteDate . 'Sown by '. $pilot;
 		if (!empty($notes)) { $sower_note = $sower_note. "\n" . $notes; }
+		
 		//perform [cache] insert
-		$caches->createCache($newID, $system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
+		$newID = $caches->createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
+
+		// create a new cache activity
+		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
 
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;

@@ -283,10 +283,10 @@ else {
 			<div class="col-sm-8" style="text-align: center;">
 				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
-						<input type="text" class="input-sm form-control" name="start" id="start" 
+						<input type="text" class="input-sm form-control" name="start" id="start" autocomplete="off"
 							value="<?php echo isset($startPD) ? $startPD : '' ?>" />
 						<span class="input-group-addon">to</span>
-						<input type="text" class="input-sm form-control" name="end" id="end" 
+						<input type="text" class="input-sm form-control" name="end" id="end" autocomplete="off"
 							value="<?php echo isset($endPD) ? $endPD : '' ?>" />
 					</div>
 					<div class="input-group">

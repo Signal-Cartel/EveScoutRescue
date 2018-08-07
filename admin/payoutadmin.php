@@ -96,7 +96,10 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 				<div class="checkbox">
 					<label class="white"><input type="checkbox" name="details" value="yes"> Payout</label>
 				</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button><br /><br />
+				<label class="white">Total Weekly Payout: </label>
+				<input type="text" name="totamt" 
+					value="<?php echo (isset($_REQUEST['totamt'])) ? $_REQUEST['totamt'] : '500000000'; ?>" /> (ISK)
 			</form>
 		</div>
 		<?php include_once '../includes/top-right.php'; ?>
@@ -234,7 +237,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
 						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
-									round((intval($value['cnt'])/intval($ctrtot))*500000000,2) .'" />
+									round((intval($value['cnt'])/intval($ctrtot))*intval($_REQUEST['totamt']),2) .'" />
 									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i>
 							  </td>';
 						echo '</tr>';

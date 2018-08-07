@@ -47,8 +47,9 @@ if (isset($_POST['sys_adj'])) {
 	// yes, process the request
 	$db = new Database();
 
-	$activitydate = $pilot = $system = $aidedpilot = $errmsg = $entrytype = $noteDate = '';
+	$cacheid = $activitydate = $pilot = $system = $aidedpilot = $errmsg = $entrytype = $noteDate = '';
 
+	$cacheid = test_input($_POST["CacheID"]);
 	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$pilot = test_input($_POST["pilot"]);
 	$system = test_input($_POST["sys_adj"]);
@@ -83,15 +84,17 @@ if (isset($_POST['sys_adj'])) {
 		// create a new instance of Caches class
 		$caches = new Caches($db);
 		// add a new agent activity
-		$caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+
 		// add note to cache
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
 		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
-		$caches->addNoteToCache($system, $agent_note);
+		$caches->addNoteToCache($cacheid, $agent_note);
+
 		// update expiration date if needed
 		if (intval($updateexp) == 1) {
-			$caches->updateExpireTime($system, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+			$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
 		}
 		
 		// RESCUE update

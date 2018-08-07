@@ -49,9 +49,10 @@ if (isset($_POST['sys_tend'])) {
 	// create a new cache class
 	$caches = new Caches($db);
 	
-	$activitydate = $pilot = $system = $status = $aidedpilot = ''; 
+	$cacheid = $activitydate = $pilot = $system = $status = $aidedpilot = ''; 
 	$errmsg = $entrytype = $noteDate = '';
 
+	$cacheid = test_input($_POST["CacheID"]);
 	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$pilot = test_input($_POST["pilot"]);
 	$system = test_input($_POST["sys_tend"]);
@@ -105,7 +106,7 @@ if (isset($_POST['sys_tend'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		// add new activity
-		$newID = $caches->addActivity($system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
 
 		//prepare note for update
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
@@ -113,14 +114,14 @@ if (isset($_POST['sys_tend'])) {
 		if (!empty($notes)) { $tender_note = $tender_note. '<br />' . $notes; }		
 		//perform [cache] update
 		
-		$caches->addNoteToCache($system, $tender_note);
+		$caches->addNoteToCache($cacheid, $tender_note);
 		
 		switch ($status) {
 			case 'Expired':
-				$caches->expireCache($system, $activitydate);
+				$caches->expireCache($cacheid, $activitydate);
 				break;
 			default:	//'Healthy', 'Upkeep Required'
-				$caches->updateExpireTime($system, $status, gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+				$caches->updateExpireTime($cacheid, $status, gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
 		}
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
