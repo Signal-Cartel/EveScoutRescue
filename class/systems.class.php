@@ -195,17 +195,37 @@ class Systems {
 	public function addSystemNote($system, $charname, $note)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("INSERT INTO systemnote (systemname, noteby, note) VALUES (:systemname, :username, :note)");
+		$this->db->query("INSERT INTO systemnote (systemname, noteby, note, notedate) 
+			VALUES (:systemname, :username, :note, :notedate)");
 		$this->db->bind(':systemname', $system);
 		$this->db->bind(':username', $charname);
 		$this->db->bind(':note', $note);
+		$this->db->bind(':notedate', gmdate("Y-m-d H:i:s", time()));
 		$this->db->execute();
 		//end db transaction
 		$this->db->endTransaction();
 	}
 
 	/**
-	 * Get system notes
+	 * Update existing system note
+	 * @param unknown $id
+	 * @param unknown $note
+	 * @param unknown $editdate
+	 */
+	public function editSystemNote($id, $note, $editdate)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("UPDATE systemnote SET note = :note, LastUpdated = :nowdt WHERE id = :id");
+		$this->db->bind(':note', $note);
+		$this->db->bind(':nowdt', $editdate);
+		$this->db->bind(':id', $id);
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+
+	/**
+	 * Get all system notes for a given system
 	 * @param unknown $system
 	 * @return string
 	 */
@@ -217,6 +237,35 @@ class Systems {
 		$this->db->closeQuery();
 		
 		return $result;
+	}
+
+	/**
+	 * Get a single system note, by ID
+	 * @param unknown $id
+	 * @return string
+	 */
+	public function getSystemNote($id)
+	{
+		$this->db->query("SELECT * FROM systemnote WHERE id = :id");
+		$this->db->bind(':id', $id);
+		$result = $this->db->single();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+
+	/**
+	 * Delete system note
+	 * @param unknown $id
+	 */
+	public function deleteSystemNote($id)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("DELETE FROM systemnote WHERE id = :id");
+		$this->db->bind(':id', $id);
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
 	}
 	
 }

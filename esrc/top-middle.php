@@ -8,6 +8,9 @@ $rescue_top = new Rescue($db_top);
 $ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc', '', '');
 $ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+
+// get PHP page
+$phpPage = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="col-sm-8 black" style="text-align: center;">
 	<div class="row">
@@ -31,18 +34,19 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 				// display system info and notes (if any)
 				$row = $systems_top->getWHInfo($system);
 				$arrSysnotes = $systems_top->getSystemNotes($system);
-				$strSysnotes = '';
+				$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
+					<i class="white fa fa-plus" style="vertical-align: middle;" data-toggle="tooltip" data-html="true" 
+					data-placement="bottom" title="Add New Note"></i></a>';
 				if (!empty($arrSysnotes)) { 
 					$sysnote = '';
 					foreach ($arrSysnotes as $val) {
 						$sysnote = $sysnote .'['. Output::getEveDate($val['notedate']) .']<br />'. $val['note'] .'<br />';
 					}
 					$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
-						<i class="white fa fa-sticky-note" style="vertical-align: bottom;" data-toggle="tooltip" data-html="true"
-						data-placement="bottom" title="'. $sysnote .'"></i></a>'; 
+						<i class="white fa fa-sticky-note" style="vertical-align: middle;" data-toggle="tooltip" data-html="true"
+						data-placement="bottom" title="'. $sysnote .'"></i></a>' . $strSysnotes; 
 				}
-				echo '<strong class="white">'.$row['Class']. $strSysnotes .'<br/>'.
-					utf8_encode($row['Notes']).'</strong>';
+				echo '<strong class="white">'.$row['Class']. $strSysnotes .'<br/>'. utf8_encode($row['Notes']).'</strong>';
 			}
 			?>
 			<br /><br />
@@ -52,6 +56,12 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 		</div>
 	</div>
 </div>
+
+<?php
+// modal include
+include 'modal_sysnotes.php';
+include 'modal_sysnotes_edit.php';
+?>
 
 <script>
 	$(document).ready(function() {
@@ -65,9 +75,10 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 	$(document).ready(function(){
 	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
 	});
-</script>
 
-<?php
-// modal include
-include 'modal_sysnotes.php';
-?>
+	// auto-display System Notes edit modal when "noteid" parameter provided in querystring
+	var url = window.location.href;
+	if(url.indexOf('noteid=') != -1) {
+	    $('#ModalSysNotesEdit').modal('show');
+	}
+</script>

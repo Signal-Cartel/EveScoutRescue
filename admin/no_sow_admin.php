@@ -37,13 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // add new note
     $systems->addSystemNote($system, $charname, $_REQUEST['notes']);
-    /*
-	$db->query("INSERT INTO systemnote (systemname, noteby, note) VALUES (:systemname, :username, :note)");
-	$db->bind(':systemname', $system);
-	$db->bind(':username', $charname);
-	$db->bind(':note', $_REQUEST['notes']);
-    $db->execute();
-    */
 }
 ?>
 <html>

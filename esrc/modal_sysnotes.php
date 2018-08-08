@@ -11,7 +11,19 @@
             <?php
             foreach ($arrSysnotes as $val) {
                 echo '<div style="padding-left: 2em; text-indent: -2em;">';
-                echo '['. Output::getEveDatetime($val['notedate']) .' // '. $val['noteby'] .']<br />'. $val['note'] .'<br />';
+                // list create date if no edits; otherwise, list LastUpdated date
+                $htmlNoteDate = (is_null($val['LastUpdated'])) ? $val['notedate'] : $val['LastUpdated'];
+                echo '['. Output::getEveDatetime($htmlNoteDate) .' // '. $val['noteby'] .']';
+                // provide a visual indicator that the note has been edited
+                if (!is_null($val['LastUpdated'])) { echo ' <strong>*</strong>'; }
+                // the person who created the note can edit; coordinators can edit AND delete
+                if ($isCoord || $charname == $val['noteby']) { 
+                    echo ' <a href="' . $phpPage . '?sys=' . $system . '&noteid=' . $val['id'] . '">edit</a>'; 
+                }
+                if ($isCoord) { 
+                    echo ' | <a href="' . $phpPage . '?sys=' . $system . '&noteid=' . $val['id'] . '&notedel=1">delete</a>';
+                }
+                echo '<br />'. $val['note'] .'<br />';
                 echo '</div><br />';
             }
             ?>
