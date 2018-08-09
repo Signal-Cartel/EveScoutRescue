@@ -10,19 +10,6 @@ require_once '../class/systems.class.php';
 $db = new Database();
 $systems = new Systems($db);
 
- /**
-  * Test provided input data to be valid.
- * @param unknown $data data to check
- * @return string processed and cleaned data
- */
-function test_input($data) 
-{
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars_decode($data);
-	return $data;
-}
-
 // set pilot name
 $snPilot =  isset($charname) ? $charname : 'charname_not_set';
 
@@ -57,8 +44,13 @@ if (isset($_POST['systemname'])) {
     
     $snPilot = $_POST["pilot"];
     $snSystem = $_POST["systemname"];
-    $snNote = test_input($_POST["notes"]);
     $phpPageForm = $_POST["refurl"];
+
+    // prepare note
+    $snNote = $_POST["notes"];
+    $snNote = trim($snNote);
+	$snNote = stripslashes($snNote);
+	$snNote = htmlspecialchars_decode($snNote);    
 	
 	//FORM VALIDATION
 	if (empty($snNote)) {
