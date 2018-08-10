@@ -3,10 +3,15 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-include_once '../includes/auth-inc.php';
-include_once '../class/users.class.php';
-include_once '../class/config.class.php';
-include_once '../class/mmmr.class.php';
+require_once '../includes/auth-inc.php';
+require_once '../class/users.class.php';
+require_once '../class/config.class.php';
+require_once '../class/mmmr.class.php';
+require_once '../class/db.class.php';
+require_once '../class/rescue.class.php';
+require_once '../class/systems.class.php';
+require_once '../class/output.class.php';
+require_once '../class/caches.class.php';
 
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
@@ -47,7 +52,7 @@ if (!isset($charname)) {
 <head>
 	<?php 
 	$pgtitle = 'SAR Requests';
-	include_once '../includes/head.php'; 
+	require_once '../includes/head.php'; 
 	?>
 	
 	<style>
@@ -81,13 +86,6 @@ if (!isset($charname)) {
 </head>
 
 <?php
-require_once '../class/db.class.php';
-require_once '../class/rescue.class.php';
-require_once '../class/systems.class.php';
-require_once '../class/output.class.php';
-require_once '../class/users.class.php';
-require_once '../class/caches.class.php';
-
 // create a new database connection
 $database = new Database();
 
