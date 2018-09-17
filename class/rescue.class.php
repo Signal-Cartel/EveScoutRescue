@@ -67,12 +67,16 @@ class Rescue {
 	 */
 	public function createRequest($system, $pilot, $canrefit, $launcher, $agentname)
 	{
-		$this->db->query("insert into rescuerequest(system, pilot, canrefit, launcher, startagent, requestdate, lastcontact) values(:system, :pilot, :canrefit, :launcher, :agent, now(), now())");
+		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
+		$this->db->query("INSERT INTO rescuerequest(system, pilot, canrefit, launcher, startagent, requestdate, lastcontact) 
+			VALUES (:system, :pilot, :canrefit, :launcher, :agent, :requestdate, :lastcontact)");
 		$this->db->bind(":system", $system);
 		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":canrefit", $canrefit);
 		$this->db->bind(":launcher", $launcher);
 		$this->db->bind(":agent", $agentname);
+		$this->db->bind(":requestdate", $dtnow);
+		$this->db->bind(":lastcontact", $dtnow);
 		
 		// execute insert query
 		$this->db->execute();
@@ -94,11 +98,14 @@ class Rescue {
 	 */
 	public function createESRCRequest($system, $pilot, $agentname, $status)
 	{
+		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
 		$this->db->query("INSERT INTO rescuerequest(system, pilot, startagent, requestdate, 
-			finished, lastcontact, status) VALUES (:system, :pilot, :agent, now(), 1, now(), :status)");
+			finished, lastcontact, status) VALUES (:system, :pilot, :agent, :requestdate, 1, :lastcontact, :status)");
 		$this->db->bind(":system", $system);
 		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":agent", $agentname);
+		$this->db->bind(":requestdate", $dtnow);
+		$this->db->bind(":lastcontact", $dtnow);
 		$this->db->bind(":status", $status);
 		
 		// execute insert query
@@ -133,7 +140,9 @@ class Rescue {
 	 */
 	public function registerContact($rescueID)
 	{
-		$this->db->query("update rescuerequest set lastcontact = now() where id = :rescueid");
+		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
+		$this->db->query("update rescuerequest set lastcontact = :lastcontact where id = :rescueid");
+		$this->db->bind(":lastcontact", $dtnow);
 		$this->db->bind(":rescueid", $rescueID);
 		// 		$database->debugDumpParams();
 		$this->db->execute();
@@ -169,7 +178,8 @@ class Rescue {
 			$closeAgent = $agentName;
 			$finished = 1;
 		}
-		$this->db->query("update rescuerequest set status = :status, closeagent = :closeagent, finished = :finished where id = :rescueid");
+		$this->db->query("UPDATE rescuerequest set status = :status, closeagent = :closeagent, finished = :finished 
+			WHERE id = :rescueid");
 		$this->db->bind(":status", $status);
 		$this->db->bind(":closeagent", $closeAgent);
 		$this->db->bind(":finished", $finished);
