@@ -344,7 +344,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. $row['requestdate'] .'</td>';
+	echo '<td style="text-nowrap">'. date("M-d", strtotime($row['requestdate'])) .'</td>';
 	
 	// System - name of J-space system
 	if (empty($system)) {
@@ -396,7 +396,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
+	echo '<td style="text-nowrap">'. date("M-d", strtotime($row['lastcontact'])) .'</td>';
 	
 	// Bounty - display max payout available for a successful locate/rescue in this system
 	// display only in "summary" tables
