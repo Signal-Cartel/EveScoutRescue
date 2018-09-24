@@ -1,3 +1,10 @@
+<?php
+$name_placeholder = '';
+if(isset($_REQUEST['pilot'])){
+	$name_placeholder = urldecode($_REQUEST['pilot']);
+}
+
+?>
 <!-- SAR New Modal Form -->
 <div id="ModalSARNew" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -15,8 +22,11 @@
 				<span class="sechead"><?php echo $system ?></span>
 			</div>
 			<div class="field">
-				<label class="control-label" for="pilot">Stranded Pilot<span class="descr">Enter as "Pilot Name (Contact Name)" if an intermediate contact is involved.</span></label>
-				<input type="text" class="form-control " id="pilot" name="pilot" />
+				<label class="control-label" for="pilot">Stranded Pilot
+					<span class="descr">Enter as "Pilot Name (Contact Name)" if an intermediate contact is involved.</span>
+				</label>
+				
+				<input type="text" class="form-control " id="pilot" name="pilot" value="<?php echo $name_placeholder;?>"/>
 			</div>
 			
 			<label class="checkbox-inline">

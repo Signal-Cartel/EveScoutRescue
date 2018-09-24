@@ -332,8 +332,8 @@ class Rescue {
 	public function getNotes($requestID)
 	{
 		// get notes from database
-		$this->db->query("SELECT notedate, agent, note FROM rescuenote
-							WHERE rescueid = :rescueid ORDER BY notedate DESC");
+		$this->db->query("SELECT CONVERT_TZ(`notedate`, @@session.time_zone, '+00:00') AS `notedate`, agent, note 
+			FROM rescuenote WHERE rescueid = :rescueid ORDER BY notedate DESC");
 		$this->db->bind(":rescueid", $requestID);
 		$data = $this->db->resultset();
 		$this->db->closeQuery();
