@@ -150,8 +150,16 @@ if (!empty($system)) {
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
 			target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
 		<!-- web evemail client button -->
-		<a href="https://evescoutrescue.com/copilot/mail/" class="btn btn-info" role="button" 
-			target="_blank">EVEMail</a>
+		<a href="/copilot/mail/" class="btn btn-info" role="button" 
+			target="_blank">EVEMail</a>&nbsp;&nbsp;&nbsp;
+		<!-- Chains button, if relevant -->
+		<?php
+		// "chains" button is Coord-only
+		if ($isCoord) {
+			echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info" 
+				role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+		}
+		?>
 	</div>
 	<div class="ws"></div>
 	

@@ -206,13 +206,18 @@ if (!empty($system)) {
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
 			target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
-		<!-- Edit button, if relevant -->
+		<!-- Chains and Edit buttons, if relevant -->
 		<?php
+		// "chains" button is Coord-only
+		if ($isCoord) {
+			echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info" 
+				role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+		}
 		//edit function only available to Coordinators and recent sowers
 		$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
 		if ($isCoord || $isRecentSower) {
-		echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal" 
-			data-target="#EditModal">Edit Cache</button>';
+			echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal" 
+				data-target="#EditModal">Edit Cache</button>';
 		}
 		?>
 		</div>
