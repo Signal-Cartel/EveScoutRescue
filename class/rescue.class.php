@@ -270,7 +270,8 @@ class Rescue {
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
 		$start = (empty($start)) ? '2017-03-18' : $start;
-		$end = (empty($end)) ? date('Y-m-d', strtotime('now')) : $end;
+		// use "tomorrow" below to account for UTC offset
+		$end = (empty($end)) ? date('Y-m-d', strtotime('tomorrow')) : $end;
 		// get requests from database
 		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class 
 							FROM rescuerequest rr, wh_systems w
