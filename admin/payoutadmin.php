@@ -203,7 +203,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(*) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
+		$db->query("SELECT COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
 		$row = $db->single();
@@ -223,7 +223,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 				<tbody>
 					<?php
 					//summary data
-					$db->query("SELECT Pilot, COUNT(*) as cnt FROM activity WHERE ActivityDate 
+					$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
 									BETWEEN :start AND :end GROUP BY Pilot");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
