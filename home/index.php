@@ -4,6 +4,8 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
+$root = $_SERVER['DOCUMENT_ROOT'] . '/copilot/';
+require_once $root . 'auth/jcount.php';
 include_once '../includes/auth-inc.php'; 
 include_once '../class/mmmr.class.php';
 require_once '../class/db.class.php';
@@ -104,7 +106,7 @@ include_once '../includes/top-right.php';
 			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
 		</span><br /><br />
 		<span class="sechead white">
-			<span style="font-weight: bold; color: gold;"><?=intval($ctrSystems)?></span> 
+			<span style="font-weight: bold; color: gold;"><?=intval($jcount)?></span> 
 			J-space Systems</span><br /> 
 		<span class="white">
 			visited by our Rescue pilots in the last <span style="font-weight: bold; color: gold;"><?=intval($daysBack)?></span> days
