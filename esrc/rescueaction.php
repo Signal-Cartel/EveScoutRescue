@@ -119,7 +119,7 @@ else if ($action === 'Create')
 		$alert = 1;
 		$skip_the_gif = 1;
 		// construct the message - URL is based on configuration
-		$message = "A new SAR request has just been entered by $charname. [Overview page](".Config::ROOT_PATH."esrc/rescueoverview.php) - [Check Chains for $system](https://evescoutrescue.com/copilot/data/chains?system=$system)";
+		$message = "A new SAR request has just been entered by $charname. [Overview page](".Config::ROOT_PATH."esrc/rescueoverview.php) - [Check Chains for $system](https://evescoutrescue.com/copilot/data/chains.php?system=$system)";
 
 		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}
