@@ -20,8 +20,7 @@ class Output {
 	static function getEveDate($origdate)
 	{
 		$eveyear = intval(date("Y", strtotime($origdate)))-1898;
-		// add 14400 seconds to time to account for ET offset from UTC
-		$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate)+14400);
+		$result = 'YC'. $eveyear .'-'. date("M-d", strtotime($origdate));
 		
 		return $result;
 	}
