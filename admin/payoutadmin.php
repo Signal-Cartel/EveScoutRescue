@@ -84,7 +84,9 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 			<span style="font-size: 125%; font-weight: bold; color: white;">Payouts: 
 				ESRC &gt;&gt; 
 				<a href="payoutadmin_sar.php">SAR Dispatch</a> &gt;&gt; 
-				<a href="payoutadmin_sar_rescue.php">SAR Locate/Rescue</a></span><br />
+				<a href="payoutadmin_sar_rescue.php">SAR Locate/Rescue</a></span>
+			<span class="pull-right"><a class="btn btn-danger btn-md" href="index.php" role="button">
+				Admin Index</a></span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
 					<input type="text" class="input-sm form-control" name="start" id="start" 
@@ -203,12 +205,17 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	//show payout data if "Payout" is checked
 	else {	
 		//count of all actions performed in the specified period
-		$db->query("SELECT COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
+		//$db->query("SELECT COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
+		$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
+						BETWEEN :start AND :end GROUP BY Pilot");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
-		$row = $db->single();
-
-		$ctrtot = $row['cnt'];
+		$rows = $db->resultset();
+		$ctrtot = 0;
+		foreach ($rows as $value) {
+			$ctrtot = $ctrtot + intval($value['cnt']);
+		}
+		
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-10">
@@ -232,7 +239,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 					foreach ($rows as $value) {
 						$ctr++;
 						echo '<tr>';
-						echo '<td><a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+						echo '<td><a target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
@@ -253,6 +260,10 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		</div>
 		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
+			Note that total count of actions here may differ from what is listed on non-Payout summary.
+			This is because pilots are only paid for sows/tends in a given system once each week. 
+			Multiple tends in the same system in the same week, e.g., do not count toward the total count for payout.
+			However, they <i>do</i> count toward activity counts for medals and such.
 		</div>
 	</div>
 <?php

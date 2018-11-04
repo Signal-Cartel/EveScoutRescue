@@ -79,7 +79,9 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 			<span style="font-size: 125%; font-weight: bold; color: white;">Payouts: 
 				<a href="payoutadmin.php">ESRC</a> &gt;&gt; 
 				<a href="payoutadmin_sar.php">SAR Dispatch</a> &gt;&gt; 
-				SAR Locate/Rescue</span><br />
+				SAR Locate/Rescue</span>
+			<span class="pull-right"><a class="btn btn-danger btn-md" href="index.php" role="button">
+				Admin Index</a></span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
 					<input type="text" class="input-sm form-control" name="start" id="start" 
