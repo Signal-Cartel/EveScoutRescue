@@ -95,17 +95,19 @@ if (count($data) > 0) {
 // CONFIRM PILOT'S IN-GAME LOCATION
 $pilotLocStat = '';
 // does not apply to SAR Coordinators
-if ($users->checkPermission($charname, 'SARCoordinator') === false  && (Config::DEV_SYSTEM != 1)) {
+if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
 		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
 		$daysdiff = round((time(tomorrow)- strtotime("2017-03-01")) / (60 * 60 * 24));
-		$rows = $leaderBoard->getTop(1000, $daysdiff);
+		$rows = $leaderBoard->getTop(2000, $daysdiff);
 		$bitPilotMatch = 0;
 		foreach ($rows as $value) {
 			if ($charname ==  $value['Pilot']) {
-				$bitPilotMatch = 1;
-				break;
+				if ($value['cnt'] >= 300) {
+					$bitPilotMatch = 1;
+					break;
+				}
 			}
 		}
 		if ($bitPilotMatch == 0) {
