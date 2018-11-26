@@ -1,4 +1,6 @@
 <?php
+// CALLED EACH DAY AT 7:05 ET VIA CRONTAB ON PRODUCTION SERVER
+
 include_once '../class/db.class.php';
 
 $db = new Database();

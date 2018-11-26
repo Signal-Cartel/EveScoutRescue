@@ -1,4 +1,6 @@
 <?php
+// CALLED EACH DAY AT 6:01 ET BY CRONTAB ON PRODUCTION SERVER
+//
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
