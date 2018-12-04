@@ -44,7 +44,7 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 					}
 					$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
 						<i class="white fa fa-sticky-note" style="vertical-align: middle;" data-toggle="tooltip" data-html="true"
-						data-placement="bottom" title="'. $sysnote .'"></i></a>' . $strSysnotes; 
+						data-placement="bottom" title="'. htmlspecialchars($sysnote) .'"></i></a>' . $strSysnotes; 
 				}
 				echo '<strong class="white">'.$row['Class']. $strSysnotes .'<br/>'. utf8_encode($row['Notes']).'</strong>';
 			}
