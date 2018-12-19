@@ -97,7 +97,7 @@ if (isset($_SESSION['auth_state']) and isset($_REQUEST['state']) and
 		    	$_SESSION['auth_characterhash']=$response->CharacterOwnerHash;
 		    	// ...and look up the character's alliance and corp details on the API
 		        $ch = curl_init();
-		        $lookup_url="https://esi.tech.ccp.is/latest/characters/".$_SESSION['auth_characterid']."/?datasource=tranquility";
+		        $lookup_url="https://esi.evetech.net/latest/characters/".$_SESSION['auth_characterid']."/?datasource=tranquility";
 		        curl_setopt($ch, CURLOPT_URL, $lookup_url);
 		        curl_setopt($ch, CURLOPT_USERAGENT, Config::USER_AGENT);
 		        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
