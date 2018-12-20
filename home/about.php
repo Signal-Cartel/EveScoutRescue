@@ -69,8 +69,11 @@ include_once '../includes/top-right.php';
 				<p>Since then, the program has grown to what it is today. What started as one rescue 
 					program has now grown to become an entire division within Signal Cartel and 
 					encompasses both Search and Rescue operations and the original Rescue Cache 
-					program. While Thrice oversees the division as a whole, it 
-					takes a team to make it all happen. Our current roster includes the following dedicated rescue pilots.</p>
+					program.</p>
+				<p>In December YC120, <a href="https://evewho.com/pilot/Thrice%20Hapus">Igaze</a> 
+					assumed leadership of the Rescue division. While he oversees the division as a whole, it 
+					takes a team to make it all happen. Our current roster includes the following dedicated 
+					rescue pilots.</p>
 
 				<div class="row">
 				  <h2 style="text-align:center">911 Operators</h2>
@@ -122,7 +125,7 @@ include_once '../includes/top-right.php';
 				<div class="row">
 				  <div class="col-md-1"></div>
 				  <div class="col-md-4">
-						<h2 style="text-align:center">ALLISON</h2>
+						<h2 style="text-align:center"><a href="https://www.signalcartel.com/copilot">ALLISON</a></h2>
 				    <div class="thumbnail text-center">
 				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
 				        <img src="https://image.eveonline.com/Character/96765374_256.jpg" alt="A.D. Parrot" style="width:100%">
@@ -136,10 +139,10 @@ include_once '../includes/top-right.php';
 				  <div class="col-md-4 text-center">
 						<h2 style="text-align:center">Director</h2>
 				    <div class="thumbnail text-center">
-						<a href="https://evewho.com/pilot/Thrice+Hapus">
-				        <img src="https://image.eveonline.com/Character/96079190_256.jpg" alt="Thrice" style="width:100%">
+						<a href="https://evewho.com/pilot/Igaze">
+				        <img src="https://image.eveonline.com/Character/1852974735_256.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
-				          <strong>Thrice Hapus</strong>
+				          <strong>Igaze</strong>
 				        </div>
 				      </a>
 				    </div>
