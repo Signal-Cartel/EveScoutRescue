@@ -10,7 +10,7 @@
 				Signal Cartel member to guide you to one of our rescue caches 
 				or to help set up a search and rescue request. If you would like 
 				to be more discreet, you can EVEmail 
-				<a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice Hapus</a> 
+				<a href="https://evewho.com/pilot/Igaze">Igaze</a> 
 				to further discuss rescue options.</p>
 		</div>
 	</div>

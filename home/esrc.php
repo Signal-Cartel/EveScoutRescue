@@ -63,7 +63,7 @@ include_once '../includes/head.php';
 					<div class="panel-body">
 						<p>Because a rescue cache is a small secure container that contains a minimum of one (1) core probe launcher and eight (8) core scanner probes, it will not be any help to you if you do not already have a probe launcher fitted to your ship, if you do not have a way to change your fit in your current wormhole, or if you no longer have a ship at all!</p>
 						<p>In these cases, be sure to contact us to arrange for a 
-							<a href="../sar/">search and rescue request</a> to go out to
+							<a href="sar.php">search and rescue request</a> to go out to
 							our network of rescue pilots.</p>
 					</div>
 				</div>
