@@ -99,7 +99,7 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
 		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
-		$daysdiff = round((time(tomorrow)- strtotime("2017-03-01")) / (60 * 60 * 24));
+		$daysdiff = round((strtotime("+1 day")- strtotime("2017-03-01")) / (60 * 60 * 24));
 		$rows = $leaderBoard->getTop(2000, $daysdiff);
 		$bitPilotMatch = 0;
 		foreach ($rows as $value) {
