@@ -63,8 +63,10 @@ include_once '../includes/top-right.php';
 			      <div class="col-sm-4" style="text-align: center;">
 			        <img src="../img/donate.png">
 			        <h3>Send Us a Tip</h3>
-			        <p>Consider sending us a tip as a thank you. Your donations go directly to reward our scouts.</p>
-			        <p><em><strong>Please send your donations to the in-game corp "<span style="color: #337ab7;">EvE-Scout</span>".</strong></em><br />
+			        <p>Consider sending us a tip as a thank you. Your donations go directly to reward 
+					our scouts.</p>
+			        <p><em><strong>Please send your donations to the in-game corp 
+					"<span style="color: #337ab7;">Signal Cartel</span>".</strong></em><br />
 			        	Be sure to indicate "ESR" or "Rescue" on the memo line.</p>
 			      </div>
 			      <div class="col-sm-4" style="text-align: center;">
@@ -77,6 +79,9 @@ include_once '../includes/top-right.php';
 						<a href="http://www.eve-scout.com/signal-cartel/how-to-join/">joining us</a>!</p>
 			      </div>
 			    </div>
+				<p></p>
+				<p style="text-align: center; font-weight: bold;">Thanks to everyone who made our 
+				<a href="../donate/">YC121 Fund Drive</a> a huge success!</p>
 			</div>
 		</div>
 	</div>

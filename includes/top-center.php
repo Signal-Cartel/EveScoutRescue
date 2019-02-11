@@ -6,6 +6,7 @@ $users = new Users($database);
 	<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="donate.php" role="button">Contribute</a>
+	<!--<a class="btn btn-success btn-md" href="../donate" role="button">DONATE NOW - YC121 Fund Drive</a> -->
 	<?php 
 	require_once '../class/users.class.php';
 	// display these buttons only to EvE-Scout pilots
