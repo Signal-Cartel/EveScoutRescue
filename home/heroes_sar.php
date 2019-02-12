@@ -19,6 +19,7 @@ $database = new Database();
 $pilot = new Pilot($database);
 $rowsBronze = $pilot->getMedals('11');
 $rowsSilver = $pilot->getMedals('12');
+$rowsGold = $pilot->getMedals('13');
 ?>
 <html>
 
@@ -88,14 +89,14 @@ function printSARHeroes($type, $min, $arrPilotCnt)
 
 <div class="row">
 	<?php 
-	// Bronze Medal column
-	printSARHeroes('Bronze Lifesaver', 1, $rowsBronze);
+	// Gold Medal column
+	printSARHeroes('Gold Lifesaver', 50, $rowsGold);
 	
 	// Silver Medal column
 	printSARHeroes('Silver Lifesaver', 10, $rowsSilver);
 	
-	// Gold Medal column
-	//printSARHeroes('Gold Lifesaver', 50, $rows);
+	// Bronze Medal column
+	printSARHeroes('Bronze Lifesaver', 1, $rowsBronze);
 	?>
 </div>
 
