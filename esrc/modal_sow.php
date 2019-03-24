@@ -17,6 +17,13 @@ $locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','I
 				<label class="control-label" for="sys_sow">System: </label>
 				<input type="hidden" name="sys_sow" value="<?php echo $system ?>" />
 				<span class="sechead"><?php echo $system ?></span>
+				<span class="descr" style="width: 100%;">
+					<p id="cachename2">
+						EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel.
+						<span id="copyclip" class="fa fa-clipboard" onclick="SelectAllCopy('cachename2')" 
+							style="left: 5px;"></span>
+					</p>
+				</span>
 			</div>
 			<!--This is the beginning of the swap fields-------------->
 			<div id="topfield">
