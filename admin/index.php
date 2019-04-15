@@ -27,6 +27,8 @@ include_once '../includes/auth-inc.php';
 <br /><br />
 <a href="user_roles_admin.php">User Roles</a>
 <br /><br />
+<a href="user_stats.php">Individual User Stats</a>
+<br /><br />
 
 </body>
 </html>
