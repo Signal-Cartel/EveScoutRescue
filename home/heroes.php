@@ -16,6 +16,7 @@ $rowsMega = $pilot->getMedals('2');
 $rowsHyper = $pilot->getMedals('3');
 $rowsUltra = $pilot->getMedals('4');
 $rowsHeroic = $pilot->getMedals('5');
+$rowsInsane = $pilot->getMedals('6');
 ?>
 <html>
 
@@ -85,19 +86,22 @@ function printESRCHeroes($type, $min, $rows)
 
 <div class="row">
 	<?php 
+	// InsaneCacher column
+	printESRCHeroes('InsaneCacher', 5000, $rowsInsane);
+
 	// HeroCacher column
 	printESRCHeroes('HeroicCacher', 3000, $rowsHeroic);
 
 	// UltraCacher column
 	printESRCHeroes('UltraCacher', 1000, $rowsUltra);
-
-	// HyperCacher column
-	printESRCHeroes('HyperCacher', 500, $rowsHyper);
 	?>
 </div>
 
 <div class="row">
 	<?php 
+	// HyperCacher column
+	printESRCHeroes('HyperCacher', 500, $rowsHyper);
+
 	// MegaCacher column
 	printESRCHeroes('MegaCacher', 300, $rowsMega);
 
