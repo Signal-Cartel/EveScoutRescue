@@ -70,7 +70,7 @@ include_once '../includes/top-right.php';
 					program has now grown to become an entire division within Signal Cartel and 
 					encompasses both Search and Rescue operations and the original Rescue Cache 
 					program.</p>
-				<p>In December YC120, <a href="https://evewho.com/pilot/Thrice%20Hapus">Igaze</a> 
+				<p>In December YC120, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
 					assumed leadership of the Rescue division. While he oversees the division as a whole, it 
 					takes a team to make it all happen. Our current roster includes the following dedicated 
 					rescue pilots.</p>
