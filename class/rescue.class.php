@@ -392,6 +392,7 @@ class Rescue {
 		$this->db->closeQuery();
 		
 		$ctr = 0;
+                $arrint = [];
 		foreach ($data as $value) {
 			$arrint[$ctr] = $value['daystosar'];
 			$ctr++;
