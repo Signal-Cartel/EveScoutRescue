@@ -403,6 +403,11 @@ if (!empty($errmsg)) {
 			<div class="sechead white text-center" style="font-weight: bold;">SAR</div>
 			<!-- SAR PARTICIPANT COUNTS BEGIN -->
 			<?php 
+
+			$arrSarUD = []; 
+			$arrSarUL = []; 
+			$arrSarUR = [];
+
 			// get unique participants from db
 			// Dispatchers
 			$database->query("SELECT startagent FROM rescuerequest 

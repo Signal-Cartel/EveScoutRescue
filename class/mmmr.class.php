@@ -7,7 +7,7 @@
  */
 function mmmr($array, $output = 'mean')
 {
-    if(!is_array($array)){
+    if(!is_array($array) || empty($array)){
         return FALSE;
     } 
     else {
