@@ -46,7 +46,7 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		 		<td style="text-align: center;"><?=round(intval($SARWaitMean))?></td> 
 		 		<!-- <td style="text-align: center;">'. round(intval($SARWaitMedian)) .'</td> --> 
 	 			<td style="text-align: center;"><?=round(intval($SARWaitMode)) 
-					.' ('. round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%)</td> 
+					.' ('. round(intval($SARWaitModeCnt) / max(intval($ctrSARrescues), 1) * 100)?>%)</td> 
 				<td style="text-align: center;"><?=round(intval($maxdaysSARrescue))?></td>
 	 		</tr> 
 	 	</tbody> 

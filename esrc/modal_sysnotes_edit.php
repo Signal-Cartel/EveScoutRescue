@@ -1,7 +1,8 @@
 <?php
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
-define('ESRC', TRUE);
+/*define('ESRC', TRUE);*/
+if (!defined('ESRC')) define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 include_once '../class/db.class.php';
@@ -13,12 +14,14 @@ $systems = new Systems($db);
 // set pilot name
 $snPilot =  isset($charname) ? $charname : 'charname_not_set';
 
+// note content
+$editNote = '';
+
 // get noteID and lookup existing note, if needed
 $noteID = (isset($_REQUEST['noteid'])) ? $_REQUEST['noteid'] : -1;
 if ($noteID > 0) {
     //look up note to edit
     $arrEditNote = $systems->getSystemNote($noteID);
-    $editNote = '';
     if (!empty($arrEditNote)) { 
         $editNote = $arrEditNote['note'];
         $snPilot = $arrEditNote['noteby'];
@@ -26,7 +29,7 @@ if ($noteID > 0) {
 }
 
 // are we deleting this note?
-$isDelete = ($_REQUEST['notedel'] == '1') ? true : false;
+$isDelete = (isset($_REQUEST['notedel']) && $_REQUEST['notedel'] == '1') ? true : false;
 if ($isDelete) {
     $strTextArea = '<label class="control-label" for="notes">Are you sure you want to delete this note?<br />
         If yes, press Submit; if no, click "X" to close popup</label><textarea class="form-control" readonly 

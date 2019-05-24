@@ -2,10 +2,13 @@
 // start <ul>
 echo '<ul class="nav nav-tabs">';
 
+$navtabsSystem = isset($system) ? $system : "";
+$navtabsActiveSAR = isset($activeSAR) ? $activeSAR : "";
+
 // ESRC TAB
 if (strpos($_SERVER['PHP_SELF'], 'search.php') === false) {
 	// inactive
-	echo '<li><a href="search.php?sys=' . $system . '">Rescue Cache</a></li>';
+	echo '<li><a href="search.php?sys=' . $navtabsSystem . '">Rescue Cache</a></li>';
 }
 else {
 	// active
@@ -15,7 +18,7 @@ else {
 // SAR TAB
 if (strpos($_SERVER['PHP_SELF'], 'rescueoverview.php') === false) {
 	// inactive
-	echo '<li><a href="rescueoverview.php?sys=' . $system . '">Search &amp; Rescue' . $activeSAR . '</a></li>';
+	echo '<li><a href="rescueoverview.php?sys=' . $navtabsSystem . '">Search &amp; Rescue' . $navtabsActiveSAR . '</a></li>';
 }
 else {
 	// active

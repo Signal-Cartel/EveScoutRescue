@@ -102,7 +102,7 @@ include_once '../includes/top-right.php';
 		</span><br /> 
 		<span class="white">
 		<span style="font-weight: bold; color: gold;">
-			<?=round(intval($SARWaitModeCnt) / intval($ctrSARrescues) * 100)?>%</span> 
+		    <?=round(intval($SARWaitModeCnt) / max(intval($ctrSARrescues), 1) * 100)?>%</span>
 			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
 		</span><br /><br />
 		<span class="sechead white">
