@@ -1,7 +1,6 @@
 <?php
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
-/*define('ESRC', TRUE);*/
 if (!defined('ESRC')) define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';

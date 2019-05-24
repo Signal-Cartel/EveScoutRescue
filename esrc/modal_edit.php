@@ -3,7 +3,6 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 if (!defined('ESRC')) define('ESRC', TRUE);
-/*define('ESRC', TRUE);*/
 
 include_once '../class/db.class.php';
 include_once '../class/caches.class.php';
