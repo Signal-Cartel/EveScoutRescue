@@ -267,7 +267,27 @@ class Systems {
 		//end db transaction
 		$this->db->endTransaction();
 	}
-	
+
+	/**
+	 * Get valid sow locations for system
+	 * @param unknown $system
+	 * @return string array
+	 */
+	public function getSowLocations($system)
+	{
+		$sowLocs = array('See Notes','Star',
+			'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
+
+		$whInfo = $this->getWHInfo($system);
+		if (isset($whInfo['PlanetCount'])) 
+		{
+			$nonPlanetOptions = 2;
+			$planetCount = $whInfo['PlanetCount'];
+			$sowLocs = array_slice($sowLocs, 0, $nonPlanetOptions + $planetCount);
+		}
+
+		return $sowLocs;
+	}
 }
 
 ?>
