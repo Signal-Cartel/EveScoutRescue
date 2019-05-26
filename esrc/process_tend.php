@@ -92,7 +92,7 @@ if (isset($_POST['sys_tend'])) {
 		{
 			$errmsg = $errmsg . "Cache has already been tended. Looks like someone else beat you to it!\n";
 		}
-		else if (($status === 'Expired' && $cacheInfo['Status'] == 'Expired') || ($status === 'Upkeep Required' && $cacheInfo['Status'] == 'Upkeep Required'))
+		else if (($status === 'Expired' && $cacheInfo['Status'] == 'Expired'))
 		{
 			$errmsg = $errmsg . "Could not set cache to '".Output::htmlEncodeString($status)."' as that is already its current status.\n";
 		}
