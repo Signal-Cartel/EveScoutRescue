@@ -81,7 +81,7 @@ if (isset($_POST['sys_edit'])) {
 } // end form POST processing
 
 // array for Location and AlignedWith select lists
-$locopts = array('See Notes','Star','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
+$locopts = $systems_top->getSowLocations($system);
 ?>
 
 <div id="EditModal" class="modal fade" role="dialog">
