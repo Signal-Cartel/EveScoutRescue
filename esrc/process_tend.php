@@ -109,13 +109,13 @@ if (isset($_POST['sys_tend'])) {
 		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
 
 		//prepare note for update
-		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
-		$tender_note = '<br />' . $noteDate . 'Tended by '. $pilot.' as '.$status.'.';
-		if (!empty($notes)) { $tender_note = $tender_note. '<br />' . $notes; }		
-		//perform [cache] update
-		
-		$caches->addNoteToCache($cacheid, $tender_note);
-		
+		if (!empty($notes) || $status == "Upkeep Required") { 
+			$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
+			$notesDetail = !empty($notes) ? ': ' . $notes : '.';
+			$tender_note = '<br />' . $noteDate . 'Tended by ' . $pilot . ' as ' . $status . $notesDetail;
+			$caches->addNoteToCache($cacheid, $tender_note);		
+		}
+
 		switch ($status) {
 			case 'Expired':
 				$caches->expireCache($cacheid, $activitydate);

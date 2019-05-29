@@ -110,9 +110,10 @@ if (isset($_POST['sys_sow'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		//prepare note
-		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
-		$sower_note = $noteDate . 'Sown by '. $pilot;
-		if (!empty($notes)) { $sower_note = $sower_note. "\n" . $notes; }
+		if (!empty($notes)) {
+			$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
+			$sower_note = $noteDate . 'Sown by '. $pilot . ": " . $notes;
+		}
 		
 		//perform [cache] insert
 		$newID = $caches->createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
