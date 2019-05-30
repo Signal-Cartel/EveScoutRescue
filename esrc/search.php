@@ -259,27 +259,7 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
-		<?php if (!empty($strNotes)) { ?>
-		<div class="ws"></div>
-		<div class="row" id="sysnotes">
-			<div class="col-sm-12">
-				<!-- DETAIL RECORD NOTE(S) -->
-				<table class="table" style="width: auto;">
-					<thead>
-						<tr>
-							<th>Notes</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?= $strNotes ?></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<?php 
-		} //if (!empty($strNotes))
+		<?php
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
