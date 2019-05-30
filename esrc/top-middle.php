@@ -34,7 +34,7 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 				// display system info and notes (if any)
 				$row = $systems_top->getWHInfo($system);
 				$arrSysnotes = $systems_top->getSystemNotes($system);
-				$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
+				$strSysnotes = '<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
 					<i class="white fa fa-plus" style="vertical-align: middle;" data-toggle="tooltip" data-html="true" 
 					data-placement="bottom" title="Add New Note">&nbsp;Add New Note</i></a>';
 				if (!empty($arrSysnotes)) { 
