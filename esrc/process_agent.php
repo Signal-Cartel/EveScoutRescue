@@ -55,8 +55,8 @@ if (isset($_POST['sys_adj'])) {
 	$system = test_input($_POST["sys_adj"]);
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
-	$updateexp = $_POST['updateexp'];
-	$succesrc = $_POST['succesrc'];
+	$updateexp = !empty($_POST['updateexp']) ? intval($_POST['updateexp']) : 0;
+	$succesrc = !empty($_POST['succesrc']) ? intval($_POST['succesrc']) : 0;
 
 	// check the system
 	if (isset($system)) {
@@ -83,8 +83,10 @@ if (isset($_POST['sys_adj'])) {
 		// CACHE update
 		// create a new instance of Caches class
 		$caches = new Caches($db);
+
 		// add a new agent activity
-		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+		$cacheStatus = $succesrc == 1 ? "Upkeep Required" : "Healthy";
+		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $cacheStatus);
 
 		// add note to cache
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
@@ -93,13 +95,13 @@ if (isset($_POST['sys_adj'])) {
 		$caches->addNoteToCache($cacheid, $agent_note);
 
 		// update expiration date if needed
-		if (intval($updateexp) == 1) {
+		if ($updateexp == 1) {
 			$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
 		}
 		
 		// RESCUE update
 		// add a Rescue record only if rescue was successful; Agent note will serve for all others
-		if (intval($succesrc) == 1) {
+		if ($succesrc == 1) {
 			// create a new instance of Rescue class
 			$rescue = new Rescue($db);
 			// add a new Rescue record

@@ -201,13 +201,13 @@ class Caches
 	 * @param $notes notes to add
 	 * @param $aidedpilot the aided pilot for agent records
 	 */
-	public function addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot)
+	public function addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $cacheStatus = '')
 	{
 		$this->db->beginTransaction();
 		// insert to [activity] table
 		$this->db->query("INSERT INTO activity (CacheID, ActivityDate, Pilot, EntryType, System,
-						AidedPilot, Note, IP)
-					VALUES (:cacheid, :activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip)");
+						AidedPilot, Note, IP, CacheStatus)
+					VALUES (:cacheid, :activitydate, :pilot, :entrytype, :system, :aidedpilot, :note, :ip, :cacheStatus)");
 		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':activitydate', $activitydate);
 		$this->db->bind(':pilot', $pilot);
@@ -216,6 +216,7 @@ class Caches
 		$this->db->bind(':aidedpilot', $aidedpilot);
 		$this->db->bind(':note', $notes);
 		$this->db->bind(':ip', $_SERVER['REMOTE_ADDR']);
+		$this->db->bind(':cacheStatus', $cacheStatus);
 		$this->db->execute();
 		//get ID from newly inserted [activity] record to use in [cache] record insert/update below
 		//$newID = $this->db->lastInsertId();

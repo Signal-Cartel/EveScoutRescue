@@ -54,6 +54,39 @@ if (!Users::isAllianceUserSession())
 	$pgtitle = 'ESRC Search';
 	include_once '../includes/head.php'; 
 	?>
+
+	<style>
+		.actionSower {
+			background-color:#ccffcc;color:black;
+		} 
+		.actionTender {
+			background-color:#d1dffa;color:black;
+		}
+		.actionAgent {
+			background-color:#fffacd;color:black;
+		}
+		.actionSower {
+			background-color:#ccffcc;color:black;
+		} 
+		.actionTender {
+			background-color:#d1dffa;color:black;
+		}
+		.actionAgent {
+			background-color:#fffacd;color:black;
+		}
+		.cacheHealthy {
+			border-left: 3px solid green;
+		}
+		.cacheExpired {
+			border-left: 3px solid red;
+		}
+		.cacheUpkeepRequired {
+			border-left: 3px solid yellow;
+		}
+		.cacheNoStatus {
+			border-left: 3px solid white;			
+		}
+	</style>
 </head>
 
 <?php
@@ -365,28 +398,42 @@ if (!empty($system)) {
 			if ($activity['EntryType'] == 'sower') {
 				$sowrow = $caches->getCacheData($activity['CacheID']);
 			}
-			
+
 			switch ($activity['EntryType']) {
 				case 'sower':
 				case 'Sower':
-					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+					$actioncellformat = ' actionSower';
 					break;
 				case 'tender':
-					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+					$actioncellformat = ' actionTender';
 					break;
 				case 'adjunct':
 				case 'agent':
-					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+					$actioncellformat = ' actionAgent';
 					break;
 				default:
-					$actioncellformat= '';
+					$actioncellformat = '';
 			}
-			
+
+			switch ($activity['CacheStatus']) {
+				case 'Healthy':
+					$actioncellBorderFormat = ' cacheHealthy';
+					break;
+				case 'Expired':
+					$actioncellBorderFormat = ' cacheExpired';
+					break;
+				case 'Upkeep Required':
+					$actioncellBorderFormat = ' cacheUpkeepRequired';
+					break;
+				default:
+					$actioncellBorderFormat = ' cacheNoStatus';
+			}
+
 			echo '<tr>';
 			$rowdate = $activity['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
-			echo '<td class="white" '. $actioncellformat .'>'. ucfirst($activity['EntryType']) .'</td>';
+			echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
 			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
 			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';

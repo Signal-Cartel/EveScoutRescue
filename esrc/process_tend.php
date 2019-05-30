@@ -106,7 +106,7 @@ if (isset($_POST['sys_tend'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		// add new activity
-		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
 
 		//prepare note for update
 		if (!empty($notes) || $status == "Upkeep Required") { 
