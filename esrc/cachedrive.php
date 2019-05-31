@@ -28,7 +28,7 @@ if (!isset($_POST['end'])) {
 
 <head>
 	<?php
-	$pgtitle = 'witchking42 ESRC Contest';
+	$pgtitle = 'CrinkleQuest ESRC Contest';
 	include_once '../includes/head.php'; 
 	?>
 	<style>
@@ -74,7 +74,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	<div class="row" id="header" style="padding-top: 10px;">
 		<?php include_once '../includes/top-left.php'; ?>
 		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
-			<span style="font-size: 125%; font-weight: bold; color: white;">witchking42's ESRC Contest</span><br />
+			<span style="font-size: 125%; font-weight: bold; color: white;">CrinkleQuest ESRC Contest</span><br />
 			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 				<div class="input-daterange input-group" id="datepicker">
 					<input type="text" class="input-sm form-control" name="start" value="<?php echo isset($start) ? $start : '' ?>" />
@@ -94,22 +94,22 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 
 	<div class="row" id="systable">
 		<div class="col-sm-6">
-			<p class="sechead white">GROUPED BY DAY</p>
+			<p class="sechead white">GROUPED BY PILOT</p>
 			<table id="example2" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Date</th>
 						<th class="white">Pilot</th>
-						<th class="white">Type</th>
+						<!--<th class="white">Type</th>-->
 						<th class="white">Count</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT DATE(ActivityDate) AS ActionDate, Pilot, EntryType, COUNT(Pilot) AS Count FROM activity 
+				$db->query("SELECT DATE(ActivityDate) AS ActionDate, Pilot, COUNT(Pilot) AS Count FROM activity 
 							WHERE DATE(ActivityDate) BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
-                            GROUP BY Pilot, EntryType, ActionDate");
+                            GROUP BY Pilot");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
@@ -139,7 +139,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
-					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
+					/*echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					switch ($value['EntryType']) {
 						case 'sower':
 							$ctrsow++;
@@ -151,6 +151,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 							$ctradj++;
 							break;
 					}
+					*/
 					echo '<td align="right" class="white">'. $value['Count'] .'</td>';
 					echo '</tr>';
 				}
