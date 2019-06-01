@@ -3,9 +3,9 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
+require_once '../class/users.class.php';
 
 if (!isset($_POST['start'])) {
 	if (gmdate('w', strtotime("now")) == 0) {
@@ -22,7 +22,25 @@ if (!isset($_POST['start'])) {
 if (!isset($_POST['end'])) {
 	$end = gmdate('Y-m-d', strtotime("+ 1 day"));
 }
+// create database connection
+$db = new Database();
+// instanciate a users check instance
+$users = new Users($database);
 
+// check character name is set
+if (!isset($charname))
+{
+	// no, set a dummy char name
+	$charname = 'charname_not_set';
+}
+
+// check if user is Admin role
+if (!$users->isAdmin($charname))
+{
+    // no, display an error
+    echo 'You are not allowed to view this page: '.$charname;
+    exit();
+}
 ?>
 <html>
 
@@ -89,7 +107,6 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	<div class="ws"></div>
 	<?php
 	// display results for the selected date range
-	$db = new Database();
 	?>	
 
 	<div class="row" id="systable">
