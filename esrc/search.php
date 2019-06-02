@@ -260,8 +260,8 @@ if (!empty($system)) {
 			</div>
 		</div>
 		<?php if (!empty($strNotes)) { ?>
+		<div class="ws"></div>
 		<div class="row" id="sysnotes">
-			<div class="ws"></div>
 			<div class="col-sm-12">
 				<!-- DETAIL RECORD NOTE(S) -->
 				<table class="table" style="width: auto;">
