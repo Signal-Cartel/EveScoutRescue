@@ -109,7 +109,7 @@ if (isset($_POST['sys_tend'])) {
 		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
 
 		//prepare note for update
-		if (!empty($notes) || $status == "Upkeep Required") { 
+		if (!empty($notes)) { 
 			$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
 			$notesDetail = !empty($notes) ? ': ' . $notes : '.';
 			$tender_note = '<br />' . $noteDate . 'Tended by ' . $pilot . ' as ' . $status . $notesDetail;

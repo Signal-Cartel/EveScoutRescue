@@ -86,6 +86,12 @@ if (!Users::isAllianceUserSession())
 		.cacheNoStatus {
 			border-left: 3px solid white;			
 		}
+		.notesToggle {
+			font-size: 0.7em;
+		}
+		#sysnotes {
+			display: none;
+		}
 	</style>
 </head>
 
@@ -292,7 +298,27 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
-		<?php
+		<?php if (!empty($strNotes)) { ?>
+		<div class="row" id="sysnotes">
+			<div class="ws"></div>
+			<div class="col-sm-12">
+				<!-- DETAIL RECORD NOTE(S) -->
+				<table class="table" style="width: auto;">
+					<thead>
+						<tr>
+							<th>Cache Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><?= $strNotes ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<?php 
+		} //if (!empty($strNotes))
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
@@ -376,7 +402,11 @@ if (!empty($system)) {
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-sm-12">';
 		echo '<div style="padding-left: 10px;">';
-		echo '<br /><span class="sechead">HISTORY</span><br />';
+		echo '<br /><span class="sechead">HISTORY';
+		if (!empty($strNotes)) {
+			echo '&nbsp;<a class="notesToggle" onclick="toggleNotes()">+/- Cache Notes</a>';
+		}
+		echo '</span><br />';
 		echo '<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -469,6 +499,15 @@ include 'modal_edit.php';
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
+	}
+	
+	function toggleNotes() {
+		var notes = document.getElementById("sysnotes");
+		if (notes) {
+			notes.style.display = (notes.style.display == "inline-block") 
+				? "none" 
+				: "inline-block";
+		}
 	}
 </script>
 
