@@ -54,45 +54,6 @@ if (!Users::isAllianceUserSession())
 	$pgtitle = 'ESRC Search';
 	include_once '../includes/head.php'; 
 	?>
-
-	<style>
-		.actionSower {
-			background-color:#ccffcc;color:black;
-		} 
-		.actionTender {
-			background-color:#d1dffa;color:black;
-		}
-		.actionAgent {
-			background-color:#fffacd;color:black;
-		}
-		.actionSower {
-			background-color:#ccffcc;color:black;
-		} 
-		.actionTender {
-			background-color:#d1dffa;color:black;
-		}
-		.actionAgent {
-			background-color:#fffacd;color:black;
-		}
-		.cacheHealthy {
-			border-left: 3px solid green;
-		}
-		.cacheExpired {
-			border-left: 3px solid red;
-		}
-		.cacheUpkeepRequired {
-			border-left: 3px solid yellow;
-		}
-		.cacheNoStatus {
-			border-left: 3px solid white;			
-		}
-		.notesToggle {
-			font-size: 0.7em;
-		}
-		#sysnotes {
-			display: none;
-		}
-	</style>
 </head>
 
 <?php
