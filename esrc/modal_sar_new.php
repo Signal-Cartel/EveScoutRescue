@@ -23,7 +23,7 @@ if(isset($_REQUEST['pilot'])){
 			</div>
 			<div class="field">
 				<label class="control-label" for="pilot">Stranded Pilot
-					<span class="descr">Enter as "Pilot Name (Contact Name)" if an intermediate contact is involved.</span>
+					<span class="descr">Other contact names, if any, should be entered in Notes.</span>
 				</label>
 				
 				<input type="text" class="form-control " id="pilot" name="pilot" value="<?php echo $name_placeholder;?>"/>
