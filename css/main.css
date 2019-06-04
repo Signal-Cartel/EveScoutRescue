@@ -193,16 +193,16 @@ div.centered {
 	background-color:#fffacd;color:black;
 }
 .cacheHealthy {
-	border-left: 3px solid green;
+	border-left: 6px solid green;
 }
 .cacheExpired {
-	border-left: 3px solid red;
+	border-left: 6px solid red;
 }
 .cacheUpkeepRequired {
-	border-left: 3px solid yellow;
+	border-left: 6px solid yellow;
 }
 .cacheNoStatus {
-	border-left: 3px solid white;			
+	border-left: 6px solid white;			
 }
 .notesToggle {
 	font-size: 0.7em;
