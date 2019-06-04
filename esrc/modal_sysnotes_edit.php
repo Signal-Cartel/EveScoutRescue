@@ -56,7 +56,7 @@ if (isset($_POST['systemname'])) {
 	
 	//FORM VALIDATION
 	if (empty($snNote)) {
-		$errmsg = $errmsg . "You must enter a note.\n";
+        $errmsg = "You must enter a note.\n";
 	}
 	//END FORM VALIDATION
 

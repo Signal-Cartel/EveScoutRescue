@@ -182,7 +182,7 @@ if (!empty($system)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- System Name display -->
-		<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		<span class="systemName"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		<!-- TEND button -->
 		<?php
 		$strTended = '';
@@ -223,9 +223,9 @@ if (!empty($system)) {
 		}
 		?>
 		</div>
+		<div class="ws"></div>		
 		</div>
 		</div>
-		<div class="ws"></div>
 		<div class="row" id="systable">
 			<div class="col-sm-12">
 				<!-- DETAIL RECORD -->
@@ -259,10 +259,39 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
+		<div class="notesRow">
+			<?php 
+			if (isset($system) && $system!= '') {
+				echo '<strong class="white">';
+				// display system info and notes (if any)
+				$sysNoteRow = $systems_top->getWHInfo($system);
+				$arrSysnotes = $systems_top->getSystemNotes($system);
+				$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
+					<i class="white" data-toggle="tooltip" data-html="true" 
+					data-placement="bottom" title="New System Note"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
+				if (!empty($arrSysnotes)) { 
+					$sysnote = '';
+					foreach ($arrSysnotes as $val) {
+						$sysnote = $sysnote .'['. Output::getEveDate($val['notedate']) .']<br />'. $val['note'] .'<br />';
+					}
+					$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
+						<i class="white" data-toggle="tooltip" data-html="true"
+						data-placement="bottom" title="'. htmlspecialchars($sysnote) .'"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes; 
+				}
+				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
+				
+				if (!empty($strNotes)) {
+					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				 		<i class="white" data-toggle="tooltip" data-html="true"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
+				}
+				echo $strSysnotes . '</strong>';
+			}
+			?>			
+		</div>
 		<?php if (!empty($strNotes)) { ?>
-		<div class="ws"></div>
-		<div class="row" id="sysnotes">
-			<div class="col-sm-12">
+		<div class="ws"></div>				
+		<div class="collapse" id="collapseExample">
+			<div class="card card-body">
 				<!-- DETAIL RECORD NOTE(S) -->
 				<table class="table" style="width: auto;">
 					<thead>
@@ -277,9 +306,9 @@ if (!empty($system)) {
 					</tbody>
 				</table>
 			</div>
-		</div>
+		</div>		
 		<?php 
-		} //if (!empty($strNotes))
+		}
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
@@ -362,12 +391,8 @@ if (!empty($system)) {
 	if (!empty($systemActivities)) {
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-sm-12">';
-		echo '<div style="padding-left: 10px;">';
-		echo '<br /><span class="sechead">HISTORY';
-		if (!empty($strNotes)) {
-			echo '&nbsp;<a class="notesToggle" onclick="toggleNotes()">+/- Cache Notes</a>';
-		}
-		echo '</span><br />';
+		echo '<div style="padding-left: 0px;">';
+		echo '<br /><span class="sechead">HISTORY</span><br />';
 		echo '<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -460,16 +485,7 @@ include 'modal_edit.php';
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
-	}
-	
-	function toggleNotes() {
-		var notes = document.getElementById("sysnotes");
-		if (notes) {
-			notes.style.display = (notes.style.display == "inline-block") 
-				? "none" 
-				: "inline-block";
-		}
-	}
+	}	
 </script>
 
 </body>
