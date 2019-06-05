@@ -346,28 +346,24 @@ if (!empty($system)) {
 				$sysNoteRow = $systems_top->getWHInfo($system);
 				$arrSysnotes = $systems_top->getSystemNotes($system);
 				$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
-					<i class="white" data-toggle="tooltip" data-html="true" 
-					data-placement="bottom" title="New System Note"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
+					<i class="white"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
+
 				if (!empty($arrSysnotes)) { 
-					$sysnote = '';
-					foreach ($arrSysnotes as $val) {
-						$sysnote = $sysnote .'['. Output::getEveDate($val['notedate']) .']<br />'. $val['note'] .'<br />';
-					}
 					$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
-						<i class="white" data-toggle="tooltip" data-html="true"
-						data-placement="bottom" title="'. htmlspecialchars($sysnote) .'"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes; 
+						<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes; 
 				}
 				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
 				
 				if (!empty($strNotes)) {
 					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-				 		<i class="white" data-toggle="tooltip" data-html="true"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
+				 		<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
 				}
 				echo $strSysnotes . '</strong>';
-			 }
+			}
 			?>			
 		</div>
 		<?php if (!empty($strNotes)) { ?>
+		<div class="ws"></div>				
 		<div class="collapse" id="collapseExample">
 			<div class="card card-body">
 				<!-- DETAIL RECORD NOTE(S) -->
