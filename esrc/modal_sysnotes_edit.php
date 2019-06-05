@@ -118,7 +118,7 @@ if (isset($_POST['systemname'])) {
                         <input type="hidden" name="refurl" value="<?=$phpPage?>" />
                         <input type="hidden" name="delnote" value="<?=($isDelete) ? 1 : 0?>" />
                         <input type="hidden" name="coord" value="<?=($isCoord) ? 1 : 0?>" />
-                    <button type="submit" class="btn btn-md">Submit</button>
+                    <button type="submit" class="btn btn-info">Submit</button>
                 </div>
             </div>
         </form>
