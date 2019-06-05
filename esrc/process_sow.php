@@ -62,7 +62,7 @@ if (isset($_POST['sys_sow'])) {
 	$alignedwith = test_input($_POST["alignedwith"]);
 	$distance = test_input($_POST["distance"]);
 	$password = test_input($_POST["password"]);
-	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : '';
+	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : 'Healthy';
 	$notes = test_input($_POST["notes"]);
 	
 	// check the system
