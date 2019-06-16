@@ -62,7 +62,7 @@ if (isset($_POST['sys_sow'])) {
 	$alignedwith = test_input($_POST["alignedwith"]);
 	$distance = test_input($_POST["distance"]);
 	$password = test_input($_POST["password"]);
-	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : '';
+	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : 'Healthy';
 	$notes = test_input($_POST["notes"]);
 	
 	// check the system
@@ -109,16 +109,20 @@ if (isset($_POST['sys_sow'])) {
 	} 
 	// otherwise, perform DB UPDATES
 	else {
+
+		$sower_note = '';
+		
 		//prepare note
-		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
-		$sower_note = $noteDate . 'Sown by '. $pilot;
-		if (!empty($notes)) { $sower_note = $sower_note. "\n" . $notes; }
+		if (!empty($notes)) {
+			$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
+			$sower_note = $noteDate . 'Sown by '. $pilot . ": " . $notes;
+		}
 		
 		//perform [cache] insert
 		$newID = $caches->createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
 
 		// create a new cache activity
-		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot);
+		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
 
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;

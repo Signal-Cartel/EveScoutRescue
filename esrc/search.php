@@ -182,7 +182,7 @@ if (!empty($system)) {
 		<div class="col-sm-12">
 		<div style="padding-left: 10px;">
 		<!-- System Name display -->
-		<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		<span class="systemName"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
 		<!-- TEND button -->
 		<?php
 		$strTended = '';
@@ -223,9 +223,9 @@ if (!empty($system)) {
 		}
 		?>
 		</div>
-		</div>
-		</div>
 		<div class="ws"></div>
+		</div>
+		</div>
 		<div class="row" id="systable">
 			<div class="col-sm-12">
 				<!-- DETAIL RECORD -->
@@ -259,27 +259,7 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
-		<?php if (!empty($strNotes)) { ?>
-		<div class="ws"></div>
-		<div class="row" id="sysnotes">
-			<div class="col-sm-12">
-				<!-- DETAIL RECORD NOTE(S) -->
-				<table class="table" style="width: auto;">
-					<thead>
-						<tr>
-							<th>Notes</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?= $strNotes ?></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<?php 
-		} //if (!empty($strNotes))
+	<?php 
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
@@ -326,6 +306,7 @@ if (!empty($system)) {
 				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass2')"></i> 
 				&lt;&lt; Copy password
 			</div></div></div>
+			<br />
 
 			<?php 
 			} 
@@ -356,13 +337,60 @@ if (!empty($system)) {
 		}
 	} //(!empty($row))
 
+?>
+		<div class="notesRow">
+			<?php 
+			if (isset($system) && $system!= '') {
+				echo '<strong class="white">';
+				// display system info and notes (if any)
+				$sysNoteRow = $systems_top->getWHInfo($system);
+				$arrSysnotes = $systems_top->getSystemNotes($system);
+				$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
+					<i class="white"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
+
+				if (!empty($arrSysnotes)) { 
+					$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
+						<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes; 
+				}
+				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
+				
+				if (!empty($strNotes)) {
+					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				 		<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
+				}
+				echo $strSysnotes . '</strong>';
+			}
+			?>			
+		</div>
+		<?php if (!empty($strNotes)) { ?>
+		<div class="ws"></div>				
+		<div class="collapse" id="collapseExample">
+			<div class="card card-body">
+				<!-- DETAIL RECORD NOTE(S) -->
+				<table class="table" style="width: auto;">
+					<thead>
+						<tr>
+							<th>Cache Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><?= $strNotes ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>		
+		<?php 
+		}
+
 	//HISTORY
 	// see if there is historical data to display for this system
 	$systemActivities = $systems->getSystemActivities($system);
 	if (!empty($systemActivities)) {
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-sm-12">';
-		echo '<div style="padding-left: 10px;">';
+		echo '<div style="padding-left: 0px;">';
 		echo '<br /><span class="sechead">HISTORY</span><br />';
 		echo '<table class="table" style="width: auto;">
 				<thead>
@@ -385,28 +413,42 @@ if (!empty($system)) {
 			if ($activity['EntryType'] == 'sower') {
 				$sowrow = $caches->getCacheData($activity['CacheID']);
 			}
-			
+
 			switch ($activity['EntryType']) {
 				case 'sower':
 				case 'Sower':
-					$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+					$actioncellformat = ' actionSower';
 					break;
 				case 'tender':
-					$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+					$actioncellformat = ' actionTender';
 					break;
 				case 'adjunct':
 				case 'agent':
-					$actioncellformat= ' style="background-color:#fffacd;color:black;"';
+					$actioncellformat = ' actionAgent';
 					break;
 				default:
-					$actioncellformat= '';
+					$actioncellformat = '';
 			}
-			
+
+			switch ($activity['CacheStatus']) {
+				case 'Healthy':
+					$actioncellBorderFormat = ' cacheHealthy';
+					break;
+				case 'Expired':
+					$actioncellBorderFormat = ' cacheExpired';
+					break;
+				case 'Upkeep Required':
+					$actioncellBorderFormat = ' cacheUpkeepRequired';
+					break;
+				default:
+					$actioncellBorderFormat = ' cacheNoStatus';
+			}
+
 			echo '<tr>';
 			$rowdate = $activity['ActivityDate'];
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
-			echo '<td class="white" '. $actioncellformat .'>'. ucfirst($activity['EntryType']) .'</td>';
+			echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
 			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
 			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
@@ -442,7 +484,7 @@ include 'modal_edit.php';
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
-	}
+	}	
 </script>
 
 </body>

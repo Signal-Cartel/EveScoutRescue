@@ -57,6 +57,13 @@ div.centered {
 	font-weight: bolder;
 }
 
+.sechead-no-indent {
+	padding-bottom: 3px;
+	padding-top: 3px;
+	font-size: 156%;
+	font-weight: bolder;
+}
+
 .sower {
 	background-color: green;
 	color: white;
@@ -172,4 +179,42 @@ div.centered {
  	border-radius: 4px 4px 0 0 ;
   	background-color: rgba(255, 255, 255, 0.4);
   	color: black;
+}
+
+.actionSower {
+	background-color:#ccffcc;color:black;
+} 
+.actionTender {
+	background-color:#d1dffa;color:black;
+}
+.actionAgent {
+	background-color:#fffacd;color:black;
+}
+.actionSower {
+	background-color:#ccffcc;color:black;
+} 
+.actionTender {
+	background-color:#d1dffa;color:black;
+}
+.actionAgent {
+	background-color:#fffacd;color:black;
+}
+.cacheHealthy {
+	border-left: 6px solid green;
+}
+.cacheExpired {
+	border-left: 6px solid red;
+}
+.cacheUpkeepRequired {
+	border-left: 6px solid yellow;
+}
+.cacheNoStatus {
+	border-left: 6px solid grey;
+}
+.notesRow {
+	background-color: rgba(42, 42, 0, 0.25);
+	padding-left: 14px;
+}
+.systemName {
+	font-weight: bold; font-size: 200%; vertical-align: middle;
 }

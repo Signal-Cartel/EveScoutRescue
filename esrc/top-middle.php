@@ -9,6 +9,9 @@ $ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc', '', '');
 $ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 
+$sysNoteRow = $systems_top->getWHInfo($system);
+$arrSysnotes = $systems_top->getSystemNotes($system);
+			
 // get PHP page
 $phpPage = basename($_SERVER['PHP_SELF']);
 ?>
@@ -29,28 +32,15 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 			</form>
 		</div>
 		<div class="col-sm-4" style="text-align: left;">
-			<?php 
+			<?php			
 			if (isset($system) && $system!= '') {
-				// display system info and notes (if any)
-				$row = $systems_top->getWHInfo($system);
-				$arrSysnotes = $systems_top->getSystemNotes($system);
-				$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
-					<i class="white fa fa-plus" style="vertical-align: middle;" data-toggle="tooltip" data-html="true" 
-					data-placement="bottom" title="Add New Note"></i></a>';
-				if (!empty($arrSysnotes)) { 
-					$sysnote = '';
-					foreach ($arrSysnotes as $val) {
-						$sysnote = $sysnote .'['. Output::getEveDate($val['notedate']) .']<br />'. $val['note'] .'<br />';
-					}
-					$strSysnotes = '&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
-						<i class="white fa fa-sticky-note" style="vertical-align: middle;" data-toggle="tooltip" data-html="true"
-						data-placement="bottom" title="'. htmlspecialchars($sysnote) .'"></i></a>' . $strSysnotes; 
-				}
-				echo '<strong class="white">'.$row['Class']. $strSysnotes .'<br/>'. utf8_encode($row['Notes']).'</strong>';
+				// display system info
+				$row = $systems_top->getWHInfo($system);			
+				$whNotes = (!empty($row['Notes'])) ? '<br />' . utf8_encode($row['Notes']) : '';
+				echo '<strong class="white">'.$row['Class'] . $whNotes . '<br /></strong>';
 			}
 			?>
-			<br /><br />
-			<span class="sechead white" style="font-weight: bold;">
+			<span class="sechead-no-indent white" style="font-weight: bold;">
 				<span style="color: gold;"><?php echo $ctrAllRescues; ?></span> Rescues
 			</span>
 		</div>
