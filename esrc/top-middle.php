@@ -40,20 +40,23 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 				echo '<strong class="white">'.$row['Class'] . $whNotes . '</strong><br />';
 				
 				/* static wh connection details */
-				$staticConns = $row['Statics'];
-				if (!empty($row['Statics'])) {
-				
-					$whTypes = explode(',', $row['Statics']);
-					echo '<div class="whStatics">';
-					echo '<ul>';
-						
+				$staticConnections = $row['Statics'];
+				if (!empty($staticConnections)) {
+
+					$whTypes = explode(',', $staticConnections);
+					echo '<div class="whStatics"><ul>';
+
+					$whListItems = array();
+					$whListIndex = 0;
+
 					foreach ($whTypes as $whType) {
 						$whTypeInfo = $systems_top->getWHType($whType);						
 						$massDesc = '';
 
-						if (!empty($whTypeInfo['Size'])) {
+						$size = $whTypeInfo['Size'];
+						if (!empty($size)) {
 
-							$size = intval($whTypeInfo['Size']);
+							$size = intval($size);
 
 							if ($size <= 5000000) {
 								$massDesc = "f/d";
@@ -75,8 +78,17 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 						}
 
 						$dest = $whTypeInfo['Destination'];
-						echo '<li class="whDest-' . $dest .'">' . strtoupper($dest) . ' > ' . $whType . ' ' . $massDesc . '</li>';
+						
+						$whListItems[$whListIndex++] = '<li class="whDest-' . $dest .'">' 
+							. strtoupper($dest) . ' > ' . $whType . ' ' . $massDesc . '</li>';
 					}
+
+					sort($whListItems);
+
+					foreach ($whListItems as $whListItem){
+					    echo $whListItem;
+					}
+
 					echo '</ul></div>';
 				}				
 			}
