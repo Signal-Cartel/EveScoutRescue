@@ -172,6 +172,33 @@ class Systems {
 	}
 	
 	/**
+	 * Returns the class and notes for a given wormhole type.
+	 * @param $whType the name of wormhole type to check
+	 * @return mixed
+	 */
+	public function getWHType($whType)
+	{
+		// check if a wormhole name is set
+		if (! isset ( $whType )) {
+			// no, return error code
+			return;
+		}
+		
+		// check the DB for the wormhole name
+		$sql = "SELECT * FROM wh_types WHERE Name = :whType";
+		// create query
+		$this->db->query ( $sql );
+		// and bind parameters
+		$this->db->bind ( ":whType", $whType );
+		// execute the query
+		$result = $this->db->single();
+		// close the query
+		$this->db->closeQuery ();
+		
+		return $result;
+	}
+
+	/**
 	 * Get all activities of a system
 	 * @param unknown $system
 	 * @return string
