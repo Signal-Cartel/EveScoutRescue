@@ -86,6 +86,7 @@ require_once '../class/rescue.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/caches.class.php';
+require_once '../class/killboardcheck.class.php';
 
 // create a new database connection
 $database = new Database();
@@ -131,6 +132,9 @@ if (!empty($errmsg)) {
 <?php
 }
 
+// check killboard for all open requests
+checkKbActivity($rescue->getRequests());
+		
 // display rescue requests for a specific system
 if (!empty($system)) { 
 	$systems = new Systems($database);
@@ -265,6 +269,7 @@ function translateStatus($status)
 /**
  * Format input as HTML table in output
  * @param unknown $data - array of row details
+ * @param string $charname - name of current user
  * @param number $finished - bit to filter on active/closed requests
  * @param unknown $system - system to show info for (NULL shows all)
  * @param number $notes - bit to toggle display of notes field
@@ -281,10 +286,12 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
 	echo '<span class="sechead">'. $strStatus .' Requests</span>';
+
 	if (empty($data)) {
 		echo '<p>None for this system.</p>';
 	} 
 	else { 
+	
 		//echo print_r($data); // for testing
 		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
 		echo '	<thead>';
@@ -323,7 +330,8 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 
 /**
  * Format input as HTML table data row in output
- * @param unknown $data - array of row details
+ * @param unknown $row - array of row details
+ * @param string $charname - name of current user
  * @param number $finished - bit to filter on active/closed requests
  * @param unknown $system - system to show info for (NULL shows all)
  * @param number $notes - bit to toggle display of notes field
@@ -382,22 +390,24 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	}
 	
-	// Status 
-	// set status color: green = new, yellow = pending, orange = check-in needed
-	switch ($status) {
-		case 'new':
-			$statuscellformat = ' style="background-color:green;color:white;"';
-		break;
-		case 'pending':
-			$statuscellformat = ' style="background-color:yellow;color:black;"';
-		break;
-		default:
-			$statuscellformat = '';
-		break;
-	}
-	if ($finished == 0 && strtotime($row['lastcontact']) < strtotime('-7 day')) {
+	// Status - set status color: 
+	// green = new, 
+	// yellow = pending
+	// orange = check-in needed,
+	// red = check killboard
+	
+	if ($status == 'check-killboard') {
+		$statuscellformat = ' style="background-color:red;color:white;"';
+	} else if ($finished == 0 && strtotime($row['lastcontact']) < strtotime('-7 day')) {
 		$statuscellformat = ' style="background-color:orange;color:white;"';
+	} else if ($status == 'new') {
+		$statuscellformat = ' style="background-color:green;color:white;"';
+	} else if ($status == 'pending') {
+		$statuscellformat = ' style="background-color:yellow;color:black;"';		
+	} else {
+		$statuscellformat = '';
 	}
+	
 	$colspan++;
 	echo '<td'. $statuscellformat .'>'.
 			Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
@@ -473,4 +483,86 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 		}
 	}
 }
+
+/**
+ * Check killboard and update rescue status if activity detected
+ * @param unknown $data
+ */
+function checkKbActivity($data) {
+
+	// create a new database connection
+	$database = new Database();
+	$kb = new KillboardActivity($database);
+	
+	$lastCheck = strtotime($kb->getLastKillboardCheck());
+	$yesterday = strtotime("-1 day");
+	
+	$isNewCheckRequired = $yesterday > $lastCheck;
+	
+	if (!$isNewCheckRequired) {		
+		return;
+	}
+	
+	$kb->updateLastKillboardCheck();
+
+	$rescue = new Rescue($database);
+	
+	foreach ($data as $row) {
+	
+		// have to wait one day because we don't have access to exact time SAR was opened
+		$since = date("Ymd0000", strtotime($row['lastcontact'] . '+1 day'));
+		$characterId = getCharacterId($row['pilot']);
+		
+		if (isKillboardActive($characterId, $since)) {				
+			$rescue->setStatus($row['id'], 'check-killboard');
+		}
+	}
+}
+
+/**
+ * Checks for activity on zkillboard.com
+ * @url string
+ */
+ function getJson($url) {
+	
+	$header = array(
+	    'Content-Type: application/json',
+	    'Accept: application/json'
+	);
+
+	$cURL = curl_init();
+	curl_setopt($cURL, CURLOPT_URL, $url);
+	curl_setopt($cURL, CURLOPT_HTTPGET, true);
+	curl_setopt($cURL, CURLOPT_HTTPHEADER, $header);
+	curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
+	$result = curl_exec($cURL);
+	curl_close($cURL);
+
+	return json_decode($result, true);
+}
+
+/**
+ * Gets character ID from eve api
+ 
+ */
+function getCharacterId($pilotName) {
+
+	$url = 'https://esi.evetech.net/latest/search/'
+			. '?categories=character&datasource=tranquility&language=en-us&strict=true&search=' 
+			. urlencode($pilotName);
+	
+	return getJson($url)['character'][0];
+}
+
+/**
+ * Checks for activity on zkillboard.com
+ * @characterId string the ESI character id
+ * @startTime the time/date to search killboard from
+ */
+function isKillboardActive($characterId, $startTime) {
+	$urlKills = 'https://zkillboard.com/api/characterID/' . $characterId . '/startTime/' . $startTime . '/';
+	$activityCount = count(getJson($urlKills));
+	return $activityCount > 0;
+}
+
 ?>
