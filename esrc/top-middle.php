@@ -34,63 +34,28 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 		<div class="col-sm-4" style="text-align: left;">
 			<?php
 			if (isset($system) && $system!= '') {
+				
 				// display system info
 				$row = $systems_top->getWHInfo($system);
-				$whNotes = (!empty($row['Notes'])) ? '<br />' . utf8_encode($row['Notes']) : '';				
+				$whNotes = (!empty($row['Notes'])) ? '<br />' . utf8_encode($row['Notes']) : '';
 				echo '<strong class="white">'.$row['Class'] . $whNotes . '</strong><br />';
 				
 				/* static wh connection details */
-				$staticConnections = $row['Statics'];
+				$staticConnections = $systems_top->getWHStatics($system);;
 				if (!empty($staticConnections)) {
 
-					$whTypes = explode(',', $staticConnections);
 					echo '<div class="whStatics"><ul>';
 
-					$whListItems = array();
-					$whListIndex = 0;
-
-					foreach ($whTypes as $whType) {
-						$whTypeInfo = $systems_top->getWHType($whType);						
-						$massDesc = '';
-
+					foreach ($staticConnections as $whTypeInfo) {
 						$size = $whTypeInfo['Size'];
-						if (!empty($size)) {
-
-							$size = intval($size);
-
-							if ($size <= 5000000) {
-								$massDesc = "f/d";
-							}
-							else if ($size <= 20000000) {
-								$massDesc = "bc";								
-							}
-							else if ($size <= 300000000) {
- 								$massDesc = "bs";
-							}
-							else if ($size <= 1350000000) {
-								 $massDesc = "cap";
-							}
-							else  {
-								$massDesc = "scap";
-							}
-
-							$massDesc = '(' . strtoupper($massDesc) . ')';
-						}
-
+						$massDesc = (!empty($size)) ? getShipSizeLimit($size) : '';
 						$dest = $whTypeInfo['Destination'];
-						
-						$whListItems[$whListIndex++] = '<li class="whDest-' . $dest .'">' 
-							. strtoupper($dest) . ' > ' . $whType . ' ' . $massDesc . '</li>';
-					}
-
-					sort($whListItems);
-
-					foreach ($whListItems as $whListItem){
-					    echo $whListItem;
+						echo '<li class="whDest-' . $dest .'">'
+							. strtoupper($dest) . ' > ' . $whTypeInfo['Name'] . ' ' . $massDesc . '</li>';
 					}
 
 					echo '</ul></div>';
-				}				
+				}
 			}
 			?>
 			<span class="sechead-no-indent white" style="font-weight: bold;">
@@ -104,6 +69,33 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 // modal include
 include 'modal_sysnotes.php';
 include 'modal_sysnotes_edit.php';
+
+/**
+ * Returns ship size limit by wormhole size
+ */
+function getShipSizeLimit($size) {
+	
+	$size = intval($size);
+
+	if ($size <= 5000000) {
+		$massDesc = "f/d";
+	}
+	else if ($size <= 20000000) {
+		$massDesc = "bc";
+	}
+	else if ($size <= 300000000) {
+		$massDesc = "bs";
+	}
+	else if ($size <= 1350000000) {
+		$massDesc = "cap";
+	}
+	else  {
+		$massDesc = "scap";
+	}
+
+	$massDesc = '(' . strtoupper($massDesc) . ')';
+	return $massDesc;
+}
 ?>
 
 <script>

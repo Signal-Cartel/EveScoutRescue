@@ -199,6 +199,37 @@ class Systems {
 	}
 
 	/**
+	 * Returns the statics for a given system.
+	 * @param $system the name of system type to check
+	 * @return mixed
+	 */
+	public function getWHStatics($system)
+	{
+		// check if system name is set
+		if (! isset ( $system )) {
+			// no, return error code
+			return;
+		}
+		
+		// check the DB for the wormhole name
+		$sql = "SELECT t.* FROM wh_types t, wh_systemstatics s
+				WHERE t.Name=s.StaticType
+				AND System = :system
+				ORDER BY t.Destination";
+
+		// create query
+		$this->db->query ( $sql );
+		// and bind parameters
+		$this->db->bind ( ":system", $system );
+		// execute the query
+		$result = $this->db->resultset();		
+		// close the query
+		$this->db->closeQuery ();
+		
+		return $result;
+	}
+
+	/**
 	 * Get all activities of a system
 	 * @param unknown $system
 	 * @return string
