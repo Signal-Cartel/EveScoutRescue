@@ -13,10 +13,10 @@ $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
 $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'DESC';
 
 // check for querystring hacking
-if ($type != 'ESRC' || $type != 'SAR') {
+if ($type != 'ESRC' && $type != 'SAR') {
 	$type = '';
 }
-if ($sort != 'ASC' || $sort != 'DESC') {
+if ($sort != 'ASC' && $sort != 'DESC') {
 	$sort = 'DESC';
 }
 ?>
