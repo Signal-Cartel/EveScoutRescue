@@ -292,5 +292,34 @@ class Systems {
 		return $sowLocs;
 	}
 
+	/**
+	 * Returns ship size limit by wormhole size
+	 * @param int $size the max size if the ship
+	 * @return string 'F/D', 'BC', 'BS', 'CAP' or 'SCAP' allowed ship class
+	 */
+	static function getShipSizeLimit($size) {
+	
+		$size = intval($size);
+	
+		if ($size <= 5000000) {
+			$massDesc = "F/D";
+		}
+		else if ($size <= 20000000) {
+			$massDesc = "BC";
+		}
+		else if ($size <= 300000000) {
+			$massDesc = "BS";
+		}
+		else if ($size <= 1350000000) {
+			$massDesc = "CAP";
+		}
+		else  {
+			$massDesc = "SCAP";
+		}
+	
+		return '(' . $massDesc . ')';
+
+	}
+	
 }
 ?>

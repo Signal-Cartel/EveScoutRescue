@@ -49,7 +49,7 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 
 						$dest = $staticConnection[1];
 						$size = $staticConnection[2];
-						$massDesc = (!empty($size)) ? getShipSizeLimit($size) : '';
+						$massDesc = (!empty($size)) ? Systems::getShipSizeLimit($size) : '';
 						echo '<li class="whDest-' . $dest .'">'
 							. strtoupper($dest) . ' > ' . $staticConnection[0] . ' ' . $massDesc 
 							. '</li>';						
@@ -70,33 +70,6 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 // modal include
 include 'modal_sysnotes.php';
 include 'modal_sysnotes_edit.php';
-
-/**
- * Returns ship size limit by wormhole size
- */
-function getShipSizeLimit($size) {
-	
-	$size = intval($size);
-
-	if ($size <= 5000000) {
-		$massDesc = "f/d";
-	}
-	else if ($size <= 20000000) {
-		$massDesc = "bc";
-	}
-	else if ($size <= 300000000) {
-		$massDesc = "bs";
-	}
-	else if ($size <= 1350000000) {
-		$massDesc = "cap";
-	}
-	else  {
-		$massDesc = "scap";
-	}
-
-	$massDesc = '(' . strtoupper($massDesc) . ')';
-	return $massDesc;
-}
 ?>
 
 <script>
