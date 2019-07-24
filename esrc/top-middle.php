@@ -11,7 +11,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 
 $sysNoteRow = $systems_top->getWHInfo($system);
 $arrSysnotes = $systems_top->getSystemNotes($system);
-			
+
 // get PHP page
 $phpPage = basename($_SERVER['PHP_SELF']);
 ?>
@@ -32,12 +32,31 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 			</form>
 		</div>
 		<div class="col-sm-4" style="text-align: left;">
-			<?php			
-			if (isset($system) && $system!= '') {
+			<?php
+
+			if (isset($sysNoteRow)) {
 				// display system info
-				$row = $systems_top->getWHInfo($system);			
-				$whNotes = (!empty($row['Notes'])) ? '<br />' . utf8_encode($row['Notes']) : '';
-				echo '<strong class="white">'.$row['Class'] . $whNotes . '<br /></strong>';
+				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
+				echo '<strong class="white">'.$sysNoteRow['Class'] . $whNotes . '</strong><br />';
+				
+				if (!empty($sysNoteRow['StaticWhInfo'])) {
+
+					echo '<div class="whStatics"><ul>';
+
+					foreach (explode(',', $sysNoteRow['StaticWhInfo']) as $staticWhInfo) {
+					
+						$staticConnection = explode('/', $staticWhInfo);
+
+						$dest = $staticConnection[1];
+						$size = $staticConnection[2];
+						$massDesc = (!empty($size)) ? getShipSizeLimit($size) : '';
+						echo '<li class="whDest-' . $dest .'">'
+							. strtoupper($dest) . ' > ' . $staticConnection[0] . ' ' . $massDesc 
+							. '</li>';						
+					}
+
+					echo '</ul></div>';
+				}
 			}
 			?>
 			<span class="sechead-no-indent white" style="font-weight: bold;">
@@ -51,6 +70,33 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 // modal include
 include 'modal_sysnotes.php';
 include 'modal_sysnotes_edit.php';
+
+/**
+ * Returns ship size limit by wormhole size
+ */
+function getShipSizeLimit($size) {
+	
+	$size = intval($size);
+
+	if ($size <= 5000000) {
+		$massDesc = "f/d";
+	}
+	else if ($size <= 20000000) {
+		$massDesc = "bc";
+	}
+	else if ($size <= 300000000) {
+		$massDesc = "bs";
+	}
+	else if ($size <= 1350000000) {
+		$massDesc = "cap";
+	}
+	else  {
+		$massDesc = "scap";
+	}
+
+	$massDesc = '(' . strtoupper($massDesc) . ')';
+	return $massDesc;
+}
 ?>
 
 <script>

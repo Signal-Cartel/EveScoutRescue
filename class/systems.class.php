@@ -151,14 +151,22 @@ class Systems {
 	 */
 	public function getWHInfo($system)
 	{
-		// check if a system name is set
+		// check if system name is set
 		if (! isset ( $system )) {
 			// no, return error code
 			return;
 		}
 		
-		// check the DB for the system name
-		$sql = "SELECT * FROM wh_systems WHERE System = :system";
+		// check the DB for the wormhole name
+		$sql = "SELECT sys.*, GROUP_CONCAT(
+						CONCAT(typ.Name, '/', typ.Destination, '/', typ.Size)
+						ORDER BY typ.Destination
+					) AS StaticWhInfo
+				FROM wh_systems sys, wh_types typ, wh_systemstatics sta
+				WHERE sys.System = :system
+				AND sys.System = sta.System
+				AND sta.StaticType = typ.Name";
+
 		// create query
 		$this->db->query ( $sql );
 		// and bind parameters
@@ -170,7 +178,7 @@ class Systems {
 		
 		return $result;
 	}
-	
+
 	/**
 	 * Get all activities of a system
 	 * @param unknown $system
@@ -270,24 +278,19 @@ class Systems {
 
 	/**
 	 * Get valid sow locations for system
-	 * @param unknown $system
+	 * @param int $planetCount
 	 * @return string array
 	 */
-	public function getSowLocations($system)
+	public function getSowLocations($planetCount)
 	{
 		$sowLocs = array('See Notes','Star',
 			'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 
-		$whInfo = $this->getWHInfo($system);
-		if (isset($whInfo['PlanetCount'])) 
-		{
-			$nonPlanetOptions = 2;
-			$planetCount = $whInfo['PlanetCount'];
-			$sowLocs = array_slice($sowLocs, 0, $nonPlanetOptions + $planetCount);
-		}
+		$nonPlanetOptions = 2;
+		$sowLocs = array_slice($sowLocs, 0, $nonPlanetOptions + $planetCount);
 
 		return $sowLocs;
 	}
-}
 
+}
 ?>

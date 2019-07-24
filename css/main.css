@@ -218,3 +218,47 @@ div.centered {
 .systemName {
 	font-weight: bold; font-size: 200%; vertical-align: middle;
 }
+
+.whStatics {
+	font-family: monospace;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+.whStatics ul {
+	padding-left: 5px;
+	margin-bottom: 5px;
+	list-style: none;
+	color: brown;
+}
+
+.whDest-ns {
+	color: #7FFFD4;
+}
+.whDest-ls {
+	color: #B8860B;
+}
+.whDest-hs {
+	color: #5cb85c;
+}
+.whDest-thera {
+	color: #6495ED;
+}
+.whDest-c1 {
+	color: #E9967A;
+}
+.whDest-c2 {
+	color: #FA8072;
+}
+.whDest-c3 {
+	color: #FF6347;
+}
+.whDest-c4 {
+	color: #FF4500;
+}
+.whDest-c5 {
+	color: #FF0000;
+}
+.whDest-c6 {
+	color: #DC143C;
+}
