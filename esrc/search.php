@@ -355,7 +355,7 @@ if (!empty($system)) {
 				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
 				
 				if (!empty($strNotes)) {
-					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
 				 		<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
 				}
 				echo $strSysnotes . '</strong>';
@@ -364,7 +364,7 @@ if (!empty($system)) {
 		</div>
 		<?php if (!empty($strNotes)) { ?>
 		<div class="ws"></div>				
-		<div class="collapse" id="collapseExample">
+		<div class="collapse in" id="collapseExample">
 			<div class="card card-body">
 				<!-- DETAIL RECORD NOTE(S) -->
 				<table class="table" style="width: auto;">
