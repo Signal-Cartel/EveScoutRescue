@@ -81,7 +81,7 @@ if (isset($_POST['sys_edit'])) {
 } // end form POST processing
 
 // array for Location and AlignedWith select lists
-$locopts = $systems_top->getSowLocations($system);
+$locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 ?>
 
 <div id="EditModal" class="modal fade" role="dialog">
