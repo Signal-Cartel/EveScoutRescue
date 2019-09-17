@@ -111,7 +111,7 @@ $leaderBoard = new Leaderboard($database);
 		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
 		<span class="sechead"><?php echo $ctractive; ?> of 2603 
 			(<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
-			<?php echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . gmdate('Y-m-d H:i:s', strtotime("now"));?><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as of last downtime)<br />
 		<br />
 		<span class="sechead">"No Sow" systems: <?php echo $lockedSys ?></span><br />
 		<span class="sechead">Expiring in <?=$expireDays?> days: <?php echo $toexpire; ?></span><br />
@@ -119,6 +119,6 @@ $leaderBoard = new Leaderboard($database);
 		<span class="sechead" style="font-weight: bold; color: gold;">All Time</span><br />
 		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
 		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as of YC119-Mar-18)
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(since YC119-Mar-18)
 	</div>
 </div> 
