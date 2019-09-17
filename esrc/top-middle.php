@@ -51,7 +51,7 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 						$size = $staticConnection[2];
 						$massDesc = (!empty($size)) ? Systems::getShipSizeLimit($size) : '';
 						echo '<li class="whDest-' . $dest .'">'
-							. strtoupper($dest) . ' > ' . $staticConnection[0] . ' ' . $massDesc 
+							. $staticConnection[0] . ' > ' . strtoupper($dest) . ' ' . $massDesc 
 							. '</li>';						
 					}
 
