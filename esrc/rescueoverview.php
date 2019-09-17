@@ -276,7 +276,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	$summary = 1, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
-	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-12 ' : '';
+	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-13 ' : '';
 	
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
@@ -296,6 +296,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '			<th>Opened</th>';
 		echo (!empty($system)) ? '' : '<th>System</th>';
 		echo (!empty($system)) ? '' : '<th>Class</th>';
+		echo (!empty($system)) ? '' : '<th>Statics</th>';
 		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
@@ -338,6 +339,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// create object instances
 	$users = new Users($database);
 	$rescue = new Rescue($database);
+	$systems = new Systems($database);
 	
 	$status = $row['status'];
 	$colspan = 0;
@@ -369,6 +371,31 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		echo '<td>'. Output::htmlEncodeString($row['Class']).'</td>';
 	}
 			
+	// Statics
+	if (empty($system)) {
+		$colspan++;
+		// get current system
+		$staticSystem = ucfirst($row['system']);
+		// get connections of system
+		$systemData = $systems->getWHInfo($staticSystem);
+		
+		$staticData = '';
+		foreach (explode(',', $systemData['StaticWhInfo']) as $staticWhInfo) {
+				
+			$staticConnection = explode('/', $staticWhInfo);
+		
+			$dest = $staticConnection[1];
+			$size = $staticConnection[2];
+			$massDesc = (!empty($size)) ? Systems::getShipSizeLimit($size) : '';
+			if (strlen($staticData) > 0)
+			{
+				$staticData .= ', ';
+			}
+			$staticData .= $staticConnection[0].'>'. strtoupper($dest).' '.$massDesc;
+		}
+		echo '<td>'. Output::htmlEncodeString($staticData).'</td>';
+	}
+		
 	// Pilot - display stranded pilot's name only to coords and relevant agents
 	// check for related SAR Agent
 	$colspan++;
