@@ -385,13 +385,14 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$staticConnection = explode('/', $staticWhInfo);
 		
 			$dest = $staticConnection[1];
-			$size = $staticConnection[2];
-			$massDesc = (!empty($size)) ? Systems::getShipSizeLimit($size) : '';
+			// check if already data is added
 			if (strlen($staticData) > 0)
 			{
+				// yes, add delimeter
 				$staticData .= ', ';
 			}
-			$staticData .= $staticConnection[0].'>'. strtoupper($dest).' '.$massDesc;
+			// add destination 
+			$staticData .= strtoupper($dest);
 		}
 		echo '<td>'. Output::htmlEncodeString($staticData).'</td>';
 	}
