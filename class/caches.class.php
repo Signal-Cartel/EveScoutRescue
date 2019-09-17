@@ -46,7 +46,7 @@ class Caches
 		
 		$this->db->closeQuery();
 		
-		return $result['cnt'];
+		return $result['ActiveCaches'];
 	}
 	
 	/**
