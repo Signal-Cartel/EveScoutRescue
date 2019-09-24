@@ -228,16 +228,18 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 
 <div class="row" id="header" style="padding-top: 10px;">
 <?php 	
+// top right
+include_once '../includes/top-right.php';
 // top left
 include_once '../includes/top-left.php'; 
 // top middle
 // show a different header form for Records display
 if ($stat_type == 'records') {
 ?>
-	<div class="col-sm-8 black" style="text-align: center;">
+	<div class="col-md-8 black" style="text-align: center;">
 		<div class="row">
 			<br />
-			<div class="col-sm-6" style="text-align: center;">
+			<div class="col-md-6" style="text-align: center;">
 				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="form-group" id="timeframe" style="margin-bottom: 5px;">
 						<select class="form-control" id="timeframe" name="timeframe">
@@ -251,7 +253,7 @@ if ($stat_type == 'records') {
 								Greatest Of All Time</option>
 						</select>
 						<input type="hidden" name="stat_type" value="records" />
-						<button type="submit" class="btn btn-sm">Get Records</button>
+						<button type="submit" class="btn btn-success">Get Records</button>
 					</div>
 					<div class="input-group">
 						<label class="radio-inline white"><input type="radio" name="record_group" 
@@ -263,7 +265,7 @@ if ($stat_type == 'records') {
 					</div>
 				</form>
 			</div>
-			<div class="col-sm-6" style="text-align: center;">
+			<div class="col-md-6" style="text-align: center;">
 				<a href="stats.php?stat_type=caches" class="btn btn-info" role="button">Caches</a> &nbsp;&nbsp;&nbsp;
 				<a href="stats.php?stat_type=participants" class="btn btn-info" role="button">Participants</a> &nbsp;&nbsp;&nbsp;
 				<a href="stats.php?stat_type=personal" class="btn btn-info" role="button">Personal</a>
@@ -278,9 +280,9 @@ else {
 	$ctrSARrescues = $rescue->getRescueCount('closed-rescued', $start, $end);
 	$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 ?>
-	<div class="col-sm-8 black" style="text-align: center;">
+	<div class="col-md-8 black" style="text-align: center;">
 		<div class="row">
-			<div class="col-sm-8" style="text-align: center;">
+			<div class="col-md-8" style="text-align: center;">
 				<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 					<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
 						<input type="text" class="input-sm form-control" name="start" id="start" autocomplete="off"
@@ -304,12 +306,12 @@ else {
 					</div>
 					<div style="margin-top: 5px;">
 						<input type="hidden" name="pilot" value="<?=$charname?>" />
-						<button type="submit" class="btn btn-sm">Get Stats</button>
+						<button type="submit" class="btn btn-success">Get Stats</button>
 					</div>
 				</form>
 			</div>
-			<div class="col-sm-4" style="text-align: center;">
-				<div class="sechead white" style="font-weight: bold;">RESCUES:&nbsp; 
+			<div class="col-md-4" style="text-align: center;">
+				<div class="subhead white" style="font-weight: bold;">RESCUES:&nbsp; 
 					<span style="color: gold;"><?php echo $ctrAllRescues; ?></span>
 				</div>
 				<div class="white text-center" style="font-weight: bold;">ESRC:&nbsp; 
@@ -322,8 +324,7 @@ else {
 	</div>
 <?php 
 }
-// top right
-include_once '../includes/top-right.php'; ?>
+ ?>
 </div>
 <div class="ws"></div>
 <!-- NAVIGATION TABS -->
@@ -335,7 +336,7 @@ include_once '../includes/top-right.php'; ?>
 if (!empty($errmsg)) {
 ?>
 	<div class="row" id="errormessage" style="background-color: #ff9999;">
-		<div class="col-sm-12 message">
+		<div class="col-md-12 message">
 			<?php echo nl2br($errmsg); ?>
 		</div>
 	</div>
@@ -345,8 +346,8 @@ if (!empty($errmsg)) {
 ?>
 	<!-- STATS TITLE -->
 	<div class="row">
-		<div class="col-sm-12">
-			<div class="sechead white text-center" style="font-weight: bold;">
+		<div class="col-md-12">
+			<div class="subhead white text-center" style="font-weight: bold;">
 				<?php echo strtoupper($stat_type);?>
 			</div>
 		</div>
@@ -358,7 +359,7 @@ if (!empty($errmsg)) {
 	switch ($stat_type) {
 		case 'caches':
 	?>
-		<div class="col-sm-12">
+		<div class="col-md-12">
 			<div class="white text-center">
 				<a href="javascript:drawEsrcCachesChart('Daily')">Daily</a> &nbsp;&nbsp;&nbsp; 
 				<a href="javascript:drawEsrcCachesChart('Weekly')">Weekly</a> &nbsp;&nbsp;&nbsp; 
@@ -372,8 +373,8 @@ if (!empty($errmsg)) {
 		case 'participants':
 	?>
 		<!-- PARTICIPANT COUNTS BEGIN -->
-		<div class="col-sm-6">
-			<div class="sechead white text-center" style="font-weight: bold;">ESRC</div>
+		<div class="col-md-6">
+			<div class="subhead white text-center" style="font-weight: bold;">ESRC</div>
 			<!-- ESRC PARTICIPANT COUNTS BEGIN -->
 			<?php 
 			// get unique participants from db
@@ -399,8 +400,8 @@ if (!empty($errmsg)) {
 			<div id="esrcParticipation" class="text-center" style="width: 450px; height:300px;"></div>
 			<!-- ESRC PARTICIPANT COUNTS END -->
 		</div>
-		<div class="col-sm-6">
-			<div class="sechead white text-center" style="font-weight: bold;">SAR</div>
+		<div class="col-md-6">
+			<div class="subhead white text-center" style="font-weight: bold;">SAR</div>
 			<!-- SAR PARTICIPANT COUNTS BEGIN -->
 			<?php 
 
@@ -490,7 +491,7 @@ if (!empty($errmsg)) {
 		case 'records':
 	?>
 		<!-- RECORDS STATS BEGIN -->
-		<div class="col-sm-12">
+		<div class="col-md-12">
 			<?php
 			// set records last update date
 			$database->query("SELECT MAX(RecordDate) AS MaxDate FROM stats_records");
@@ -524,7 +525,7 @@ if (!empty($errmsg)) {
 					}
 
 					// draw new section header
-					echo '<div class="sechead white" style="font-weight: bold; color: gold;">'. $row["Type"] .'</div>';
+					echo '<div class="subhead white" style="font-weight: bold; color: gold;">'. $row["Type"] .'</div>';
 
 					// draw new table header
 					echo '<table class="table">';
@@ -572,8 +573,8 @@ if (!empty($errmsg)) {
 	?>
 		
 		<!-- COUNTERS -->
-		<div class="col-sm-4 white">
-			<span class="sechead">ESRC Activity Count</span><br /><br />
+		<div class="col-md-4 white">
+			<span class="subhead">ESRC Activity Count</span><br /><br />
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -656,7 +657,7 @@ if (!empty($errmsg)) {
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-8 white">
+		<div class="col-md-8 white">
 			<!-- FULL LISTING -->
 			<table id="tblPersonalESRC" class="table">
 				<thead>

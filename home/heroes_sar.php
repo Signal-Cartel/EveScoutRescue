@@ -34,9 +34,10 @@ $rowsGold = $pilot->getMedals('13');
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 <?php
+include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
+
 ?>
 </div>
 <div class="ws"></div>
@@ -53,7 +54,7 @@ include_once '../includes/top-right.php';
 function printSARHeroes($type, $min, $arrPilotCnt) 
 { 
 ?>
-	<div class="col-sm-4">
+	<div class="col-md-4">
 		<h2 style="text-align: center;"><?=$type?></h2>
 		<p style="text-align: center;">Awarded to pilots upon completing 
 			<?=$min?> successful rescue <?php echo ($min == 1 ? 'mission' : 'missions');?>.<br />

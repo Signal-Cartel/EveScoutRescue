@@ -109,9 +109,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	<div class="container">
 	
 	<div class="row" id="header" style="padding-top: 10px;">
-		<?php include_once '../includes/top-left.php'; ?>
-		<?php include_once 'top-middle.php'; ?>
-		<?php include_once '../includes/top-right.php'; ?>
+		<?php 
+		include_once '../includes/top-right.php'; 
+		include_once '../includes/top-left.php';
+		include_once 'top-middle.php'; 
+
+		?>
 	</div>
 	<div class="ws"></div>
 	<!-- NAVIGATION TABS -->
@@ -123,7 +126,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 if (!empty($errmsg)) {
 ?>
 	<div class="row" id="errormessage" style="background-color: #ff9999;">
-		<div class="col-sm-12 message">
+		<div class="col-md-12 message">
 			<?php echo nl2br($errmsg); ?>
 		</div>
 	</div>
@@ -175,7 +178,7 @@ if (!empty($system)) {
 	// invalid system name
 	else { ?>
 	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-md-12">
 			<div style="padding-left: 10px;">
 				<span class="sechead white"><?=$system?> not a valid system name.
 					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
@@ -275,12 +278,14 @@ function translateStatus($status)
 function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, 
 	$summary = 1, $noUpdate = 0)
 {
-	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
-	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-13 ' : '';
+
+	$strStatus = ($finished == 0) ? 'ACTIVE' : 'CLOSED';
+	$strcols = ($finished == 0 && empty($system)) ? 'col-md-12 ' : '';
+
 	
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
-	echo '<span class="sechead">'. $strStatus .' Requests</span>';
+	echo '<span class="subhead">'. $strStatus .' REQUESTS</span>';
 	if (empty($data)) {
 		echo '<p>None for this system.</p>';
 	} 
@@ -354,7 +359,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("M-d", strtotime($row['requestdate'])) .'</td>';
+	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate'])) .'</td>';
 	
 	// System - name of J-space system
 	if (empty($system)) {
@@ -414,17 +419,17 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// set status color: green = new, yellow = pending, orange = check-in needed
 	switch ($status) {
 		case 'new':
-			$statuscellformat = ' style="background-color:green;color:white;"';
+			$statuscellformat = ' style="color:green;"';
 		break;
 		case 'pending':
-			$statuscellformat = ' style="background-color:yellow;color:black;"';
+			$statuscellformat = ' style="color:yellow;"';
 		break;
 		default:
 			$statuscellformat = '';
 		break;
 	}
 	if ($finished == 0 && strtotime($row['lastcontact']) < strtotime('-7 day')) {
-		$statuscellformat = ' style="background-color:orange;color:white;"';
+		$statuscellformat = ' style="color:orange;"';
 	}
 	$colspan++;
 	echo '<td'. $statuscellformat .'>'.
@@ -432,7 +437,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("M-d", strtotime($row['lastcontact'])) .'</td>';
+	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['lastcontact'])) .'</td>';
 	
 	// Bounty - display max payout available for a successful locate/rescue in this system
 	// display only in "summary" tables
@@ -494,7 +499,8 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 	if (count($notes) > 0) {
 		foreach($notes as $note) {
 			echo '<div style="padding-left: 2em; text-indent: -2em;">';
-			echo '['. Output::getEveDatetime($note['notedate']) .' // ';
+			//echo '['. Output::getEveDatetime($note['notedate']) .' // ';
+			echo '['. date("M-d H:i", strtotime($note['notedate'])) .' // '; 
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
 			echo Output::htmlEncodeString($note['note']) .'<br />';
 			echo '</div><br />';

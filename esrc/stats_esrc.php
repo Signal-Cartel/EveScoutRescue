@@ -30,17 +30,19 @@ $leaderBoard = new Leaderboard($database);
 		}
 		?>
 		<!-- date range and number selection form -->
-		<span class="sechead" style="font-weight: bold;">SOW / TEND LEADERS</span><br />
+		<p><span class="subhead">LEADERBOARD</span></p>
 		<form id="LBform" name="LBform" method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 			Top <input type="text" name="numberLB" size="1" autocomplete="off" class="black"
-				value="<?=$numberLB?>"> over the last <input type="text" name="daysrangeLB" 
-				size="1" autocomplete="off" class="black" value="<?=$daysrangeLB?>"> days
-			<input type="submit" style="display: none;">
+				value="<?=$numberLB?>"> 
+			over the last <input type="text" name="daysrangeLB" size="1" autocomplete="off" class="black" 
+				value="<?=$daysrangeLB?>"> days
+				<input type="submit" style="display: none;">
+			</form>
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
 						<th>Pilot</th>
-						<th>Total Actions</th>
+						<th>Sows/Tends</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,13 +58,12 @@ $leaderBoard = new Leaderboard($database);
 				?>
 				</tbody>
 			</table>
-			<input type="submit" style="visibility: hidden;" /> 
-		</form>
+
 	</div>
 	<div class="col-sm-4 white">
 		<!-- HALL OF HELP -->
-		<span class="sechead"><span style="font-weight: bold;">HALL OF HELP</span><br /><br />
-		All participants, last 30 days<br />Most recent first</span>
+		<p><span class="subhead">HALL OF HELP</p>
+		<p>All participants, last 30 days<br/>Most recent first</p>
 		<table class="table" style="width: auto;">
 			<thead>
 				<tr>
@@ -105,20 +106,30 @@ $leaderBoard = new Leaderboard($database);
 		$expireDays = 5;
 		$toexpire = $caches->expireInDays($expireDays);
 		?>
-		<span class="sechead" style="font-weight: bold; color: gold;">
-			ESRC Rescues: <span style="color: white;"><?php echo $ctrrescues; ?></span></span><br />
-		<br />
-		<span class="sechead" style="font-weight: bold;">Total Active Caches:</span><br />
-		<span class="sechead"><?php echo $ctractive; ?> of 2603 
-			(<?php echo round((intval($ctractive)/2603)*100,1); ?>%)</span><br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as of last downtime)<br />
-		<br />
-		<span class="sechead">"No Sow" systems: <?php echo $lockedSys ?></span><br />
-		<span class="sechead">Expiring in <?=$expireDays?> days: <?php echo $toexpire; ?></span><br />
-		<br />
-		<span class="sechead" style="font-weight: bold; color: gold;">All Time</span><br />
-		<span class="sechead">Sown: <?php echo $ctrsown; ?></span><br />
-		<span class="sechead">Tended: <?php echo $ctrtended; ?></span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(since YC119-Mar-18)
+		
+		<p class="subhead">CURRENT STATS</p>	
+		<p>
+			ESRC Rescues: <span class="gold"><?php echo $ctrrescues; ?></span>
+		</p>
+		<p>
+				Active Caches:<span class="gold"><?php echo $ctractive; ?> </span>
+				<br/>
+				&nbsp;<?php echo round((intval($ctractive)/2603)*100,1); ?>% of 2603
+				<br />
+				&nbsp;<small>(as of last Downtime)</small>
+		</p>
+		
+		<p>No Sow systems: <span class="gold"><?php echo $lockedSys ?></span>
+			<br/>
+			Expiring in <?=$expireDays?> days: <span class="gold"><?php echo $toexpire; ?></span>
+		</p>
+		<hr/>
+		<p class="subhead">ALL TIME</p>	
+		
+		<p>Sown: <span class="gold"><?php echo $ctrsown; ?></span><br />
+		Tended: <span class="gold"><?php echo $ctrtended; ?></span>
+		</p>
+		<p><small>(since YC119-Mar-18)</small>
+		</p>
 	</div>
 </div> 

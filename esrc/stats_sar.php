@@ -23,10 +23,10 @@ $SARWaitMode = mmmr($arrSARWaits, 'mode');
 $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 ?>
 
- <div class="col-sm-4"> 
-	 <span class="sechead" style="font-weight: bold; color: gold;">
-		SAR Rescues: <span style="color: white;"><?=$ctrSARrescues?></span></span><br /><br />
-		<span class="sechead" style="font-weight: bold;">Average Wait (days):</span><br /> 
+ <div class="col-md-4"> 
+	 <span class="subhead">
+		SAR RESCUES: <span style="color: gold;"><?=$ctrSARrescues?></span></span><br /><br />
+		<span class="subhead">AVERAGE WAIT (DAYS):</span><br /> 
 	
 	 <table id="tblSARWaitTime" class="table display" style="width: auto;"> 
 		<thead> 
@@ -69,7 +69,7 @@ if (isset($_REQUEST['numberLB'])) {
 ?>
 
 	<!-- LB type, date range and number selection form -->
-	<span class="sechead" style="font-weight: bold;">LEADERBOARDS</span><br />
+	<span class="subhead">LEADERBOARDS</span><br />
 	<form id="LBform" name="LBform" method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 		<select class="form-control" name="LBtype" onchange="$('#LBform').submit();" 
 			style="width: auto; margin: 5px;">

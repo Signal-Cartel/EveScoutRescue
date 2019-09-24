@@ -60,16 +60,7 @@ $ctrSystems = $caches->getSystemsVisited($daysBack);
 		    }
 		});
     </script>
-    <style>
-    <!--
-    	.carousel-content {
-		    color: white;
-		    display: flex;
-		    text-align: left;
-		    padding: 20px;
-		}
-    -->
-    </style>
+
 </head>
 
 <body>
@@ -77,9 +68,10 @@ $ctrSystems = $caches->getSystemsVisited($daysBack);
 <div class="ws"></div>
 <div class="row" id="header">
 <?php
+include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
+
 ?>
 </div>
 <div class="ws"></div>
@@ -118,7 +110,8 @@ include_once '../includes/top-right.php';
 			data-interval="20000">
 	    	<!-- Wrapper for slides -->
 		    <div class="row">
-		        <div class="col-sm-offset-1 col-sm-10">
+				<div class="col-sm-offset-1 col-sm-10">
+				<div class="subhead white">PILOT TESTIMONIALS</div>
 		            <div class="carousel-inner">
 		                <?php include '../includes/testimonials.php'; ?>
 		            </div>

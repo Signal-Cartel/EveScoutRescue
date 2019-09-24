@@ -17,9 +17,10 @@ include_once '../includes/head.php';
 <body>
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
+	<?php include_once '../includes/top-right.php'; ?>
 	<?php include_once '../includes/top-left.php'; ?>
 	<?php include_once '../includes/top-center.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
+
 </div>
 <div class="ws"></div>
 <div class="row">

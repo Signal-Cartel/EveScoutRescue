@@ -108,9 +108,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	<div class="container">
 	
 	<div class="row" id="header" style="padding-top: 10px;">
-		<?php include_once '../includes/top-left.php'; ?>
-		<?php include_once 'top-middle.php'; ?>
-		<?php include_once '../includes/top-right.php'; ?>
+		<?php 
+		include_once '../includes/top-right.php';
+		include_once '../includes/top-left.php';
+		include_once 'top-middle.php'; 
+		?>
+
 	</div>
 	<div class="ws"></div>
 	<!-- NAVIGATION TABS -->
@@ -184,7 +187,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	$summary = 1, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
-	$strcols = ($finished == 0 && empty($system)) ? 'col-sm-8 ' : '';
+	$strcols = ($finished == 0 && empty($system)) ? 'col-md-8 ' : '';
 	
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
@@ -239,7 +242,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// create a new database connection
 	$database = new Database();
 	// create object instances
-	$users = new Users($database);
+	//$users = new Users($database);
 	$rescue = new Rescue($database);
 	
 	$status = $row['status'];
@@ -255,7 +258,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. $row['requestdate'] .'</td>';
+	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate']))  .'</td>';
 	
 	// System - name of J-space system
 	if (empty($system)) {
@@ -269,6 +272,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// Pilot - display stranded pilot's name only to coords and relevant agents
 	// check for related SAR Agent
 	$colspan++;
+	/*
 	$isSARAgent = $users->isSARAgent($charname, $row['id']);
 	$isRescueAgent = $users->isRescueAgent($charname, $row['id']);
 	if ($isCoord == 0 && $isSARAgent == 0 && $isRescueAgent == 0) {
@@ -278,7 +282,10 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	}
-	
+	*/
+	echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
+				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
+				
 	// Status 
 	// set status color: green = new, yellow = pending, orange = check-in needed
 	switch ($status) {
@@ -301,7 +308,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
+	echo '<td style="text-nowrap">'. date("m-d-y H:i", strtotime($row['lastcontact']))  .'</td>';
 	
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 	if ($summary == 0) {

@@ -5,7 +5,7 @@
     <div class="modal-content">
       <div class="modal-header tender">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">Tender</h4>
+        <h4 class="modal-title">Tender</h4>
       </div>
       <form name="tendform" id="tendform" action="process_tend.php" method="POST">
 	      <div class="modal-body black">

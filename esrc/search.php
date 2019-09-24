@@ -130,9 +130,10 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 <div class="container">
 
 <div class="row" id="header" style="padding-top: 10px;">
+	<?php include_once '../includes/top-right.php'; ?>
 	<?php include_once '../includes/top-left.php'; ?>
 	<?php include_once 'top-middle.php'; ?>
-	<?php include_once '../includes/top-right.php'; ?>
+
 </div>
 <div class="ws"></div>
 <!-- NAVIGATION TABS -->
@@ -144,7 +145,7 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 if (!empty($errmsg)) {
 ?>
 	<div class="row" id="errormessage" style="background-color: #ff9999;">
-		<div class="col-sm-12 message">
+		<div class="col-md-12 message">
 			<?php echo nl2br($errmsg); ?>
 		</div>
 	</div>
@@ -163,13 +164,13 @@ if (!empty($system)) {
 		$statuscellformat = '';
 		switch ($row ['Status']) {
 			case 'Healthy':
-				$statuscellformat = ' style="background-color:green;color:white;"';
+				$statuscellformat = ' style="color:rgba(90, 230, 90, 1);"';
 				break;
 			case 'Upkeep Required':
-				$statuscellformat = ' style="background-color:yellow;color:black;"';
+				$statuscellformat = ' style="color:yellow;"';
 				break;
 			case 'Locals Tend':
-				$statuscellformat = ' style="background-color:#fffacd;color:black;"';
+				$statuscellformat = ' style="color:#fffacd;"';
 				break;
 			default:
 				$statuscellformat = '';
@@ -179,10 +180,10 @@ if (!empty($system)) {
 		?>
 		<!-- action button row -->
 		<div class="row" id="systableheader">
-		<div class="col-sm-12">
+		<div class="col-md-12">
 		<div style="padding-left: 10px;">
 		<!-- System Name display -->
-		<span class="systemName"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+		<p class="systemName"><? echo($system . "<span $statuscellformat> " . $row ['Status'] . "</span>") ?></p>
 		<!-- TEND button -->
 		<?php
 		$strTended = '';
@@ -195,19 +196,19 @@ if (!empty($system)) {
 			$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
 		}?>
 		<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
-			Tend<?=$strTended?></button>&nbsp;&nbsp;&nbsp;
+			Tend<?=$strTended?></button>
 		<!-- AGENT button -->
 		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
-			data-target="#AgentModal">Agent</button>&nbsp;&nbsp;&nbsp;
+			data-target="#AgentModal">Agent</button>
 		<!-- SAR New button -->
 		<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
-			role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
+			role="button">New SAR</a>
 		<!-- TW button -->
 		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
-			role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+			role="button" target="_blank">Tripwire</a>
 		<!-- anoik.is button -->
 		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
-			target="_blank">anoik.is</a>&nbsp;&nbsp;&nbsp;
+			target="_blank">anoik.is</a>
 		<!-- Chains and Edit buttons, if relevant -->
 		<?php
 		// "chains" button is Coord-only
@@ -227,7 +228,7 @@ if (!empty($system)) {
 		</div>
 		</div>
 		<div class="row" id="systable">
-			<div class="col-sm-12">
+			<div class="col-md-12">
 				<!-- DETAIL RECORD -->
 				<table class="table" style="width: auto;">
 					<thead>
@@ -247,7 +248,7 @@ if (!empty($system)) {
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
-					<td><input type="text" id="cachepass1" style="color:black; width:125px;"
+					<td><input type="text" id="cachepass1" style="width:125px;"
 							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
 							<i id="copyclip" class="fa fa-clipboard" 
 								onClick="SelectAllCopy('cachepass1')"></i>
@@ -272,40 +273,47 @@ if (!empty($system)) {
 				// yes, create a link to the data entry page
 				?>
 			<div class="row" id="systableheader">
-			<div class="col-sm-12">
-			<div style="padding-left: 10px;">
-			<!-- System Name display -->
-			<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
-			<!-- SOW button  -->
-			<?php 
-			//check pilot status
-			if ($pilotLocStat == '') { 
-				$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
-			} ?>
-			<span class="sechead white">No cache</span>&nbsp;&nbsp;&nbsp;
-			<button type="button" class="btn btn-success btn-lg" role="button" <?=$strBtnAttrib?>>
-				Sow one now</button>&nbsp;&nbsp;&nbsp;
-			<!-- SAR New button -->
-			<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
-				role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
-			<!-- TW button -->
-			<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" 
-				class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
-			<!-- anoik.is button -->
-			<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
-				role="button" target="_blank">anoik.is</a>
-			<br />
-			<!-- Name for new cache -->
-			<input type="text" id="cachename2" style="color:black; width:650px; margin-top: 5px;"
-				value="EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel." readonly />
-				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachename2')"></i> 
-				&lt;&lt; Copy name<br />
-			<!-- Password for new cache -->
-			<input type="text" id="cachepass2" style="color:black; width:125px; margin-top: 5px;"
-				value="<?=$cachepass?>" readonly />
-				<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass2')"></i> 
-				&lt;&lt; Copy password
-			</div></div></div>
+				<div class="col-md-12">
+					<div style="padding-left: 10px;">
+						<!-- System Name display -->
+						
+						<p class="systemName"><? echo($system . "<span style=\"color: red;\"> No Cache</span>") ?></p>
+					
+						
+						
+						<!-- SOW button  -->
+						<?php 
+						//check pilot status
+						if ($pilotLocStat == '') { 
+							$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
+						} ?>
+						
+						<button type="button" class="btn btn-success" role="button" <?=$strBtnAttrib?>>
+							Sow New Cache</button>&nbsp;&nbsp;&nbsp;
+						<!-- SAR New button -->
+						<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
+							role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
+						<!-- TW button -->
+						<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" 
+							class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
+						<!-- anoik.is button -->
+						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
+							role="button" target="_blank">anoik.is</a>
+						<br />
+						
+						<!-- Name for new cache -->
+						<input type="text" id="cachename2" style="width:620px; margin-top: 5px;"
+							value="EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel." readonly />
+							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachename2')"></i>
+							<br />
+							
+						<!-- Password for new cache -->
+						<input type="text" id="cachepass2" style="width:125px; margin-top: 5px;"
+							value="<?=$cachepass?>" readonly />
+							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachepass2')"></i>
+					</div>
+				</div>
+			</div>
 			<br />
 
 			<?php 
@@ -313,9 +321,9 @@ if (!empty($system)) {
 			else {
 				?>	
 			<div class="row" id="systableheader">
-			<div class="col-sm-12">
+			<div class="col-md-12">
 			<div style="padding-left: 10px;">
-				<span class="sechead white">Upon request of the current wormhole residents, 
+				<span class="subhead white">Upon request of the current wormhole residents, 
 					caches are not to be sown in <?=$system?> until 
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
@@ -328,9 +336,9 @@ if (!empty($system)) {
 			// wrong system name length
 			?>
 			<div class="row" id="systableheader">
-			<div class="col-sm-12">
+			<div class="col-md-12">
 			<div style="padding-left: 10px;">
-				<span class="sechead white">'<?=$system?> not a valid system name. 
+				<span class="subhead white">'<?=$system?> not a valid system name. 
 					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
 			</div></div></div>
 		<?php
@@ -387,19 +395,19 @@ if (!empty($system)) {
 	$systemActivities = $systems->getSystemActivities($system);
 	if (!empty($systemActivities)) {
 		echo '<div class="row" id="historytable">';
-		echo '<div class="col-sm-12">';
+		echo '<div class="col-md-12">';
 		echo '<div style="padding-left: 0px;">';
-		echo '<br /><span class="sechead">HISTORY</span><br />';
+		echo '<br /><span class="subhead">HISTORY</span><br />';
 		echo '<table class="table" style="width: auto;">
 				<thead>
 					<tr>
-						<th class="white">Sown/Tended</th>
+						<th class="white"> </th>
 						<th class="white">Pilot</th>
 						<th class="white">Type</th>
 						<th class="white">Location</th>
-						<th class="white">Aligned With</th>
+						<th class="white">Align</th>
 						<th class="white">Distance</th>
-						<th class="white">Expires On</th>
+						<th class="white">Expires</th>
 						<th class="white">Note</th>
 					</tr>
 				</thead>
