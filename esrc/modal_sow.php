@@ -1,7 +1,7 @@
 <!-- Sower Modal Form -->
 
 <?php 
-$locopts = $systems_top->getSowLocations($system);
+$locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 ?>
 <div id="SowModal" class="modal fade" role="dialog">
   <div class="modal-dialog">

@@ -351,8 +351,6 @@ if (!empty($system)) {
 			if (isset($system) && $system!= '') {
 				echo '<strong class="white">';
 				// display system info and notes (if any)
-				$sysNoteRow = $systems_top->getWHInfo($system);
-				$arrSysnotes = $systems_top->getSystemNotes($system);
 				$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
 					<i class="white"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
 

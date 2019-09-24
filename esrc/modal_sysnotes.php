@@ -23,7 +23,7 @@
                 if ($isCoord) { 
                     echo ' | <a href="' . $phpPage . '?sys=' . $system . '&noteid=' . $val['id'] . '&notedel=1">delete</a>';
                 }
-                echo '<br />'. $val['note'] .'<br />';
+                echo '<br />'. Output::htmlEncodeString($val['note']) .'<br />';
                 echo '</div><br />';
             }
             ?>

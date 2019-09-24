@@ -159,7 +159,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
-							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							<a target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
@@ -174,7 +174,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							$ctradj++;
 							break;
 					}
-					echo '<td><a href="search.php?sys='. $value['System'] .'" target="_blank">'. 
+					echo '<td><a href="/esrc/search.php?sys='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
 					echo '<td><a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['AidedPilot'] .'">'. 
