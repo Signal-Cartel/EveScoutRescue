@@ -90,14 +90,14 @@ $locopts = $systems_top->getSowLocations($system);
     <div class="modal-content">
       <div class="modal-header sower">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">Edit Cache Info</h4>
+        <h4 class="modal-title">Edit Cache Info</h4>
       </div>
       <form name="editform" id="editform" action="modal_edit.php" method="POST">
 	      <div class="modal-body black">
 			<div class="form-group">
 				<label class="control-label" for="sys_edit">System: </label>
 				<input type="hidden" name="sys_edit" value="<?php echo $system ?>" />
-				<span class="sechead"><?php echo $system ?></span>
+				<span class="subhead"><?php echo $system ?></span>
 			</div>
 
             <div class="field form-group">

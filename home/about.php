@@ -31,9 +31,10 @@ $users = new Users($database);
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 <?php
+include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
+
 ?>
 </div>
 <div class="ws"></div>

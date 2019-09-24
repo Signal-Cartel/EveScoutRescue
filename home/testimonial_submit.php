@@ -45,15 +45,16 @@ function test_input($data)
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 <?php
+include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
+
 ?>
 </div>
 <div class="ws"></div>
 
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h2 class="pull-left">Submit Your Testimonial</h2>

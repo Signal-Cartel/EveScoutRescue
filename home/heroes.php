@@ -31,9 +31,10 @@ $rowsInsane = $pilot->getMedals('6');
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 <?php
+include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
 include_once '../includes/top-center.php';
-include_once '../includes/top-right.php';
+
 ?>
 </div>
 <div class="ws"></div>
@@ -50,7 +51,7 @@ include_once '../includes/top-right.php';
 function printESRCHeroes($type, $min, $rows) 
 { 
 ?>
-	<div class="col-sm-4">
+	<div class="col-md-4">
 		<h2 style="text-align: center;"><?=$type?></h2>
 		<p style="text-align: center;">Awarded to pilots upon sowing or tending 
 			<?=$min?> rescue caches.<br />

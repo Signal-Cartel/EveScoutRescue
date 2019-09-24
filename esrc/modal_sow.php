@@ -9,14 +9,14 @@ $locopts = $systems_top->getSowLocations($system);
     <div class="modal-content">
       <div class="modal-header sower">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">Sower</h4>
+        <h4 class="modal-title">Sower</h4>
       </div>
       <form name="sowform" id="sowform" action="process_sow.php" method="POST">
 	      <div class="modal-body black">
 			<div class="form-group">
 				<label class="control-label" for="sys_sow">System: </label>
 				<input type="hidden" name="sys_sow" value="<?php echo $system ?>" />
-				<span class="sechead"><?php echo $system ?></span>
+				<span class="subhead"><?php echo $system ?></span>
 				<span class="descr" style="width: 100%;">
 					<p id="cachename2">
 						EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel.

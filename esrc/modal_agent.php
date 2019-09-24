@@ -11,7 +11,7 @@ $cacheid = $rowAgent['CacheID'];
     <div class="modal-content">
       <div class="modal-header adjunct">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">Agent</h4>
+        <h4 class="modal-title">Agent</h4>
       </div>
       <form name="agentform" id="agentform" action="process_agent.php" method="POST">
 	      <div class="modal-body black">
