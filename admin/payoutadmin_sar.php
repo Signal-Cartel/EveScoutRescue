@@ -141,7 +141,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							date("Y-m-d", strtotime($value['requestdate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
-							<a target="_blank" href="personal_stats.php?pilot='. 
+							<a target="_blank" href="/esrc/personal_stats.php?pilot='. 
 								urlencode($value['startagent']) .'">'. 
 								$value['startagent'] .'</a> - <a target="_blank" 
 								href="https://evewho.com/pilot/'. $value['startagent'] .'">EG</a></td>';
@@ -174,7 +174,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							$ctrdeclined++;
 							break;
 					}
-					echo '<td><a href="rescueoverview.php?sys='. $value['system'] .'" target="_blank">'. 
+					echo '<td><a href="/esrc/rescueoverview.php?sys='. $value['system'] .'" target="_blank">'. 
 							$value['system'] .'</a></td>';
 					echo '<td><a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['pilot'] .'">'. 

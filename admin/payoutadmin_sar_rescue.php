@@ -138,11 +138,11 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 					echo '<td><a target="_blank"
 							href="https://evewho.com/pilot/'. $value['pilot'] .'">'.
 							Output::htmlEncodeString($value['pilot']) .'</td>';
-					echo '<td><a href="rescueoverview.php?sys='. ucfirst($value['system']) .
+					echo '<td><a href="/esrc/rescueoverview.php?sys='. ucfirst($value['system']) .
 							'" target="_blank">'. ucfirst($value['system']) .'</a></td>';
 					if (!empty($value['locateagent'])) {
 						echo '<td class="text-nowrap">
-							<a target="_blank" href="personal_stats.php?pilot='.
+							<a target="_blank" href="/esrc/personal_stats.php?pilot='.
 							urlencode($value['locateagent']) .'">'.
 							$value['locateagent'] .'</a> - <a target="_blank"
 							href="https://evewho.com/pilot/'. $value['locateagent'] .'">EG</a></td>';
@@ -216,7 +216,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 						$payoutmax = ($basepay*$whclassmult)+(intval($value['daystosar'])*$dailyincrease);
 						echo '<tr>';
 						echo '<td><a target="_blank"
-								href="rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
+								href="/esrc/rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
 								Output::htmlEncodeString(ucfirst($value['system'])) .'</a>
 								<span class="white">(50mil x '. 
 									intval(substr($value['Class'], -1)) .') + 
