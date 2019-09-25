@@ -124,6 +124,23 @@ if (isset($_POST['sys_sow'])) {
 		// create a new cache activity
 		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
 
+		// check active cache total and notify on discord if = 2122
+		$live_active_cache_count = $caches->getLiveActiveCount();
+		if ($live_active_cache_count == 2122 ){
+			include_once '../class/discord.class.php';
+			$discord = new Discord($db);
+			// esrc coordinators channel
+			$webhook = 'https://discordapp.com/api/webhooks/332632705542127616/svEATTzqXbaDUi7pa0Ybf_FTfH9byR2XV_LDVjAIcUcWkqCh6ncSVLKKLKnFAtYGFY_Q';
+			// devest channel
+			//$webhook = 'https://discordapp.com/api/webhooks/535459506721914940/XaauF25rKQE5rQYnfYqFjkQRoPfdrBKAa1WGlRIdY1zh2Z6qJ3yiTjYOr7WH1CB7ciX-';
+			$user = 'Igazebot';
+			$alert = 0;
+			$message = "<@303907284126531584>  $pilot just sowed active cache number $live_active_cache_count in $system.";
+			$skip_the_gif = 1;
+			$discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);
+		}
+		
+		
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
 	}
