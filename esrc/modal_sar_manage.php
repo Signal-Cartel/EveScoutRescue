@@ -1,6 +1,6 @@
 <!-- SAR Edit/Update Modal Form -->
 
-<?php 
+<?php
 // prepare DB object
 $database = new Database();
 // create the query
@@ -34,7 +34,7 @@ $request = $rescue->getRequest($reqID);
 				<tr>
 					<td align="right">Stranded Pilot:</td>
 					<td><strong>
-						<?php 
+						<?php
 						// display pilot name only to coordinators
 						if ($isCoord == 0)
 						{
@@ -69,10 +69,10 @@ $request = $rescue->getRequest($reqID);
 					<td><strong><?=Output::getEveDate($request['lastcontact'])?></strong></td>
 				</tr>
 			</table>
-			
+
 			<hr>
-			<?php 
-			// display Last Contact checkbox and Status dropdown only to coordinators 
+			<?php
+			// display Last Contact checkbox and Status dropdown only to coordinators
 			if ($isCoord == 1)
 			{
 			?>
@@ -102,10 +102,19 @@ $request = $rescue->getRequest($reqID);
 					<option value="closed-dup" <?php if ($request['status'] === 'closed-dup') { echo ' selected="selected"'; } ?>>Closed - duplicate</option>
 				</select>
 			</div>
+			<div class="field">
+					<!-- should we check if mail already sent? -->
+					<?php if ($request['status'] === 'closed-esrc') { ?>
+							<label for="followup" class="pull-right">
+									<strong>Rescue Follow-up Mail&nbsp;</strong>
+									<a href="rescue_success_mail.php?req=<?=$reqID?>" id="followup" class="btn btn-info" role="button">Create</a>
+							</label>
+					<?php } ?>
+			</div>
 			<div class="ws"></div>
-			<?php 
+			<?php
 			}
-			else 
+			else
 			{
 			?>
 				<input type="hidden" name="status" id="status" value="<?=$request['status']?>">
