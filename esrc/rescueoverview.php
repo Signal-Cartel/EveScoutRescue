@@ -175,6 +175,7 @@ if (!empty($system)) {
 	$data = $rescue->getSystemRequests($system, 1, $isCoord);
 	displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
 	}
+	
 	// invalid system name
 	else { ?>
 	<div class="row">
@@ -359,7 +360,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate'])) .'</td>';
+	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['requestdate'])) .'</td>';
 	
 	// System - name of J-space system
 	if (empty($system)) {
@@ -437,7 +438,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['lastcontact'])) .'</td>';
+	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['lastcontact'])) .'</td>';
 	
 	// Bounty - display max payout available for a successful locate/rescue in this system
 	// display only in "summary" tables
@@ -500,7 +501,7 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 		foreach($notes as $note) {
 			echo '<div style="padding-left: 2em; text-indent: -2em;">';
 			//echo '['. Output::getEveDatetime($note['notedate']) .' // ';
-			echo '['. date("M-d H:i", strtotime($note['notedate'])) .' // '; 
+			echo '['. date("Y-m-d H:i", strtotime($note['notedate'])) .' // '; 
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
 			echo Output::htmlEncodeString($note['note']) .'<br />';
 			echo '</div><br />';
