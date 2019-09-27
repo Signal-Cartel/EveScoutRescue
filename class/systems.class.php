@@ -201,15 +201,16 @@ class Systems {
 	 */
 	public function getActiveCacheParticipants($system)
 	{
-			$queryString = "SELECT Distinct Pilot
-					FROM activity
-					WHERE System = :system
-					AND ActivityDate >= (SELECT ActivityDate
-							FROM activity
-							WHERE System = :systemII
-							And EntryType = 'sower'
-							ORDER By ActivityDate ASC
-							LIMIT 1) ORDER By ActivityDate ASC";
+			$queryString = "SELECT Pilot, EntryType, DATE_FORMAT(MAX(ActivityDate), '%b-%d-%Y') LastActivity
+											FROM activity
+											WHERE System = :system
+											AND ActivityDate >=
+												(SELECT MAX(ActivityDate) as LastActivity
+													FROM activity
+													WHERE System = :systemII
+													AND EntryType = 'sower')
+											GROUP BY Pilot
+											ORDER BY MAX(ActivityDate)";
 
 			$this->db->query($queryString);
 			$this->db->bind(':system', $system);
