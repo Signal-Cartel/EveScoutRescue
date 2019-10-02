@@ -12,7 +12,7 @@ $db = new Database();
 $caches = new Caches($database);
 
 // get count of active caches
-$cnt = $caches->getActiveCount();
+$cnt = $caches->getLiveActiveCount();
 
 // INSERT current cnt into [activecaches] table
 $errmsg = '';
