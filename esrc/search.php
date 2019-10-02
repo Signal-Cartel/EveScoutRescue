@@ -129,7 +129,7 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 <body class="white" style="background-color: black;">
 <div class="container">
 
-<div class="row" id="header" style="padding-top: 10px;">
+<div class="row" id="header" style="padding-top: 20px;">
 	<?php include_once '../includes/top-right.php'; ?>
 	<?php include_once '../includes/top-left.php'; ?>
 	<?php include_once 'top-middle.php'; ?>

@@ -26,8 +26,8 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 						value="<?php echo isset($system) ? $system : '' ?>">
 				</div>
 				<div class="clearit">
-					<button type="submit" class="btn btn-md">Search</button>
-					&nbsp;&nbsp;&nbsp;<a href="?">clear system</a>
+					<button type="submit" class="btn btn-success">Search</button>
+					<a class="btn btn-info" href="?"><small>Clear</small></a>
 				</div>
 			</form>
 		</div>

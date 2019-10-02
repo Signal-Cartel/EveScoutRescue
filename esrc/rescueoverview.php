@@ -108,7 +108,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 <body class="white" style="background-color: black;">
 	<div class="container">
 	
-	<div class="row" id="header" style="padding-top: 10px;">
+	<div class="row" id="header" style="padding-top: 20px;">
 		<?php 
 		include_once '../includes/top-right.php'; 
 		include_once '../includes/top-left.php';
