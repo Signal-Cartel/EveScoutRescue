@@ -33,14 +33,15 @@ body::before {
     background-size: cover;
 }
 
-/* The animation code 
-@keyframes bkgndmove {
-  0% {left: -20;}
-  50% {left: 20;}
-  75% {top: 15;}
-  100% {top: -15;}
+
+
+.login {
+  background: url(../img/EVE_SSO_Login_Buttons_Small_Black.png) no-repeat 6px center;
+  width: 200px;
+  height: 50px;
+  display: block;
 }
-*/
+
 
 #copyclip {
     position: relative;
@@ -220,6 +221,11 @@ textarea {
     border-color: rgba(59, 214, 71, 0.41);
     border-radius: 6px;
     padding: 1px 6px;
+}
+select option{
+	color: #eeeeee;
+    background-color: #282626;
+    font-weight: 700;
 }
 
 button.close {

@@ -21,8 +21,9 @@ if (isset($_SESSION['auth_characterid'])) {
 
 //populate display string for non-authenticated users
 else {
-	$chardiv  = '<a href="../auth/login.php">'.
-				'<img src="../img/EVE_SSO_Login_Buttons_Small_Black.png"></a>';
+	//$chardiv  = '<a href="../auth/login.php">'. '<img src="../img/EVE_SSO_Login_Buttons_Small_Black.png"></a>';
+	$chardiv  =	'<a class="login" href="../auth/login.php"></a>';		
+				
 }
 
 // Only run through auth routines if we are NOT on localhost
