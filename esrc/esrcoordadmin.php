@@ -27,7 +27,7 @@ if (!Users::isAllianceUserSession())
 		// set redirect to requested path
 		$_redirect_uri = $_SERVER['REQUEST_URI'];
 	}
-	
+
 	// void the session entries on 'attack'
 	session_unset();
 	// save the redirect URL to current page
@@ -50,11 +50,11 @@ if (!isset($charname)) {
 <html>
 
 <head>
-	<?php 
+	<?php
 	$pgtitle = 'SAR Requests';
-	require_once '../includes/head.php'; 
+	require_once '../includes/head.php';
 	?>
-	
+
 	<style>
 		.sartable th, td {
 		    padding: 4px;
@@ -73,7 +73,7 @@ if (!isset($charname)) {
 			color: aqua;
 		}
 	</style>
-	
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 		    $('#tblClosed').DataTable( {
@@ -106,12 +106,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 ?>
 <body class="white">
 	<div class="container">
-	
+
 	<div class="row" id="header" style="padding-top: 20px;">
 		<?php 
 		include_once '../includes/top-right.php';
 		include_once '../includes/top-left.php';
-		include_once 'top-middle.php'; 
+		include_once 'top-middle.php';
 		?>
 
 	</div>
@@ -119,8 +119,8 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	<!-- NAVIGATION TABS -->
 	<?php include_once 'navtabs.php'; ?>
 	<div class="ws"></div>
-	
-	<?php 
+
+	<?php
 	if ($isCoord == 1) {
 		echo '<div class="ws"></div>';
 		// closed requests
@@ -132,12 +132,12 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 </body>
 </html>
 
-<?php 
+<?php
 /**
  * Translates the internal status value to a readable form.
- * 
+ *
  * Note: May be move to a central place later if used more than once.
- * 
+ *
  * @param unknown $status
  * @return string|unknown
  */
@@ -165,7 +165,7 @@ function translateStatus($status)
 		break;
 		case 'closed-dup' : $result = "Declined - duplicate";
 		break;
-		
+
 		default:
 			$result = ucfirst($status);
 		break;
@@ -183,19 +183,19 @@ function translateStatus($status)
  * @param number summary - bit to toggle summary/detailed table listing
  * @param number noUpdate - bit to toggle Update button
  */
-function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, 
+function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0,
 	$summary = 1, $noUpdate = 0)
 {
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
 	$strcols = ($finished == 0 && empty($system)) ? 'col-md-8 ' : '';
-	
+
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
 	echo '<span class="sechead">'. $strStatus .' Requests</span>';
 	if (empty($data)) {
 		echo '<p>None for this system.</p>';
-	} 
-	else { 
+	}
+	else {
 		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
 		echo '	<thead>';
 		echo '		<tr>';
@@ -244,22 +244,22 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// create object instances
 	//$users = new Users($database);
 	$rescue = new Rescue($database);
-	
+
 	$status = $row['status'];
 	$colspan = 0;
-	
+
 	echo "<tr>";
-	
+
 	// "Update" button - display only for finished requests if coord logged in
 	if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
-		echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
+		echo '<td><a type="button" class="btn btn-danger" role="button" href="rescueoverview.php?sys='.
 				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 	}
-	
+
 	// Opened - date request was created
 	$colspan++;
 	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate']))  .'</td>';
-	
+
 	// System - name of J-space system
 	if (empty($system)) {
 		$colspan++;
@@ -268,7 +268,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 				Output::htmlEncodeString($row['system']).'</a>';
 		echo '</td>';
 	}
-			
+
 	// Pilot - display stranded pilot's name only to coords and relevant agents
 	// check for related SAR Agent
 	$colspan++;
@@ -279,14 +279,14 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		echo '<td><b>PROTECTED</b></td>';
 	}
 	else {
-		echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
+		echo '<td><a target="_blank" href="https://evewho.com/pilot/'.
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
 	}
 	*/
-	echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
+	echo '<td><a target="_blank" href="https://evewho.com/pilot/'.
 				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
-				
-	// Status 
+
+	// Status
 	// set status color: green = new, yellow = pending, orange = check-in needed
 	switch ($status) {
 		case 'new':
@@ -305,23 +305,23 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	$colspan++;
 	echo '<td'. $statuscellformat .'>'.
 			Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
-	
+
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
 	echo '<td style="text-nowrap">'. date("m-d-y H:i", strtotime($row['lastcontact']))  .'</td>';
-	
+
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 	if ($summary == 0) {
 		// Dispatcher - display name of Signaleer who opened request
 		$colspan++;
 		echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
-		
+
 		// Locator - display name of Signaleer who located system (if any)
 		$colspan++;
 		echo '<td>';
 		echo (empty($row['locateagent'])) ? 'N/A' : Output::htmlEncodeString($row['locateagent']);
 		echo '</td>';
-		
+
 		// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
 		$colspan++;
 		$arrRescueAgents = $rescue->getRescueAgents($row['id']);
@@ -330,7 +330,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			echo $value['pilot'] .'<br />';
 		}
 		echo '</td>';
-		
+
 		// NOTES
 		if ($notes == 1 && ($isCoord == 1 || $isSARAgent == 1 || $isRescueAgent == 1)) {
 			echo '</tr><tr>';
