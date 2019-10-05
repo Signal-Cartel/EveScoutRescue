@@ -409,3 +409,27 @@ img {
     color: #DC143C;
 }
 
+.rescueMailTitle {
+    text-align: center;
+    color: #FFFFFF;
+}
+.rescueMailSubtitle {
+    color: #FFFFFF;
+}
+.rescueMail {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.grid-container {
+    display: grid;
+    margin-bottom: 15px;
+    padding: 5px;
+    border: solid black 2px;
+}
+.eveMailBody {
+    min-width:500px;
+    max-width:100%;
+    width:100%;
+    min-height:350px;
+}

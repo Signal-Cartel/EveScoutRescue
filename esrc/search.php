@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
@@ -50,9 +50,9 @@ if (!Users::isAllianceUserSession())
 <html>
 
 <head>
-	<?php 
+	<?php
 	$pgtitle = 'ESRC Search';
-	include_once '../includes/head.php'; 
+	include_once '../includes/head.php';
 	?>
 </head>
 
@@ -77,7 +77,7 @@ $leaderBoard = new Leaderboard($database);
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 $system = '';
-if(isset($_REQUEST['sys'])) { 
+if(isset($_REQUEST['sys'])) {
 	$system = ucfirst(htmlspecialchars_decode($_REQUEST['sys']));
 }
 
@@ -115,7 +115,7 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 			if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
 				$pilotLocStat = 'not_in_system';
 				$strBtnAttrib = 'data-toggle="tooltip" title="You must be in or one jump out from '.
-					$system .' in order to perform this action, but you are in '. 
+					$system .' in order to perform this action, but you are in '.
 					$_SESSION['auth_char_location'].'"';
 			}
 		}
@@ -139,7 +139,7 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 <!-- NAVIGATION TABS -->
 <?php include_once 'navtabs.php'; ?>
 <div class="ws"></div>
- 
+
 <?php
 // display error message if there is one
 if (!empty($errmsg)) {
@@ -183,43 +183,43 @@ if (!empty($system)) {
 		<div class="col-md-12">
 		<div style="padding-left: 10px;">
 		<!-- System Name display -->
-		<p class="systemName"><? echo($system . "<span $statuscellformat> " . $row ['Status'] . "</span>") ?></p>
+		<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>"?></p>
 		<!-- TEND button -->
 		<?php
 		$strTended = '';
 		if (0 == $caches->isTendingAllowed($system)) {
 			$strTended = ' <i class="white fa fa-clock-o"></i>';
 		}
-		
+
 		//check pilot status
-		if ($pilotLocStat == '') { 
+		if ($pilotLocStat == '') {
 			$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
 		}?>
 		<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
 			Tend<?=$strTended?></button>
 		<!-- AGENT button -->
-		<button type="button" class="btn btn-warning" role="button" data-toggle="modal" 
+		<button type="button" class="btn btn-warning" role="button" data-toggle="modal"
 			data-target="#AgentModal">Agent</button>
 		<!-- SAR New button -->
-		<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
+		<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger"
 			role="button">New SAR</a>
 		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
+		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
 			role="button" target="_blank">Tripwire</a>
 		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
+		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
 			target="_blank">anoik.is</a>
 		<!-- Chains and Edit buttons, if relevant -->
 		<?php
 		// "chains" button is Coord-only
 		if ($isCoord) {
-			echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info" 
+			echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
 				role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
 		}
 		//edit function only available to Coordinators and recent sowers
 		$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
 		if ($isCoord || $isRecentSower) {
-			echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal" 
+			echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
 				data-target="#EditModal">Edit Cache</button>';
 		}
 		?>
@@ -250,7 +250,7 @@ if (!empty($system)) {
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
 					<td><input type="text" id="cachepass1" style="width:125px;"
 							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
-							<i id="copyclip" class="fa fa-clipboard" 
+							<i id="copyclip" class="fa fa-clipboard"
 								onClick="SelectAllCopy('cachepass1')"></i>
 					</td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
@@ -260,14 +260,14 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
-	<?php 
+	<?php
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
 		// check for valid system name
 		if ($systems->validatename($system) === 0) {
 			$lockedDate = $systems->locked($system);
-			
+
 			if (!isset($lockedDate))
 			{
 				// yes, create a link to the data entry page
@@ -276,37 +276,37 @@ if (!empty($system)) {
 				<div class="col-md-12">
 					<div style="padding-left: 10px;">
 						<!-- System Name display -->
-						
+
 						<p class="systemName"><? echo($system . "<span style=\"color: red;\"> No Cache</span>") ?></p>
-					
-						
-						
+
+
+
 						<!-- SOW button  -->
-						<?php 
+						<?php
 						//check pilot status
-						if ($pilotLocStat == '') { 
+						if ($pilotLocStat == '') {
 							$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
 						} ?>
-						
+
 						<button type="button" class="btn btn-success" role="button" <?=$strBtnAttrib?>>
 							Sow New Cache</button>&nbsp;&nbsp;&nbsp;
 						<!-- SAR New button -->
-						<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger" 
+						<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger"
 							role="button">New SAR</a>&nbsp;&nbsp;&nbsp;
 						<!-- TW button -->
-						<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" 
+						<a href="https://tripwire.eve-apps.com/?system=<?=$system?>"
 							class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 						<!-- anoik.is button -->
-						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" 
+						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info"
 							role="button" target="_blank">anoik.is</a>
 						<br />
-						
+
 						<!-- Name for new cache -->
 						<input type="text" id="cachename2" style="width:620px; margin-top: 5px;"
 							value="EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel." readonly />
 							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('cachename2')"></i>
 							<br />
-							
+
 						<!-- Password for new cache -->
 						<input type="text" id="cachepass2" style="width:125px; margin-top: 5px;"
 							value="<?=$cachepass?>" readonly />
@@ -316,29 +316,29 @@ if (!empty($system)) {
 			</div>
 			<br />
 
-			<?php 
-			} 
+			<?php
+			}
 			else {
-				?>	
+				?>
 			<div class="row" id="systableheader">
 			<div class="col-md-12">
 			<div style="padding-left: 10px;">
-				<span class="subhead white">Upon request of the current wormhole residents, 
-					caches are not to be sown in <?=$system?> until 
+				<span class="subhead white">Upon request of the current wormhole residents,
+					caches are not to be sown in <?=$system?> until
 					<?=date("Y-M-d", strtotime($lockedDate))?>.
 				</span>
 			</div></div></div>
 				<?php
 			}
 		}
-		else 
+		else
 		{
 			// wrong system name length
 			?>
 			<div class="row" id="systableheader">
 			<div class="col-md-12">
 			<div style="padding-left: 10px;">
-				<span class="subhead white">'<?=$system?> not a valid system name. 
+				<span class="subhead white">'<?=$system?> not a valid system name.
 					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
 			</div></div></div>
 		<?php
@@ -347,29 +347,29 @@ if (!empty($system)) {
 
 ?>
 		<div class="notesRow">
-			<?php 
+			<?php
 			if (isset($system) && $system!= '') {
 				echo '<strong class="white">';
 				// display system info and notes (if any)
 				$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotesEdit">
 					<i class="white"><span class="white fa fa-plus">&nbsp;</span>New System Note</i></a>';
 
-				if (!empty($arrSysnotes)) { 
+				if (!empty($arrSysnotes)) {
 					$strSysnotes = '&nbsp;<a href="#" data-toggle="modal" data-target="#ModalSysNotes">
-						<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes; 
+						<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;System Notes</i></a>&nbsp;' . $strSysnotes;
 				}
 				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
-				
+
 				if (!empty($strNotes)) {
 					echo '<a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
 				 		<i class="white"><span class="white fa fa-sticky-note">&nbsp;</span>&nbsp;Cache Notes</i></a>&nbsp;';
 				}
 				echo $strSysnotes . '</strong>';
 			}
-			?>			
+			?>
 		</div>
 		<?php if (!empty($strNotes)) { ?>
-		<div class="ws"></div>				
+		<div class="ws"></div>
 		<div class="collapse in" id="collapseExample">
 			<div class="card card-body">
 				<!-- DETAIL RECORD NOTE(S) -->
@@ -386,8 +386,8 @@ if (!empty($system)) {
 					</tbody>
 				</table>
 			</div>
-		</div>		
-		<?php 
+		</div>
+		<?php
 		}
 
 	//HISTORY
@@ -412,7 +412,7 @@ if (!empty($system)) {
 					</tr>
 				</thead>
 				<tbody>';
-		
+
 		foreach ($systemActivities as $activity) {
 			//get cache table data for sower records
 			$sowrow = '';
@@ -473,7 +473,7 @@ if (!empty($system)) {
 }
 // no system selected, so show summary stats
 else {
-	include_once 'stats_esrc.php'; 
+	include_once 'stats_esrc.php';
 } //if (isset($system))?>
 </div>
 
@@ -490,7 +490,7 @@ include 'modal_edit.php';
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
-	}	
+	}
 </script>
 
 </body>
