@@ -10,6 +10,13 @@ body::before {
     display: block;
     position: absolute;
     left: 0;
+	/*
+		animation-name: bkgndmove;
+		animation-duration: 20s;
+		animation-timing-function: linear;
+		animation-direction: alternate-reverse;
+		animation-iteration-count: infinite;
+	*/
     top: 0;
     width: 100%;
     height: 100%;
@@ -25,6 +32,16 @@ body::before {
     -webkit-background-size: cover;
     background-size: cover;
 }
+
+
+
+.login {
+  background: url(../img/EVE_SSO_Login_Buttons_Small_Black.png) no-repeat 6px center;
+  width: 200px;
+  height: 50px;
+  display: block;
+}
+
 
 #copyclip {
     position: relative;
@@ -204,6 +221,11 @@ textarea {
     border-color: rgba(59, 214, 71, 0.41);
     border-radius: 6px;
     padding: 1px 6px;
+}
+select option{
+	color: #eeeeee;
+    background-color: #282626;
+    font-weight: 700;
 }
 
 button.close {

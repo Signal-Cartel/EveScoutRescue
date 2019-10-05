@@ -60,7 +60,7 @@ $leaderBoard = new Leaderboard($database);
 			</table>
 
 	</div>
-	<div class="col-sm-4 white">
+	<div class="col-sm-5 white">
 		<!-- HALL OF HELP -->
 		<p><span class="subhead">HALL OF HELP</p>
 		<p>All participants, last 30 days<br/>Most recent first</p>
@@ -95,7 +95,7 @@ $leaderBoard = new Leaderboard($database);
 		</table>
 	</div>
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
-	<div class="col-sm-4 white">
+	<div class="col-sm-3 white">
 		<?php
 		$ctrrescues = $rescue->getRescueCount('closed-esrc');
 		$ctrsown = $caches->getSownTotalCount();

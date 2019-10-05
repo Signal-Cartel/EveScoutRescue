@@ -1,7 +1,7 @@
 <?php 
 $users = new Users($database);
 ?>
-<div class="col-md-8 white" style="text-align: center; padding: 12px;">
+<div class="col-sm-8 white" style="text-align: center; padding: 12px;">
 	<span class="sechead"><?=$pgtitle?></span><br /><br />
 	<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<a class="btn btn-primary btn-md" href="about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;

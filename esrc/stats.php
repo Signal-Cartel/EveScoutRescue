@@ -226,7 +226,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 <body class="white" style="background-color: black;">
 <div class="container">
 
-<div class="row" id="header" style="padding-top: 10px;">
+<div class="row" id="header" style="padding-top: 20px;">
 <?php 	
 // top right
 include_once '../includes/top-right.php';

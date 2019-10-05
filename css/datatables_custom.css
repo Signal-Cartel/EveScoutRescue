@@ -60,7 +60,7 @@ table.dataTable {
       background-color: #b0bed9; }
   table.dataTable tbody th,
   table.dataTable tbody td {
-    padding: 8px 10px; }
+    padding: 2px 4px; }
   table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
     border-top: 1px solid #dddddd; }
   table.dataTable.row-border tbody tr:first-child th,
@@ -228,14 +228,14 @@ table.dataTable td {
     float: left;
     padding-top: 0.755em; }
   .dataTables_wrapper .dataTables_paginate {
-    float: right;
-    text-align: right;
-    padding-top: 0.25em; }
+    text-align: center;
+    padding-top: 0.25em;
+	clear: both;	}
     .dataTables_wrapper .dataTables_paginate .paginate_button {
       box-sizing: border-box;
       display: inline-block;
       min-width: 1.5em;
-      padding: 0.5em 1em;
+      padding: 0em .5em;
       margin-left: 2px;
       text-align: center;
       text-decoration: none !important;
