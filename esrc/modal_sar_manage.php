@@ -107,7 +107,7 @@ $request = $rescue->getRequest($reqID);
 					<?php if ($request['status'] === 'closed-esrc') { ?>
 							<label for="followup" class="pull-right">
 									<strong>Rescue Follow-up Mail&nbsp;</strong>
-									<a href="rescue_success_mail.php?req=<?=$reqID?>" id="followup" class="btn btn-info" role="button">Create</a>
+									<a href="rescue_success_mail.php?req=<?=$reqID?>" target="ESRC-Mail" id="followup" class="btn btn-info" role="button">Create</a>
 							</label>
 					<?php } ?>
 			</div>

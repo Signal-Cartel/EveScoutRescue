@@ -61,16 +61,12 @@ if (!isset($charname)) {
 		    vertical-align: text-top;
 		}
 		.request a {
-			color: aqua;
+			color: #aaffaa;
 		}
-		.request a:link {
-			color: aqua;
-		}
-		.request a:visited {
-			color: aqua;
-		}
+
 		.request a:hover {
 			color: aqua;
+			text-decoration: none;
 		}
 	</style>
 
@@ -82,6 +78,7 @@ if (!isset($charname)) {
 		        "dom": 'lfprtip'
 		    } );
 		} );
+		
 	</script>
 </head>
 
@@ -252,10 +249,15 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 
 	// "Update" button - display only for finished requests if coord logged in
 	if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
-		echo '<td><a type="button" class="btn btn-danger" role="button" href="rescueoverview.php?sys='.
-				$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
+		echo '<td><a type="button" class="btn btn-primary" role="button" href="rescueoverview.php?sys='.
+			$row['system'].'&amp;req='.$row['id'].'"><small>Update<small></a>';		
+		if (translateStatus($row['status']) == 'Rescued - ESRC'){
+			echo '<a type="button" class="btn btn-primary" role="button" href="rescue_success_mail.php?sys='.
+			$row['system'].'&amp;req='.$row['id'].'" target="ESRC-Mail"><small>Mail<small></a>';			
+		}
+		echo '</td>';
 	}
-
+			
 	// Opened - date request was created
 	$colspan++;
 	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate']))  .'</td>';
