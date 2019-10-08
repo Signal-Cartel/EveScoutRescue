@@ -253,7 +253,11 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$row['system'].'&amp;req='.$row['id'].'"><small>Update<small></a>';		
 		if (translateStatus($row['status']) == 'Rescued - ESRC'){
 			echo '<a type="button" class="btn btn-primary" role="button" href="rescue_success_mail.php?sys='.
-			$row['system'].'&amp;req='.$row['id'].'" target="ESRC-Mail"><small>Mail<small></a>';			
+			$row['system'].'&amp;req='.$row['id'].'&typ=esrc" target="ESR-Mail"><small>Mail<small></a>';			
+		}
+		else if(translateStatus($row['status']) == 'Rescued - SAR'){
+			echo '<a type="button" class="btn btn-primary" role="button" href="rescue_success_mail.php?sys='.
+			$row['system'].'&amp;req='.$row['id'].'&typ=sar" target="ESR-Mail"><small>Mail<small></a>';				
 		}
 		echo '</td>';
 	}

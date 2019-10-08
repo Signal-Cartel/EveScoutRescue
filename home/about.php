@@ -21,15 +21,14 @@ $users = new Users($database);
 	$pgtitle = "About Us";
 	include_once '../includes/head.php';
 	?>
-	<style>
-		td.clean {
+	<style>td.clean {
 		    padding: 3px;
 		}
 		</style>
 </head>
 <body>
 <div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
+<div class="row" id="header" style="padding-top: 20px;">
 <?php
 include_once '../includes/top-right.php';
 include_once '../includes/top-left.php';
@@ -91,7 +90,7 @@ include_once '../includes/top-center.php';
 					}
 					echo '<div class="col-md-2"><div class="thumbnail text-center">';
 					echo '	<a href="https://evewho.com/pilot/'. urlencode($val['username']) .'">';
-					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_64.jpg" 
+					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_512.jpg" 
 						alt="'. urlencode($val['username']) .'" style="width:100%">';
 					echo '		<div class="caption"><strong>'. $val['username'] .'</strong></div></a></div></div>';
 					// increment counter
@@ -116,7 +115,7 @@ include_once '../includes/top-center.php';
 					}
 					echo '<div class="col-md-3"><div class="thumbnail text-center">';
 					echo '	<a href="https://evewho.com/pilot/'. urlencode($val['username']) .'">';
-					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_128.jpg" 
+					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_512.jpg" 
 						alt="'. urlencode($val['username']) .'" style="width:100%">';
 					echo '		<div class="caption"><strong>'. $val['username'] .'</strong></div></a></div></div>';
 				}
@@ -129,7 +128,7 @@ include_once '../includes/top-center.php';
 						<h2 style="text-align:center"><a href="https://www.signalcartel.com/copilot">ALLISON</a></h2>
 				    <div class="thumbnail text-center">
 				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
-				        <img src="https://image.eveonline.com/Character/96765374_256.jpg" alt="A.D. Parrot" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/96765374_512.jpg" alt="A.D. Parrot" style="width:100%">
 				        <div class="caption">
 				          <strong>A Dead Parrot</strong>
 				        </div>
@@ -141,7 +140,7 @@ include_once '../includes/top-center.php';
 						<h2 style="text-align:center">Director</h2>
 				    <div class="thumbnail text-center">
 						<a href="https://evewho.com/pilot/Igaze">
-				        <img src="https://image.eveonline.com/Character/1852974735_256.jpg" alt="Igaze" style="width:100%">
+				        <img src="https://image.eveonline.com/Character/1852974735_512.jpg" alt="Igaze" style="width:100%">
 				        <div class="caption">
 				          <strong>Igaze</strong>
 				        </div>
