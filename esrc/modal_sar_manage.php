@@ -57,7 +57,7 @@ $request = $rescue->getRequest($reqID);
 					<td><strong><?=Output::htmlEncodeString($request['startagent'])?></strong></td>
 				</tr>
 				<?php
-				// display closin agent only if status is closed
+				// display closing agent only if status is closed
 				if ($request['finished'] == 1) { ?>
 				<tr>
 					<td align="right">Closing Agent:</td>
@@ -106,11 +106,18 @@ $request = $rescue->getRequest($reqID);
 					<!-- should we check if mail already sent? -->
 					<?php if ($request['status'] === 'closed-esrc') { ?>
 							<label for="followup" class="pull-right">
-									<strong>Rescue Follow-up Mail&nbsp;</strong>
-									<a href="rescue_success_mail.php?req=<?=$reqID?>" target="ESRC-Mail" id="followup" class="btn btn-info" role="button">Create</a>
+									<strong>ESRC Follow-up Mail&nbsp;</strong>
+									<a href="rescue_success_mail.php?req=<?=$reqID?>&typ=esrc" target="ESR-Mail" id="followup" class="btn btn-info" role="button">Create</a>
 							</label>
 					<?php } ?>
-			</div>
+					<?php if ($request['status'] === 'closed-sar') { ?>
+							<label for="followup" class="pull-right">
+									<strong>SAR Follow-up Mail&nbsp;</strong>
+									<a href="rescue_success_mail.php?req=<?=$reqID?>&typ=sar" target="ESR-Mail" id="followup" class="btn btn-info" role="button">Create</a>
+							</label>
+					<?php } ?>
+
+					</div>
 			<div class="ws"></div>
 			<?php
 			}

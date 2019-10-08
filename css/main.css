@@ -1,6 +1,6 @@
 body {
     font-family: "Open Sans", sans-serif;
-    font-size: 14px;
+    font-size: 1.4em;
     background-color: black;
 }
 
@@ -308,6 +308,9 @@ img {
     overflow: hidden;
 }
 
+.thumbnail img{
+	opacity: 1;
+}
 
 /* END BS OVERRIDES*/
 

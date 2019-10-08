@@ -42,7 +42,7 @@ $charname = $_SESSION['auth_charactername'];
 // check if a valid character name is set
 if (!isset($charname)) {
 	// no, set a dummy char name
-	$charname = 'charname_not_set';
+	$charname = 'EvE-Scout Rescue Coordinator Team';
 }
 
 // prepare DB object
@@ -60,6 +60,8 @@ if (!$isCoord) {
 
 // get rescue id for query
 $reqID = (isset($_REQUEST['req'])) ? $_REQUEST['req'] : '';
+// get mail type - SAR or ESRC
+$mail_type = (isset($_REQUEST['typ'])) ? $_REQUEST['typ'] : '';
 
 /* get all rescue information */
 $rescue = new Rescue($database);
@@ -75,7 +77,7 @@ class RescueSuccess {
 		$subject = "Successful Rescue in " . $systemName;
 		$toList = $sowPilot . EVEMAIL_DELIMITER . $cacheTenders;
 
-		$bodyText = "Greetings, Signaleers!
+		$bodyText = "Greetings Signaleers (past and present)!
 
 Multiple times a week pilots across New Eden are saved by rescue caches sown and tended by devoted Signaleers like yourselves.
 Often these rescues are accomplished so quickly that few people even know they happened.
@@ -95,28 +97,53 @@ https://evescoutrescue.com/
 		return new RescueMail($toList, $subject, $bodyText);
 	}
 
-	public function generateRescueFollowupMail($systemName, $rescuedPilot, $coordinator)
+	public function generateRescueFollowupMail($systemName, $rescuedPilot, $coordinator,$mail_type)
 	{
 		$subject = "Successful Rescue from " . $systemName;
+		
+// MAIL BODY FOR SAR FOLLOWUP
+if ($mail_type == 'sar') {	
+	
+$bodyText = "Hello there,
 
-		$bodyText = "Greetings, $rescuedPilot!
+My name is $coordinator, and I am a Rescue Coordinator for the EvE-Scout Search and Rescue (SAR) Program.
 
-We hope that you were satisfied with our recent efforts to deliver you safely back to known space.
-I'd like to offer you the opportunity to give some feedback regarding your experience.
-All comments, positive or negative, will help us to improve our services to New Eden.
+I recently learned of your rescue from $systemName. Congratulations on making it out! I am very happy to know that our Rescue Pilots were able to assist you in getting out of J-Space.
 
-Additionally, if you were pleased with our efforts and happy to go on record as such,
-I'd like to ask if you would be interested in providing a testimonial for the Eve-Scout Rescue Website:
-https://evescoutrescue.com/home/testimonials_list.php
+I am reaching out to you now just to follow up on your experience and see if there was anything that you would like to share regarding it. Also, assuming that you were satisfied with the service that you received, I was wondering if you would consider writing a short testimonial that we might use upon our webpage? Of course you are under no obligation to do so, and if you wished you could also do so anonymously.
 
-Thank you for contacting us, and fly safe!
-o7
+You can submit your testimonial at https://evescoutrescue.com/home/testimonial_submit.php or feel free to send me an evemail with any thoughts or concerns.
 
-$coordinator,
+Again, I am glad to know that you made it out. Feel free to mention us to your friends, and do not hesitate to reach out to us again at any time, even if just to say \"hi\". Just go to the EvE-Scout channel in game. There is always someone there.
+
+Yours in service,
+
+$coordinator
 EvE-Scout Rescue
 https://evescoutrescue.com/
 ";
+}
+else{
+// MAIL BODY FOR ESRC FOLLOWUP
+$bodyText = "Hello there,
 
+My name is $coordinator, and I am a Rescue Coordinator for the EvE-Scout Search and Rescue (SAR) Program.
+
+I recently learned of your rescue from $systemName. Congratulations on making it out! I am very happy to know that our team was able to assist you in getting out of J-Space.
+
+I am reaching out to you now just to follow up on your experience and see if there was anything that you would like to share regarding it. Also, assuming that you were satisfied with the service that you received, I was wondering if you would consider writing a short testimonial that we might use upon our webpage? Of course you are under no obligation to do so, and if you wished you could also do so anonymously.
+
+You can submit your testimonial at https://evescoutrescue.com/home/testimonial_submit.php or feel free to send me an evemail with any thoughts or concerns.
+
+Again, I am glad to know that you made it out. Feel free to mention us to your friends, and do not hesitate to reach out to us again at any time, even if just to say \"hi\". Just go to the EvE-Scout channel in game. There is always someone there.
+
+Yours in service,
+
+$coordinator
+EvE-Scout Rescue
+https://evescoutrescue.com/
+";	
+}
 			return new RescueMail($rescuedPilot, $subject, $bodyText);
 		}
 	}
@@ -126,7 +153,8 @@ https://evescoutrescue.com/
 	$rescueDate = Output::getEveDate($request['requestdate']);
 	$systemName = Output::htmlEncodeString($request['system']);
 	$rescuedPilot = Output::htmlEncodeString($request['pilot']);
-	$coordinator = ($request['closeagent']) ? Output::htmlEncodeString($request['closeagent']) : "EvE-Scout Rescue Coordinator Team";
+	//$coordinator = ($request['closeagent']) ? Output::htmlEncodeString($request['closeagent']) : "EvE-Scout Rescue Coordinator Team";
+	$coordinator = $charname;
 
 	$cacheParticipants = $systems->getActiveCacheParticipants($systemName);
 	$activitySummary = "";
@@ -153,7 +181,9 @@ https://evescoutrescue.com/
 		}
 
 		$tenderThanksMail = $rescueSuccess->generateTenderThanksMail($systemName, $sowPilot, $cacheTenders, $coordinator, $activitySummary);
-		$rescueFollowupMail = $rescueSuccess->generateRescueFollowupMail($systemName, $rescuedPilot, $coordinator);
+		$rescueFollowupMail = $rescueSuccess->generateRescueFollowupMail($systemName, $rescuedPilot, $coordinator,$mail_type);
+		
+		
 	}
 
 	?>
@@ -166,16 +196,7 @@ https://evescoutrescue.com/
 
 	<body >
 		<div class="rescueMail">
-			<h3 class="rescueMailTitle"><?=$rescueDate?> - 911 Rescue Success Mails for system - <?=$systemName?></h3>
-
-			<div class="grid-container">
-				<h3 class="rescueMailSubtitle">Signaleers:</h3>
-				<input class="addresses" value="<?=$tenderThanksMail->getAddressees()?>"/>
-				<h5 class="rescueMailSubtitle">Subject:</h5>
-				<input class="subject" value="<?=$tenderThanksMail->getSubject()?>"/>
-				<h5 class="rescueMailSubtitle">Body:</h5>
-				<textarea id="tenderThanksMail" class="eveMailBody"><?=$tenderThanksMail->getBody()?></textarea>
-			</div>
+			<h3 class="rescueMailTitle"><?=$rescueDate?> - Rescue Success Mails for system - <?=$systemName?></h3>
 
 			<div class="grid-container">
 				<h3 class="rescueMailSubtitle">Rescued Pilot(s):</h3>
@@ -185,6 +206,17 @@ https://evescoutrescue.com/
 				<h5 class="rescueMailSubtitle">Body:</h5>
 				<textarea id="rescueFollowupMail" class="eveMailBody"><?=$rescueFollowupMail->getBody()?></textarea>
 			</div>
+			
+			<div class="grid-container">
+				<h3 class="rescueMailSubtitle">Signaleers:</h3>
+				<input class="addresses" value="<?=$tenderThanksMail->getAddressees()?>"/>
+				<h5 class="rescueMailSubtitle">Subject:</h5>
+				<input class="subject" value="<?=$tenderThanksMail->getSubject()?>"/>
+				<h5 class="rescueMailSubtitle">Body:</h5>
+				<textarea id="tenderThanksMail" class="eveMailBody"><?=$tenderThanksMail->getBody()?></textarea>
+			</div>
+
+
 
 			<p>Please review and edit messages. Then click to send all mail:
 				<button class="btn" onclick="alert('hiya, I dont do anything yet! :D')">Send Rescue Success EveMails</button></p>
