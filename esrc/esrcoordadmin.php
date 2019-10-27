@@ -264,7 +264,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("M-d H:i", strtotime($row['requestdate']))  .'</td>';
+	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['requestdate']))  .'</td>';
 
 	// System - name of J-space system
 	if (empty($system)) {
@@ -314,7 +314,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("m-d-y H:i", strtotime($row['lastcontact']))  .'</td>';
+	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['lastcontact']))  .'</td>';
 
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 	if ($summary == 0) {
@@ -363,7 +363,7 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 	if (count($notes) > 0) {
 		foreach($notes as $note) {
 			echo '<div style="padding-left: 2em; text-indent: -2em;">';
-			echo '['. date("M-d", strtotime($note['notedate'])) .' // ';
+			echo '['. date("Y-m-d", strtotime($note['notedate'])) .' // ';
 			echo Output::htmlEncodeString($note['agent']) .']<br />';
 			echo Output::htmlEncodeString($note['note']) .'<br />';
 			echo '</div><br />';
