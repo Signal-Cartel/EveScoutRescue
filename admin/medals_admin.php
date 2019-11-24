@@ -180,18 +180,24 @@ elseif ($rowid > 0) {
 				</thead>
 				<tbody>
 				<?php
-                // ESRC Medals
+				// ESRC Medals
                 if (intval($medalid) < 10) {
                     $db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act FROM activity
                         WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN '2017-03-01' AND NOW()
                         GROUP BY Pilot ORDER BY cnt desc, act DESC");
                 }
                 // SAR Medals
-                else {
+                elseif (intval($medalid) > 10 && intval($medalid) < 20) {
                     $db->query("SELECT COUNT(ra.pilot) AS cnt, ra.pilot AS Pilot, MAX(ra.entrytime) AS act 
                         FROM rescuerequest rr, rescueagents ra 
 						WHERE rr.status = 'closed-rescued' AND rr.id=ra.reqid
 						GROUP BY ra.pilot ORDER BY cnt DESC, ra.entrytime DESC");
+				}
+				// Dispatcher medals
+				elseif (intval($medalid) > 20) {
+                    $db->query("SELECT COUNT(startagent) as cnt, startagent as Pilot, max(requestdate) as act FROM rescuerequest
+                        WHERE requestdate BETWEEN '2017-03-01' AND NOW()
+						GROUP BY startagent ORDER BY COUNT(startagent) DESC, act DESC");
                 }
 				$rows = $db->resultset();
 				$db->closeQuery();
