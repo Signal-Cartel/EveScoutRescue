@@ -224,6 +224,9 @@ elseif ($rowid > 0) {
             12 - <a href="?medalid=12&min=10&max=49">SAR Silver</a><?php echo ($medalid==12)? $arrow : '' ?><br />
             13 - <a href="?medalid=13&min=50&max=99">SAR Gold</a><?php echo ($medalid==13)? $arrow : '' ?><br />
 			14 - <a href="?medalid=14&min=100&max=499">Beacon of Anoikis</a><?php echo ($medalid==14)? $arrow : '' ?><br />
+			21 - <a href="?medalid=21&min=5&max=49">Disp - Qualified</a><?php echo ($medalid==21)? $arrow : '' ?><br />
+			22 - <a href="?medalid=22&min=50&max=99">Disp - Proficient</a><?php echo ($medalid==22)? $arrow : '' ?><br />
+			23 - <a href="?medalid=23&min=100&max=999">Disp - Master</a><?php echo ($medalid==23)? $arrow : '' ?><br />
 		</div>
 	</div>
 	<?php
