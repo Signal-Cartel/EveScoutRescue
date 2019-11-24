@@ -54,6 +54,7 @@ class Discord
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         // set the JSon data
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         // get the return status
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         // execute the request
