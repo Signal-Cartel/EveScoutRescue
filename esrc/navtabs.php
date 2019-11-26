@@ -35,6 +35,16 @@ else {
 	echo '<li class="active"><a href="#" data-toggle="tab">STATISTICS</a></li>';
 }
 
+// SITE TRACKER TAB
+if (strpos($_SERVER['PHP_SELF'], 'sitetracker.php') === false) {
+	// inactive
+	echo '<li><a href="sitetracker.php">SITE TRACKER</a></li>';
+}
+else {
+	// active
+	echo '<li class="active"><a href="#" data-toggle="tab">SITE TRACKER</a></li>';
+}
+
 // ESR COORDINATOR TAB - only visible to ESR Coordinators
 if ($isCoord == 1) {
 	if (strpos($_SERVER['PHP_SELF'], 'esrcoordadmin.php') === false) {
