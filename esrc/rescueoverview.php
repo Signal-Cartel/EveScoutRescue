@@ -254,6 +254,8 @@ function translateStatus($status)
 		break;
 		case 'closed-noresponse' : $result = "No response";
 		break;
+		case 'closed-zkill' : $result = "zKill Activity";
+		break;
 		case 'closed-declined' : $result = "Declined - illegitimate";
 		break;
 		case 'closed-dup' : $result = "Declined - duplicate";

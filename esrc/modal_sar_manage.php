@@ -97,6 +97,7 @@ $request = $rescue->getRequest($reqID);
 					<option value="closed-escapedlocals" <?php if ($request['status'] === 'closed-escapedlocals') { echo ' selected="selected"'; } ?>>Closed - escaped by locals</option>
 					<option value="closed-destruct" <?php if ($request['status'] === 'closed-destruct') { echo ' selected="selected"'; } ?>>Closed - self destruct</option>
 					<option value="closed-destroyed" <?php if ($request['status'] === 'closed-destroyed') { echo ' selected="selected"'; } ?>>Closed - destroyed by locals/3rd party</option>
+					<option value="closed-zkill" <?php if ($request['status'] === 'closed-zkill') { echo ' selected="selected"'; } ?>>Closed - zKill Activity</option>
 					<option value="closed-noresponse" <?php if ($request['status'] === 'closed-noresponse') { echo ' selected="selected"'; } ?>>Closed - no response</option>
 					<option value="closed-declined" <?php if ($request['status'] === 'closed-declined') { echo ' selected="selected"'; } ?>>Closed - declined</option>
 					<option value="closed-dup" <?php if ($request['status'] === 'closed-dup') { echo ' selected="selected"'; } ?>>Closed - duplicate</option>
