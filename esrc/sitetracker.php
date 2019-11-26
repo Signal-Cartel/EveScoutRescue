@@ -7,14 +7,14 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 
-include_once '../class/config.class.php';
+//include_once '../class/config.class.php';
 
-require_once '../class/password.class.php';
+//require_once '../class/password.class.php';
 require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
-require_once '../class/caches.class.php';
+//require_once '../class/leaderboard.class.php';
+//require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
-require_once '../class/output.class.php';
+//require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
 
 
@@ -67,11 +67,6 @@ if (!isset($charname))
 
 // create object instances
 $users = new Users($database);
-$caches = new Caches($database);
-$systems = new Systems($database);
-$rescue = new Rescue($database);
-$leaderBoard = new Leaderboard($database);
-
 // check for SAR Coordinator login
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
@@ -123,6 +118,7 @@ if (!empty($errmsg)) {
 
 <div class="row" id="st-submit-row" >
 		<div class="col-md-12">
+			<h2>Site tracker is currently for testing only</h2>
 			<p>Paste the contents of your scanner window and submit</p>
             <textarea id="st-submit" rows="10" cols="90" style="display: block;"></textarea>
             <button class="btn btn-success" onclick="SubmitSigs()">Submit signatures</button>
