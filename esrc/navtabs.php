@@ -35,10 +35,10 @@ else {
 	echo '<li class="active"><a href="#" data-toggle="tab">STATISTICS</a></li>';
 }
 
-// SITE TRACKER TAB
-if (strpos($_SERVER['PHP_SELF'], 'sitetracker.php') === false) {
+// PVE SHARER TAB
+if (strpos($_SERVER['PHP_SELF'], 'pve_sharer.php') === false) {
 	// inactive
-	echo '<li><a href="sitetracker.php">SITE TRACKER</a></li>';
+	echo '<li><a href="pve_sharer.php">SITE TRACKER</a></li>';
 }
 else {
 	// active

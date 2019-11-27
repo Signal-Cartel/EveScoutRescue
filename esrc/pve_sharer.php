@@ -118,8 +118,8 @@ if (!empty($errmsg)) {
 
 <div class="row" id="st-submit-row" >
 		<div class="col-md-12">
-			<h2>Site tracker is currently for testing only</h2>
-			<p>Paste the contents of your scanner window and submit</p>
+			<h2>Site tracker is currently in early beta testing</h2>
+			<p>Paste the contents of your scanner window below and submit</p>
             <textarea id="st-submit" rows="10" cols="90" style="display: block;"></textarea>
             <button class="btn btn-success" onclick="SubmitSigs()">Submit signatures</button>
 
@@ -148,7 +148,7 @@ function SubmitSigs(){
     document.getElementById("st-response").value = 'Uno momento...';
     var pasteContents = document.getElementById("st-submit").value;
     var data = pasteContents;
-    var apiUrl = "sitetrackerpost.php";
+    var apiUrl = "pve_sharer_post.php";
     var apiParams = "data=" + data;
     var callback = stCallback;
     GetResource(apiUrl, apiParams, callback);
