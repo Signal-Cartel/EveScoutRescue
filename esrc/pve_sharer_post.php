@@ -10,6 +10,31 @@ session_start();
 if (!isset($_SESSION['auth_copilot'])) {
     exit();
 }
+/*
+this is dev:
+uri: https://mma.ultramega.info/rest/sitetracker_post_signatures.php
+secret: 643e60c4cd9be13cf9b3073d2c4bf07fe08f60e77ffb256f33ca65be1c7a9e01
+
+this is prod:
+uri: https://signalcartel.space/mma/rest/sitetracker_post_signatures.php
+secret: 004d84cab359167842b8659a21e6ae021d82175239100e6dbc345ee82a424722
+*/
+$server = $_SERVER['SERVER_NAME'];
+if ($server == 'evescoutrescue.com'){
+	// "We are on the production server";
+	$environment = 'production_esi';
+	$_SESSION['environment'] = "prod";
+	$sitetracker_url = 'https://signalcartel.space/mma/rest/sitetracker_post_signatures.php';
+	$sitetracker_secret = '004d84cab359167842b8659a21e6ae021d82175239100e6dbc345ee82a424722';
+}
+else{
+	// "We are on the dev server";
+	$environment = 'development_esi';
+	$_SESSION['environment'] = "dev";
+	$sitetracker_url = 'https://mma.ultramega.info/rest/sitetracker_post_signatures.php';
+	$sitetracker_secret = '643e60c4cd9be13cf9b3073d2c4bf07fe08f60e77ffb256f33ca65be1c7a9e01';
+}
+
 
 /*
 We need to submit
@@ -38,7 +63,7 @@ $json_data = json_encode($data_array);
     //echo $json_data;
     //exit();
 
-$response = CurlRequest('https://mma.ultramega.info/rest/sitetracker_post_signatures.php',$json_data);
+$response = CurlRequest($sitetracker_url,$json_data);
 
 if ($response){
     if (is_array($response)){
@@ -57,7 +82,7 @@ else{
 exit();
 
 function CurlRequest($url, $json_data){
-
+	global $sitetracker_secret;
     // json_data is JSON string
     // https://mma.ultramega.info/rest/sitetracker_post_signatures.php
     // with header X-Mma-Discord: 643e60c4cd9be13cf9b3073d2c4bf07fe08f60e77ffb256f33ca65be1c7a9e01
@@ -65,8 +90,9 @@ function CurlRequest($url, $json_data){
     $returnArray = array();
     $ch = curl_init();
     $lookup_url = $url;
+	$secret_header = 'X-Mma-Discord: ' . $sitetracker_secret;
     $headers = [
-        'X-Mma-Discord: 643e60c4cd9be13cf9b3073d2c4bf07fe08f60e77ffb256f33ca65be1c7a9e01',
+        $secret_header,
         'Content-Type: application/json',
         'Referer: sitetrackerpost.php',
         'User-Agent: Allison'
