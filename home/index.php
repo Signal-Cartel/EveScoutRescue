@@ -147,7 +147,9 @@ include_once '../includes/top-center.php';
 					launcher, core scanner probes, and even a hug or two. Perfect if you have a 
 					fitting service or just need probes. <a href="esrc.php">Learn more...</a></p>
 				<p class="text-center">
-					<a class="btn btn-primary btn-md" href="heroes.php" role="button">Rescue Cache 
+					<a class="btn btn-primary btn-md" href="heroes.php" role="button">Sower/Tender 
+						Hall of Fame</a> &nbsp;&nbsp;&nbsp; 
+					<a class="btn btn-primary btn-md" href="heroes-disp.php" role="button">Dispatcher 
 						Hall of Fame</a></p>
 			</div>
 		</div>
