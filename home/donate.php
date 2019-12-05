@@ -54,7 +54,7 @@ include_once '../includes/top-center.php';
 				<hr class="half-rule">
 		  		<div class="row">
 			      <div class="col-sm-4" style="text-align: center;">
-			        <img src="../img/cache-lg.png" height="190">
+			        <img src="../img/cache-lg.png" height="190" style="max-width: 70%; height: auto;">
 			        <h3>Let It Be</h3>
 			        <p>If you agree that no one should be stranded inside a wormhole due 
 					to server problems or socket disconnects, please support this initiative 
@@ -62,7 +62,7 @@ include_once '../includes/top-center.php';
 					We sincerely thank you for your	cooperation!</p>
 			      </div>
 			      <div class="col-sm-4" style="text-align: center;">
-			        <img src="../img/donate.png">
+			        <img src="../img/donate.png" style="max-width: 70%; height: auto;">
 			        <h3>Send Us a Tip</h3>
 			        <p>Consider sending us a tip as a thank you. Your donations go directly to reward 
 					our scouts.</p>
@@ -71,7 +71,7 @@ include_once '../includes/top-center.php';
 			        	Be sure to indicate "ESR" or "Rescue" on the memo line.</p>
 			      </div>
 			      <div class="col-sm-4" style="text-align: center;">
-			        <img src="../img/wanted_final.png" height="195">
+			        <img src="../img/wanted_final.png" style="max-width: 85%; height: auto;">
 			        <h3>Join Us</h3>
 			        <p>Is helping other capsuleers of more interest to you than blowing them up?
 						<br />Want to be part of an active exploration corp filled with neutral 
