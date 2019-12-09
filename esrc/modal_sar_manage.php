@@ -85,13 +85,38 @@ $request = $rescue->getRequest($reqID);
 			<div class="field">
 				<label class="control-label" for="status">Status</label>
 				<select class="form-control black" id="status" name="status">
-					<?php if ($request['status'] === 'new') { ?><option value="new" selected="selected">new</option>
+					<option value="new"
+						<?php
+							$located_disable = false;
+							if ($request['status'] === 'new') {
+								$located_disable = true;
+								echo ' selected="selected"';
+							}
+						?> >new
+					</option>
+					<option value="pending" 
+						<?php 
+							if ($request['status'] === 'pending') { 
+								$located_disable = true;
+								echo ' selected="selected"'; 
+							}
+						?> >Pending
+					</option>
+					
+					<option value="open" 
+						<?php
+							if ($request['status'] === 'open') {
+								$located_disable = true;
+								echo ' selected="selected"'; 
+							}
+						?> >Open
+					</option>
+					
+					<?php if (!$located_disable){?>
+						<option value="system-located" <?php if ($request['status'] === 'system-located') { echo ' selected="selected"'; } ?>>System Located</option>	
 					<?php } ?>
-					<option value="pending" <?php if ($request['status'] === 'pending') { echo ' selected="selected"'; } ?>>Pending</option>
-					<option value="open" <?php if ($request['status'] === 'open') { echo ' selected="selected"'; } ?>>Open</option>
-					<!-- REMOVED AS POSSIBLE SOLUTION TO ISSUE #235
-					<option value="system-located" <?php if ($request['status'] === 'system-located') { echo ' selected="selected"'; } ?>>System Located</option>
-					-->
+					
+					
 					<option value="closed-esrc" <?php if ($request['status'] === 'closed-esrc') { echo ' selected="selected"'; } ?>>Closed - rescued (ESRC)</option>
 					<option value="closed-rescued" <?php if ($request['status'] === 'closed-rescued') { echo ' selected="selected"'; } ?>>Closed - rescued (SAR)</option>
 					<option value="closed-escaped" <?php if ($request['status'] === 'closed-escaped') { echo ' selected="selected"'; } ?>>Closed - escaped by self</option>
