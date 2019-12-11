@@ -21,6 +21,7 @@ include_once '../includes/head.php';
 	<div class="col-sm-8 white" style="text-align: center; height: 100px; vertical-align: middle;">
 		<br /><span class="sechead">Bounce Method Instructions</span><br /><br />
 		<a href="index_en.php">English</a><br />
+		<a href="index_zh.php">中文</a><br />
 		<a href="index_ja.php">日本語</a><br />
 		<a href="index_ko.php">한국어</a><br />
 		<a href="index_ru.php">русский</a><br />
