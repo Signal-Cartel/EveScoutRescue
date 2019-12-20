@@ -46,6 +46,41 @@ if (!Users::isAllianceUserSession())
 	exit;
 }
 
+$romans = Array(
+	'Star' => 'Star',
+	'See Note' => '**',
+	'0' => 0,
+	'I' => 1,
+	'II' => 2,
+	'III' => 3,
+	'IV' => 4,
+	'V' => 5,
+	'VI' => 6,
+	'VII' => 7,
+	'VIII' => 8,
+	'IX' => 9,
+	'X' => 10,
+	'XI' => 11,
+	'XII' => 12,
+	'XIII' => 13,
+	'XIV' => 14,
+	'XV' => 15,
+	'XVI' => 16,
+	'XVII' => 17,
+	'XVIII' => 18,
+	'XIX' => 19,
+	'XX' => 20,
+	'XXI' => 21,
+	'XXII' => 22,
+	'XXIII' => 23,
+	'XXIV' => 24,
+	'XXV' => 25,
+	'XXVI' => 26,
+	'XXVII' => 27,
+	'XXVIII' => 28,
+	'XXIX' => 29,
+	'XXX' => 30	
+)
 ?>
 <html>
 
@@ -240,6 +275,7 @@ if (!empty($system)) {
 							<th>Password</th>
 							<th>Status</th>
 							<th>Expires On</th>
+							<th>Bookmark</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -248,13 +284,21 @@ if (!empty($system)) {
 					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
-					<td><input type="text" id="cachepass1" style="width:125px;"
+					<td><input type="text" id="cachepass1" style="width:100px;"
 							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
 							<i id="copyclip" class="fa fa-clipboard"
 								onClick="SelectAllCopy('cachepass1')"></i>
 					</td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
+
+					<td><input type="text" id="bookmark1" style="width:180px;"
+							value="<?= $system . ' ' . $romans[$row['AlignedWith']] . '>' . $romans[$row['Location']] . ' @' . Output::htmlEncodeString($row['Distance']) ?>" readonly />
+							<i id="copyclip2" class="fa fa-clipboard"
+								onClick="SelectAllCopy('bookmark1')"></i>
+					</td>
+
+
 					</tr>
 					</tbody>
 				</table>
