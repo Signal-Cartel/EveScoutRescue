@@ -10,7 +10,7 @@ body::before {
     display: block;
     position: absolute;
     left: 0;
-	/*
+    /*
 		animation-name: bkgndmove;
 		animation-duration: 20s;
 		animation-timing-function: linear;
@@ -33,22 +33,19 @@ body::before {
     background-size: cover;
 }
 
-
-
 .login {
-  background: url(../img/EVE_SSO_Login_Buttons_Small_Black.png) no-repeat 6px center;
-  width: 200px;
-  height: 50px;
-  display: block;
+    background: url(../img/EVE_SSO_Login_Buttons_Small_Black.png) no-repeat 6px center;
+    width: 200px;
+    height: 50px;
+    display: block;
 }
-
 
 #copyclip {
     position: relative;
     z-index: 1;
     left: -16px;
     /* top: 1px; */
-    color: #36d435;
+    /*color: #36d435;*/
     cursor: pointer;
     width: 0;
     /* padding-left: 3px; */
@@ -222,8 +219,9 @@ textarea {
     border-radius: 6px;
     padding: 1px 6px;
 }
-select option{
-	color: #eeeeee;
+
+select option {
+    color: #eeeeee;
     background-color: #282626;
     font-weight: 700;
 }
@@ -308,9 +306,10 @@ img {
     overflow: hidden;
 }
 
-.thumbnail img{
-	opacity: 1;
+.thumbnail img {
+    opacity: 1;
 }
+
 
 /* END BS OVERRIDES*/
 
@@ -438,23 +437,27 @@ img {
     text-align: center;
     color: #FFFFFF;
 }
+
 .rescueMailSubtitle {
     color: #FFFFFF;
 }
+
 .rescueMail {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
 }
+
 .grid-container {
     display: grid;
     margin-bottom: 15px;
     padding: 5px;
     border: solid black 2px;
 }
+
 .eveMailBody {
-    min-width:500px;
-    max-width:100%;
-    width:100%;
-    min-height:350px;
+    min-width: 500px;
+    max-width: 100%;
+    width: 100%;
+    min-height: 350px;
 }
