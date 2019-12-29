@@ -269,8 +269,8 @@ if (!empty($system)) {
 					<thead>
 						<tr>
 							<th>Sown On</th>
-							<th>Location</th>
 							<th>Aligned With</th>
+							<th>Location</th>
 							<th>Distance</th>
 							<th>Password</th>
 							<th>Status</th>
@@ -281,8 +281,8 @@ if (!empty($system)) {
 					<tbody>
 					<tr>
 					<td><?=Output::getEveDate($row['InitialSeedDate'])?></td>
-					<td><?=$row['Location']?></td>
 					<td><?=$row['AlignedWith']?></td>
+					<td><?=$row['Location']?></td>
 					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
 					<td><input type="text" id="cachepass1" style="width:100px;"
 							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
