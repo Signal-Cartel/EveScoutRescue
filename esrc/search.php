@@ -448,8 +448,8 @@ if (!empty($system)) {
 						<th class="white"> </th>
 						<th class="white">Pilot</th>
 						<th class="white">Type</th>
-						<th class="white">Location</th>
 						<th class="white">Align</th>
+						<th class="white">Location</th>
 						<th class="white">Distance</th>
 						<th class="white">Expires</th>
 						<th class="white">Note</th>
@@ -499,10 +499,10 @@ if (!empty($system)) {
 			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
 			echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
 			echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
-			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
-			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
 			echo '<td class="text-nowrap">'. $rowAW .'</td>';
+			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
+			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 			$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
 			echo '<td class="text-nowrap">'. $rowDist.'</td>';
 			$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
