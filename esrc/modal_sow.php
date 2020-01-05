@@ -25,27 +25,11 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 					</p>
 				</span>
 			</div>
-			<!--This is the beginning of the swap fields-------------->
+			<!--This is the beginning of the swap fields class="form-control" -------------->
 			<div id="topfield">
 				<div class="field form-group">
-					<label class="control-label" for="location">Location<span class="descr">By which celestial is the cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="location" name="location" onchange="validatePlanets()" required>
-						<option value="">- Select -</option>
-						<?php
-						foreach ($locopts as $val) {
-							echo '<option value="' . $val . '">' . $val . '</option>';
-						}
-						?>
-					</select>
-				</div>
-			</div><!-- End topfield -->
-			<div class="pull-right">					
-				<a class="btn btn-success btn-xs" tabindex="99" role="button" href="javascript: swapThem();">Location&lt;-&gt;Align</a>
-			</div>
-			<div id="bottomfield" >
-				<div class="field form-group">
-					<label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
-					<select class="form-control" id="alignedwith" name="alignedwith" onchange="validatePlanets()" required>
+					<label class="control-label" for="alignedwith">Aligned with<span class="descr"><em>If somewhere other than a planet or star, please detail in notes.</em></span></label>
+					<select  id="alignedwith" name="alignedwith" class="form-control" onchange="validatePlanets(this)" required>
 						<option value="">- Select -</option>
 						<?php 
 						foreach ($locopts as $val) {
@@ -54,18 +38,37 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 						?>
 					</select>
 				</div>
+			</div><!-- End topfield -->
+
+			<div style="display: block; text-align: right;">					
+				<a class="btn btn-success btn-xs" tabindex="99" role="button" href="javascript: swapThem();">Swap Align &lt;-&gt; Location fields</a>
+			</div>
+
+			<div id="bottomfield" >
+				<div class="field form-group">
+					<label class="control-label" for="location">Location celestial<span class="descr"><em>If somewhere other than a planet or star, please detail in notes.</em></span></label>
+					<select id="location" name="location" class="form-control" onchange="validatePlanets(this)" required>
+						<option value="">- Select -</option>
+						<?php
+						foreach ($locopts as $val) {
+							echo '<option value="' . $val . '">' . $val . '</option>';
+						}
+						?>
+					</select>
+				</div>
+
+
 			</div><!-- end bottomfield -->
 			<!--This is the end of the swap fields------------------------>
 
 			<div class="field form-group">
-				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from the Location planet? Must be a number between 22000 and 50000.</span></label>
+				<label class="control-label" for="distance">Distance from location(km)<span class="descr"><em>Must be between 22000 and 50000.</em></span></label>
 				<input class="form-control " id="distance" name="distance" type="number" min="22000" max="50000" step="1" required/>
 			</div>
 
 			<div class="field form-group">
-				<label class="control-label" for="password">Password<span class="descr">What is the 
-					password for the secure container? (Generated password is pre-filled. Click to 
-					paste your own password.)</span></label>
+				<label class="control-label" for="password">Password<span class="descr"><em>Generated password is pre-filled. Click to 
+					paste your own password.</em></span></label>
 				<input type="text" class="form-control" id="password" name="password" 
 					value="<?=$cachepass?>" maxlength="15" onclick="select();" required />
 			</div>
@@ -87,30 +90,34 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 </div>
 
 <script>
+	/*
   $( document ).ready(function() {
     $("#sowform").validator();
   });
-
+	*/
   if (typeof(Storage) !== "undefined"){
       if (localStorage.LocOnTop) {
           LocOnTop = (localStorage.LocOnTop == 'true');
       }
       else{
-          localStorage.LocOnTop = 'true';
-          LocOnTop = true;
+          localStorage.LocOnTop = 'false';
+          LocOnTop = false;
       }
-      if (!LocOnTop){LocOnTop = true; swapThem();}
+      if (LocOnTop){LocOnTop = true; swapThem();}
   }
   else{
-      LocOnTop = true;
+      LocOnTop = false;
   }
 
-  function validatePlanets()
+
+	
+  function validatePlanets(caller)
   { 
-	  var location = document.getElementById("location"); 
-	  var align = document.getElementById("alignedwith"); 
+	var location = document.getElementById("location"); 
+	var align = document.getElementById("alignedwith");  	 
 	  if (location.value == align.value) {
 		  alert("Location planet and align planet must be different."); 
+		  caller.selectedIndex = -1; 
 	  }
   }
 
