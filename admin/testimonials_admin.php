@@ -34,7 +34,6 @@ if (isset($_POST['testimonial'])) {
 		$db->endTransaction();
 		
 		// Broadcast new testimonial to Discord
-		$live_active_cache_count = $caches->getLiveActiveCount();
 		if ($app){
 			include_once '../class/discord.class.php';
 			$discord = new Discord($db);
