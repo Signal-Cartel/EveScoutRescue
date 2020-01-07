@@ -32,6 +32,20 @@ if (isset($_POST['testimonial'])) {
 		$db->bind(':id', $_POST['ID']);
 		$db->execute();
 		$db->endTransaction();
+		
+		// Broadcast new testimonial to Discord
+		$live_active_cache_count = $caches->getLiveActiveCount();
+		if ($app){
+			include_once '../class/discord.class.php';
+			$discord = new Discord($db);
+			// FIXME please fill in appropriate channel
+			$webHook = 'https://discordapp.com/api/webhooks/'.Config::PLACEHOLDER;
+			$user = 'EvE-Scout Rescue';
+			$alert = 0;
+			$message = "New testimonial from $_POST['pilot']: $_POST['testimonial']";
+			$skip_the_gif = 1;
+			$discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);
+		}
 	}
 }
 ?>
