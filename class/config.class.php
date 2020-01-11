@@ -25,7 +25,7 @@ define("AUTHSECRET", $sysconfig['authSecret']);
 define("USERAGENT", $sysconfig['userAgent']);
 define("DEVSYSTEM", $sysconfig['devSystem']);
 define("DISCORDCOORD", $sysconfig['discordCoordChannel']);
-define("DISCORDEXPLO", $sysconfig['discordExploChannel']);
+define("DISCORD_EXPLO", $sysconfig['discordExploChannel']);
 /**
  * Database connection handling wrapper. It's possible to run one query at a time only.
  */
@@ -44,4 +44,6 @@ class Config
 	const DEV_SYSTEM = DEVSYSTEM;
 	
 	const DISCORD_SAR_COORD_TOKEN = DISCORDCOORD;
+	
+	const DISCORDEXPLO = DISCORD_EXPLO;
 }

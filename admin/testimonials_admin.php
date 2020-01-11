@@ -3,8 +3,9 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-include_once '../includes/auth-inc.php';
+require_once '../includes/auth-inc.php';
 require_once '../class/db.class.php';
+require_once '../class/discord.class.php';
 
 // create object instance(s)
 $db = new Database();
@@ -34,16 +35,13 @@ if (isset($_POST['testimonial'])) {
 		$db->endTransaction();
 		
 		// Broadcast new testimonial to Discord
-		if ($app){
-			include_once '../class/discord.class.php';
-			$discord = new Discord($db);
-			// FIXME please fill in appropriate channel
-			$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORDEXPLO;
+		if ($app == 1){			
+			$webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
 			$user = 'EvE-Scout Rescue';
 			$alert = 0;
-			$message = "New testimonial from $_POST['pilot']: $_POST['testimonial']";
+			$message = "_New testimonial from " . $_POST['pilot'] . "_\n" . $_POST['testimonial'];
 			$skip_the_gif = 1;
-			$discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);
+			$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 		}
 	}
 }
