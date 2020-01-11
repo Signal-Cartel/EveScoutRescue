@@ -141,7 +141,7 @@ if (isset($_POST['testimonial'])) {
 					(<?php echo ($row['Anon'] == 1) ? 'A' : 'Not a'; ?>nonymous)<br />
 				Rescue Method: <strong><?php echo $row['Type'];?></strong><br /><br />
 				
-				Approved to post: <input type="checkbox" id="approved" name="approved" 
+				Approved to post (and share on discord): <input type="checkbox" id="approved" name="approved" 
 					value="1" <?php echo ($row['Approved'] == 1) ? 'checked' : '';?>>
 				<br /><br />
 				
@@ -155,7 +155,8 @@ if (isset($_POST['testimonial'])) {
 		      <div class="modal-footer">
 		        <div class="form-actions">
 					<input type="hidden" name="ID" id="ID" value="<?=$_REQUEST['id']?>" />
-				    <button type="submit" class="btn">Submit</button>
+				    <button type="submit" class="btn btn-primary">Submit</button>
+					<a class="btn btn-danger btn-md" href="testimonials_admin.php" role="button">Cancel</a>
 				</div>
 		      </div>   
 		    </form>
