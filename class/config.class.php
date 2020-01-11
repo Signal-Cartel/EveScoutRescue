@@ -25,6 +25,7 @@ define("AUTHSECRET", $sysconfig['authSecret']);
 define("USERAGENT", $sysconfig['userAgent']);
 define("DEVSYSTEM", $sysconfig['devSystem']);
 define("DISCORDCOORD", $sysconfig['discordCoordChannel']);
+define("DISCORDEXPLO", $sysconfig['discordExploChannel']);
 /**
  * Database connection handling wrapper. It's possible to run one query at a time only.
  */
