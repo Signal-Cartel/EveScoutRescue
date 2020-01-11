@@ -38,7 +38,7 @@ if (isset($_POST['testimonial'])) {
 			include_once '../class/discord.class.php';
 			$discord = new Discord($db);
 			// FIXME please fill in appropriate channel
-			$webHook = 'https://discordapp.com/api/webhooks/'.Config::PLACEHOLDER;
+			$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORDEXPLO;
 			$user = 'EvE-Scout Rescue';
 			$alert = 0;
 			$message = "New testimonial from $_POST['pilot']: $_POST['testimonial']";
