@@ -35,11 +35,14 @@ if (isset($_POST['testimonial'])) {
 		$db->endTransaction();
 		
 		// Broadcast new testimonial to Discord
-		if ($app == 1){			
+		if ($app == 1){		
+			
 			$webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
 			$user = 'EvE-Scout Rescue';
 			$alert = 0;
-			$message = "_New testimonial from " . $_POST['pilot'] . "_\n" . $_POST['testimonial'];
+			$name_holder = ( $_POST['anon'] == 1 ? "Anonymous" : $_POST['pilot'] );
+			
+			$message = "_New testimonial from " . $name_holder . "_\n" . $_POST['testimonial'];
 			$skip_the_gif = 1;
 			$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 		}
@@ -138,6 +141,7 @@ if (isset($_POST['testimonial'])) {
 			<form name="testform" id="testform" action="testimonials_admin.php" method="POST">
 		      <div class="white">
 				Pilot: <strong><input class="black" type="text" name="pilot" value="<?=$row['Pilot']?>"></strong> 
+				 <input type="hidden" name="anon" value="<?=$row['Anon']?>">
 					(<?php echo ($row['Anon'] == 1) ? 'A' : 'Not a'; ?>nonymous)<br />
 				Rescue Method: <strong><?php echo $row['Type'];?></strong><br /><br />
 				
