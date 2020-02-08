@@ -2,11 +2,16 @@
 
 <?php
 // prepare DB object
-$database = new Database();
+//$database = new Database();
 // create the query
 $reqID = (isset($_REQUEST['req'])) ? $_REQUEST['req'] : '';
 // get all rescue information
 $request = $rescue->getRequest($reqID);
+
+	$isSARAgent = $users->isSARAgent($charname, $reqID);
+	$isRescueAgent = $users->isRescueAgent($charname, $reqID);
+	
+	
 ?>
 
 <style>
@@ -35,8 +40,8 @@ $request = $rescue->getRequest($reqID);
 					<td align="right">Stranded Pilot:</td>
 					<td><strong>
 						<?php
-						// display pilot name only to coordinators
-						if ($isCoord == 0)
+						// display pilot name only to coordinators and involved pilots
+						if ($isCoord == 0 and $isSARAgent == 0 and $isRescueAgent == 0 )
 						{
 							echo 'PROTECTED<br />';
 						}
