@@ -375,5 +375,46 @@ class Caches
 		$this->db->closeQuery();
 		return $data['cnt'];
 	}
+	
+	/**
+	 * Get most active sowing/tending pilot,
+		* most recent downtime to prior downtime
+	 */
+	public function getTopTender()
+	{
+		
+			$sql = "Select
+					  user.characterid as uid,
+					  activity.Pilot,
+					  Count(activity.ID) As Actions
+					From
+					  activity
+					Inner Join
+					  user
+						On user.character_name = activity.Pilot
+						
+					Where
+					  ((activity.EntryType = 'sower') Or (activity.EntryType = 'tender')) and
+					(
+					  hour(UTC_TIMESTAMP) between 0 and 10 
+					  and activity.ActivityDate >= UTC_DATE - interval 37 hour -- 11am two days ago
+					  and activity.ActivityDate < UTC_DATE - interval 13 hour -- 11am yesterday
+					)
+					or
+					(
+					  hour(UTC_TIMESTAMP) between 11 and 23
+					  and activity.ActivityDate >= UTC_DATE - interval 13 hour -- 11am yesterday
+					  and activity.ActivityDate < UTC_DATE + interval 11 hour -- today 11am
+					)
+					  
+					Group By
+					  activity.Pilot
+					  Order by Actions DESC";
+
+		$this->db->query($sql);
+		$result = $this->db->single();		
+		$this->db->closeQuery();	
+		return $result;
+	}
 }
 ?>
