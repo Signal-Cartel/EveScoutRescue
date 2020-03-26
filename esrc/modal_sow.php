@@ -18,9 +18,7 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 				<input type="hidden" name="sys_sow" value="<?php echo $system ?>" />
 				<span class="subhead"><?php echo $system ?></span>
 				<span class="descr" style="width: 100%;">
-					<p id="cachename2">
-						EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel.
-						<span id="copyclip" class="fa fa-clipboard" onclick="SelectAllCopy('cachename2')" 
+					<p id="cachename2">EvE-Scout Rescue Cache - If you are stranded in this wormhole you can request help in the EvE-Scout channel.<span id="copyclip" class="fa fa-clipboard" onclick="SelectAllCopy('cachename2')" 
 							style="left: 5px;"></span>
 					</p>
 				</span>
