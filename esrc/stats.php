@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+$hide_stats = false;
 // for debug only
 /*
  error_reporting(E_ALL);
@@ -62,6 +62,7 @@ if (!isset($charname))
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
+if ($charname == 'Igaze') {$hide_stats = false;}
 
 // check for SAR Coordinator login
 $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
@@ -157,6 +158,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		// load only the charts we need for the specified $stat_type
 		switch ($stat_type) {
 			case 'caches':
+			if ($hide_stats) {break;}
 		?>
 		// Draw charts on page load
 		google.charts.setOnLoadCallback(drawEsrcCachesChart);
@@ -184,6 +186,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		<?php 
 				break;
 			case 'participants':
+			if ($hide_stats) {break;} 
 		?>
 		google.charts.setOnLoadCallback(drawEsrcParticipationChart);
 		google.charts.setOnLoadCallback(drawSarParticipationChart);
@@ -348,7 +351,14 @@ if (!empty($errmsg)) {
 	<div class="row">
 		<div class="col-md-12">
 			<div class="subhead white text-center" style="font-weight: bold;">
-				<?php echo strtoupper($stat_type);?>
+				<?php 
+					echo strtoupper($stat_type);
+					if($hide_stats){
+						echo '<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto">Why are you here looking for stats?<br/>Shouldn\'t you be out sowing caches for The Tender Games?<br/>';								
+									echo '<img src="../img/tender-games.jpg"/>';	
+									echo '</div>';											
+						}
+				?>
 			</div>
 		</div>
 	</div>
@@ -358,6 +368,7 @@ if (!empty($errmsg)) {
 	<?php 
 	switch ($stat_type) {
 		case 'caches':
+		if($hide_stats){break;}
 	?>
 		<div class="col-md-12">
 			<div class="white text-center">
@@ -366,11 +377,13 @@ if (!empty($errmsg)) {
 				<a href="javascript:drawEsrcCachesChart('Monthly')">Monthly</a>
 			</div>
 			<div class="ws"></div>
-			<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto"></div>
+			<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto">
+			</div>
 		</div>
 	<?php 
 			break;
 		case 'participants':
+		if($hide_stats){break;}
 	?>
 		<!-- PARTICIPANT COUNTS BEGIN -->
 		<div class="col-md-6">
@@ -397,7 +410,8 @@ if (!empty($errmsg)) {
 				<a href="javascript:drawEsrcParticipationChart('Tenders')">Tenders</a>
 			</div>
 			<div class="ws"></div>
-			<div id="esrcParticipation" class="text-center" style="width: 450px; height:300px;"></div>
+			<div id="esrcParticipation" class="text-center" style="width: 450px; height:300px;">
+			</div>
 			<!-- ESRC PARTICIPANT COUNTS END -->
 		</div>
 		<div class="col-md-6">
@@ -482,7 +496,8 @@ if (!empty($errmsg)) {
 				<a href="javascript:drawSarParticipationChart('Rescuers')">Rescuers</a>
 			</div>
 			<div class="ws"></div>
-			<div id="sarParticipation" style="width: 450px; height:300px;"></div>
+			<div id="sarParticipation" style="width: 450px; height:300px;">
+			</div>
 			<!-- SAR PARTICIPANT COUNTS END -->
 		</div>
 		<!-- PARTICIPANT COUNTS END -->
