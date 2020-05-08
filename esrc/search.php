@@ -458,57 +458,58 @@ if (!empty($system)) {
 				<tbody>';
 
 		foreach ($systemActivities as $activity) {
-			//get cache table data for sower records
-			$sowrow = '';
-			if ($activity['EntryType'] == 'sower') {
-				$sowrow = $caches->getCacheData($activity['CacheID']);
-			}
+			if (   !(($system == constant("ANOIKISDIV")) and (($activity['Pilot']) == 'Tamayo'))   ){			
+				//get cache table data for sower records
+				$sowrow = '';
+				if ($activity['EntryType'] == 'sower') {
+					$sowrow = $caches->getCacheData($activity['CacheID']);
+				}
+				switch ($activity['EntryType']) {
+					case 'sower':
+					case 'Sower':
+						$actioncellformat = ' actionSower';
+						break;
+					case 'tender':
+						$actioncellformat = ' actionTender';
+						break;
+					case 'adjunct':
+					case 'agent':
+						$actioncellformat = ' actionAgent';
+						break;
+					default:
+						$actioncellformat = '';
+				}
 
-			switch ($activity['EntryType']) {
-				case 'sower':
-				case 'Sower':
-					$actioncellformat = ' actionSower';
-					break;
-				case 'tender':
-					$actioncellformat = ' actionTender';
-					break;
-				case 'adjunct':
-				case 'agent':
-					$actioncellformat = ' actionAgent';
-					break;
-				default:
-					$actioncellformat = '';
-			}
+				switch ($activity['CacheStatus']) {
+					case 'Healthy':
+						$actioncellBorderFormat = ' cacheHealthy';
+						break;
+					case 'Expired':
+						$actioncellBorderFormat = ' cacheExpired';
+						break;
+					case 'Upkeep Required':
+						$actioncellBorderFormat = ' cacheUpkeepRequired';
+						break;
+					default:
+						$actioncellBorderFormat = ' cacheNoStatus';
+				}
 
-			switch ($activity['CacheStatus']) {
-				case 'Healthy':
-					$actioncellBorderFormat = ' cacheHealthy';
-					break;
-				case 'Expired':
-					$actioncellBorderFormat = ' cacheExpired';
-					break;
-				case 'Upkeep Required':
-					$actioncellBorderFormat = ' cacheUpkeepRequired';
-					break;
-				default:
-					$actioncellBorderFormat = ' cacheNoStatus';
+				echo '<tr>';
+				$rowdate = $activity['ActivityDate'];
+				echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
+				echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
+				echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
+				$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
+				echo '<td class="text-nowrap">'. $rowAW .'</td>';
+				$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
+				echo '<td class="text-nowrap">'. $rowLoc .'</td>';
+				$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
+				echo '<td class="text-nowrap">'. $rowDist.'</td>';
+				$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
+				echo '<td class="text-nowrap">'. $rowExp.'</td>';
+				echo '<td class="white">'. Output::htmlEncodeString($activity['Note']) .'</td>';
+				echo '</tr>';
 			}
-
-			echo '<tr>';
-			$rowdate = $activity['ActivityDate'];
-			echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
-			echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
-			echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
-			$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
-			echo '<td class="text-nowrap">'. $rowAW .'</td>';
-			$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
-			echo '<td class="text-nowrap">'. $rowLoc .'</td>';
-			$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
-			echo '<td class="text-nowrap">'. $rowDist.'</td>';
-			$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
-			echo '<td class="text-nowrap">'. $rowExp.'</td>';
-			echo '<td class="white">'. Output::htmlEncodeString($activity['Note']) .'</td>';
-			echo '</tr>';
 		}
 		echo '</tbody>
 			</table>';

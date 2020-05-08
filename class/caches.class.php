@@ -40,10 +40,17 @@ class Caches
 	 */
 	public function getActiveCount()
 	{
+		// live count
+		$this->db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
+		$result = $this->db->single();	
+		$this->db->closeQuery();		
+		return $result['cnt'];
+		/*
 		$this->db->query("SELECT cache_activity.Sown, cache_activity.Tended, cache_activity.ActiveCaches FROM cache_activity WHERE Sown IS NOT NULL ORDER BY ID DESC LIMIT 1");
 		$result = $this->db->single();	
 		$this->db->closeQuery();		
 		return $result['ActiveCaches'];
+		*/
 	}
 
 	public function getLiveActiveCount()

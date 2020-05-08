@@ -16,6 +16,8 @@ if ($sysconfig === FALSE)
 	// add error logging here
 	exit(1);
 }
+// Limit AD hole display
+define("ANOIKISDIV", $sysconfig['anoikisDiv']);
 
 // check for enabled maintenance mode in DB
 define("ROOTPATH", $sysconfig['rootPath']);
