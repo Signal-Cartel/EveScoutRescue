@@ -56,7 +56,10 @@ if (isset($_POST['sys_adj'])) {
 	$aidedpilot = test_input($_POST["aidedpilot"]);
 	$notes = test_input($_POST["notes"]);
 	$updateexp = !empty($_POST['updateexp']) ? intval($_POST['updateexp']) : 0;
-	$succesrc = !empty($_POST['succesrc']) ? intval($_POST['succesrc']) : 0;
+	$succesrc = !empty($_POST['succesrc']) ? intval($_POST['succesrc']) : 0; // used probes?
+	$succesrcf = !empty($_POST['succesrcf']) ? intval($_POST['succesrcf']) : 0; // used filament?
+	$eq_used = $succesrc == 1 ? 'pas' : '';// pilot used probes and scanner
+	$eq_used = $succesrcf == 1 ? 'fil' : $eq_used;// pilot used filament
 
 	// check the system
 	if (isset($system)) {
@@ -85,8 +88,9 @@ if (isset($_POST['sys_adj'])) {
 		$caches = new Caches($db);
 
 		// add a new agent activity
-		$cacheStatus = $succesrc == 1 ? "Upkeep Required" : "Healthy";
-		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $cacheStatus);
+		$cacheStatus = ($succesrc == 1 or $succesrcf==1) ? "Upkeep Required" : "Healthy";
+		
+		$caches->addActivityNew($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $eq_used, $cacheStatus );
 
 		// add note to cache
 		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
@@ -96,17 +100,23 @@ if (isset($_POST['sys_adj'])) {
 
 		// update expiration date if needed
 		if ($updateexp == 1) {
-			$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+			if ($eq_used == 'fil') {
+				$hasfil = 0;
+				$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate, $hasfil);
+			}
+			else {
+				$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+			}			
 		}
 		
 		// RESCUE update
 		// add a Rescue record only if rescue was successful; Agent note will serve for all others
-		if ($succesrc == 1) {
+		if ($succesrc == 1 or $succesrcf==1) {
 			// create a new instance of Rescue class
 			$rescue = new Rescue($db);
 			// add a new Rescue record
 			$db->beginTransaction();
-			$newRescueID = $rescue->createESRCRequest($system, $aidedpilot, $pilot, 'closed-esrc');
+			$newRescueID = $rescue->createESRCRequestNew($system, $aidedpilot, $pilot, 'closed-esrc', $eq_used);
 			// insert rescue note if set
 			if (isset($notes) && $notes != '') {
 				$notes = 'ESRC - ' . $notes;

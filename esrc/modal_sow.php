@@ -2,6 +2,22 @@
 
 <?php 
 $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
+// get cache information from database
+$old_cache = $caches->getLastCacheInfo($system);
+$script = 'var oldLoc, oldAlign, oldDist, oldPass; ';
+
+if (!empty($old_cache)) {
+	$oldHasfil = ($old_cache['has_fil'] == 1 ? 'true' : 'false');	
+	$script .= "var oldHasfil = $oldHasfil;";
+	$script .= 'var oldLoc = "' .$old_cache["Location"] . '";';
+	$script .= 'var oldAlign = "' . $old_cache["AlignedWith"] . '";';
+	$script .= 'var oldDist = "' . Output::htmlEncodeString($old_cache['Distance']) . '";';
+	$script .= 'var oldPass = "' . Output::htmlEncodeString($old_cache['Password']) . '";';
+}
+
+
+
+
 ?>
 <div id="SowModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -11,6 +27,8 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Sower</h4>
       </div>
+
+			
       <form name="sowform" id="sowform" action="process_sow.php" method="POST">
 	      <div class="modal-body black">
 			<div class="form-group">
@@ -23,6 +41,14 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 					</p>
 				</span>
 			</div>
+		<div style="display: block;">					
+			<a class="btn btn-success btn-xs" tabindex="98" role="button" href="javascript: copyOldInfo();">Same as last Cache</a>
+		</div>
+
+		<div style="float: right;">					
+			<a class="btn btn-warning btn-xs" tabindex="98" role="button" href="javascript: setUnaligned();">Unaligned</a>
+		</div>
+		
 			<!--This is the beginning of the swap fields class="form-control" -------------->
 			<div id="topfield">
 				<div class="field form-group">
@@ -31,14 +57,14 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 						<option value="">- Select -</option>
 						<?php 
 						foreach ($locopts as $val) {
-							echo '<option value="' . $val . '">' . $val . '</option>';
+								echo '<option value="' . $val . '">' . $val . '</option>';
 						}
 						?>
 					</select>
 				</div>
 			</div><!-- End topfield -->
 
-			<div style="display: block; text-align: right;">					
+			<div style="display: block; float: right;">					
 				<a class="btn btn-success btn-xs" tabindex="99" role="button" href="javascript: swapThem();">Swap Align &lt;-&gt; Location fields</a>
 			</div>
 
@@ -49,7 +75,7 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 						<option value="">- Select -</option>
 						<?php
 						foreach ($locopts as $val) {
-							echo '<option value="' . $val . '">' . $val . '</option>';
+								echo '<option value="' . $val . '">' . $val . '</option>';
 						}
 						?>
 					</select>
@@ -61,18 +87,27 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 
 			<div class="field form-group">
 				<label class="control-label" for="distance">Distance from location(km)<span class="descr"><em>Must be between 22000 and 50000.</em></span></label>
-				<input class="form-control " id="distance" name="distance" type="number" min="22000" max="50000" step="1" required/>
+				<input class="form-control " id="distance" name="distance" required />
 			</div>
 
 			<div class="field form-group">
-				<label class="control-label" for="password">Password<span class="descr"><em>Generated password is pre-filled. Click to 
+				<label class="control-label" for="spassword">Password<span class="descr"><em>Generated password is pre-filled. Click to 
 					paste your own password.</em></span></label>
-				<input type="text" class="form-control" id="password" name="password" 
+				<input type="text" class="form-control" id="spassword" name="password" 
 					value="<?=$cachepass?>" maxlength="15" onclick="select();" required />
 			</div>
+			
+			<div>
+				<label for="hasfil">
+					<input id="hasfil" name="hasfil" type="checkbox" value="1" data-error="Does the cache contain a filament?">
+					<strong style="background-color: red;">Filament: </strong>Does the cache contain a filament?
+				</label>
+			</div>
+							
+							
 		  	<div class="field form-group">
-				<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>
-				<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+				<label class="control-label" for="snotes">Notes<span class="descr">Other important information we need to know</span></label>
+				<textarea class="form-control" id="snotes" name="notes" rows="3"></textarea>
 			</div>
 	      </div>
 	      <div class="modal-footer">
@@ -93,6 +128,10 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
     $("#sowform").validator();
   });
 	*/
+	
+
+		
+		
   if (typeof(Storage) !== "undefined"){
       if (localStorage.LocOnTop) {
           LocOnTop = (localStorage.LocOnTop == 'true');
@@ -108,15 +147,48 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
   }
 
 
+
+<?=$script?>	
+
+function copyOldInfo(){
+	//oldLoc, oldAlign, oldDist, oldPass
+	// location, alignedwith, distance, password
+	document.getElementById('location').value = oldLoc;
+	document.getElementById('alignedwith').value = oldAlign;
+	document.getElementById('distance').value = oldDist;
+	document.getElementById('snotes').value = "";
+	//document.getElementById('password').value = oldPass;
+}
+
 	
-  function validatePlanets(caller)
-  { 
+
+function setUnaligned(){
+	if (confirm('An unaligned cache requires prior approval. Has this been approved?')) {
+		document.getElementById("location").value = 'Unaligned'; 
+		document.getElementById("alignedwith").value = 'Unaligned'; 
+		document.getElementById('distance').value = 'Unaligned';
+		document.getElementById('snotes').value = 'Locate with corp bookmark. ';
+	} 
+}
+	
+  function validatePlanets(caller){ 
 	var location = document.getElementById("location"); 
 	var align = document.getElementById("alignedwith");  	 
-	  if (location.value == align.value) {
+	  if ((location.value != 'Unaligned') && location.value == align.value) {
 		  alert("Location planet and align planet must be different."); 
 		  caller.selectedIndex = -1; 
 	  }
+	 if (caller.value == 'Unaligned'){
+		 if (confirm('An unaligned cache requires prior approval. Has this been approved?')) {
+			document.getElementById("location").value = 'Unaligned'; 
+			document.getElementById("alignedwith").value = 'Unaligned'; 
+			document.getElementById('distance').value = 'Unaligned';
+			document.getElementById('snotes').value = 'Locate with corp bookmark. ';
+		} 
+		else{
+			caller.selectedIndex = 0;
+		}		
+	 }
   }
 
   function swapThem()

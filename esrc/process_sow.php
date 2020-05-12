@@ -64,6 +64,7 @@ if (isset($_POST['sys_sow'])) {
 	$password = test_input($_POST["password"]);
 	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : 'Healthy';
 	$notes = test_input($_POST["notes"]);
+	$hasfil = ((isset($_POST['hasfil']) and $_POST['hasfil'] == 1) ? true : false);
 	
 	// check the system
 	if (isset($system))
@@ -94,11 +95,11 @@ if (isset($_POST['sys_sow'])) {
 		$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 	}
 	
-	if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && $location != 'See Notes') {
+	if (!empty($location) && !empty($alignedwith) && $location === $alignedwith && ($location != 'See Notes' and $location != 'Unaligned')) {
 		$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
 	}
 	
-	if ((int)$distance < 22000 || (int)$distance > 50000) { 
+	if ($alignedwith != 'Unaligned' and ((int)$distance < 22000 || (int)$distance > 50000)) { 
 		$errmsg = $errmsg . "Distance (".Output::htmlEncodeString($distance).") must be a number between 22000 and 50000.\n"; 
 	}
 	//END FORM VALIDATION
@@ -119,12 +120,13 @@ if (isset($_POST['sys_sow'])) {
 		}
 		
 		//perform [cache] insert
-		$newID = $caches->createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note);
+		$newID = $caches->createCacheNew($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note, $hasfil);
 
 		// create a new cache activity
 		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
 
 		// check active cache total and notify on discord if = 2122
+		/*
 		$live_active_cache_count = $caches->getLiveActiveCount();
 		if ($live_active_cache_count == 2122 ){
 			include_once '../class/discord.class.php';
@@ -137,7 +139,7 @@ if (isset($_POST['sys_sow'])) {
 			$skip_the_gif = 1;
 			$discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);
 		}
-		
+		*/
 		
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
