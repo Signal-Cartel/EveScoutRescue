@@ -116,6 +116,38 @@ class Rescue {
 		// return the new created rescue ID
 		return $rescueID;
 	}
+
+	/**
+	 * Create a new ESRC rescue request with filament
+	 *
+	 * @param unknown $system
+	 * @param unknown $pilot
+	 * @param unknown $agentname
+	 * @param unknown $status
+	 * @return unknown
+	 * @param $eqused 'pas' for probeas and scanner or 'fil' for filament
+	 */
+	public function createESRCRequestNew($system, $pilot, $agentname, $status, $eqused)
+	{
+		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
+		$this->db->query("INSERT INTO rescuerequest(system, pilot, startagent, requestdate, 
+			finished, lastcontact, status, eq_used) VALUES (:system, :pilot, :agent, :requestdate, 1, :lastcontact, :status, :eqused)");
+		$this->db->bind(":system", $system);
+		$this->db->bind(":pilot", $pilot);
+		$this->db->bind(":agent", $agentname);
+		$this->db->bind(":requestdate", $dtnow);
+		$this->db->bind(":lastcontact", $dtnow);
+		$this->db->bind(":status", $status);
+		$this->db->bind(":eqused", $eqused);
+		
+		// execute insert query
+		$this->db->execute();
+		// get new rescue ID
+		$rescueID = $this->db->lastInsertId();
+		
+		// return the new created rescue ID
+		return $rescueID;
+	}
 	
 	/**
 	 * Create a new note for a rescue request

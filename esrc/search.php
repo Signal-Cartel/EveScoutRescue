@@ -188,6 +188,7 @@ if (!empty($errmsg)) {
 <?php
 }
 
+
 // check if a system is supplied
 if (!empty($system)) {
 	// display result for the selected system
@@ -274,6 +275,7 @@ if (!empty($system)) {
 							<th>Distance</th>
 							<th>Password</th>
 							<th>Status</th>
+							<th style="color: red;">Filament</th>
 							<th>Expires On</th>
 							<th>Bookmark</th>
 						</tr>
@@ -290,6 +292,7 @@ if (!empty($system)) {
 								onClick="SelectAllCopy('cachepass1')"></i>
 					</td>
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
+					<td><?php echo ($row['has_fil'] == 1 ? 'Yes' : 'No'); ?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 
 					<td><input type="text" id="bookmark1" style="width:180px;"
@@ -451,17 +454,22 @@ if (!empty($system)) {
 						<th class="white">Align</th>
 						<th class="white">Location</th>
 						<th class="white">Distance</th>
+						<th class="white">Password</th>
 						<th class="white">Expires</th>
 						<th class="white">Note</th>
 					</tr>
 				</thead>
 				<tbody>';
+		
 
 		foreach ($systemActivities as $activity) {
+
 			if (   !(($system == constant("ANOIKISDIV")) and (($activity['Pilot']) == 'Tamayo'))   ){			
 				//get cache table data for sower records
 				$sowrow = '';
 				if ($activity['EntryType'] == 'sower') {
+					
+					// get cache data table 
 					$sowrow = $caches->getCacheData($activity['CacheID']);
 				}
 				switch ($activity['EntryType']) {
@@ -505,6 +513,11 @@ if (!empty($system)) {
 				echo '<td class="text-nowrap">'. $rowLoc .'</td>';
 				$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
 				echo '<td class="text-nowrap">'. $rowDist.'</td>';
+
+				$rowPass = (!empty($sowrow)) ? $sowrow['Password'] : '';
+				echo '<td class="text-nowrap">'. Output::htmlEncodeString($rowPass) .'</td>';
+				
+				
 				$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
 				echo '<td class="text-nowrap">'. $rowExp.'</td>';
 				echo '<td class="white">'. Output::htmlEncodeString($activity['Note']) .'</td>';
@@ -531,11 +544,14 @@ include 'modal_edit.php';
 ?>
 
 <script type="text/javascript">
+		
+		
 	function SelectAllCopy(id) {
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
 	}
+	
 </script>
 
 </body>

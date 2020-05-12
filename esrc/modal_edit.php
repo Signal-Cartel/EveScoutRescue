@@ -39,6 +39,7 @@ if (isset($_POST['sys_edit'])) {
 	$editDistance = test_input($_POST["distance"]);
 	$editPassword = test_input($_POST["password"]);
 	$editNewNote = test_input($_POST["newNote"]);
+	$edithasfil = !empty($_POST['hasfil']) ? intval($_POST['hasfil']) : 0; // used filament
 	
 	//FORM VALIDATION
 	if (empty($editLocation) || empty($editAlignedwith) || empty($editDistance) || empty($editPassword)) {
@@ -61,7 +62,7 @@ if (isset($_POST['sys_edit'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		// edit existing cache
-		$caches->updateCache($editCacheid, $editLocation, $editAlignedwith, $editDistance, $editPassword);
+		$caches->updateCacheNew($editCacheid, $editLocation, $editAlignedwith, $editDistance, $editPassword, $edithasfil);
 
         //prepare note
 		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
@@ -144,6 +145,16 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 				<input type="text" class="form-control" id="password" name="password" 
 					value="<?=$row['Password']?>" maxlength="15" onclick="select();" required />
 			</div>
+			
+			<?php			
+			 $hasfilcheck = ($row['has_fil'] == 1 ? 'checked' : '');
+			?>
+			<div class="field form-group">
+				<label class="control-label" for="hasfil">Filament<span class="descr">Does the cache contain a filament?</span></label>
+				<input type="checkbox" class="form-control" id="hasfil" name="hasfil" 
+					value = '1' <?=$hasfilcheck ?>/>
+			</div>
+
 		  	<div class="field form-group">
 				<label class="control-label" for="notes">Notes<span class="descr">Will be appended to existing notes.</span></label>
 				<textarea class="form-control" id="newNote" name="newNote" rows="3"></textarea>
