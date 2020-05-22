@@ -15,7 +15,7 @@
 							// get cache information from database
 							$row = $caches->getCacheInfo($system);
 							if (!empty($row)) {
-								$hasfil = ($row['has_fil'] == 1 ? 'selected' : '');
+								$hasfil = ($row['has_fil'] == 1 ? 'checked' : '');
 							?>
 								<strong>Existing Cache Info</strong><br />
 								Location: <?=$row['Location']?><br />
@@ -66,9 +66,11 @@
 								</label>
 							</div>
 							<div>
-								<label for="hasfil">
-									<input id="hasfil" name="hasfil" type="checkbox" <?=$hasfil?> value="1" data-error="Does the cache contain a filament?">
-									<strong style="background-color: red;">Filament: </strong>Does the cache contain a filament?
+								<label for="hasfil" style="margin-bottom: 20px">
+									<input id="hasfil" name="hasfil" type="checkbox" <?=$hasfil?> value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
+									<p style="display: inline; position: relative; top: -6px;">
+									<strong style="background-color: rgba(136, 0, 0, .6);">Filament: </strong>Does the cache contain a filament?
+									</p>
 								</label>
 							</div>
 							
