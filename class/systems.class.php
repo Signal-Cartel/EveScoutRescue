@@ -311,10 +311,10 @@ class Systems {
 	 */
 	public function getSowLocations($planetCount)
 	{
-		$sowLocs = array('Unaligned','See Notes','Star',
+		$sowLocs = array('Unaligned','Star',
 			'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX');
 
-		$nonPlanetOptions = 3;
+		$nonPlanetOptions = 2;
 		$sowLocs = array_slice($sowLocs, 0, $nonPlanetOptions + $planetCount);
 
 		return $sowLocs;
