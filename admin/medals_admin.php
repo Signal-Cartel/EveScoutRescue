@@ -226,6 +226,7 @@ elseif ($rowid > 0) {
             4 - <a href="?medalid=4&min=1000&max=2999">UltraCacher</a><?php echo ($medalid==4)? $arrow : '' ?><br />
             5 - <a href="?medalid=5&min=3000&max=4999">Heroic Cacher</a><?php echo ($medalid==5)? $arrow : '' ?><br />
             6 - <a href="?medalid=6&min=5000&max=9999">Insane Cacher</a><?php echo ($medalid==6)? $arrow : '' ?><br />
+			7 - <a href="?medalid=7&min=10000&max=19999">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?><br />
             11 - <a href="?medalid=11&min=1&max=9">SAR Bronze</a><?php echo ($medalid==11)? $arrow : '' ?><br />
             12 - <a href="?medalid=12&min=10&max=49">SAR Silver</a><?php echo ($medalid==12)? $arrow : '' ?><br />
             13 - <a href="?medalid=13&min=50&max=99">SAR Gold</a><?php echo ($medalid==13)? $arrow : '' ?><br />
