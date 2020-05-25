@@ -97,7 +97,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 		<?php 
 		include_once '../includes/top-right.php'; 
 		include_once '../includes/top-left.php';
-		include_once 'top-middle.php'; 
+		//include_once 'top-middle.php'; 
 
 		?>
 	</div>

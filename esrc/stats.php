@@ -92,6 +92,8 @@ if (!isset($_REQUEST['end'])) {
 }
 
 // set start and end dates to submitted values (GET or POST)
+// POST vals
+// start: YC122-May-10, end: YC122-May-24 
 if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	// start date
 	$arrStart = explode('-', $_REQUEST['start']);

@@ -93,7 +93,7 @@ if (isset($_POST['sys_adj'])) {
 		$caches->addActivityNew($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $eq_used, $cacheStatus );
 
 		// add note to cache
-		$noteDate = '[' . date("M-d", strtotime("now")) . '] ';
+		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
 		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
 		$caches->addNoteToCache($cacheid, $agent_note);
@@ -102,10 +102,10 @@ if (isset($_POST['sys_adj'])) {
 		if ($updateexp == 1) {
 			if ($eq_used == 'fil') {
 				$hasfil = 0;
-				$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate, $hasfil);
+				$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate, $hasfil);
 			}
 			else {
-				$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate);
+				$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate);
 			}			
 		}
 		
@@ -116,7 +116,7 @@ if (isset($_POST['sys_adj'])) {
 			$rescue = new Rescue($db);
 			// add a new Rescue record
 			$db->beginTransaction();
-			$newRescueID = $rescue->createESRCRequestNew($system, $aidedpilot, $pilot, 'closed-esrc', $eq_used);
+			$newRescueID = $rescue->createESRCRequestNew($system, $cacheid, $aidedpilot, $pilot, 'closed-esrc', $eq_used);
 			// insert rescue note if set
 			if (isset($notes) && $notes != '') {
 				$notes = 'ESRC - ' . $notes;

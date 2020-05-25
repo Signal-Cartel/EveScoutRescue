@@ -1,4 +1,7 @@
 <?php
+// Reviewed for UTC consistency 2020-0524
+date_default_timezone_set('UTC');
+
 if (strpos($_SERVER['HTTP_HOST'],'dev') === FALSE) {
 	$config = parse_ini_file('../../config/esr_dbconfig.ini');
 }
@@ -75,7 +78,8 @@ class Database
 		$options = array(
 			PDO::ATTR_PERSISTENT => true, 
 			PDO::ATTR_EMULATE_PREPARES => false, 
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::MYSQL_ATTR_INIT_COMMAND =>"SET time_zone = '+00:00'"
 		);
 		// Create a new PDO instance
 		try {
