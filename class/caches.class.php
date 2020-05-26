@@ -1,5 +1,5 @@
 <?php
-
+// Reviewed for UTC consistency 2020-0524
 // check if called from an allowed page
 if (!defined('ESRC'))
 {
@@ -397,8 +397,7 @@ class Caches
 	public function createCache($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note)
 	{
 		$this->db->beginTransaction();
-		$this->db->query ("INSERT INTO cache (InitialSeedDate, System, Location,
-			AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note)
+		$this->db->query ("INSERT INTO cache (InitialSeedDate, System, Location, AlignedWith, Distance, Password, Status, ExpiresOn, LastUpdated, Note)
 			VALUES (:sowdate, :system, :location, :aw, :distance, :pw, :status, :expdate, :lastupdated, :note)" );
 		$this->db->bind ( ':sowdate', $activitydate );
 		$this->db->bind ( ':system', $system );
@@ -407,7 +406,7 @@ class Caches
 		$this->db->bind ( ':distance', $distance );
 		$this->db->bind ( ':pw', $password );
 		$this->db->bind ( ':status', 'Healthy' );
-		$this->db->bind ( ':expdate', gmdate ( "Y-m-d", strtotime ( "+30 days", time () ) ) );
+		$this->db->bind ( ':expdate', gmdate("Y-m-d H:i:s", strtotime("+30 days")) );
 		$this->db->bind ( ':lastupdated', $activitydate );
 		$this->db->bind ( ':note', $sower_note );
 		$this->db->execute ();
@@ -443,7 +442,7 @@ class Caches
 		$this->db->bind ( ':distance', $distance );
 		$this->db->bind ( ':pw', $password );
 		$this->db->bind ( ':status', 'Healthy' );
-		$this->db->bind ( ':expdate', gmdate ( "Y-m-d", strtotime ( "+30 days", time () ) ) );
+		$this->db->bind ( ':expdate', gmdate("Y-m-d H:i:s", strtotime("+30 days")) );
 		$this->db->bind ( ':lastupdated', $activitydate );
 		$this->db->bind ( ':note', $sower_note );
 		$this->db->bind ( ':hasfil', $hasfil );

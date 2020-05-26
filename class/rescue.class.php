@@ -1,4 +1,5 @@
 <?php
+// Reviewed for UTC consistency 2020-0524
 // use database class
 require_once '../class/db.class.php';
 
@@ -67,16 +68,14 @@ class Rescue {
 	 */
 	public function createRequest($system, $pilot, $canrefit, $launcher, $agentname)
 	{
-		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
+		//$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
 		$this->db->query("INSERT INTO rescuerequest(system, pilot, canrefit, launcher, startagent, requestdate, lastcontact) 
-			VALUES (:system, :pilot, :canrefit, :launcher, :agent, :requestdate, :lastcontact)");
+			VALUES (:system, :pilot, :canrefit, :launcher, :agent, NOW(), NOW())");
 		$this->db->bind(":system", $system);
 		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":canrefit", $canrefit);
 		$this->db->bind(":launcher", $launcher);
 		$this->db->bind(":agent", $agentname);
-		$this->db->bind(":requestdate", $dtnow);
-		$this->db->bind(":lastcontact", $dtnow);
 		
 		// execute insert query
 		$this->db->execute();
@@ -87,38 +86,9 @@ class Rescue {
 		return $rescueID;
 	}
 	
+	
 	/**
-	 * Create a new ESRC rescue request.
-	 *
-	 * @param unknown $system
-	 * @param unknown $pilot
-	 * @param unknown $agentname
-	 * @param unknown $status
-	 * @return unknown
-	 */
-	public function createESRCRequest($system, $pilot, $agentname, $status)
-	{
-		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
-		$this->db->query("INSERT INTO rescuerequest(system, pilot, startagent, requestdate, 
-			finished, lastcontact, status) VALUES (:system, :pilot, :agent, :requestdate, 1, :lastcontact, :status)");
-		$this->db->bind(":system", $system);
-		$this->db->bind(":pilot", $pilot);
-		$this->db->bind(":agent", $agentname);
-		$this->db->bind(":requestdate", $dtnow);
-		$this->db->bind(":lastcontact", $dtnow);
-		$this->db->bind(":status", $status);
-		
-		// execute insert query
-		$this->db->execute();
-		// get new rescue ID
-		$rescueID = $this->db->lastInsertId();
-		
-		// return the new created rescue ID
-		return $rescueID;
-	}
-
-	/**
-	 * Create a new ESRC rescue request with filament
+	 * Create a new ESRC rescue request - added cacheID and filament May 2020
 	 *
 	 * @param unknown $system
 	 * @param unknown $pilot
@@ -127,16 +97,13 @@ class Rescue {
 	 * @return unknown
 	 * @param $eqused 'pas' for probeas and scanner or 'fil' for filament
 	 */
-	public function createESRCRequestNew($system, $pilot, $agentname, $status, $eqused)
+	public function createESRCRequestNew($system, $cache, $pilot, $agentname, $status, $eqused)
 	{
-		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
-		$this->db->query("INSERT INTO rescuerequest(system, pilot, startagent, requestdate, 
-			finished, lastcontact, status, eq_used) VALUES (:system, :pilot, :agent, :requestdate, 1, :lastcontact, :status, :eqused)");
+		$this->db->query("INSERT INTO rescuerequest(system, cacheID, pilot, startagent, requestdate, finished, lastcontact, status, eq_used) VALUES (:system, :cache, :pilot, :agent, NOW(), 1, NOW(), :status, :eqused)");
 		$this->db->bind(":system", $system);
+		$this->db->bind(":cache", $cache);
 		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":agent", $agentname);
-		$this->db->bind(":requestdate", $dtnow);
-		$this->db->bind(":lastcontact", $dtnow);
 		$this->db->bind(":status", $status);
 		$this->db->bind(":eqused", $eqused);
 		
@@ -172,9 +139,7 @@ class Rescue {
 	 */
 	public function registerContact($rescueID)
 	{
-		$dtnow = gmdate("Y-m-d H:i:s", strtotime("now"));
-		$this->db->query("update rescuerequest set lastcontact = :lastcontact where id = :rescueid");
-		$this->db->bind(":lastcontact", $dtnow);
+		$this->db->query("update rescuerequest set lastcontact = NOW() where id = :rescueid");
 		$this->db->bind(":rescueid", $rescueID);
 		// 		$database->debugDumpParams();
 		$this->db->execute();
@@ -201,17 +166,19 @@ class Rescue {
 	 */
 	public function setStatus($rescueID, $status, $agentName = NULL)
 	{
-		$closeAgent = NULL;
 		$finished = 0;
-			
-// 		if($status === 'closed')
+		$closeAgent = NULL;
+		$closedate = NULL;
+		$qrystring = "UPDATE rescuerequest set status = :status, closeagent = :closeagent, finished = :finished, closedate = NULL WHERE id = :rescueid";
+		
 		if(substr($status, 0, 6) === 'closed')
 		{
-			$closeAgent = $agentName;
 			$finished = 1;
+			$closeAgent = $agentName;
+			$qrystring = "UPDATE rescuerequest set status = :status, closeagent = :closeagent, finished = :finished, closedate = NOW() WHERE id = :rescueid";
 		}
-		$this->db->query("UPDATE rescuerequest set status = :status, closeagent = :closeagent, finished = :finished 
-			WHERE id = :rescueid");
+		
+		$this->db->query($qrystring);
 		$this->db->bind(":status", $status);
 		$this->db->bind(":closeagent", $closeAgent);
 		$this->db->bind(":finished", $finished);
@@ -297,13 +264,15 @@ class Rescue {
 	 * Get all requests by status and date
 	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
 	 * @return array
+	 * gmdate("Y-m-d H:i:s", strtotime("now"));
 	 */
 	public function getRequests($finished = 0, $start = '', $end = '')
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
-		$start = (empty($start)) ? '2017-03-18' : $start;
-		// use "tomorrow" below to account for UTC offset
-		$end = (empty($end)) ? date('Y-m-d', strtotime('tomorrow')) : $end;
+		
+		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
+		
 		// get requests from database
 		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class 
 							FROM rescuerequest rr, wh_systems w
@@ -365,7 +334,7 @@ class Rescue {
 	public function getNotes($requestID)
 	{
 		// get notes from database
-		$this->db->query("SELECT CONVERT_TZ(`notedate`, @@session.time_zone, '+00:00') AS `notedate`, agent, note 
+		$this->db->query("SELECT notedate, agent, note 
 			FROM rescuenote WHERE rescueid = :rescueid ORDER BY notedate DESC");
 		$this->db->bind(":rescueid", $requestID);
 		$data = $this->db->resultset();
@@ -399,10 +368,10 @@ class Rescue {
 	public function getRescueCount($rescuetype, $start = '', $end = '')
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
-		$start = (empty($start)) ? '2017-03-18' : $start;
-		$end = (empty($end)) ? date('Y-m-d', strtotime('now')) : $end;
+		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
 		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest 
-			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end");
+			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end ");
 		$this->db->bind(":rescuetype", $rescuetype);
 		$this->db->bind(":start", $start);
 		$this->db->bind(":end", $end);
@@ -418,7 +387,7 @@ class Rescue {
 	 */
 	public function getSARWaitTime()
 	{
-		$this->db->query("SELECT datediff(LastUpdated, requestdate) as daystosar 
+		$this->db->query("SELECT datediff(closedate, requestdate) as daystosar 
 							FROM rescuerequest WHERE status = 'closed-rescued'");
 		$data = $this->db->resultset();
 		$this->db->closeQuery();
@@ -432,5 +401,33 @@ class Rescue {
 		
 		return $arrint;
 	}
+
+	public function getSARWaitTimeMode()
+	{
+		$this->db->query(
+		"SELECT COUNT( rescuerequest.id ) AS Count_id, DATEDIFF( closedate, requestdate ) AS daystosar
+		FROM rescuerequest
+		WHERE rescuerequest.status = 'closed-rescued'
+		GROUP BY DATEDIFF( closedate, requestdate )
+		ORDER BY Count_id DESC
+		LIMIT 1"
+		);
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		$ctr = 0;
+		$arrint = [];
+		foreach ($data as $value) {
+			$arrint[$ctr] = $value['daystosar'];
+			$ctr++;
+		}
+		
+		return $arrint;
+	}
+	
+	
+	//
+
+
 }
 ?>

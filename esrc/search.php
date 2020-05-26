@@ -474,13 +474,11 @@ if (!empty($system)) {
 				}
 				switch ($activity['EntryType']) {
 					case 'sower':
-					case 'Sower':
 						$actioncellformat = ' actionSower';
 						break;
 					case 'tender':
 						$actioncellformat = ' actionTender';
 						break;
-					case 'adjunct':
 					case 'agent':
 						$actioncellformat = ' actionAgent';
 						break;

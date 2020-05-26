@@ -25,10 +25,12 @@ switch ($_REQUEST['type']) {
 		break;
 }
 // get database connection
+$timestart = $_REQUEST['start'] . " 00:00:00";
+$timeend = $_REQUEST['end'] . " 23:59:59";
 $db = new Database();
 $db->query($sql);
-$db->bind (':start', $_REQUEST['start']);
-$db->bind (':end', $_REQUEST['end']);
+$db->bind (':start', timestart);
+$db->bind (':end', $timeend);
 $result = $db->resultset();
 $db->closeQuery();
 

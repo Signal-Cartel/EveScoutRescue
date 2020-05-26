@@ -40,7 +40,7 @@ if (!empty($old_cache)) {
 					<p id="cachename2">
 						<span id="cachespan">EvE-Scout Rescue Cache - Stranded in this wormhole? Request help in the EvE-Scout channel</span>
 						<span id="copyclipname" class="fa fa-clipboard" onclick="SelectInner('cachespan')" 
-							style="margin-left: 16px;"></span>
+							style="margin-left: 16px;  cursor: pointer;"></span>
 					</p>											
 								
 				</span>
@@ -119,8 +119,8 @@ if (!empty($old_cache)) {
 			<span class="descr" style="width: 100%;">
 			
 					<p style="width:100%">
-					<span id="copyclipbm" class="fa fa-clipboard" onclick="SelectInner('sowbookmark')" style="margin-right: 16px;"></span>
-					Bookmark label:&nbsp; <span id="sowbookmark" style="background-color: rgba(128, 32, 32, 0.8); height: 1.5em; padding: 2px 6px 3px 6px;">not yet set</span>
+					
+					Bookmark label:&nbsp; <span id="sowbookmark" style="background-color: rgba(128, 32, 32, 0.8); height: 1.5em; padding: 2px 6px 3px 6px;">not yet set</span><span id="copyclipbm" class="fa fa-clipboard" onclick="SelectInner('sowbookmark')" style="margin-left: 16px; cursor: pointer;"></span>
 					</p>
 													
 								

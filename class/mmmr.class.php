@@ -30,11 +30,13 @@ function mmmr($array, $output = 'mean')
             case 'mode':
                 $v = array_count_values($array);
                 arsort($v);
+				// suggest using PHP end() funtion instead -ADP
                 foreach($v as $k => $v){$total = $k; break;}
             break;
             case 'modecnt':
             	$v = array_count_values($array);
             	arsort($v);
+				// suggest using PHP end() funtion instead -ADP
             	foreach($v as $k => $v){$total = $v; break;}
             	break;
             case 'range':

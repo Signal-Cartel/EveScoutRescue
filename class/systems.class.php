@@ -1,5 +1,5 @@
 <?php
-
+// Reviewed for UTC consistency 2020-0524
 // check if called from an allowed page
 if (!defined('ESRC'))
 {

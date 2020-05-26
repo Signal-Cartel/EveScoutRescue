@@ -25,6 +25,15 @@ else {
 	echo '<li class="active"><a href="#" data-toggle="tab">SEARCH &amp; RESCUE</a></li>';
 }
 
+// STATS TAB
+if (strpos($_SERVER['PHP_SELF'], 'stats.php') === false) {
+	// inactive
+	echo '<li><a href="stats.php">STATISTICS</a></li>';
+}
+else {
+	// active
+	echo '<li class="active"><a href="#" data-toggle="tab">STATISTICS</a></li>';
+}
 
 // THERA TAB
 if (strpos($_SERVER['PHP_SELF'], 'theraoverview.php') === false) {
@@ -36,16 +45,6 @@ else {
 	echo '<li class="active"><a href="#" data-toggle="tab">THERA SCAN</a></li>';
 }
 
-
-// STATS TAB
-if (strpos($_SERVER['PHP_SELF'], 'stats.php') === false) {
-	// inactive
-	echo '<li><a href="stats.php">STATISTICS</a></li>';
-}
-else {
-	// active
-	echo '<li class="active"><a href="#" data-toggle="tab">STATISTICS</a></li>';
-}
 
 // PVE SHARER TAB
 if (strpos($_SERVER['PHP_SELF'], 'pve_sharer.php') === false) {

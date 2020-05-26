@@ -92,7 +92,7 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
     <div class="row" id="header" style="padding-top: 20px;">
         <?php include_once '../includes/top-right.php'; ?>
         <?php include_once '../includes/top-left.php'; ?>
-        <?php include_once 'top-middle.php'; ?>
+        <?php //include_once 'top-middle.php'; ?>
 
     </div>
     <div class="ws"></div>

@@ -43,13 +43,13 @@ class SARLeaderboard
 	public function getTop($type, $agenttype, $count, $lastDays)
 	{		
 		// set start and end of period
-		$start = gmdate('Y-m-d', strtotime('-'.$lastDays.' days'));
-		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
+		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$lastDays.' days'));
+		$end = gmdate('Y-m-d 23:59:59', strtotime("now"));
 		
 		// prepare the query
 		$this->db->query("SELECT COUNT(*) AS cnt, $agenttype, max(lastcontact) as act
 							FROM rescuerequest
-							WHERE status LIKE :status AND lastcontact BETWEEN :start AND :end
+							WHERE status LIKE :status AND lastcontact BETWEEN :start AND :end 
 							GROUP BY $agenttype
 							ORDER BY cnt desc, act
 							DESC limit :limit");
@@ -88,7 +88,7 @@ class SARLeaderboard
 	 */
 	public function getRescueMaxDays($rescuetype)
 	{
-		$this->db->query("SELECT max(datediff(rr.LastUpdated, rr.requestdate)) AS maxdaystosar
+		$this->db->query("SELECT max(datediff(rr.closedate, rr.requestdate)) AS maxdaystosar
 							FROM rescuerequest rr WHERE rr.status = :rescuetype");
 		$this->db->bind(":rescuetype", $rescuetype);
 		$row= $this->db->single();

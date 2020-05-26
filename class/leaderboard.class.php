@@ -67,12 +67,12 @@ class Leaderboard
 	 */
 	public function getTop($count, $lastDays = 30)
 	{
-		$start = gmdate('Y-m-d', strtotime('-'.$lastDays.' days'));
-		$end = gmdate('Y-m-d', strtotime("+ 1 day"));
+		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$lastDays.' days'));
+		$end = gmdate('Y-m-d 23:29:59', strtotime("now"));
 			
 		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
 					FROM activity
-					WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end
+					WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end 
 					GROUP BY Pilot
 					ORDER BY cnt desc, act DESC limit :limit");
 		$this->db->bind(':start', $start);
@@ -98,11 +98,11 @@ class Leaderboard
 		{
 			$days = 60;
 		}
-		
-		$start = gmdate('Y-m-d', strtotime('-'.$days.' days'));
-		$end = gmdate('Y-m-d', strtotime("+ 1 days"));
+				
+		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$days.' days'));
+		$end = gmdate('Y-m-d 23:59:59', strtotime("now"));
 		$this->db->query("SELECT Pilot, max(ActivityDate) as maxdate FROM activity
-					WHERE ActivityDate BETWEEN :start AND :end
+					WHERE ActivityDate BETWEEN :start AND :end 
 					GROUP BY Pilot ORDER BY maxdate DESC");
 		$this->db->bind(':start', $start);
 		$this->db->bind(':end', $end);
