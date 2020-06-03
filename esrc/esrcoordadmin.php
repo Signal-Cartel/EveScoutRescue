@@ -71,9 +71,11 @@ if (!isset($charname)) {
 	</style>
 
 	<script type="text/javascript">
+		// "order": [[ 1, "desc" ]],
+		//"dom": 'lfprtip'
 		$(document).ready(function() {
 		    $('#tblClosed').DataTable( {
-		        "order": [[ 1, "desc" ]],
+		       "order": [[ 1, "desc" ]],
 		        "pagingType": "full_numbers",
 		        "dom": 'lfprtip'
 		    } );
@@ -98,6 +100,12 @@ if (isset($_REQUEST['sys'])) {
 	$system = htmlspecialchars_decode($_REQUEST["sys"]);
 }
 
+$all = false;
+if (isset($_REQUEST['all'])) {
+	$all = true;
+}
+
+
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
 ?>
@@ -120,9 +128,18 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 	<?php
 	if ($isCoord == 1) {
 		echo '<div class="ws"></div>';
+		$time = microtime(TRUE);
+		$memory = memory_get_usage();
 		// closed requests
-		$data = $rescue->getRequests(1);
+		$start = $all ? '' : date("Y-m-d", strtotime("-3 month", time()));
+		$data = $rescue->getClosedRequests(1,$start);
+		$dat_db = (microtime(TRUE)-$time). ' seconds and '. (memory_get_usage()-$memory). ' bytes';
+		
+		$time = microtime(TRUE);
+		$memory = memory_get_usage();
 		displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
+		$dat_tab = (microtime(TRUE)-$time). ' seconds and '. (memory_get_usage()-$memory). ' bytes';
+		if(true or Config::DEV_SYSTEM == 1)echo "<p>DB: $dat_db <br>TABLE: $dat_tab</p>";
 	}
 	?>
 	</div>
@@ -180,15 +197,17 @@ function translateStatus($status)
  * @param number summary - bit to toggle summary/detailed table listing
  * @param number noUpdate - bit to toggle Update button
  */
-function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0,
-	$summary = 1, $noUpdate = 0)
-{
+function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $summary = 1, $noUpdate = 0){
+	global $all;
+	$pretext = $all ? "All " : "Past 3 Mo ";
 	$strStatus = ($finished == 0) ? 'Active' : 'Closed';
 	$strcols = ($finished == 0 && empty($system)) ? 'col-md-8 ' : '';
 
 	echo '<div class="row">';
 	echo '<div class="'. $strcols .'request">';
-	echo '<span class="sechead">'. $strStatus .' Requests</span>';
+	echo '<span class="sechead">'. $pretext . $strStatus .' Requests </span>';
+	if ($all) {echo '<a href="esrcoordadmin.php" class="btn btn-danger">Past 3 Mo</a>';}
+	else{echo '<a href="esrcoordadmin.php?all=true" class="btn btn-danger">Get All</a>';}
 	if (empty($data)) {
 		echo '<p>None for this system.</p>';
 	}
@@ -237,10 +256,10 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $summary, $noUpdate)
 {
 	// create a new database connection
-	$database = new Database();
+	//$database = new Database();
 	// create object instances
 	//$users = new Users($database);
-	$rescue = new Rescue($database);
+	//$rescue = new Rescue($database);
 
 	$status = $row['status'];
 	$colspan = 0;
@@ -264,14 +283,14 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			
 	// Opened - date request was created
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['requestdate']))  .'</td>';
+	echo '<td style="text-nowrap">'. $row['requestdate']  .'</td>';
 
 	// System - name of J-space system
 	if (empty($system)) {
 		$colspan++;
 		echo '<td>';
 		echo '<a href="rescueoverview.php?sys='.$row['system'].'" target="_blank">'.
-				Output::htmlEncodeString($row['system']).'</a>';
+				$row['system'] .'</a>';
 		echo '</td>';
 	}
 
@@ -290,7 +309,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	}
 	*/
 	echo '<td><a target="_blank" href="https://evewho.com/pilot/'.
-				$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
+				$row['pilot'] .'">'. $row['pilot'] .'</a></td>';
 
 	// Status
 	// set status color: green = new, yellow = pending, orange = check-in needed
@@ -314,27 +333,25 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['lastcontact']))  .'</td>';
+	echo '<td style="text-nowrap">'. $row['lastcontact'] .'</td>';
 
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 	if ($summary == 0) {
 		// Dispatcher - display name of Signaleer who opened request
 		$colspan++;
-		echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
+		echo "<td>". $row['startagent'] ."</td>";
 
 		// Locator - display name of Signaleer who located system (if any)
 		$colspan++;
 		echo '<td>';
-		echo (empty($row['locateagent'])) ? 'N/A' : Output::htmlEncodeString($row['locateagent']);
+		echo (empty($row['locateagent'])) ? 'N/A' : $row['locateagent'];
 		echo '</td>';
 
 		// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
 		$colspan++;
-		$arrRescueAgents = $rescue->getRescueAgents($row['id']);
+		
 		echo '<td>';
-		foreach ($arrRescueAgents as $value) {
-			echo $value['pilot'] .'<br />';
-		}
+		echo $row['rescueagents'];
 		echo '</td>';
 
 		// NOTES

@@ -512,7 +512,7 @@ class Caches
 	public function isRecentSower($username, $cacheid)
 	{
 		$this->db->query("SELECT count(1) as cnt FROM `activity` WHERE CacheID = :cacheid AND Pilot = :pilot 
-			AND EntryType = 'sower' AND ActivityDate > DATE_SUB(NOW(), INTERVAL 1 DAY)");
+			AND EntryType = 'sower' AND ActivityDate > DATE_SUB(NOW(), INTERVAL 7 DAY)");
 		$this->db->bind(":cacheid", $cacheid);
 		$this->db->bind(":pilot", $username);
 		$data = $this->db->single();

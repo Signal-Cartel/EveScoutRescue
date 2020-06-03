@@ -29,7 +29,7 @@ $timestart = $_REQUEST['start'] . " 00:00:00";
 $timeend = $_REQUEST['end'] . " 23:59:59";
 $db = new Database();
 $db->query($sql);
-$db->bind (':start', timestart);
+$db->bind (':start', $timestart);
 $db->bind (':end', $timeend);
 $result = $db->resultset();
 $db->closeQuery();
