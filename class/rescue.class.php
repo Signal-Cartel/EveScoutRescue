@@ -287,6 +287,47 @@ class Rescue {
 		
 		return $data;
 	}
+
+	/**
+	 * Get all requests by status and date
+	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
+	 * @return array
+	 * gmdate("Y-m-d H:i:s", strtotime("now"));
+	 */
+	public function getClosedRequests($finished = 1, $start = '', $end = '')
+	{
+		// set start and end dates to defaults for "all time" if not passed into function
+		
+		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
+		
+		// get requests from database
+		$this->db->query("Select rr.*, ra.rescueagents,
+  DateDiff(rr.closedate, rr.requestdate) As daysopen,
+  w.Class
+From
+  rescuerequest rr Left Join
+  (SELECT rescueagents.reqid, GROUP_CONCAT( rescueagents.pilot
+SEPARATOR '<br>' ) AS rescueagents
+FROM rescueagents
+GROUP BY rescueagents.reqid) as ra
+    On ra.reqid = rr.id,
+  wh_systems w
+Where
+  rr.system = w.System And
+  rr.finished = :finished And
+  rr.lastcontact Between :start And :end
+Order By
+  rr.requestdate DESC");
+		$this->db->bind(":finished", $finished);
+		$this->db->bind(":start", $start);
+		$this->db->bind(":end", $end);
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+
 	
 	/**
 	 * Get all requests by status
