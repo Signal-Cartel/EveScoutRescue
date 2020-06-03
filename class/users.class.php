@@ -47,8 +47,11 @@ class Users {
 	 */
 	public function isSARCoordinator($username)
 	{
+		if (isset($_SESSION['isSARCoordinator'])){
+			return $_SESSION['isSARCoordinator'];
+		} 
 		$result = $this->checkPermission($username, "ESR Coordinator");
-		
+		$_SESSION['isSARCoordinator'] = $result;
 		return $result;
 	}
 	
@@ -59,8 +62,11 @@ class Users {
 	 */
 	public function isAdmin($username)
 	{
+		if (isset($_SESSION['isAdmin'])){
+			return $_SESSION['isAdmin'];
+		} 
 		$result = $this->checkPermission($username, "Admin");
-// 		echo "Admin: ".$result." / ".true."<br>"; 
+		$_SESSION['isAdmin'] = $result;
 		return $result;
 	}
 	

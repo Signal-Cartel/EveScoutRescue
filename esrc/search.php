@@ -134,18 +134,23 @@ if ($isCoord === false  && (Config::DEV_SYSTEM != 1)) {
 	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
 		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
-		$daysdiff = round((strtotime("+1 day")- strtotime("2017-03-01")) / (60 * 60 * 24));
-		$rows = $leaderBoard->getTop(2000, $daysdiff);
-		$bitPilotMatch = 0;
-		foreach ($rows as $value) {
-			if ($charname ==  $value['Pilot']) {
-				if ($value['cnt'] >= 300) {
-					$bitPilotMatch = 1;
-					break;
+		// This is awfully inefficient - ADP
+		if (!isset($_SESSION['megacacher'])){
+			$daysdiff = round((strtotime("+1 day")- strtotime("2017-03-01")) / (60 * 60 * 24));
+			$rows = $leaderBoard->getTop(2000, $daysdiff);
+			$bitPilotMatch = 0;
+			foreach ($rows as $value) {
+				if ($charname ==  $value['Pilot']) {
+					if ($value['cnt'] >= 300) {
+						$bitPilotMatch = 1;
+						break;
+					}
 				}
 			}
+			$_SESSION['megacacher'] = $bitPilotMatch;
 		}
-		if ($bitPilotMatch == 0) {
+		
+		if ($_SESSION['megacacher'] == 0) {
 			// otherwise, pilot may only sow/tend caches for a system they are verified to be present in
 			if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
 				$pilotLocStat = 'not_in_system';
