@@ -11,8 +11,9 @@ class Password {
 	
 	static function generatePassword($length = 10)
 	{
-		// do not contain upper o (similar to zero and upper i similar to lower L
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+		// lowercase letters only for accessibility reasons (web readers for blind users)
+		// no numeral "1" or lowercase "L" as they are easy to confuse
+		$characters = '023456789abcdefghijkmnopqrstuvwxyz';
 		$charactersLength = strlen($characters);
 		$randomString = '';
 		for ($i = 0; $i < $length; $i++) {
