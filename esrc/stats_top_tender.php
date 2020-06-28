@@ -1,5 +1,5 @@
 <?php 
-
+// created for the discord bot to reward top ESRC pilot with icon on discord name
 define('ESRC', TRUE);
 
 //include_once '../includes/auth-inc.php';

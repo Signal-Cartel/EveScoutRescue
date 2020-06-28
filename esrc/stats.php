@@ -356,7 +356,7 @@ if (!empty($errmsg)) {
 				<?php 
 					echo strtoupper($stat_type);
 					if($hide_stats){
-						echo '<div id="esrcCaches" class="text-center" style="width: 900px; height:400px; margin: 0 auto">Why are you here looking for stats?<br/>Shouldn\'t you be out sowing caches for The Tender Games?<br/>';								
+						echo '<div id="esrcCaches" class="text-center" style="width: 100%; height:400px; margin: 0 auto">Why are you here looking for stats?<br/>Shouldn\'t you be out sowing caches for The Tender Games?<br/>';								
 									echo '<img src="../img/tender-games.jpg"/>';	
 									echo '</div>';											
 						}

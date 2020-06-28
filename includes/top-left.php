@@ -1,6 +1,5 @@
-
 <div class="col-sm-2">
-	<a href="../index.php"><img src="../img/eve-scout-logo.png" alt="EvE-Scout Rescue" style="width: 100%; max-width: 150px; height: auto;" /></a>
+	<a href="../index.php"><img src="../img/eve-scout-logo.png" alt="EvE-Scout Rescue" style="width: 100px;" /></a>
 <div id='timedisp'></div>
 <SCRIPT>
 function startTime() {

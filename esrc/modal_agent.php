@@ -50,7 +50,7 @@ $hasfil =  $rowAgent['has_fil'];
 			</div>
 			<div class="field">
 				<label class="control-label" for="notes">Notes<span class="descr">Other information we need to know?</span>
-					<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+					<textarea maxlength="1000" class="form-control" id="notes" name="notes" rows="3"></textarea>
 				</label>
 			</div>
 	      </div>

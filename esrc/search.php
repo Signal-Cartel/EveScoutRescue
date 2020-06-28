@@ -507,7 +507,7 @@ if (!empty($system)) {
 
 				echo '<tr>';
 				$rowdate = $activity['ActivityDate'];
-				echo '<td class="white text-nowrap">'. Output::getEveDate($rowdate) .'</td>';
+				echo '<td class="white text-nowrap">'. Output::getEveDatetime($rowdate) .'</td>';
 				echo '<td class="text-nowrap">'. $activity['Pilot'] .'</td>';
 				echo '<td class="white' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
 				$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
