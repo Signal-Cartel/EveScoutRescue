@@ -538,6 +538,7 @@ class Caches
 	/**
 	 * Get most active sowing/tending pilot,
 		* most recent downtime to prior downtime
+		* This is used by discord to award top pilot with icon on name
 	 */
 	public function getTopTender()
 	{
