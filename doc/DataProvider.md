@@ -99,3 +99,5 @@ https://..../data/copilotextended.php?cache=J999999
 https://..../data/copilotextended.php?cache=J999999
 
         {"error":"Invalid system: J999999"}
+
+#### Reviewed by Thrice - 20200630
