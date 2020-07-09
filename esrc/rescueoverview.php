@@ -95,8 +95,9 @@ $database = new Database();
 $users = new Users($database);
 $rescue = new Rescue($database);
 
-// check for SAR Coordinator login
-$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
+// check for user roles
+$isAdmin = $users->isAdmin($charname);
+$isCoord = ($users->isSARCoordinator($charname) || $isAdmin);
 //testing
 	//$isCoord = 1;
 	//$charname = 'Captain Crinkle';
@@ -204,6 +205,7 @@ if (!empty($errmsg)) {
 <?php
 include 'modal_sar_new.php';
 include 'modal_sar_manage.php';
+include 'modal_sar_add-rescue-pilot.php';
 ?>
 
 <script type="text/javascript">
@@ -211,6 +213,12 @@ include 'modal_sar_manage.php';
 	var url = window.location.href;
 	if(url.indexOf('req=') != -1) {
 	    $('#ModalSAREdit').modal('show');
+	}
+
+	// auto-display Add Pilot modal when "reqp" parameter provided in querystring
+	var url = window.location.href;
+	if(url.indexOf('reqp=') != -1) {
+	    $('#ModalSARAddPilot').modal('show');
 	}
 
 	// auto-display new modal when "new" parameter provided in querystring
@@ -479,6 +487,10 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$colspan++;
 			echo '<td>';
 			echo (empty($row['locateagent'])) ? 'N/A' : Output::htmlEncodeString($row['locateagent']);
+			if ($_SESSION['isAdmin']) {
+				echo '<br><a type="button" class="btn btn-danger" role="button" href="?sys='.
+					$row['system'].'&reqp='.$row['id'].'&agent=loc">Add/Update</a></td>';
+			}
 			echo '</td>';
 			
 			// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
@@ -486,7 +498,27 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$arrRescueAgents = $rescue->getRescueAgents($row['id']);
 			echo '<td>';
 			foreach ($arrRescueAgents as $value) {
-				echo $value['pilot'] .'<br />';
+				if ($_SESSION['isAdmin']) {
+					echo '<form method="post" class="form-inline" id="user_role_del'. $value['id'] .'" 
+						action="rescueaction.php">';
+				}
+
+				echo $value['pilot'];
+				
+				if ($_SESSION['isAdmin']) {
+				echo '<input type="hidden" name="rowid" value="'. $value['id'] .'">';
+				echo '<input type="hidden" name="action" value="RemovePilot">';
+				echo '<input type="hidden" name="system" value="'. $system .'">';
+                echo '<button type="submit" class="btn btn-xs btn-danger">X</button>';
+				echo '</form>';
+				}
+				else {
+					echo '<br>';
+				}
+			}
+			if ($_SESSION['isAdmin']) {
+				echo '<br><a type="button" class="btn btn-danger" role="button" href="?sys='.
+					$row['system'].'&amp;reqp='.$row['id'].'&agent=res">Add Pilot</a></td>';
 			}
 			echo '</td>';
 			

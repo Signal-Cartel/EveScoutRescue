@@ -72,8 +72,7 @@ if ($action === 'View') {
 }
 
 // process create action
-else if ($action === 'Create')
-{
+elseif ($action === 'Create') {
 	$errorCount = 0;
 	// mark data as ok
 	$dataOK= TRUE;
@@ -137,8 +136,7 @@ else if ($action === 'Create')
 	}
 }
 
-else if ($action === 'UpdateRequest')
-{
+elseif ($action === 'UpdateRequest') {
 	// update request data
 	$rescueID = $_REQUEST['request'];
 
@@ -167,8 +165,28 @@ else if ($action === 'UpdateRequest')
 	
 	displayRequestOverview ( $_REQUEST['system'] );
 }
-else
-{
+
+elseif ($action === 'AddRescuePilot') {
+	$agent_type = $_REQUEST['agent_type'];
+	$rescueID = $_REQUEST['request'];
+	$rescueagent = Output::prepTextarea($_REQUEST['newrescuepilot']);
+	if ($agent_type == 'loc') {
+		$rescue->updateLocateAgent($rescueID, $rescueagent);
+	}
+	elseif ($agent_type == 'res') {
+		$rescue->createRescueAgent($rescueID, $rescueagent);
+	}
+
+	displayRequestOverview ( $_REQUEST['system'] );
+}
+
+elseif ($action === 'RemovePilot') {
+	$rescue->deleteRescueAgent($_REQUEST['rowid']);
+
+	displayRequestOverview ( $_REQUEST['system'] );
+}
+
+else {
 	echo "Unknown action: ".Output::htmlEncodeString($action);
 }
 

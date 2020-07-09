@@ -200,6 +200,21 @@ class Rescue {
 		$this->db->bind(":rescueid", $rescueID);
 		$this->db->execute();
 	}
+
+	/**
+	 * Update the locateagent for the rescue request w/o changing status
+	 * @param unknown $rescueID - ID of record to update
+	 * @param unknown $locateagent - Name of pilot who located system
+	 */
+	public function updateLocateAgent($rescueID, $locateagent)
+	{	
+		$this->db->query("UPDATE rescuerequest 
+							SET locateagent = :locateagent 
+							WHERE id = :rescueid");
+		$this->db->bind(":locateagent", $locateagent);
+		$this->db->bind(":rescueid", $rescueID);
+		$this->db->execute();
+	}
 	
 	/**
 	 * Add a rescueagent for the rescue request
@@ -230,6 +245,17 @@ class Rescue {
 		$result = $this->db->single();
 		
 		return $result['cnt'];
+	}
+
+	/**
+	 * Delete a specific rescue agent
+	 * @param unknown $rowid - ID of [rescueagent] record to update
+	 */
+	public function deleteRescueAgent($rowid)
+	{
+		$this->db->query("DELETE FROM rescueagents WHERE id = :rowid");
+		$this->db->bind(":rowid", $rowid);
+		$this->db->execute();
 	}
 	
 	/**
