@@ -282,20 +282,20 @@ function setBookmark(){
 }
 		
 	function SelectInner(id) {
-		copytext = document.getElementById(id).innerText;
+		copytext = document.getElementById(id);
 		  var textArea = document.createElement("textarea");
-		  textArea.value = copytext;
+		  textArea.value = copytext.innerText;
 		  // Avoid scrolling to bottom
 		  textArea.style.top = "0";
 		  textArea.style.left = "0";
 		  textArea.style.position = "fixed";
 
-		  document.body.appendChild(textArea);
+		  copytext.appendChild(textArea);
 		  textArea.focus();
 		  textArea.select();
 
 		try {
-			var successful = document.execCommand('copy');
+			var successful = document.execCommand("Copy");
 			var msg = successful ? 'successful' : 'unsuccessful';
 			console.log('Fallback: Copying text command was ' + msg);
 		} 
@@ -303,9 +303,10 @@ function setBookmark(){
 			console.error('Fallback: Oops, unable to copy', err);
 		}
 
-		document.body.removeChild(textArea);
+		copytext.removeChild(textArea);
 	}
-	
+
+		
   function swapThem()
   {
 		var alignVal = document.getElementById("alignedwith").value;

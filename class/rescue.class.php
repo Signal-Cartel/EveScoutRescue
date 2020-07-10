@@ -245,6 +245,33 @@ class Rescue {
 		
 		return $result;
 	}
+
+
+
+	/**
+	 * Get open request for Rescue Assistant
+	 * @param $system
+	 * @param $pilot = rescuee pilot name
+	 * @return id
+	 */
+	public function getRescueAssistantRequest($system, $pilot)
+	{
+		// set the default query
+		$sql = "SELECT * FROM rescuerequest WHERE system = :system AND pilot = :pilot AND finished = 0
+					ORDER BY requestdate DESC";
+		// get requests from database
+		$this->db->query($sql);
+		$this->db->bind(":system", $system);
+		$this->db->bind(":pilot", $pilot);
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		foreach ($data as $value) {
+			$id = $value['id'];
+			break;
+		}
+		return $id;
+	}
+
 	
 	/**
 	 * Check if a SAR request is active for pilot
