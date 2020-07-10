@@ -33,6 +33,17 @@ class Output {
 		
 		return $result;
 	}
+
+
+	static function prepTextarea($note)
+	{
+		$strclean = $note;
+		$strclean = trim($strclean);
+		$strclean = stripslashes($strclean);
+		$strclean = htmlspecialchars_decode($strclean);
+	
+		return $strclean;
+	}
 	
 }
 
