@@ -3,6 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 // https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=A%20Dead%20Parrot&system=J135031
+// https://dev.evescoutrescue.com/esrc/rescue_assistant-dev.php?pilot=A%20Dead%20Parrot&system=J135031
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
@@ -178,7 +179,6 @@ if (!empty($errmsg)) {
 	border: solid 1px rgba(145,145,145,.5);
     border-radius: 6px;
     padding: 0px 10px 10px 10px;
-	min-height: 60%;
 }
 
 #ra #page1{
@@ -212,10 +212,8 @@ if (!empty($errmsg)) {
 } 
 
 #ra .step {
-	margin-top: 8px;
-	min-height: 16px;
-	overflow: auto;
-	
+	margin: 0px;
+	    margin-bottom: 4px;
 }
 
 #ra .note {
@@ -226,16 +224,34 @@ if (!empty($errmsg)) {
     opacity: 0.7;
 }
 
+#ra .note-label{
+	display: inline-block;
+    width: 32%;
+    text-align: right;
+}
+
+#ra .note-text{
+	border-color: transparent;
+    border-bottom-color: #646464;
+    color: #d0d0d0;
+	width: 64%;
+	vertical-align: top;
+	margin-bottom: 6px;
+}
 #ra .step-label{
 	color: white;
 	display: inline;
+	text-align: left;
 
 }
 
+#ra .step-inst{
+	color: white;
+	margin: 0px;
+}
 #ra .step-text{
 	color: white;
-	display: inline;
-	float: right;
+	text-align: right;
 }
 
 #ra .step-btn{
@@ -246,11 +262,14 @@ if (!empty($errmsg)) {
 
 #ra .copyable{
 	transition: box-shadow .5s;
+	vertical-align: top;
+	margin-bottom: 8px;
 }
 
 #ra textarea {
 	border: solid 1px rgba(145,145,145,.5);
 	outline: none;
+	overflow: hidden;
 	resize: none;
 }
 
@@ -313,15 +332,22 @@ if (!empty($errmsg)) {
 	margin-bottom: -20px;
 }
 
+#ra .backbutton-foot{
+	position: relative;
+	bottom: 14px;
+	left: 0px;
+	margin-bottom: -20px;
+}
+
 #ra .copybutton {
 	position: relative;
-    min-width: 24px;
+    min-width: 26px;
     height: 13px;
     display: inline-block;
     background-repeat: no-repeat;
 	background-position: right;
-	margin-left: 8px;
-
+	margin-left: 2px;
+	cursor: default;
 }
 
 #ra .copybutton:before {
@@ -409,7 +435,6 @@ if (!empty($errmsg)) {
 		<span class="flag en"></span>
 		<select id="lang-picker"  onchange="changeLang()">
 		  <option style="background-image:url(../img/flag-english.jpg);" value="en">English</option>
-		  <option style="background-image:url(../img/flag-russian.jpg);" value="ru">Russian</option>
 		  <option style="background-image:url(../img/flag-french.jpg);" value="fr">French</option>
 		</select>
 	</div>
@@ -425,7 +450,9 @@ if (!empty($errmsg)) {
 			<h4>INITIAL CONTACT - <?=$pilot_name?></h4>
 			
 				<div class="step">
-					<p class="step-label">Find the pilot in game</p>				
+					<div class="step-label">
+						<p class="step-inst">Find the pilot in game</p>	
+					</div>					
 					<div class="step-text">
 						<input type="text" class="copyable info" value="<?=$pilot_name?>">
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
@@ -433,7 +460,7 @@ if (!empty($errmsg)) {
 				</div>
 
 				<div class="step">
-					<p class="step-label">And start a conversation</p>
+					<div class="step-label"><p class="step-inst">And start a conversation</p></div>
 					<div class="step-text">
 						<input type="text" class="copyable convo" style="width: 300px;" 
 						value="I am from EvE-Scout Rescue. o7" 
@@ -451,7 +478,8 @@ if (!empty($errmsg)) {
 				
 				
 				<div class="step">
-					<p class="step-label">Make sure pilot is safe</p>
+					<div class="step-label">
+<p class="step-inst">Make sure pilot is safe</p></div>
 					<div class="step-text">
 						<input type="text" class="copyable convo" style="width: 400px;" 
 						value="First and most important, are you in a safe spot so we can talk?"
@@ -466,8 +494,9 @@ if (!empty($errmsg)) {
 					</p>
 				</div>	
 
-				<div class="step">
-					<p class="step-label">Gather information</p>
+				<div class="step">					
+					<div class="step-label">	<p class="step-inst">Gather information</p></div>
+					
 					<div class="step-text">
 						<input type="text" class="copyable convo" style="width: 320px;" 
 						value="Good. What is your situation, and how can I help?"
@@ -478,14 +507,17 @@ if (!empty($errmsg)) {
 				<hr>
 				
 				<div class="step">
-					<p class="step-label">Cache status</p>
+					<div class="step-label">
+	<p class="step-inst">Cache status</p></div>
 					<div class="step-text">
 						<h4><?=$pilot_system?> : <?=$cache_status?> and <?=$filament_status?> filament.</h4>
 					</div>
 				</div>
 
 				<div class="step">
-					<p class="step-label">Can the cache be useful?</p>
+					<div class="step-label">
+							<p class="step-inst">Can the cache be useful?</p>
+					</div>
 					<div class="step-text">
 						<input type="text" class="copyable convo" style="width: 480px;" 
 						value="Do you have a probe launcher fitted? or maybe a mobile depot in your cargo?"
@@ -495,7 +527,8 @@ if (!empty($errmsg)) {
 				</div>
 				
 				<div class="step">
-					<p class="step-label">Is the pilot with a fleet?</p>
+					<div class="step-label">
+							<p class="step-inst">Is the pilot with a fleet?</p>					</div>
 					<div class="step-text">
 						<input type="text" class="copyable convo" style="width: 390px;" value="Is anyone in your group flying a ship with a maintenance bay?"
 						data-fr="Est-ce que quelqu’un dans votre groupe pilote un vaisseau avec un baie de maintenance?">
@@ -521,13 +554,14 @@ if (!empty($errmsg)) {
 			<div class="col-md-8 page notshown" id="page2" >
 
 					<div class="backbutton">
-					<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+					<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 					</div>
 
 			<h4>RESCUE CACHE</h4>
 			
 				<div class="step">
-					<p class="step-label">In discord, ask for someone with admin access to add bookmark for the system:</p> 
+					<div class="step-label">
+							<p class="step-inst">In discord, ask for someone with admin access to add bookmark for the system:</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -537,7 +571,8 @@ if (!empty($errmsg)) {
 				</div>
 					
 				<div class="step">
-					<p class="step-label">Will the pilot use:</p>
+					<div class="step-label">
+							<p class="step-inst">Will the pilot use:</p>					</div>
 				</div>
 				<div class="step">
 					<p class="step-btn">
@@ -558,15 +593,17 @@ if (!empty($errmsg)) {
 
 				
 				<div class="step">
-					<p class="step-label">Add pilot to Bookmark Access List
+					<div class="step-label">
+							<p class="step-inst">Add pilot to Bookmark Access List
 						<span class="gametext">Neocom-&gt;Social-&gt;Access List</span>
 						<input type="text" class="copyable info" value="<?=$pilot_name?>">
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>			
-					</p> 
+					</p>					</div> 
 				</div>
 
 				<div class="step">
-					<p class="step-label">Then, send the ingame eve-mail to the pilot:</p>
+					<div class="step-label">
+							<p class="step-inst">Then, send the ingame eve-mail to the pilot:</p>					</div>
 				</div>
 				
 			<!-- Eve-Mail -->
@@ -577,7 +614,8 @@ if (!empty($errmsg)) {
 				</div>
 
 				<div class="step">
-					<p class="step-label">Pilot can’t find the cache? Check Overview settings.</p>
+					<div class="step-label">
+							<p class="step-inst">Pilot can’t find the cache? Check Overview settings.</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -591,7 +629,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 				<div id="supplyreturn">
 				<div class="step">
-					<p class="step-label">Ask to return cache supplies (if applicable)</p>
+					<div class="step-label">
+							<p class="step-inst">Ask to return cache supplies (if applicable)</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -604,7 +643,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 
 				<div class="step">
-					<p class="step-label">If the pilot will return supplies:</p>
+					<div class="step-label">
+							<p class="step-inst">If the pilot will return supplies:</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -618,7 +658,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 				<!--
 				<div class="step">
-					<p class="step-label">If there is a static connection to HS/LS, you can inform the pilot</p>
+					<div class="step-label">
+							<p class="step-inst">If there is a static connection to HS/LS, you can inform the pilot</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -637,7 +678,9 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 					</h4>
 				</div>
 
-				
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
 			</div>	
 	</section>		
 			
@@ -646,13 +689,14 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 			<div class="col-md-8 page notshown" id="page3" >
 
 					<div class="backbutton">
-					<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+					<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 					</div>
 
 			<h4>SEARCH & RESCUE</h4>
 
 				<div class="step">
-					<p class="step-label">FIND A ROUTE:<br>In discord, ask Coordinators if we have a chain to pilot's system:</p> 
+					<div class="step-label">
+							<p class="step-inst">FIND A ROUTE:<br>In discord, ask Coordinators if we have a chain to pilot's system:</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -663,7 +707,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 
 				<div class="step">
-					<p class="step-label">Even if we have a chain, see if pilot has recent connection info:</p>
+					<div class="step-label">
+							<p class="step-inst">Even if we have a chain, see if pilot has recent connection info:</p>					</div>
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -676,7 +721,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 				
 				<div class="step">
-					<p class="step-label">If the pilot's entrance hole may still exist</p>
+					<div class="step-label">
+							<p class="step-inst">If the pilot's entrance hole may still exist</p>					</div>
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -695,14 +741,16 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 			
 
 				<div class="step">
-					<p class="step-label">If we have a possible route to the pilot's location, begin an immediate rescue:</p>
-					<button class="btn btn-danger" onclick="ChangePage(4)">Active SAR</button>
+					<div class="step-label">
+							<p class="step-inst">If we have a possible route to the pilot's location, begin an immediate rescue:</p>					</div>
+					<p class="step-btn"><button class="btn btn-danger" onclick="ChangePage(4)">Active SAR</button></p>
 				</div>	
 
 				<hr>
 					
 				<div class="step">
-					<p class="step-label">If not, inform the pilot:</p>
+					<div class="step-label">
+							<p class="step-inst">If not, inform the pilot:</p>					</div>
 				</div>
 				<div class="step">
 					<div class="step-text">
@@ -714,13 +762,17 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">And offer more options.</p>
+					<div class="step-label">
+							<p class="step-inst">And offer more options.</p>					</div>
 				</div>
 
 				<div class="pagebottom" id="ra_foot">
 					<h4>
 					<button class="btn btn-info" onclick="ChangePage(13)">More options</button></h4>
 				</div>
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
 
 				
 			</div>	
@@ -729,20 +781,22 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 	<section data="PAGE 4 ACTIVE SAR">
 		<div class="col-md-8 page notshown" id="page4" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
 			<h4>ACTIVE SAR</h4>
 
 				<div class="step">
-					<p class="step-label">FIRST 
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">FIRST 
+					</p>					</div> 
 				</div>	
 
 				<div class="step">
-					<p class="step-label">Open the new SAR so the Coordinator team knows there is an active rescue. 
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">Open the new SAR so the Coordinator team knows there is an active rescue. 
+					</p>					</div> 
 				</div>	
 				
 				<div class="step">
@@ -752,17 +806,19 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 
 				<div class="step note">
-					<p class="step-label">NOTE: For your safety, (and because we are not WH "locators") do not share any route information with pilot that they did not provide directly. 
+					<p class="step-inst">NOTE: For your safety, (and because we are not WH "locators") do not share any route information with pilot that they did not provide directly. 
 					</p> 
 				</div>					
 				
 				<div class="step">
-					<p class="step-label">THEN
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">THEN
+					</p>					</div> 
 				</div>		
 		
 				<div class="step">
-					<p class="step-label">Inform the team that you are on your way to the pilot's location.</p> 
+					<div class="step-label">
+							<p class="step-inst">Inform the team that you are on your way to the pilot's location.</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -772,7 +828,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">If needed, ask for backup in 911 channel:</p> 
+					<div class="step-label">
+							<p class="step-inst">If needed, ask for backup in 911 channel:</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -782,7 +839,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">If needed, ask Coordinators for an OPSEC shared folder</p> 
+					<div class="step-label">
+							<p class="step-inst">If needed, ask Coordinators for an OPSEC shared folder</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -794,19 +852,22 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 			<hr>
 
 				<div class="step">
-					<p class="step-label">FLY TO SYSTEM 				
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">FLY TO SYSTEM 				
+					</p>					</div> 
 				</div>	
 				
 				
 				<div class="step">
-					<p class="step-label">If you are able to reach the pilot's system: 
+					<div class="step-label">
+							<p class="step-inst">If you are able to reach the pilot's system: 
 					<button class="btn btn-danger" onclick="ChangePage(7)">Live rescue operation</button><!-- RESCUE OP -->					
-					</p> 
+					</p>					</div> 
 				</div>	
 				
 				<div class="step">
-					<p class="step-label">If not, inform the pilot:</p>
+					<div class="step-label">
+							<p class="step-inst">If not, inform the pilot:</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -816,8 +877,9 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">And offer more options 			
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">And offer more options 			
+					</p>					</div> 
 				</div>	
 				
 				
@@ -826,20 +888,24 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				<button class="btn btn-default" onclick="ChangePage(13)">More options</button><!-- MORE OPTIONS -->
 				</h4>
 			</div>	
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
 		</div>	
 	</section>
 
 	<section data="PAGE 5 WAIT FOR RESCUE">
 		<div class="col-md-8 page notshown" id="page5" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
 			<h4>WAIT FOR RESCUE</h4>
 
 				<div class="step">
-					<p class="step-label">Information gathering</p> 
+					<div class="step-label">
+							<p class="step-inst">Information gathering</p>					</div> 
 				</div>	
 				<div class="step">
 				<div class="step-text">
@@ -851,7 +917,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 
 				<div class="step">
-					<p class="step-label">Discord instructions</p> 
+					<div class="step-label">
+							<p class="step-inst">Discord instructions</p>					</div> 
 				</div>	
 				<div class="step">
 				<div class="step-text">
@@ -863,7 +930,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 
 				<div class="step">
-					<p class="step-label">Hull size (optional)</p> 
+					<div class="step-label">
+							<p class="step-inst">Hull size (optional)</p>					</div> 
 				</div>	
 				<div class="step">
 				<div class="step-text">
@@ -875,7 +943,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 				
 				<div class="step">
-					<p class="step-label">Have you asked time zone? Language?</p> 
+					<div class="step-label">
+							<p class="step-inst">Have you asked time zone? Language?</p>					</div> 
 				</div>	
 				
 				<div class="step">
@@ -890,7 +959,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 			
 				
 				<div class="step">
-					<p class="step-label">Fly safe!</p> 
+					<div class="step-label">
+							<p class="step-inst">Fly safe!</p>					</div> 
 				</div>	
 				<div class="step">
 				<div class="step-text">
@@ -903,7 +973,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 
 				<div class="step">
-					<p class="step-label">Optional Eve-mail to pilot with info about Signal Cartel</p>
+					<div class="step-label">
+							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>					</div>
 				</div>
 				
 				<div class="step">
@@ -913,6 +984,9 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 
 				
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
 
 		</div>	
 	</section>
@@ -920,15 +994,16 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 	<section data="PAGE 6 POST MORTEM SAR">
 		<div class="col-md-8 page notshown" id="page6" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
 			<h4>POST MORTEM SAR</h4>
 
 				<div class="step">
-					<p class="step-label">FIRST:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">FIRST:
+					</p>					</div> 
 				</div>	
 
 				<div class="step">
@@ -939,15 +1014,18 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 				
 				<div class="step">
-					<p class="step-label">THEN:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">THEN:
+					</p>					</div> 
 				</div>		
 		
 				<div class="step">
-					<p class="step-label">Inform the team about the outcome.</p> 
+					<div class="step-label">
+							<p class="step-inst">Inform the team about the outcome.</p>					</div> 
 				</div>			
 				<div class="step">
-					<p class="step-label">If pilot self-destructed:</p> 
+					<div class="step-label">
+							<p class="step-inst">If pilot self-destructed:</p>					</div> 
 				</div>	
 				<div class="step">
 					<div class="step-text">
@@ -957,7 +1035,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">If pilot was killed:</p> 
+					<div class="step-label">
+							<p class="step-inst">If pilot was killed:</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -967,7 +1046,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">Optional Eve-mail to pilot with info about Signal Cartel</p>
+					<div class="step-label">
+							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>					</div>
 				</div>
 				<div class="step">
 					<p class="step-btn">
@@ -979,32 +1059,39 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 			<div class="pagebottom" id="ra_foot">
 
 			</div>	
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
+
 		</div>	
 	</section>	
 
 	<section data="PAGE 7 RESCUE OP">
 		<div class="col-md-8 page notshown" id="page7" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
 			<h4>RESCUE OP (draft ideas)</h4>
 
 				<div class="step">
-					<p class="step-label">IN SYSTEM OPERATIONS:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">IN SYSTEM OPERATIONS:
+					</p>					</div> 
 				</div>	
 
 				<div class="step">
-					<p class="step-label">Once you arrive in system, PRESS RECHECK on Allison to be credited for rescue.
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">Once you arrive in system, PRESS RECHECK on Allison to be credited for rescue.
+					</p>					</div> 
 				</div>	
 				
 				
 				<div class="step">
-					<p class="step-label">Copyable text for in-system operations
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">Copyable text for in-system operations
+					</p>					</div> 
 				</div>			
 				<div class="step">
 				<div class="step-text">
@@ -1014,7 +1101,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>
 				
 				<div class="step">
-					<p class="step-label">More ideas</p> 
+					<div class="step-label">
+							<p class="step-inst">More ideas</p>					</div> 
 				</div>	
 				<div class="step">
 				<div class="step-text">
@@ -1028,12 +1116,14 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 			<hr>
 				<div class="step">
-					<p class="step-label">RESCUE SUCCESS:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">RESCUE SUCCESS:
+					</p>					</div> 
 				</div>	
 
 				<div class="step">
-					<p class="step-label">Let the team know!</p> 
+					<div class="step-label">
+							<p class="step-inst">Let the team know!</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -1043,7 +1133,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 				<div class="step">
-					<p class="step-label">Optional Eve-mail to pilot with info about Signal Cartel</p>
+					<div class="step-label">
+							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>					</div>
 				</div>
 				
 				<div class="step">
@@ -1054,12 +1145,14 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 			<hr>
 				<div class="step">
-					<p class="step-label">RESCUE FAILURE:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">RESCUE FAILURE:
+					</p>					</div> 
 				</div>	
 
 				<div class="step">
-					<p class="step-label">If pilot was killed:</p> 
+					<div class="step-label">
+							<p class="step-inst">If pilot was killed:</p>					</div> 
 				</div>			
 				<div class="step">
 					<div class="step-text">
@@ -1069,7 +1162,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>					
 
 				<div class="step">
-					<p class="step-label">Optional Eve-mail to pilot with info about Signal Cartel</p>
+					<div class="step-label">
+							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>					</div>
 				</div>
 				
 				<div class="step">
@@ -1083,6 +1177,10 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 
 			</div>	
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
+
 		</div>	
 	</section>	
 
@@ -1090,7 +1188,7 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 		<!-- PAGE COMMENT -->	
 		<div class="col-md-8 page notshown" id="page8" >
 			<div class="backbutton">
-				<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
@@ -1098,7 +1196,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 
 				<div class="step">
-					<p class="step-label">Thank the pilot</p>
+					<div class="step-label">
+							<p class="step-inst">Thank the pilot</p>					</div>
 				</div>
 				<div class="step">
 					<div class="step-text">
@@ -1111,16 +1210,18 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 
 				<div class="step">
-					<p class="step-label">Remove pilot from Bookmark Access List 
+					<div class="step-label">
+							<p class="step-inst">Remove pilot from Bookmark Access List 
 						<span class="gametext">Neocom-&gt;Social-&gt;Access List</span>					
 						<input type="text" class="copyable info" value="<?=$pilot_name?>">
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>			
-					</p> 
+					</p>					</div> 
 				</div>		
 
 
 				<div class="step">
-					<p class="step-label">Ask to have the bookmark removed from the folder.</p> 
+					<div class="step-label">
+							<p class="step-inst">Ask to have the bookmark removed from the folder.</p>					</div> 
 				</div>	
 				<div class="step">
 					<div class="step-text">
@@ -1131,7 +1232,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				
 				
 				<div class="step">
-					<p class="step-label">Optional Eve-mail to pilot with info about Signal Cartel</p>
+					<div class="step-label">
+							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>					</div>
 				</div>
 				
 				<div class="step">
@@ -1149,7 +1251,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 			<div class="pagebottom" id="ra_foot">
 				<div class="step">
-					<p class="step-label">Final Step</p>
+					<div class="step-label">
+							<p class="step-inst">Final Step</p>					</div>
 				</div>
 
 				<div class="step">
@@ -1159,6 +1262,10 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				</div>	
 
 			</div>	
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
+
 		</div>	
 	</section>
 
@@ -1166,7 +1273,7 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 		<!-- PAGE COMMENT -->	
 		<div class="col-md-8 page notshown" id="page12" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 			<h4>COMPLETE</h4>
@@ -1185,14 +1292,15 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 		<!-- PAGE COMMENT -->	
 		<div class="col-md-8 page notshown" id="page13" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 			<h4>MORE OPTIONS</h4>
 
 				<div class="step">
-					<p class="step-label">Offer more options:
-					</p> 
+					<div class="step-label">
+							<p class="step-inst">Offer more options:
+					</p>					</div> 
 				</div>	
 				
 				<div class="step">
@@ -1220,7 +1328,8 @@ Please consider the value of your ship/implants and the time it may take for us 
 
 				<div class="pagebottom" id="ra_foot">
 					<div class="step">
-						<p class="step-label">Pilot's choice?</p> 
+						<div class="step-label">
+							<p class="step-inst">Pilot's choice?</p>					</div> 
 					</div>	
 					<h4>
 					<button class="btn btn-danger" onclick="ChangePage(5)">Wait for rescue - SAR</button>
@@ -1229,12 +1338,16 @@ Please consider the value of your ship/implants and the time it may take for us 
 					</h4>
 
 					<div class="step">
-						<p class="step-label">Or, maybe he received connection information from locals?</p> 
+						<div class="step-label">
+							<p class="step-inst">Or, maybe he received connection information from locals?</p>					</div> 
 					</div>	
 					<h4>
 						<button class="btn btn-success" onclick="ChangePage(4)">Return to active SAR</button>
 					</h4>						
 				</div>
+				<div class="backbutton-foot">
+				<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
+				</div>				
 
 		</div>	
 	</section>
@@ -1243,7 +1356,7 @@ Please consider the value of your ship/implants and the time it may take for us 
 		<!-- PAGE COMMENT -->	
 		<div class="col-md-8 page notshown" id="page10" >
 			<div class="backbutton">
-			<button class="btn btn-secondary" onclick="BackPage()">&#9668; BACK</button>
+			<button class="btn btn-warning" onclick="BackPage()">&#9668; BACK</button>
 			</div>
 		
 		
@@ -1272,34 +1385,39 @@ Please consider the value of your ship/implants and the time it may take for us 
 <section data="NOTES">
 	<div class="col-md-4" id="notes">
 
-	<div class="step">
-		<p class="step-btn">
-			<button class="btn btn-default" data-toggle="modal" data-target="#faqModal">F.A.Q.s</button>	
-		</p>
-	</div>	
-			
-	<div class="step">
-		<p class="step-btn">
-			<button class="btn btn-default" data-toggle="modal" data-target="#utilityModal">Utilities</button>	
-		</p>
-	</div>	
+		<div class="step">
+			<p class="step-btn">
+				<button class="btn btn-default" data-toggle="modal" data-target="#faqModal">F.A.Q.s</button>	
+			</p>
+		</div>	
 				
-	<hr>
+		<div class="step">
+			<p class="step-btn">
+				<button class="btn btn-default" data-toggle="modal" data-target="#utilityModal">Utilities</button>	
+			</p>
+		</div>	
+					
+		<hr>
+		<div>
+			<h3>Your Notes</h3>
+		<div class="note-label">HULL</div>	
+		<input data-lab="Hull" class="note-text" type="text">
+		<div class="note-label">ALTS</div>	
+		<input data-lab="Alts" class="note-text" type="text">
+		<div class="note-label">DISCORD NAME</div>	
+		<input data-lab="Discord name" class="note-text" type="text">
+		<div class="note-label">TIME ZONE</div>	
+		<input data-lab="Time zone" class="note-text" type="text">
+		<div class="note-label">LANGUAGE</div>	
+		<input data-lab="Language" class="note-text" type="text">
+		<div class="note-label">REASON</div>	
+		<input data-lab="Reason" class="note-text" type="text">
+		<div class="note-label">OTHER INFO</div>
+		
+		<textarea id="other-text" rows="4" class="note-text" style=""></textarea>
+		</div>
 
-	<h3>Your Notes</h3>
-
-<textarea id="notes-text" rows="20" cols="34" style="display: block;">
-HULL: 
-ALTS: 
-DISCORD NAME: 
-TIME ZONE: 
-LANGUAGE: 
-REASON: 
-OTHER INFO: 
-</textarea>
-
-
-</div>
+	</div>
 </section>	
 
 </div>
@@ -1423,25 +1541,29 @@ OTHER INFO:
 	  
 	  
 			<div class="step">
-				<div class="step-text">
-					Subject<br>
+					<div class="step-label">
+						<p class="step-inst">Subject</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" rows="1" cols="64"
 					data-fr="EvE-Scout Rescue - Information sur le container"
 					>EvE-Scout Rescue - Cache Information</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-				</div>				
+					</div>				
 			</div>
 			<div class="step">
-				<div class="step-text">
-					Body<br>
+					<div class="step-label">
+						<p class="step-inst">Body</p>
+					</div>
+					<div class="step-text">
 <textarea class="copyable convo" rows="20" cols="64"
-data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Voici le lien pour le dossier partagé de Signet:&#013;&#010;&lt;a href=&quot;bookmarkFolder:6026349&quot;&gt;ESR 911 Stranded Pilots&lt;/a&gt;  &#013;&#010;&#010;Mettez ce dossier en ligne et n’oubliez pas d’entrer «L» pour ouvrir la fenêtre des signets sur votre écran.  &#013;&#010;Le mot de passe du container est le suivant:&#013;&#010;<?= $cache_pass?>&#013;&#010;&#010;Prenez ce dont vous avez besoin."
+data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Voici le lien pour le dossier partagé de Signet:&#013;&#010;&lt;a href=&quot;bookmarkFolder:6026349&quot;&gt;ESR 911 Stranded Pilots&lt;/a&gt;  &#013;&#010;&#010;Mettez ce dossier en ligne et n’oubliez pas d’entrer «L» pour ouvrir la fenêtre des signets sur votre écran. De notre côté, nous allons vous ajouter à la liste d’accès du dossier, et mettre le signet à votre disposition. Cela peut prendre quelques minutes. Si vous ne pouvez acceder au dossier ou si vous ne voyez pas le signet, attendez juste quelques instants et essayez à nouveau. &#013;&#010;Le mot de passe du container est le suivant:&#013;&#010;<?= $cache_pass?>&#013;&#010;&#010;Prenez ce dont vous avez besoin."
 >Dear <?= $pilot_name?>,
 
 Here is the link to the shared bookmark folder:
 &lt;a href="bookmarkFolder:6026349"&gt;ESR 911 Stranded Pilots&lt;/a&gt;
 
-Put that folder online and don't forget to type "L" to see your saved locations.
+Put that folder online and don't forget to type "L" to see your saved locations. It might take a few minutes to add you to the folder's access list, and to put the bookmark up. If you can't access the folder or if you don't see the bookmark, just wait a little and try again.
 
 The password to open the Rescue Cache is: <?= $cache_pass?>
 
@@ -1470,16 +1592,20 @@ Take whatever you need.
 	  <div class="modal-body">
 	  
 			<div class="step">
-				<div class="step-text">
-					Subject<br>
+					<div class="step-label">
+						<p class="step-inst">Subject</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" rows="1" cols="64"
 					data-fr="">EvE-Scout Rescue - Wrap Up</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-				</div>				
+					</div>				
 			</div>
 			<div class="step">
-				<div class="step-text">
-					Body<br>
+					<div class="step-label">
+						<p class="step-inst">Body</p>
+					</div>
+					<div class="step-text">
 <textarea class="copyable convo" rows="24" cols="64">
 Dear <?= $pilot_name?>,
 
@@ -1494,10 +1620,8 @@ Have a great day and fly safe o/
 </textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>				
-			</div>	  
+			</div>
 
-
-			
 	  </div>
 	  <div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1516,16 +1640,20 @@ Have a great day and fly safe o/
 	  <div class="modal-body">
 	  
 			<div class="step">
-				<div class="step-text">
-					Subject<br>
+					<div class="step-label">
+						<p class="step-inst">Subject</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" rows="1" cols="64"
 					data-fr="">EvE-Scout Rescue - Wrap Up</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-				</div>				
+					</div>				
 			</div>
 			<div class="step">
-				<div class="step-text">
-					Body<br>
+					<div class="step-label">
+						<p class="step-inst">Body</p>
+					</div>
+					<div class="step-text">
 <textarea class="copyable convo" rows="24" cols="64">
 Dear <?= $pilot_name?>,
 
@@ -1566,16 +1694,20 @@ We hope to find you very soon o7
 	  <div class="modal-body">
 	  
 			<div class="step">
-				<div class="step-text">
-					Subject<br>
+					<div class="step-label">
+						<p class="step-inst">Subject</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" rows="1" cols="64"
 					data-fr="">EvE-Scout Rescue - Wrap Up</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-				</div>				
+					</div>				
 			</div>
 			<div class="step">
-				<div class="step-text">
-					Body<br>
+					<div class="step-label">
+						<p class="step-inst">Body</p>
+					</div>
+					<div class="step-text">
 <textarea class="copyable convo" rows="24" cols="64">
 Dear <?= $pilot_name?>,
 
@@ -1634,15 +1766,17 @@ Have a great day and fly safe o/
 	  <div class="modal-body">
 	  
 			<div class="step">
-				<p class="step-label">The pilot may have logged out for safety reasons.<br>
+				<div class="step-label">
+							<p class="step-inst">The pilot may have logged out for safety reasons.<br>
 				In this case, send an eve-mail (Mail A) asking them to convo you with an alt, and invite them to join the stranded pilot's lounge on Discord.
-				</p> 
+				</p>					</div> 
 			</div>	
 
 
 			<div class="step">
-				<p class="step-label">In the rare case you get immediately kicked out of your conversation, the pilot may have set the private chat to automatically refuse new invitations. If that happens, try Mail B first.
-				</p>
+				<div class="step-label">
+							<p class="step-inst">In the rare case you get immediately kicked out of your conversation, the pilot may have set the private chat to automatically refuse new invitations. If that happens, try Mail B first.
+				</p>					</div>
 				 <p class "step-btn">
 				 <button class="btn btn-default" onclick="changeMail('a')">Mail A</button> 
 				 <button class="btn btn-default" onclick="changeMail('b')">Mail B</button> 
@@ -1650,15 +1784,19 @@ Have a great day and fly safe o/
 			</div>	
 
 			<div class="step">
-				<div class="step-text">
-					Subject<br>
+					<div class="step-label">
+						<p class="step-inst">Subject</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" id="mail-subj-nr" rows="1" cols="60" data-fr="Je fais partie de EvE-Scout Rescue Division o7">EvE-Scout Rescue - Your 911 call</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>				
 			</div>
 			<div class="step">
-				<div class="step-text">
-					Body<br>
+					<div class="step-label">
+						<p class="step-inst">Body</p>
+					</div>
+					<div class="step-text">
 					<textarea class="copyable convo" id="mail-body-nr" rows="20" cols="60" 
 					data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Vous avez déclenché un appel 911, et nous avons bien reçu votre demande. Nous sommes en train d’essayer de vous contacter en conversation privée, mais vous ne répondez pas. Il se peut que vous vous soyez déconnecté pour des raisons de sécurité. Dans ce cas, vous pouvez me joindre en conversation privée avec un alt, ou bien rejoindre la «Stranded Pilot Lounge» sur notre serveur Discord: &lt;a href=&quot;https://discord.gg/ru6Juw&quot;&gt;https://discord.gg/ru6Juw&lt;/a&gt;   &#013;&#010;&#010;Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous. &#013;&#010;&#010;Merci o/">Dear <?= $pilot_name?>, &#013;&#010;&#010;You issued a 911 call, and we received you request. We are trying to reach you in a private conversation, but you are not responding. You may have logged out for safety reasons. In that case, you can join me in a private conversation with an alt, or you can alternatively join the "Stranded pilot lounge" on our discord server here: &lt;a href="https://discord.gg/ru6Juw"&gt;https://discord.gg/ru6Juw&lt;/a&gt; &#013;&#010;&#010;Be aware that the Discord channel is a public channel, do not reveal any information about your position or situation. Just wave, and an EvE-Scout Rescue Operator will be in touch. &#013;&#010;&#010;Thank you o/</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
@@ -1728,8 +1866,9 @@ function changeOS(choice){
 	  <div class="modal-body">
 
 			<div class="step">
-				<p class="step-label">Is the pilot being actively hunted?
-				</p> 
+				<div class="step-label">
+							<p class="step-inst">Is the pilot being actively hunted?
+				</p>					</div> 
 			</div>	
 			
 			<div class="step">
@@ -1752,8 +1891,9 @@ function changeOS(choice){
 			
 			
 			<div class="step">
-				<p class="step-label">Suggest that the pilot log out and join us with alt, or on Discord:
-				</p> 
+				<div class="step-label">
+							<p class="step-inst">Suggest that the pilot log out and join us with alt, or on Discord:
+				</p>					</div> 
 			</div>	
 			
 			<div class="step">
@@ -1767,7 +1907,7 @@ function changeOS(choice){
 
 			<div class="step">
 				<div class="step-text">
-					<textarea class="copyable convo" rows="3" cols="60"
+					<textarea class="copyable convo" rows="4" cols="60"
 					data-fr="Vous pouvez aussi joindre notre «Stranded pilot lounge» sur notre serveur Discord: https://discord.gg/ru6Juw (Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous.)"
 					>You can also join our stranded pilot lounge on Discord: https://discord.gg/ru6Juw    (be aware that it's a public channel, don't reveal any information about your situation: just wave and an EvE-Scout Rescue Operator will be in touch). </textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
@@ -1775,8 +1915,9 @@ function changeOS(choice){
 			</div>
 
 			<div class="step">
-				<p class="step-label">Or suggest pilot call us back later.
-				</p> 
+				<div class="step-label">
+							<p class="step-inst">Or suggest pilot call us back later.
+				</p>					</div> 
 			</div>
 			
 			<div class="step">
@@ -1789,9 +1930,10 @@ function changeOS(choice){
 			</div>
 
 			<div class="step">
-				<p class="step-label">In these cases, open a placeholder SAR 
+				<div class="step-label">
+							<p class="step-inst">In these cases, open a placeholder SAR 
 				<button class="btn btn-danger" data-dismiss="modal" data-toggle="modal" data-target="#ModalSARNew">Open SAR</button>
-				</p> 
+				</p>					</div> 
 			</div>	
 
 			
@@ -1815,51 +1957,56 @@ function changeOS(choice){
 				<h4>Ready made answers to common pilot questions!</h4>
 				
 				<div class="step">
-					<p class="step-label">What do you charge for a rescue?</p>
+					<div class="step-label">
+							<p class="step-inst">What do you charge for a rescue?</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
-						<textarea class="copyable convo" rows="3" cols="70">Our rescue services are completely free, but donations are always appreciated.</textarea>
+						<textarea class="copyable convo" style="height: 1.8em; width:40em;">Our rescue services are completely free, but donations are always appreciated.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
 				
 				<div class="step">
-					<p class="step-label">How can I make a donation?</p>
+					<div class="step-label">
+							<p class="step-inst">How can I make a donation?</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
-						<textarea class="copyable convo" rows="3" cols="70">You can donate in-game to the corp Signal Cartel. Please put "ESR" or "Rescue" in the memo line.</textarea>
+						<textarea class="copyable convo" style="height: 3.2em; width:40em;">You can donate in-game to the corp Signal Cartel. Please put "ESR" or "Rescue" in the memo line.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
 				
 				<div class="step">
-					<p class="step-label">What is a safe spot?</p>
+					<div class="step-label">
+							<p class="step-inst">What is a safe spot?</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
-						<textarea class="copyable convo" rows="3" cols="70">A safe spot is a location in space away from any celestial or structure that you can warp to for evading hostiles. To create a create a safe spot, you have to warp from a celestial (or an object in space) to another one, create a bookmark while warping (ctrl+b) and place it (ENTER) between those two entities. You can then warp to that bookmark and you are a little more safe. You can create multiple safe spots in a system, and warp from one to another for more safety. You can even create safe spots between two safe spots (even safer).</textarea>
+						<textarea class="copyable convo" style="height: 11em; width:40em;">A safe spot is a location in space away from any celestial or structure that you can warp to for evading hostiles. To create a create a safe spot, you have to warp from a celestial (or an object in space) to another one, create a bookmark while warping (ctrl+b) and place it (ENTER) between those two entities. You can then warp to that bookmark and you are a little more safe. You can create multiple safe spots in a system, and warp from one to another for more safety. You can even create safe spots between two safe spots (even safer).</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
 
 				<div class="step">
-					<p class="step-label">How to use a filament?</p>
+					<div class="step-label">
+							<p class="step-inst">How to use a filament?</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
-						<textarea class="copyable convo" rows="3" cols="70">First, you have to form a fleet with yourself (right-click on your own name and select “form fleet with”), and put your safety on “partial” (green button on the top left corner of your HUD). Put the filament in your cargo, right click on it and launch the filament. Don’t forget to put your safety back to “enable” (green) after landing in null sec.</textarea>
+						<textarea class="copyable convo" style="height: 8em; width:40em;">First, you have to form a fleet with yourself (right-click on your own name and select “form fleet with”), and put your safety on “partial” (green button on the top left corner of your HUD). Put the filament in your cargo, right click on it and launch the filament. Don’t forget to put your safety back to “enable” (green) after landing in null sec.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
 
 				<div class="step">
-					<p class="step-label">Why don’t you put a mobile depot in your caches?</p>
+					<div class="step-label">
+							<p class="step-inst">Why don’t you put a mobile depot in your caches?</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
-						<textarea class="copyable convo" rows="3" cols="70">We would love to be able to put mobile depots in our rescue caches, but physics are against us: it’s impossible to put a “container” inside another “container”. We tried.</textarea>
+						<textarea class="copyable convo" style="height: 5em; width:40em;">We would love to be able to put mobile depots in our rescue caches, but physics are against us: it’s impossible to put a “container” inside another “container”. We tried.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
@@ -1884,7 +2031,8 @@ function changeOS(choice){
 	  <div class="modal-body">
 		
 				<div class="step">
-					<p class="step-label">Copy the following into an in game note and always have these items ready to 'drag' into an eve-mail or chat window</p>
+					<div class="step-label">
+							<p class="step-inst">Copy the following into an in game note and always have these items ready to 'drag' into an eve-mail or chat window</p>					</div>
 				</div>
 				<div class="step">
 				<div class="step-text">
@@ -1921,9 +2069,10 @@ Corporation infor for <a href="showinfo:2//98372649">Signal Cartel</a>
 	  <div class="modal-body">
 
 			<div class="step">
-				<p class="step-label">1. Check in-game log files 
+				<div class="step-label">
+							<p class="step-inst">1. Check in-game log files 
 				<br><em>This will not work if pilot has full logs, or has logged out since entering system.</em>
-				</p> 
+				</p>					</div> 
 			</div>	
 			<div class="step">
 				<div class="step-text">
@@ -1934,7 +2083,8 @@ Corporation infor for <a href="showinfo:2//98372649">Signal Cartel</a>
 
 
 			<div class="step">
-				<p class="step-label">2. Check Eve program logs on computer</p> 
+				<div class="step-label">
+							<p class="step-inst">2. Check Eve program logs on computer</p>					</div> 
 			</div>	
 			<div class="step">
 				<div class="step-text">
@@ -1944,7 +2094,8 @@ Corporation infor for <a href="showinfo:2//98372649">Signal Cartel</a>
 			</div>
 
 			<div class="step">
-				<p class="step-label">If the pilot doesn't know</p>
+				<div class="step-label">
+							<p class="step-inst">If the pilot doesn't know</p>					</div>
 				<div class="step-text">
 					<input type="text" class="copyable convo" style="width: 400px;" value="What operating system are you running? Windows? Mac? Linux?">
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
@@ -1959,7 +2110,7 @@ Corporation infor for <a href="showinfo:2//98372649">Signal Cartel</a>
 			</div>		
 			<div class="step">
 				<div class="step-text">
-					<textarea class="copyable convo"  rows="3" cols="70" id="convoDiv">Click an OS button above to reveal instruction</textarea>
+					<textarea class="copyable convo"  style="height:5em; width: 90%;" id="convoDiv">Click an OS button above to reveal instruction</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>			
 			</div>			
@@ -2060,15 +2211,15 @@ var currentPage = 'page1';
 var language = 'en';
 
 $("#ModalSARNew").on('show.bs.modal', function(){
-   CopyNotesTo('sarnotes');
+   CopyNoteFieldsTo('sarnotes');
 });
 
 $("#ModalSAREdit").on('show.bs.modal', function(){
-   CopyNotesTo('sareditnotes');
+   CopyNoteFieldsTo('sareditnotes');
 });
 
 $("#AgentModal").on('show.bs.modal', function(){
-   CopyNotesTo('agentnotes');
+   CopyNoteFieldsTo('agentnotes');
 });
 
 
@@ -2076,6 +2227,18 @@ function CopyNotesTo(element){
 	var notes = document.getElementById('notes-text').value;
 	el = document.getElementById(element);
 	el.value = notes;
+}
+
+function CopyNoteFieldsTo(element){
+	var noteText = "";
+	var notes = document.getElementsByClassName("note-text");
+	for(var i=0; i < notes.length; i++) {
+		if (notes[i].value != ""){noteText += notes[i].dataset['lab'] + ": " + notes[i].value + "\r\n"}
+	}
+	var other = document.getElementById('other-text').value;
+	if (other.value){noteText += "Other Info:" + other.value;}	
+	el = document.getElementById(element);
+	el.value = noteText;
 }
 
 function SelectAllCopy(ele) {
@@ -2109,6 +2272,11 @@ function changeLang() {
 	var classnames = "flag " + language;
 	for(var i=0; i < flags.length; i++) {
 		flags[i].className = classnames;
+	}
+	var buts = document.getElementsByClassName("copybutton");
+	var lang = (language == "en" ? "" : language); 
+	for(var i=0; i < buts.length; i++) {
+		buts[i].innerText = lang;
 	}
 }
   
