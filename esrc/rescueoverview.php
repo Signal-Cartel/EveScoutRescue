@@ -369,7 +369,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// "Update" button - display only for finished requests if coord logged in
 
 		if (($finished == 1 and $isCoord == 1) || ($finished == 0 && ($isCoord == 1 or $isSARAgent == 1 or $isRescueAgent == 1) && $noUpdate == 0)) {
-			echo '<td><a type="button" class="btn btn-danger" role="button" href="?sys='.
+			echo '<td><a type="button" class="btn btn-danger adminbut" role="button" href="?sys='.
 					$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
 		}
 		else{
@@ -380,26 +380,26 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		
 	// Opened - date request was created
 		$colspan++;
-		echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['requestdate'])) .'</td>';
+		echo '<td style="text-nowrap"><p class="admint">'. date("Y-m-d H:i", strtotime($row['requestdate'])) .'</p></td>';
 	
 	// System - name of J-space system to coords and involved pilots
 		
 		
 		if (empty($system) and ($isCoord == 1 or $isSARAgent == 1 or $isRescueAgent == 1)) {	
 			$colspan++;		
-			echo '<td><a href="?sys='.ucfirst($row['system']).'">'.
-					Output::htmlEncodeString(ucfirst($row['system'])).'</a></td>';	
+			echo '<td><p class="admint"><a href="?sys='.ucfirst($row['system']).'">'.
+					Output::htmlEncodeString(ucfirst($row['system'])).'</a></p></td>';	
 		}
 		else if(empty($system)){
 			$colspan++;
-			echo '<td>&nbsp;&nbsp;J------</td>';
+			echo '<td><p class="admint">&nbsp;&nbsp;J------</p></td>';
 		}
 
 		
 	// Class - class of J-space system
 		if (empty($system)) {
 			$colspan++;
-			echo '<td>'. Output::htmlEncodeString($row['Class']).'</td>';
+			echo '<td><p class="admint">'. Output::htmlEncodeString($row['Class']).'</p></td>';
 		}
 			
 	// Statics
@@ -425,7 +425,7 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 				// add destination 
 				$staticData .= strtoupper($dest);
 			}
-			echo '<td>'. Output::htmlEncodeString($staticData).'</td>';
+			echo '<td><p class="admint">'. Output::htmlEncodeString($staticData).'</p></td>';
 		}
 		
 	// Pilot - display stranded pilot's name only to coords and relevant agents
@@ -433,18 +433,18 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 		$colspan++;
 
 		if ($isCoord == 0 && $isSARAgent == 0 && $isRescueAgent == 0) {
-			echo '<td><b>PROTECTED</b></td>';
+			echo '<td><p class="admint"><b>PROTECTED</b></p></td>';
 		}
 		else {
-			echo '<td><a target="_blank" href="https://evewho.com/pilot/'. 
-					$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></td>';
+			echo '<td><p class="admint"><a target="_blank" href="https://evewho.com/pilot/'. 
+					$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></p></td>';
 		}
 	
 	// Status 
 		// set status color: green = new, yellow = pending, orange = check-in needed
 		switch ($status) {
 			case 'new':
-				$statuscellformat = ' style="color:green;"';
+				$statuscellformat = ' style="color:lightgreen;"';
 			break;
 			case 'pending':
 				$statuscellformat = ' style="color:yellow;"';
@@ -457,12 +457,12 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$statuscellformat = ' style="color:orange;"';
 		}
 		$colspan++;
-		echo '<td'. $statuscellformat .'>'.
-				Output::htmlEncodeString(translateStatus($row['status'])).'</td>';
+		echo '<td'. $statuscellformat .'><p class="admint">'.
+				Output::htmlEncodeString(translateStatus($row['status'])).'</p></td>';
 	
 	// Last Contact - display date of last contact with stranded pilot
 	$colspan++;
-	echo '<td style="text-nowrap">'. date("Y-m-d H:i", strtotime($row['lastcontact'])) .'</td>';
+	echo '<td style="text-nowrap"><p class="admint">'. date("Y-m-d H:i", strtotime($row['lastcontact'])) .'</p></td>';
 	
 	// Bounty - display max payout available for a successful locate/rescue in this system
 		// display only in "summary" tables
@@ -474,51 +474,49 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			$whclassmult = intval(substr($row['Class'], -1));
 			// (base x WH class multiplier) + (Days until rescued x daily increase amt)
 			$payoutmax = ($basepay*$whclassmult)+(intval($row['daysopen'])*$dailyincrease);
-			echo '<td style="text-nowrap">'. number_format(intval($payoutmax/2)) .'</td>';
+			echo '<td style="text-nowrap"><p class="admint">'. number_format(intval($payoutmax/2)) .'</p></td>';
 		}
 	
 	// DETAIL ONLY COLUMNS BELOW [Dispatcher, Locator, Rescue Pilot(s), Notes]
 		if ($summary == 0) {
 			// Dispatcher - display name of Signaleer who opened request
 			$colspan++;
-			echo "<td>".Output::htmlEncodeString($row['startagent'])."</td>";
+			echo "<td><p class='admint'>" . Output::htmlEncodeString($row['startagent']) . "</p></td>";
 			
 			// Locator - display name of Signaleer who located system (if any)
 			$colspan++;
-			echo '<td>';
+			echo "<td><p class='admint'>";
+			
 			echo (empty($row['locateagent'])) ? 'N/A' : Output::htmlEncodeString($row['locateagent']);
 			if ($_SESSION['isAdmin']) {
-				echo '<br><a type="button" class="btn btn-danger" role="button" href="?sys='.
-					$row['system'].'&reqp='.$row['id'].'&agent=loc">Add/Update</a></td>';
+				echo '&nbsp;<a role="button" href="?sys='.
+					$row['system'].'&reqp='.$row['id'].'&agent=loc"><span class="fa fa-pencil-square-o" style="color: #FFC107;" aria-hidden="true"></span></a></td>';
 			}
-			echo '</td>';
+			echo '</p></td>';
 			
 			// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
 			$colspan++;
 			$arrRescueAgents = $rescue->getRescueAgents($row['id']);
-			echo '<td>';
+			echo '<td style="text-align: right;">';
 			foreach ($arrRescueAgents as $value) {
 				if ($_SESSION['isAdmin']) {
-					echo '<form method="post" class="form-inline" id="user_role_del'. $value['id'] .'" 
+					echo '<form method="post" class="form-inline adminfrm" id="user_role_del'. $value['id'] .'" 
 						action="rescueaction.php">';
+					echo '<input type="hidden" name="rowid" value="'. $value['id'] .'">';
+					echo '<input type="hidden" name="action" value="RemovePilot">';
+					echo '<input type="hidden" name="system" value="'. $system .'">';
+					
+					echo '<p class="admint">' . $value['pilot'];
+					echo '&nbsp;<button type="submit" class="btn btn-xs btn-dark" style="margin: 0px; padding: 0px;"><span class="fa fa-trash" style="color: #FFC107;" aria-hidden="true"></span></button></p>';
+					echo '</form>';					
 				}
-
-				echo $value['pilot'];
-				
-				if ($_SESSION['isAdmin']) {
-				echo '<input type="hidden" name="rowid" value="'. $value['id'] .'">';
-				echo '<input type="hidden" name="action" value="RemovePilot">';
-				echo '<input type="hidden" name="system" value="'. $system .'">';
-                echo '<button type="submit" class="btn btn-xs btn-danger">X</button>';
-				echo '</form>';
-				}
-				else {
-					echo '<br>';
+				else{
+					echo '<p class="admint" >' . $value['pilot'] . '</p>';
 				}
 			}
 			if ($_SESSION['isAdmin']) {
-				echo '<br><a type="button" class="btn btn-danger" role="button" href="?sys='.
-					$row['system'].'&amp;reqp='.$row['id'].'&agent=res">Add Pilot</a></td>';
+				echo '<p class="admint" ><a role="button" href="?sys='.
+					$row['system'].'&amp;reqp='.$row['id'].'&agent=res"><span class="fa fa-plus" style="color: #FFC107;" aria-hidden="true"></span></a></p>';
 			}
 			echo '</td>';
 			
