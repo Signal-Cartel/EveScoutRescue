@@ -17,6 +17,8 @@ include_once '../includes/auth-inc.php';
 <br /><br />
 <a href="payoutadmin.php">Payouts</a>
 <br /><br />
+<a href="payout_optout_admin.php">ESRC Payout Opt-out</a>
+<br /><br />
 <a href="medals_admin.php">Medals</a>
 <br /><br />
 <br /><br />
