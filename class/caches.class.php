@@ -7,8 +7,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-// use database class
-require_once '../class/db.class.php';
 
 class Caches
 {
@@ -527,7 +525,7 @@ class Caches
 	 */
 	public function getSystemsVisited($daysBack)
 	{
-		$this->db->query("SELECT COUNT(DISTINCT System) AS cnt FROM `activity` 
+		$this->db->query("SELECT COUNT(DISTINCT `System`) AS cnt FROM `activity` 
 			WHERE ActivityDate >= (CURDATE() - INTERVAL :daysBack DAY)");
 		$this->db->bind(":daysBack", $daysBack);
 		$data = $this->db->single();
