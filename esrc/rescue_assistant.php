@@ -2,8 +2,8 @@
 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
-// https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=A%20Dead%20Parrot&system=J135031
-// https://dev.evescoutrescue.com/esrc/rescue_assistant-dev.php?pilot=A%20Dead%20Parrot&system=J135031
+// https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=Boyami%20Lost&system=J135031
+// https://dev.evescoutrescue.com/esrc/rescue_assistant-dev.php?pilot=Boyami%20Lost&system=J135031
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
@@ -2187,7 +2187,7 @@ $cacheid = $rowAgent['CacheID'];
 		  <div class="modal-footer">
 			<div class="form-actions">
 					<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
-					<input type="hidden" name="CacheID" value="<?=$row['CacheID']?>" />
+					<input type="hidden" name="CacheID" value="<?=$cacheid?>" />
 				<button type="submit" class="btn btn-info">Submit</button>
 				<script>
 				$('#agentform').submit(function() {
