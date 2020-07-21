@@ -152,6 +152,11 @@ class Users {
 		if (session_status() == PHP_SESSION_NONE) {
 			session_start();
 		}
-		return $_SESSION['auth_characteralliance'] == 99005130;
+
+		if (isset($_SESSION['auth_characteralliance'])){
+			return $_SESSION['auth_characteralliance'] == 99005130;
+		} 
+
+		return false;
 	}
 }

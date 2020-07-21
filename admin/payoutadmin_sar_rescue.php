@@ -123,8 +123,8 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 				// pull all SAR rescues for specified period
 				$db->query("SELECT id, LastUpdated, pilot, system, locateagent
 							FROM rescuerequest
-							WHERE status = 'closed-rescued' AND LastUpdated BETWEEN :start AND :end
-							ORDER BY LastUpdated DESC");
+							WHERE status = 'closed-rescued' AND closedate BETWEEN :start AND :end
+							ORDER BY closedate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
 				$rows = $db->resultset();
@@ -197,8 +197,8 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 								FROM rescuerequest rr, wh_systems w
 								WHERE rr.system = w.System
 								AND status = 'closed-rescued' 
-								AND LastUpdated BETWEEN :start AND :end
-								ORDER BY LastUpdated DESC");
+								AND closedate BETWEEN :start AND :end
+								ORDER BY closedate DESC");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();

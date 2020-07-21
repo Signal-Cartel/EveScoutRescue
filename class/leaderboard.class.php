@@ -8,7 +8,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-require_once '../class/db.class.php';
 
 class Leaderboard
 {

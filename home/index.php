@@ -22,7 +22,7 @@ $arrSARWaits = $rescues->getSARWaitTime();
 $SARWaitMean = mmmr($arrSARWaits);
 $SARWaitMode = mmmr($arrSARWaits, 'mode');
 $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
-$daysBack = "7";
+$daysBack = 7;
 $ctrSystems = $caches->getSystemsVisited($daysBack);
 
 
