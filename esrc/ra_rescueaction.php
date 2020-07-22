@@ -53,16 +53,12 @@ if (!isset($charname)) {
 // try to get data from request
 
 $system = $_REQUEST['system'];
-$data['canrefit'] = $_REQUEST['canrefit'];
-$data['launcher'] = $_REQUEST['launcher'];
-$data['notes'] = $_REQUEST['notes'];
+$data['canrefit'] = isset($_REQUEST['canrefit']) ? 1 : 0;
+$data['launcher'] = isset($_REQUEST['launcher']) ? 1 : 0;
+$data['notes'] = isset($_REQUEST['notes']) ? $_REQUEST['notes'] : "";
 
 $errors = [];
 $errmsg = '';
-
-
-if (!isset($data['launcher'])) { $data['launcher'] = 0; }
-if (!isset($data['canrefit'])) { $data['canrefit'] = 0; }
 
 // create a database instance
 $database = new Database();
