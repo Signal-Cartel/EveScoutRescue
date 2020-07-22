@@ -219,55 +219,63 @@ if (!empty($system)) {
 		// save notes as separate var
 		$strNotes = Output::htmlEncodeString($row['Note']);
 		?>
+		
+		
 		<!-- action button row -->
 		<div class="row" id="systableheader">
-		<div class="col-md-12">
-		<div style="padding-left: 10px;">
-		<!-- System Name display -->
-		<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>"?></p>
-		<!-- TEND button -->
-		<?php
-		$strTended = '';
-		if (0 == $caches->isTendingAllowed($system)) {
-			$strTended = ' <i class="white fa fa-clock-o"></i>';
-		}
+			<div class="col-md-12">
+				<div style="padding-left: 10px;">
+					<!-- System Name display -->
+					<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>"?></p>
+					<!-- TEND button -->
+					<?php
+					$strTended = '';
+					if (0 == $caches->isTendingAllowed($system)) {
+						$strTended = ' <i class="white fa fa-clock-o"></i>';
+					}
 
-		//check pilot status
-		if ($pilotLocStat == '') {
-			$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
-		}?>
-		<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
-			Tend<?=$strTended?></button>
-		<!-- AGENT button -->
-		<button type="button" class="btn btn-warning" role="button" data-toggle="modal"
-			data-target="#AgentModal">Agent</button>
-		<!-- SAR New button -->
-		<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger"
-			role="button">New SAR</a>
-		<!-- TW button -->
-		<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
-			role="button" target="_blank">Tripwire</a>
-		<!-- anoik.is button -->
-		<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
-			target="_blank">anoik.is</a>
-		<!-- Chains and Edit buttons, if relevant -->
-		<?php
-		// "chains" button is Coord-only
-		if ($isCoord) {
-			echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
-				role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
-		}
-		//edit function only available to Coordinators and recent sowers
-		$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
-		if ($isCoord || $isRecentSower) {
-			echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
-				data-target="#EditModal">Edit Cache</button>';
-		}
-		?>
+					//check pilot status
+					if ($pilotLocStat == '') {
+						$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
+					}?>
+					<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
+						Tend<?=$strTended?></button>
+					
+					<!-- AGENT button -->
+					<button type="button" class="btn btn-warning" role="button" data-toggle="modal"
+						data-target="#AgentModal">Agent</button>
+					
+					<!-- SAR New button -->
+					<a href="rescueoverview.php?new=1&sys=<?=$system?>" class="btn btn-danger"
+						role="button">New SAR</a>
+					
+					<!-- TW button -->
+					<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
+						role="button" target="_blank">Tripwire</a>
+					
+					<!-- anoik.is button -->
+					<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
+						target="_blank">anoik.is</a>
+					
+					<!-- Chains and Edit buttons, if relevant -->
+					<?php
+					// "chains" button is Coord-only
+					if ($isCoord) {
+						echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
+							role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+					}
+					//edit function only available to Coordinators and recent sowers
+					$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
+					if ($isCoord || $isRecentSower) {
+						echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
+							data-target="#EditModal">Edit Cache</button>';
+					}
+					?>
+				</div>
+				<div class="ws"></div>
+			</div>
 		</div>
-		<div class="ws"></div>
-		</div>
-		</div>
+		
 		<div class="row" id="systable">
 			<div class="col-md-12">
 				<!-- DETAIL RECORD -->
@@ -351,6 +359,17 @@ if (!empty($system)) {
 						<!-- anoik.is button -->
 						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info"
 							role="button" target="_blank">anoik.is</a>
+				
+						<!-- Chains button if relevant -->
+						<?php
+						// "chains" button is Coord-only
+						if ($isCoord) {
+							echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
+								role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+						}
+						?>
+					
+							
 						<br />
 
 						<!-- Name for new cache -->
@@ -373,13 +392,40 @@ if (!empty($system)) {
 			else {
 				?>
 			<div class="row" id="systableheader">
-			<div class="col-md-12">
-			<div style="padding-left: 10px;">
-				<span class="subhead white">Upon request of the current wormhole residents,
-					caches are not to be sown in <?=$system?> until
-					<?=date("Y-M-d", strtotime($lockedDate))?>.
-				</span>
-			</div></div></div>
+				<div class="col-md-12">
+					<div style="padding-left: 10px;">
+						<p class="systemName"><? echo($system . "<span style=\"color: red;\"> No Sow System</span>") ?></p>
+						<p>
+							<span class="subhead white">Upon request of the current wormhole residents,
+								caches are not to be sown in <?=$system?> until
+								<?=date("Y-M-d", strtotime($lockedDate))?>.
+							</span>
+						</p>
+						
+						
+						
+					<!-- TW button -->
+					<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
+						role="button" target="_blank">Tripwire</a>
+					
+					<!-- anoik.is button -->
+					<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
+						target="_blank">anoik.is</a>
+					
+					<!-- Chains and Edit buttons, if relevant -->
+					<?php
+					// "chains" button is Coord-only
+					if ($isCoord) {
+						echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
+							role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+					}
+					?>
+					
+					
+					
+					</div>
+				</div>
+			</div>
 				<?php
 			}
 		}
