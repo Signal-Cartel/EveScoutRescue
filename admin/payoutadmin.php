@@ -204,19 +204,27 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	}
 	//show payout data if "Payout" is checked
 	else {	
+		// get array of pilots who have opted out
+		$db->query("SELECT pilot FROM payout_optout WHERE optout_type = 'ESRC'");
+		$arrPilotsOptedOut = $db->resultset();
+		$db->closeQuery();
+
 		//count of all actions performed in the specified period
-		//$db->query("SELECT COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate BETWEEN :start AND :end");
 		$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
 						BETWEEN :start AND :end GROUP BY Pilot");
 		$db->bind(':start', $start);
 		$db->bind(':end', $end);
 		$rows = $db->resultset();
-		$ctrtot = 0;
+		$db->closeQuery();
+		$ctrtot = $ctrLessOptouts = 0;
 		foreach ($rows as $value) {
+			$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
+			// skip loop if pilot has opted out from payout
 			$ctrtot = $ctrtot + intval($value['cnt']);
-		}
-		
-	?>
+			if ($isOptedOut !== false) { continue; }
+			$ctrLessOptouts = $ctrLessOptouts + intval($value['cnt']);
+		}	?>
+	
 	<div class="row" id="systable">
 		<div class="col-sm-10">
 			<table class="table" style="width: auto;">
@@ -230,30 +238,45 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 				<tbody>
 					<?php
 					//summary data
-					$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
-									BETWEEN :start AND :end GROUP BY Pilot");
-					$db->bind(':start', $start);
-					$db->bind(':end', $end);
-					$rows = $db->resultset();
-					$ctr = 0;
+					$ctrParticipants = $ctrParticipantsLessOptouts = 0;
 					foreach ($rows as $value) {
-						$ctr++;
+						$ctrParticipants++;
+						$isOptedOut = array_search($value['Pilot'], 
+							array_column($arrPilotsOptedOut, 'pilot'));
+						// set values accordingly; opted out pilots receive credit for 0
+						if ($isOptedOut === false) {
+							$countAmt = $value['cnt'];
+							$strActualCount = '';
+							$payoutAmt = round((intval($value['cnt'])/intval($ctrLessOptouts))*intval($_REQUEST['totamt']),2);
+							$ctrParticipantsLessOptouts++;
+						}
+						else {
+							$countAmt = 0;
+							$strActualCount = ' ('. $value['cnt'] .')';
+							$payoutAmt = 0;
+						}
 						echo '<tr>';
 						echo '<td><a target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
 							$value['Pilot'] .'</a> - <a target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
-						echo '<td class="white" align="right">'. $value['cnt'] .'</td>';
-						echo '<td><input type="text" id="amt'.$ctr.'" value="'. 
-									round((intval($value['cnt'])/intval($ctrtot))*intval($_REQUEST['totamt']),2) .'" />
-									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i>
+						echo '<td class="white" align="right">'. $countAmt . $strActualCount .'</td>';
+						echo '<td><input type="text" id="amt'.$ctrParticipants.'" value="'. $payoutAmt .'" />
+									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctrParticipants.'\')"></i>
 							  </td>';
 						echo '</tr>';
 					}
 					?>
 					<tr>
-						<td class="white" align="right">Participants: <?php echo $ctr; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL: </td>
-						<td class="white" align="right"><?php echo $ctrtot; ?></td>
-						<td></td>
+						<td class="white">
+							Paid Participants: <?=$ctrParticipantsLessOptouts?><br>
+							All Participants: <?=$ctrParticipants?>
+
+						</td>
+						<td class="white" align="right">
+							PAID TOTAL: <?=$ctrLessOptouts?><br>
+							Sow/Tend Total: <?=$ctrtot?>
+						</td>
+						<td>&nbsp;</td>
 					</tr>
 				</tbody>
 			</table>
