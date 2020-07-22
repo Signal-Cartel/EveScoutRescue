@@ -69,6 +69,18 @@ div.centered {
     width: 50%;
 }
 
+p.admint {
+	margin: 1px 0px 1px 0px;
+}
+
+a.adminbut{
+	margin: 0px;
+	font-size: .8em;
+    padding: 0px 4px 0px 4px;
+}
+form.adminfrm{
+	margin: 0px;
+}
 .descr {
     font-size: 100%;
     font-weight: normal;
