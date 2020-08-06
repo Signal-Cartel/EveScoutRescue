@@ -23,7 +23,7 @@ $leaderBoard = new Leaderboard($database);
 		<!-- CURRENT WEEK SOW/TEND LEADERBOARD -->
 		<?php 
 
-			$exclude_pilots = Array("Renek Dallocort");
+			//$exclude_pilots = Array("Renek Dallocort");
 			$daysrangeLB = isset($daysrangeLB) ? $daysrangeLB: '30';
 			$numberLB= isset($numberLB) ? $numberLB: '10';
 			if (isset($_REQUEST['daysrangeLB'])) { 
@@ -51,12 +51,12 @@ $leaderBoard = new Leaderboard($database);
 							echo '</tr></thead><tbody>';
 							$rows = $leaderBoard->getTop($numberLB, $daysrangeLB);	
 							foreach ($rows as $value) {					
-								if (!in_array($value['Pilot'],$exclude_pilots)){
+								//if (!in_array($value['Pilot'],$exclude_pilots)){
 									echo '<tr>';
 									echo '<td>'. Output::htmlEncodeString($value['Pilot']) .'</td>';
 									echo '<td align="right">'. $value['cnt'] .'</td>';
 									echo '</tr>';
-								}
+								//}
 							}
 							echo'</tbody></table>';
 						}
@@ -86,7 +86,7 @@ $leaderBoard = new Leaderboard($database);
 				<?php
 				$rows = $leaderBoard->getActivePilots(30);
 				foreach ($rows as $value) {
-					if (!in_array($value['Pilot'],$exclude_pilots)){
+					//if (!in_array($value['Pilot'],$exclude_pilots)){
 						//prepare personal stats link for logged-in pilot
 						$pilot = $value['Pilot'];
 						$ptxt = Output::htmlEncodeString($pilot);
@@ -101,7 +101,7 @@ $leaderBoard = new Leaderboard($database);
 						echo '<td'. $pformat .'>'. $ptxt .'</td>';
 						echo '<td>'. date("M-d", strtotime($value['maxdate'])) .'</td>';
 						echo '</tr>';
-					}
+					//}
 				}
 				?>
 			</tbody>

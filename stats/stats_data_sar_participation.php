@@ -6,21 +6,30 @@ include_once '../class/db.class.php';
 
 switch ($_REQUEST['type']) {
 	case 'Dispatchers':
-		$sql = "SELECT startagent, COUNT(startagent) AS cnt FROM rescuerequest
-			WHERE requestdate BETWEEN :start AND :end
+		$sql = "SELECT startagent, COUNT(startagent) AS cnt 
+			FROM rescuerequest rr
+			LEFT OUTER JOIN payout_optout po ON po.pilot = rr.startagent
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(requestdate BETWEEN :start AND :end)
 			GROUP BY startagent	ORDER BY cnt DESC LIMIT 10";
 		$fieldname = 'startagent';
 		break;
 	case 'Locators':
-		$sql = "SELECT locateagent, COUNT(locateagent) AS cnt FROM rescuerequest
-			WHERE lastcontact BETWEEN :start AND :end
+		$sql = "SELECT locateagent, COUNT(locateagent) AS cnt 
+			FROM rescuerequest rr
+			LEFT OUTER JOIN payout_optout po ON po.pilot = rr.locateagent
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(lastcontact BETWEEN :start AND :end)
 			GROUP BY locateagent ORDER BY cnt DESC LIMIT 10";
 		$fieldname = 'locateagent';
 		break;
 	case 'Rescuers':
 	default:
-		$sql = "SELECT pilot, COUNT(pilot) AS cnt FROM rescueagents
-			WHERE entrytime BETWEEN :start AND :end
+		$sql = "SELECT ra.pilot, COUNT(ra.pilot) AS cnt 
+			FROM rescueagents ra
+			LEFT OUTER JOIN payout_optout po ON po.pilot = ra.pilot
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(entrytime BETWEEN :start AND :end)
 			GROUP BY pilot ORDER BY cnt DESC LIMIT 10";
 		$fieldname = 'pilot';
 		break;
