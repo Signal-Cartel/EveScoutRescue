@@ -1,9 +1,12 @@
 <?php
+define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 
-//CREATE QUERY TO DB AND PUT RECEIVED DATA INTO ASSOCIATIVE ARRAY
+// instantiate db object
+$db = new Database();
 
+// prepare SQL based on request
 switch ($_REQUEST['type']) {
 	case 'Agents':
 		$sql = "SELECT a.Pilot, COUNT(EntryType) AS cnt 
@@ -43,10 +46,9 @@ switch ($_REQUEST['type']) {
 		break;
 }
 
-// get database connection
+// get database results
 $timestart = $_REQUEST['start'] . " 00:00:00";
 $timeend = $_REQUEST['end'] . " 23:59:59";
-$db = new Database();
 $db->query($sql);
 $db->bind (':start', $timestart);
 $db->bind (':end', $timeend);

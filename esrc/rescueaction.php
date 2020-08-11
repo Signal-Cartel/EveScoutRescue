@@ -49,18 +49,14 @@ if (!isset($charname)) {
 }
 
 // try to get data from request
-$rescueID = $_REQUEST['request'];
+$rescueID = $_REQUEST['request'] ?? '';
 $system = $_REQUEST['system'];
-$data['canrefit'] = $_REQUEST['canrefit'];
-$data['launcher'] = $_REQUEST['launcher'];
-$data['notes'] = $_REQUEST['notes'];
+$data['canrefit'] = $_REQUEST['canrefit'] ?? 0;
+$data['launcher'] = $_REQUEST['launcher'] ?? 0;
+$data['notes'] = $_REQUEST['notes'] ?? '';
 
 $errors = [];
 $errmsg = '';
-
-
-if (!isset($data['launcher'])) { $data['launcher'] = 0; }
-if (!isset($data['canrefit'])) { $data['canrefit'] = 0; }
 
 // create a database instance
 $database = new Database();
@@ -150,7 +146,7 @@ elseif ($action === 'UpdateRequest') {
 
 	// NOTE: REMINDER STUFF IS NOT VISIBLE in UI currently
 	// get the set reminder days
-	$reminder = $_REQUEST['reminder'];
+	$reminder = $_REQUEST['reminder'] ?? '';
 	// check if a reminder is set
 	if (isset($reminder) && is_numeric(trim($reminder))) {
 		$rescue->setReminder($rescueID, trim($reminder));

@@ -4,8 +4,8 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
-require_once '../class/db.class.php';
-require_once '../class/systems.class.php';
+//require_once '../class/db.class.php';
+//require_once '../class/systems.class.php';
 
 // create object instance(s)
 $db = new Database();

@@ -4,7 +4,7 @@
 define('ESRC', TRUE);
 
 require_once '../includes/auth-inc.php';
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 require_once '../class/discord.class.php';
 
 // create object instance(s)

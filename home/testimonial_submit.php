@@ -1,63 +1,34 @@
 <?php 
-
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
-
-include_once '../includes/auth-inc.php'; 
-require_once '../class/db.class.php';
-require_once '../class/users.class.php';
+require '../page_templates/secure_initialization.php';
 
 // check if the user is logged in
 if (!isset($_SESSION['auth_characterid'])) {
 	// void the session entries on 'attack'
 	session_unset();
 	// save the redirect URL to current page
-	$_SESSION['auth_redirect']=$_redirect_uri;
+	$_SESSION['auth_redirect'] = Config::ROOT_PATH . substr($_SERVER['PHP_SELF'], 1);
 	// no, redirect to home page
 	header("Location: ".Config::ROOT_PATH."auth/login.php");
 	// stop processing
 	exit;
 }
 
-/**
- * Test provided input data to be valid.
- * @param unknown $data data to check
- * @return string processed and cleaned data
- */
-function test_input($data)
-{
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars_decode($data);
-	return $data;
-}
-?>
-<html>
+// PAGE VARS
+$database = new Database();
+$pgtitle = "Submit Your Testimonial";
 
-<head>
-	<?php
-	$pgtitle = "Submit Your Testimonial";
-	include_once '../includes/head.php';
-	?>
-</head>
-<body>
-<div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
-<?php
-include_once '../includes/top-right.php';
-include_once '../includes/top-left.php';
-include_once '../includes/top-center.php';
 
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-</div>
-<div class="ws"></div>
 
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Submit Your Testimonial</h2>
+				<h2 class="pull-left"><?=$pgtitle?></h2>
 			</div>
 			<div class="panel-body">
 <?php 
@@ -68,10 +39,10 @@ if (isset($_POST['pilot'])) {
 	
 	$pilot = $method = $testimonial = $errmsg = '';
 	
-	$pilot = test_input($_POST["pilot"]);
-	$anon = $_POST["chkAnon"] == 1 ? 1 : 0; 
-	$method = test_input($_POST["method"]);
-	$testimonial = test_input($_POST["testimonial"]);
+	$pilot = Output::prepTextarea($_POST["pilot"]);
+	$anon = $_POST["chkAnon"] ?? 0; 
+	$method = Output::prepTextarea($_POST["method"]);
+	$testimonial = Output::prepTextarea($_POST["testimonial"]);
 	
 	//FORM VALIDATION
 	
@@ -90,15 +61,15 @@ if (isset($_POST['pilot'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		// create a new cache activity
-		$db->beginTransaction();
-		$db->query("INSERT INTO testimonials (Pilot, Anon, Type, Note)
+		$database->beginTransaction();
+		$database->query("INSERT INTO testimonials (Pilot, Anon, Type, Note)
 			VALUES (:pilot, :anon, :type, :note)");
-		$db->bind(":pilot", $pilot);
-		$db->bind(":anon", $anon);
-		$db->bind(":type", $method);
-		$db->bind(":note", $testimonial);
-		$db->execute();
-		$db->endTransaction();
+		$database->bind(":pilot", $pilot);
+		$database->bind(":anon", $anon);
+		$database->bind(":type", $method);
+		$database->bind(":note", $testimonial);
+		$database->execute();
+		$database->endTransaction();
 		
 		echo 'Thank you! Your testimonial has been submitted successfully and is awaiting moderation.
 			Once approved, it should appear on the site within about a week.<br /><br />
@@ -163,9 +134,8 @@ else {
 	</div>
 </div>
 
-</div>
 
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
-</body>
-</html>
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>

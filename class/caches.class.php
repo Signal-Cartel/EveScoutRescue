@@ -544,8 +544,7 @@ class Caches
 			$sql = "SELECT
 						user.characterid AS uid,
 						activity.Pilot,
-						Count(activity.ID) As Actions,
-						po.optout_type
+						Count(activity.ID) As Actions
 					FROM
 						activity
 					INNER JOIN
