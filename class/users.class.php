@@ -43,13 +43,20 @@ class Users {
 	 * @param unknown $username
 	 * @return string
 	 */
-	public function isSARCoordinator($username)
+	public function isSARCoordinator($username, $getForLoggedInUser = true)
 	{
-		if (isset($_SESSION['isSARCoordinator'])){
-			return $_SESSION['isSARCoordinator'];
-		} 
+		// we only want to check session var if it's the status of the logged-in user we are after
+		if ($getForLoggedInUser) {
+			if (isset($_SESSION['isSARCoordinator'])) {
+				return $_SESSION['isSARCoordinator'];
+			} 
+		}
+
 		$result = $this->checkPermission($username, "ESR Coordinator");
-		$_SESSION['isSARCoordinator'] = $result;
+
+		// likewise, we only want to set session var for logged-in user
+		if ($getForLoggedInUser) { $_SESSION['isSARCoordinator'] = $result; }
+		
 		return $result;
 	}
 	

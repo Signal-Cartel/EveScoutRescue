@@ -1,120 +1,28 @@
 <?php 
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-// for debug only
-/*
- error_reporting(E_ALL);
- ini_set('display_errors', 'on');
-*/
+// PAGE VARS
+$db = new Database();
+$pgtitle = 'ESRC Payouts';
 
-require_once '../class/db.class.php';
-include_once '../includes/auth-inc.php';
-require_once '../class/output.class.php';
 
-// if start and end dates are not set, set them to default values
-if (!isset($_REQUEST['start'])) {
-	$start = gmdate('Y-m-d', strtotime("- 7 day"));
-	$startPD = gmdate('Y-M-d', strtotime("- 7 day")); // formatted for Pikaday widget
-}
-if (!isset($_REQUEST['end'])) {
-	$end = gmdate('Y-m-d', strtotime("now"));
-	$endPD = gmdate('Y-M-d', strtotime("now")); // formatted for Pikaday widget
-}
-
-// set start and end dates to submitted values (GET or POST)
-if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
-	// start date
-	$arrStart = explode('-', $_REQUEST['start']);
-	$startYear = intval(substr($arrStart[0], -3)) + 1898;
-	$startMonth = intval(date('m', strtotime($arrStart[1])));
-	$startDay = intval($arrStart[2]);
-	$start = gmdate('Y-m-d', strtotime($startYear. '-' . $startMonth. '-' . $startDay));
-	
-	// end date
-	$arrEnd = explode('-', $_REQUEST['end']);
-	$endYear = intval(substr($arrEnd[0], -3)) + 1898;
-	$endMonth = intval(date('m', strtotime($arrEnd[1])));
-	$endDay = intval($arrEnd[2]);
-	$end = gmdate('Y-m-d', strtotime($endYear. '-' . $endMonth. '-' . $endDay));
-	
-	// special string for Pikaday widget
-	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
-	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
-}
-
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-<html>
 
-<head>
-	<?php
-	$pgtitle = 'Payout Admin';
-	include_once '../includes/head.php'; 
-	?>
-	<style>
-	<!--
-		table {
-			table-layout: fixed;
-			word-wrap: break-word;
-		}
-		a,
-		a:visited,
-		a:hover {
-			color: aqua;
-		}
-	-->
-	</style>
-	<script type="text/javascript">
-		$(document).ready(function() {
-		    $('#example').DataTable( {
-		        "order": [[ 0, "desc" ]],
-		        "pagingType": "full_numbers",
-		        "pageLength": 15
-		    } );
-		} );
-	</script>
-</head>
-
-<body>
-<div class="container">
-	<div class="row" id="header" style="padding-top: 10px;">
-		<?php include_once '../includes/top-left.php'; ?>
-		<div class="col-sm-8" style="text-align: center; height: 100px; vertical-align: middle;">
-			<span style="font-size: 125%; font-weight: bold; color: white;">Payouts: 
-				ESRC &gt;&gt; 
-				<a href="payoutadmin_sar.php">SAR Dispatch</a> &gt;&gt; 
-				<a href="payoutadmin_sar_rescue.php">SAR Locate/Rescue</a></span>
-			<span class="pull-right"><a class="btn btn-danger btn-md" href="index.php" role="button">
-				Admin Index</a></span><br />
-			<form method="post" class="form-inline" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-				<div class="input-daterange input-group" id="datepicker" style="margin-bottom: 5px;">
-					<input type="text" class="input-sm form-control" name="start" id="start" 
-						value="<?php echo isset($startPD) ? $startPD : '' ?>" />
-					<span class="input-group-addon">to</span>
-					<input type="text" class="input-sm form-control" name="end" id="end" 
-						value="<?php echo isset($endPD) ? $endPD : '' ?>" />
-				</div>
-				<div class="checkbox">
-					<label class="white"><input type="checkbox" name="details" value="yes"> Payout</label>
-				</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-sm">Search</button><br /><br />
-				<label class="white">Total Weekly Payout: </label>
-				<input type="text" name="totamt" 
-					value="<?php echo (isset($_REQUEST['totamt'])) ? $_REQUEST['totamt'] : '500000000'; ?>" /> (ISK)
-			</form>
-		</div>
-		<?php include_once '../includes/top-right.php'; ?>
+<div class="row">
+	<div class="col-sm-12" style="text-align: center; height: 100px; vertical-align: middle;">
+		<?php require '../page_templates/admin_payouts-header.php'; ?>
 	</div>
-	<div class="ws"></div>
-	<?php
-	// display results for the selected date range
-	$db = new Database();
-		
-	//show detailed records if "Payout" is not checked
-	if (!isset($_POST['details']) && $_POST['details'] != 'yes') {	
-	?>
-	<div class="row" id="systable">
+</div>
+
+<?php
+//show detailed records if "Payout" is not checked
+if (!isset($_POST['payout'])) {	?>
+
+	<div class="row" id="systable" style="padding-top: 20px;">
 		<div class="col-sm-10 white">
 			<table id="example" class="table display" style="width: auto;">
 				<thead>
@@ -159,8 +67,8 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
-							<a target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
-							$value['Pilot'] .'</a> - <a target="_blank" 
+							<a class="payout" target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a class="payout" target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
 					switch ($value['EntryType']) {
@@ -174,9 +82,9 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							$ctradj++;
 							break;
 					}
-					echo '<td><a href="/esrc/search.php?sys='. $value['System'] .'" target="_blank">'. 
+					echo '<td><a class="payout" href="/esrc/search.php?sys='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
-					echo '<td><a target="_blank" 
+					echo '<td><a class="payout" target="_blank" 
 							href="https://evewho.com/pilot/'. $value['AidedPilot'] .'">'. 
 							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
 					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
@@ -200,32 +108,33 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
 		</div>
 	</div>
-	<?php
-	}
-	//show payout data if "Payout" is checked
-	else {	
-		// get array of pilots who have opted out
-		$db->query("SELECT pilot FROM payout_optout WHERE optout_type = 'ESRC'");
-		$arrPilotsOptedOut = $db->resultset();
-		$db->closeQuery();
+<?php
+}
 
-		//count of all actions performed in the specified period
-		$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
-						BETWEEN :start AND :end GROUP BY Pilot");
-		$db->bind(':start', $start);
-		$db->bind(':end', $end);
-		$rows = $db->resultset();
-		$db->closeQuery();
-		$ctrtot = $ctrLessOptouts = 0;
-		foreach ($rows as $value) {
-			$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
-			// skip loop if pilot has opted out from payout
-			$ctrtot = $ctrtot + intval($value['cnt']);
-			if ($isOptedOut !== false) { continue; }
-			$ctrLessOptouts = $ctrLessOptouts + intval($value['cnt']);
-		}	?>
+//show payout data if "Payout" is checked
+else {	
+	// get array of pilots who have opted out
+	$db->query("SELECT pilot FROM payout_optout WHERE optout_type = 'ESRC'");
+	$arrPilotsOptedOut = $db->resultset();
+	$db->closeQuery();
+
+	//count of all actions performed in the specified period
+	$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
+					BETWEEN :start AND :end GROUP BY Pilot");
+	$db->bind(':start', $start);
+	$db->bind(':end', $end);
+	$rows = $db->resultset();
+	$db->closeQuery();
+	$ctrtot = $ctrLessOptouts = 0;
+	foreach ($rows as $value) {
+		$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
+		// skip loop if pilot has opted out from payout
+		$ctrtot = $ctrtot + intval($value['cnt']);
+		if ($isOptedOut !== false) { continue; }
+		$ctrLessOptouts = $ctrLessOptouts + intval($value['cnt']);
+	}	?>
 	
-	<div class="row" id="systable">
+	<div class="row" id="systable" style="padding-top: 20px;">
 		<div class="col-sm-10">
 			<table class="table" style="width: auto;">
 				<thead>
@@ -256,8 +165,8 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 							$payoutAmt = 0;
 						}
 						echo '<tr>';
-						echo '<td><a target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
-							$value['Pilot'] .'</a> - <a target="_blank" 
+						echo '<td><a class="payout" target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
+							$value['Pilot'] .'</a> - <a class="payout" target="_blank" 
 							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
 						echo '<td class="white" align="right">'. $countAmt . $strActualCount .'</td>';
 						echo '<td><input type="text" id="amt'.$ctrParticipants.'" value="'. $payoutAmt .'" />
@@ -290,94 +199,9 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		</div>
 	</div>
 <?php
-	}
-?>
-</div>
+}	
 
-<script type="text/javascript">
-	// datepicker
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    var startDate,
-    endDate,
-    updateStartDate = function() {
-        startPicker.setStartRange(startDate);
-        endPicker.setStartRange(startDate);
-        endPicker.setMinDate(startDate);
-    },
-    updateEndDate = function() {
-        startPicker.setEndRange(endDate);
-        startPicker.setMaxDate(endDate);
-        endPicker.setEndRange(endDate);
-    },
-    startPicker = new Pikaday({
-        field: document.getElementById('start'),
-        minDate: new Date('03/18/2017'),
-        showMonthAfterYear: true,
-        format: 'YYYY-MMM-DD',
-        toString(date, format) {
-            const day = ("0" + date.getDate()).slice(-2);
-            const month = monthNames[date.getMonth()];
-            const year = date.getFullYear() - 1898;
-            return `YC${year}-${month}-${day}`;
-        },
-        onSelect: function() {
-            startDate = this.getDate();
-            updateStartDate();
-        }
-    }),
-    endPicker = new Pikaday({
-        field: document.getElementById('end'),
-        minDate: new Date('03/18/2017'),
-        showMonthAfterYear: true,
-        format: 'YYYY-MMM-DD',
-        toString(date, format) {
-            const day = ("0" + date.getDate()).slice(-2);
-            const month = monthNames[date.getMonth()];
-            const year = date.getFullYear() - 1898;
-            return `YC${year}-${month}-${day}`;
-        },
-        onSelect: function() {
-            endDate = this.getDate();
-            updateEndDate();
-        }
-    }),
-    _startDate = startPicker.getDate(),
-    _endDate = endPicker.getDate();
-
-    if (_startDate) {
-        startDate = _startDate;
-        updateStartDate();
-    }
-
-    if (_endDate) {
-        endDate = _endDate;
-        updateEndDate();
-    }
-</script>
-
-<script type="text/javascript">
-	function SelectAllCopy(id) {
-	    document.getElementById(id).focus();
-	    document.getElementById(id).select();
-	    document.execCommand("Copy");
-	}
-</script>
-
-</body>
-</html>
-
-<?php 
-function debug($variable){
-	if(is_array($variable)){
-		echo "<pre>";
-		print_r($variable);
-		echo "</pre>";
-		exit();
-	}
-	else{
-		echo ($variable);
-		exit();
-	}
-}
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
 ?>
