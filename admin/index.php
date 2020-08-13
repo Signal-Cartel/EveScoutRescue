@@ -1,17 +1,23 @@
 <?php
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-include_once '../includes/auth-inc.php';
+// PAGE VARS
+$pgtitle = 'Admin Index';
+
+
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
 
-<html>
-<head>
-	<title>Admin Index</title>
-</head>
-
-<body>
+<style>
+	a,
+	a:visited,
+	a:hover {
+		color: white;
+	}
+</style>
 
 <a href="testimonials_admin.php">Testimonials</a>
 <br /><br />
@@ -32,5 +38,8 @@ include_once '../includes/auth-inc.php';
 <a href="user_stats.php">Individual User Stats</a>
 <br /><br />
 
-</body>
-</html>
+
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>
