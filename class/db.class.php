@@ -1,4 +1,9 @@
 <?php
+/*
+REMOVE THIS FILE WHEN REFACTOR COMPLETE - jmh - 20200813
+-- It has been superseded by database.class.php
+*/
+
 // Reviewed for UTC consistency 2020-0524
 date_default_timezone_set('UTC');
 
