@@ -4,8 +4,8 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
-require_once '../class/db.class.php';
-require_once '../class/systems.class.php';
+//require_once '../class/db.class.php';
+//require_once '../class/systems.class.php';
 
 // create object instance(s)
 $db = new Database();
@@ -16,7 +16,6 @@ $users = new Users($db);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // prep user submitted value for db entry
     $username = Output::prepTextarea($_REQUEST['username']);
-    $optout_type = 'ESRC';
     $formAction = $_POST['action'] ?? '';
 
     // remove pilot from opt out, if requested
@@ -29,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     else {
         $db->query("INSERT INTO payout_optout (pilot, optout_type) VALUES (:pilot, :optout_type)");
         $db->bind(':pilot', $username);
-        $db->bind(':optout_type', $optout_type);
+        $db->bind(':optout_type', $_REQUEST['optout_type']);
         $db->execute();
     }
 }
@@ -117,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <span class="white">Opt-out Type:</span> 
                     <select name="optout_type">
                         <option value="ESRC">ESRC</option>
+						<option value="Stats">Stats</option>
                     </select>
                     <br /><br />
 					<p class="text-center"><button type="submit" class="btn btn-md">Update</button></p>
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				</thead>
 				<tbody>
 				<?php
-				$db->query("SELECT * FROM payout_optout ORDER BY pilot");
+				$db->query("SELECT * FROM payout_optout ORDER BY optout_type, pilot");
 				$rows = $db->resultset();
 				$db->closeQuery();
 				foreach ($rows as $value) {
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
 
 		$('#example').DataTable( {
-            "order": [[ 1, "desc" ]],
+            "order": [[ 2, "desc" ]],
             "pagingType": "full_numbers",
             "pageLength": 10
         });

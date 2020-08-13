@@ -8,7 +8,7 @@ if (!defined('ESRC'))
 }
 
 // use database class
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 class Systems {
 	var $db = null;
 

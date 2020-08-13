@@ -1,4 +1,5 @@
 <?php
+define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 

@@ -8,7 +8,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-require_once '../class/db.class.php';
 
 class Leaderboard
 {
@@ -70,9 +69,11 @@ class Leaderboard
 		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$lastDays.' days'));
 		$end = gmdate('Y-m-d 23:29:59', strtotime("now"));
 			
-		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
-					FROM activity
-					WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end 
+		$this->db->query("SELECT COUNT(*) AS cnt, a.Pilot, max(ActivityDate) as act
+					FROM activity a
+					LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+					WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+						(EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end)
 					GROUP BY Pilot
 					ORDER BY cnt desc, act DESC limit :limit");
 		$this->db->bind(':start', $start);

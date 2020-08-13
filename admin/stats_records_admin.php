@@ -6,9 +6,9 @@ define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 
-$rectype = '';
+$rectype = $recid = '';
 if (isset($_REQUEST['recid'])) { 
     $recid = $_REQUEST['recid']; 
     switch ($recid) {
@@ -567,7 +567,7 @@ if (isset($_REQUEST['recid'])) {
 	$db = new Database();
 		
 	// records categories listing
-	if (!isset($_POST['details']) && $_POST['details'] != 'yes') {	
+	if (!isset($_POST['details'])) {	
 	?>
 	<div class="row" id="systable">
 		<div class="col-sm-8 white">
@@ -621,7 +621,7 @@ if (isset($_REQUEST['recid'])) {
 		</div>
         <div class="col-sm-4 white">
             <div id="LiveData">
-                <?=$strHTML?>
+                <?=$strHTML ?? ''?>
             </div>
 		</div>
     </div>

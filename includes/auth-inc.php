@@ -1,15 +1,32 @@
 <?php
+/**
+ * Page(s) that include this page:
+ * - should be included on all pages
+ * 
+ * Requirements:
+ * - None
+ * 
+ * Notes:
+ * - Direct access of included resources is prevented by an "ESRC" constant 
+ *   defined on each relevant page
+ * 
+ * jmh - 20200716
+ */
+
+ // page cannot be accessed directly
+ if (!defined('ESRC')) { die ('Direct access not permitted'); }
+
+ // autoload classes and set debug params
+ require_once '../class/autoload.php';
+ require_once '../resources/handler_debug-parameters.php';
+
+ // if no session, start one
+ if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+ // set default TZ
 date_default_timezone_set('UTC');
 
-if (session_status() == PHP_SESSION_NONE) {
-	session_start();
-}
-require_once '../class/output.class.php';
-require_once '../class/db.class.php';
-require_once '../class/users.class.php';
-require_once '../class/config.class.php';
-
-//populate display strings for authenticated users
+// populate display strings for authenticated vs non-authed users
 if (isset($_SESSION['auth_characterid'])) {
 	$charimg    = '<img src="https://image.eveonline.com/Character/'.
 				$_SESSION['auth_characterid'].'_64.jpg"  style="width: 40px;">';
@@ -20,10 +37,7 @@ if (isset($_SESSION['auth_characterid'])) {
 				  '<div><span class="white">' . Output::htmlEncodeString($charname) . 
 				  '</span></a><br />' . $logoutlink . '</div></div>';
 }
-
-//populate display string for non-authenticated users
 else {
-	//$chardiv  = '<a href="../auth/login.php">'. '<img src="../img/EVE_SSO_Login_Buttons_Small_Black.png"></a>';
 	$chardiv  =	'<a class="login" href="../auth/login.php"></a>';			
 }
 

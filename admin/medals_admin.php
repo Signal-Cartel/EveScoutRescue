@@ -4,7 +4,7 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/output.class.php';
 

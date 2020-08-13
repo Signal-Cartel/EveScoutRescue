@@ -1,40 +1,54 @@
 <?php
+define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 
-//CREATE QUERY TO DB AND PUT RECEIVED DATA INTO ASSOCIATIVE ARRAY
+// instantiate db object
+$db = new Database();
 
+// prepare SQL based on request
 switch ($_REQUEST['type']) {
 	case 'Agents':
-		$sql = "SELECT Pilot, COUNT(EntryType) AS cnt FROM activity
-			WHERE ActivityDate BETWEEN :start AND :end AND (EntryType = 'Agent' OR EntryType = 'agent') 
+		$sql = "SELECT a.Pilot, COUNT(EntryType) AS cnt 
+			FROM activity a
+			LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(ActivityDate BETWEEN :start AND :end AND (EntryType = 'Agent' OR EntryType = 'agent')) 
 			GROUP BY Pilot, EntryType
 			ORDER BY cnt DESC LIMIT 10";
 		break;
 	case 'Tenders':
-		$sql = "SELECT Pilot, COUNT(EntryType) AS cnt FROM activity
-			WHERE ActivityDate BETWEEN :start AND :end AND (EntryType = 'Tender' OR EntryType = 'tender') 
+		$sql = "SELECT a.Pilot, COUNT(EntryType) AS cnt 
+			FROM activity a
+			LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(ActivityDate BETWEEN :start AND :end AND (EntryType = 'Tender' OR EntryType = 'tender'))
 			GROUP BY Pilot, EntryType
 			ORDER BY cnt DESC LIMIT 10";
 		break;
 	case 'Sowers':
-		$sql = "SELECT Pilot, COUNT(EntryType) AS cnt FROM activity
-			WHERE ActivityDate BETWEEN :start AND :end AND (EntryType = 'Sower' OR EntryType = 'sower') 
+		$sql = "SELECT a.Pilot, COUNT(EntryType) AS cnt 
+			FROM activity a
+			LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(ActivityDate BETWEEN :start AND :end AND (EntryType = 'Sower' OR EntryType = 'sower')) 
 			GROUP BY Pilot, EntryType
 			ORDER BY cnt DESC LIMIT 10";
 		break;
 	case 'Overall':
 	default:
-		$sql = "SELECT Pilot, COUNT( EntryType ) AS cnt FROM  `activity`
-			WHERE ActivityDate BETWEEN :start AND :end
+		$sql = "SELECT a.Pilot, COUNT( EntryType ) AS cnt 
+			FROM  `activity` a
+			LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+			WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+				(ActivityDate BETWEEN :start AND :end)
 			GROUP BY Pilot ORDER BY cnt DESC LIMIT 10";
 		break;
 }
 
-// get database connection
+// get database results
 $timestart = $_REQUEST['start'] . " 00:00:00";
 $timeend = $_REQUEST['end'] . " 23:59:59";
-$db = new Database();
 $db->query($sql);
 $db->bind (':start', $timestart);
 $db->bind (':end', $timeend);

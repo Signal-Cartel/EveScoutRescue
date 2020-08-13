@@ -3,6 +3,10 @@
 // details on EVE SSO are available at 
 // http://eveonline-third-party-documentation.readthedocs.io/en/latest/sso/
 
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
 //direct users to this page when they click to login
 require_once '../class/config.class.php';
 session_start();

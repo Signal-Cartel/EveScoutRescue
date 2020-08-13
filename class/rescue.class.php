@@ -1,33 +1,12 @@
 <?php
 // Reviewed for UTC consistency 2020-0524
-// use database class
-require_once '../class/db.class.php';
 
 // check if called from an allowed page
-if (!defined('ESRC'))
-{
+if (!defined('ESRC')) {
 	echo "Do not call the script direct!";
 	exit ( 1 );
 }
 
-// for debug only
-/*
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
-
-function debug($variable){
-	if(is_array($variable)){
-		echo "<pre>";
-		print_r($variable);
-		echo "</pre>";
-		exit();
-	}
-	else{
-		echo ($variable);
-		exit();
-	}
-}
-*/
 
 /**
  * Class to manage and search SAR requests. 
