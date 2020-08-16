@@ -121,10 +121,11 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 // get active SAR requests of current system
 $data = $rescue->getSystemRequests($system, 0, $isCoord);
 
-$activeSAR = '';
+$activeSAR = $activeSARtitle = '';
 // check for active SAR request
 if (count($data) > 0) {
 	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
+	$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: rgb(234 10 10);"> ACTIVE SAR SYSTEM!</span>';
 }
 
 // CONFIRM PILOT'S IN-GAME LOCATION
@@ -226,7 +227,7 @@ if (!empty($system)) {
 			<div class="col-md-12">
 				<div style="padding-left: 10px;">
 					<!-- System Name display -->
-					<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>"?></p>
+					<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>" . $activeSARtitle ?></p>
 					<!-- TEND button -->
 					<?php
 					$strTended = '';
@@ -337,7 +338,7 @@ if (!empty($system)) {
 					<div style="padding-left: 10px;">
 						<!-- System Name display -->
 
-						<p class="systemName"><? echo($system . "<span style=\"color: red;\"> No Cache</span>") ?></p>
+						<p class="systemName"><? echo($system . "<span style=\"color: red;\"> No Cache</span>" . $activeSARtitle); ?></p>
 
 
 
