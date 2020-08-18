@@ -1,5 +1,6 @@
 <?php
 // CALLED EACH DAY AT 7:05 ET VIA CRONTAB ON PRODUCTION SERVER
+define('ESRC', TRUE);
 
 include_once '../class/db.class.php';
 

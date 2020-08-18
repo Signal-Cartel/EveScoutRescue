@@ -37,9 +37,10 @@ if (!isset($_POST['payout'])) {	?>
 				</thead>
 				<tbody>
 				<?php
-				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
+				$ctrtotact = $ctrsow = $ctrtend = 0;
+				// "agent" actions are paid via SAR Dispatch, so do not count here
 				$db->query("SELECT * FROM activity 
-							WHERE ActivityDate BETWEEN :start AND :end 
+							WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start AND :end 
 							ORDER By ActivityDate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
@@ -54,9 +55,6 @@ if (!isset($_POST['payout'])) {	?>
 							break;
 						case 'tender':
 							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
-							break;
-						case 'agent':
-							$actioncellformat= ' style="background-color:#fffacd;color:black;"';
 							break;
 						default:
 							// ??
@@ -78,9 +76,6 @@ if (!isset($_POST['payout'])) {	?>
 						case 'tender':
 							$ctrtend++;
 							break;
-						case 'agent':
-							$ctradj++;
-							break;
 					}
 					echo '<td><a class="payout" href="/esrc/search.php?sys='. $value['System'] .'" target="_blank">'. 
 							$value['System'] .'</a></td>';
@@ -101,9 +96,8 @@ if (!isset($_POST['payout'])) {	?>
 		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
 			Actions this period: <?php echo $ctrtotact; ?><br />
-			Sowed: <?php echo $ctrsow; ?><br />
-			Tended: <?php echo $ctrtend; ?><br />
-			Agent: <?php echo $ctradj; ?><br /><br />
+			Sown: <?php echo $ctrsow; ?><br />
+			Tended: <?php echo $ctrtend; ?><br /><br />
 			Total caches in space:<br />
 			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
 		</div>
@@ -119,8 +113,10 @@ else {
 	$db->closeQuery();
 
 	//count of all actions performed in the specified period
-	$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity WHERE ActivityDate 
-					BETWEEN :start AND :end GROUP BY Pilot");
+	// "agent" actions are paid via SAR Dispatch, so do not count here
+	$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity 
+				WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start AND :end 
+				GROUP BY Pilot");
 	$db->bind(':start', $start);
 	$db->bind(':end', $end);
 	$rows = $db->resultset();
