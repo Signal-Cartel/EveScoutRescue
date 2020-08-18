@@ -135,13 +135,18 @@ class Users {
 	 * Get list of all users by role, can filter for specific role
 	 * @param string $role the specific role we want a list of users for, use '%%' for not specified
 	 * @param boolean $active active filter, default to "true"
+	 * @param boolean $multiple indicates that $role passes more than one value, default to "false"
 	 * @return array return list of users
 	 */
-	public function getUsersByRole($role, $active = true)
+	public function getUsersByRole($role, $active = true, $multiple = false)
 	{
-		$this->db->query("SELECT * FROM user_roles ur, user u WHERE ur.userid = u.id AND ur.roleid LIKE :role 
-			AND ur.active = :active ORDER BY ur.username");
-		$this->db->bind(":role", $role);
+		$roleMatch = ($multiple === false) ? 'ur.roleid LIKE :role' : 'ur.roleid IN ('. $role .')';
+		$this->db->query("SELECT * 
+							FROM user_roles ur, user u 
+							WHERE ur.userid = u.id AND ur.active = :active AND
+							$roleMatch
+							ORDER BY ur.username");
+		if ($multiple === false) { $this->db->bind(":role", $role); }
 		$this->db->bind(":active", ($active) ? 1 : 0);
 		// get the resultset
 		$data = $this->db->resultset();

@@ -135,7 +135,7 @@ require '../page_templates/home_html-begin.php';
 				<p class="text-center">
 					<a class="btn btn-primary btn-md" href="heroes.php" role="button">Sower/Tender 
 						Hall of Fame</a> &nbsp;&nbsp;&nbsp; 
-					<a class="btn btn-primary btn-md" href="heroes-disp.php" role="button">
+					<a class="btn btn-primary btn-md" href="heroes_disp.php" role="button">
 						Dispatcher Hall of Fame</a></p>
 			</div>
 		</div>

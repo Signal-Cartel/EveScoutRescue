@@ -7,8 +7,7 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-// use database class
-require_once '../class/db.class.php';
+
 
 class Pilot
 {
@@ -99,17 +98,81 @@ class Pilot
 
 	/**
 	 * Get medals for given medal type
-	 * @param unknown $medalid
-	 * @return unknown
+	 * @param string $medalid
+	 * @param boolean $multiple indicates whether $medalid contains multiple values; default to "false"
+	 * @return array $rows
 	 */
-	public function getMedals($medalid)
+	public function getMedals($medalid, $multiple = false)
 	{
-		$this->db->query("SELECT * FROM `medals` WHERE medalid = :medalid ORDER BY dateawarded DESC, pilot");
-		$this->db->bind(":medalid", $medalid);
+		$where_clause = ($multiple === false) ? 'medalid = :medalid' : 'medalid IN ('. $medalid .')';
+		
+		$this->db->query("SELECT * FROM `medals` 
+							WHERE $where_clause 
+							ORDER BY dateawarded DESC, pilot");
+		if ($multiple === false) { $this->db->bind(":medalid", $medalid); }
 		$rows = $this->db->resultset();
 		$this->db->closeQuery();
 		
 		return $rows;
 	}
+
+
+	/**
+	 * Prepare HTML for hall of fame table
+	 * @param string $medaltype the type of the medal for this list
+	 * @param string $medalname the name of the medal for this list
+	 * @param int $min the minimum number of caches at this level
+	 * @param string $medalid the type of medal to display in this table
+	 * @param array $rows the array of info to display in the table
+	 */
+	static function printTable($medaltype, $medalname, $min, $medalid, $rows) 
+	{
+		switch ($medaltype) {
+			case 'esrc':
+				$colDescr = 'Awarded to pilots upon sowing or tending '. $min .' rescue caches.';
+				break;
+			case 'sardisp':
+				$colDescr = 'Awarded to a Signaleer for coming to the aid of '. $min .' or more 
+					stranded capsuleers.';
+				break;
+			case 'sar_rescue':
+				$colDescr = 'Awarded to pilots upon completing '. $min .' successful rescue '.
+					 ($min == 1 ? 'mission' : 'missions');
+				break;
+		}
+	?>
+		<div class="col-md-4 white">
+			<h2 style="text-align: center;"><?=$medalname?></h2>
+			<p style="text-align: center;"><?=$colDescr?><br />
+				<?php 
+				$filename = '../img/'. $medalname .'.PNG';
+				if (file_exists($filename)) {
+					echo '<img height="216" src="'. $filename .'">';
+				}
+				?>
+			</p>
+			<table class="table white">
+				<thead>
+					<tr>
+						<th>Pilot</th>
+						<th>Date Awarded</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					foreach ($rows as $value) {
+						if (($value['medalid']) != $medalid) { continue; }	// skip row if it's not for the correct medal
+						echo '<tr>';
+						echo '	<td>'. $value['pilot'] .'</td>';
+						echo '	<td>'. Output::getEVEdate($value['dateawarded']) .'</td>';
+						echo '</tr>';
+					}
+					?>
+				</tbody>
+			</table>
+		</div>
+	<?php 
+	}
+
 }
 ?>

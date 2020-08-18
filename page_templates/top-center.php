@@ -1,4 +1,5 @@
 <?php 
+$database = new Database();
 $users = new Users($database);	?>
 
 <div class="col-sm-8 white" style="text-align: center; padding: 12px;">
