@@ -37,12 +37,11 @@ if (!isset($_POST['payout'])) {	?>
 				<tbody>
 				<?php
 				$ctrtotact = $ctropen = $ctrrescued = $ctrescaped = $ctrescapedlocals = 0;
-				$ctrdestruct = $ctrdestroyed = $ctrnoresponse = $ctrdeclined = 0;
+				$ctrdestruct = $ctrdestroyed = $ctrnoresponse = $ctrdeclined = $ctresrc = 0;
 				// pull all start agents aside from ESRC Agents and duplicates
 				$db->query("SELECT requestdate, startagent, status, system, pilot
 							FROM rescuerequest
-							WHERE status NOT IN ('closed-esrc', 'closed-dup') 
-								AND requestdate BETWEEN :start AND :end
+							WHERE status <> 'closed-dup' AND requestdate BETWEEN :start AND :end
 							ORDER BY requestdate DESC");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
@@ -73,6 +72,9 @@ if (!isset($_POST['payout'])) {	?>
 							break;
 						case 'closed-escaped':
 							$ctrescaped++;
+							break;
+						case 'closed-esrc':
+							$ctresrc++;
 							break;
 						case 'closed-escapedlocals':
 							$ctrescapedlocals++;
@@ -105,7 +107,8 @@ if (!isset($_POST['payout'])) {	?>
 			<?=gmdate('Y-m-d H:i:s', strtotime("now"))?> EVE<br /><br />
 			<strong>Total this period: <?=$ctrtotact?></strong><br />
 			Open: <?=$ctropen?><br />
-			Rescued: <?=$ctrrescued?><br />
+			Rescued (ESRC): <?=$ctresrc?><br />
+			Rescued (SAR): <?=$ctrrescued?><br />
 			Escaped by self: <?=$ctrescaped?><br />
 			Escaped by locals: <?=$ctrescapedlocals?><br />
 			Self-destruct: <?=$ctrdestruct?><br />
@@ -121,8 +124,7 @@ if (!isset($_POST['payout'])) {	?>
 else {	
 	//count of all actions performed in the specified period
 	$db->query("SELECT COUNT(*) as cnt FROM rescuerequest 
-				WHERE status NOT IN ('closed-esrc', 'closed-dup')
-				AND requestdate BETWEEN :start AND :end");
+				WHERE status <> 'closed-dup' AND requestdate BETWEEN :start AND :end");
 	$db->bind(':start', $start);
 	$db->bind(':end', $end);
 	$row = $db->single();
@@ -143,8 +145,9 @@ else {
 					<?php
 					//summary data
 					$db->query("SELECT startagent, COUNT(*) as cnt FROM rescuerequest 
-								WHERE status NOT IN ('closed-esrc', 'closed-dup')
-								AND requestdate BETWEEN :start AND :end GROUP BY startagent");
+								WHERE status <> 'closed-dup'
+								AND requestdate BETWEEN :start AND :end 
+								GROUP BY startagent");
 					$db->bind(':start', $start);
 					$db->bind(':end', $end);
 					$rows = $db->resultset();

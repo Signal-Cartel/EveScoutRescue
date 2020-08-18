@@ -143,14 +143,12 @@ else {			?>
 								href="https://evewho.com/pilot/'. $value['locateagent'] .'">'. 
 								Output::htmlEncodeString($value['locateagent']) .'</a></td>';
 						echo '<td>&nbsp;</td>';
-						// Locator gets half of total payout amount; if ESR Coord, they get 0
-						$payoutloc = intval($payoutmax/2);
-						$actualpayloc = ($user->isSARCoordinator($value['locateagent'], false) === false) 
-							? $payoutloc : 0;	
+						// Locator gets half of total payout amount
+						$payoutloc = intval($payoutmax/2);	
 						echo '<td><input type="text" id="amt'.$ctr.'" width="100" 
-								value="'. $actualpayloc .'" /><i id="copyclip" class="fa fa-clipboard" 
+								value="'. $payoutloc .'" /><i id="copyclip" class="fa fa-clipboard" 
 								onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
-						$totamt = $totamt + $actualpayloc;
+						$totamt = $totamt + $payoutloc;
 						echo '</tr>';
 						}
 						// pull all rescuers for specified system rescue, ordered oldest to newest
