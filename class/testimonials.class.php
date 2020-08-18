@@ -34,22 +34,25 @@ class Testimonials
     
 	
 	/**
-	 * Get number of pilot activities within a time frame.
-	 * @param unknown $pilot name of the pilot
-	 * @param unknown $start time frame start
-	 * @param unknown $end time frame end
-	 * @return mixed
+	 * Get testimonials.
+	 * @param integer $limit number of testimonials to return
+	 * @return array $result
 	 */
 	public function getTestimonials($limit = 5)
 	{
-        $this->db->query("SELECT * FROM testimonials 
-                                WHERE Approved = 1 
-                                ORDER BY RescueDate DESC
-                                LIMIT :limitamt");
+		if (isset($_SESSION['arrTestimonials'])) {
+			return $_SESSION['arrTestimonials'];
+		}
+
+		$this->db->query("SELECT * FROM testimonials 
+							WHERE Approved = 1 
+							ORDER BY RescueDate DESC
+							LIMIT :limitamt");
         $this->db->bind(":limitamt", $limit);
         $result = $this->db->resultset();
         $this->db->closeQuery();
 		
+		$_SESSION['arrTestimonials'] = $result;
 		return $result;
 	}
 

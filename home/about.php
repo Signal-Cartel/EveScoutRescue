@@ -7,6 +7,8 @@ require '../page_templates/secure_initialization.php';
 $database = new Database();
 $leaderBoard = new Leaderboard($database);
 $users = new Users($database);
+$arrESRTeam = $users->getUsersByRole("'2', '3'", true, true);
+$arrParticipants = $leaderBoard->getActivePilots(30);
 $pgtitle = "About Us";
 
 
@@ -59,15 +61,17 @@ require '../page_templates/home_html-begin.php';
 				<div class="row">
 
 				<?php 
-				$arrPilots = $users->getUsersByRole('3', true);
-				$arrCount = count($arrPilots);
 				$i = -1;
-				foreach ($arrPilots as $val) {
+				foreach ($arrESRTeam as $val) {
+					if ($val['roleid'] != '3') { continue; }	// skip row if not '911 Operator'
+					
 					$i++;
-					// every six loops, close last row and start a new one
-					if ($i % 6 == 0) {
-						echo '</div>
-							  <div class="row">';
+					if ($i % 6 == 0) {	// every six loops, close last row and start a new one	?>
+						
+						</div>
+						<div class="row">
+
+						<?php	
 					}	?>
 					
 					<div class="col-md-2">
@@ -88,20 +92,21 @@ require '../page_templates/home_html-begin.php';
 
 				<!-- ESR Coordinators -->
 				<div class="row">
-				  <h2 style="text-align:center">EvE-Scout Rescue Coordinators</h2>
+					<h2 style="text-align:center">EvE-Scout Rescue Coordinators</h2>
 				</div>
 				<div class="row">
 
 				<?php 
-				$arrPilots = $users->getUsersByRole('2', true);
-				$arrCount = count($arrPilots);
 				$i = 0;
-				foreach ($arrPilots as $val) {
+				foreach ($arrESRTeam as $val) {
+					if ($val['roleid'] != '2') { continue; }	// skip row if not 'ESR Coordinator'
 					$i++;
-					// every four loops, close last row and start a new one
-					if ($i % 5 == 0) {
-						echo '</div>
-							  <div class="row">';
+					
+					if ($i % 5 == 0) {	// every four loops, close last row and start a new one	?>
+						</div>
+						<div class="row">
+
+						<?php
 					}	?>
 					
 					<div class="col-md-3">
@@ -159,9 +164,8 @@ require '../page_templates/home_html-begin.php';
 			<tbody>
 
 				<?php
-				$rows = $leaderBoard->getActivePilots(30);
 				$a = 1;
-				foreach ($rows as $value) {
+				foreach ($arrParticipants as $value) {
 					if (($a % 2) == 1) { echo '<tr>' ;}
 					echo '<td class="clean text-nowrap">&nbsp;&nbsp;'. $value['Pilot'] .'</td>';
 					if (($a % 2) == 0) { echo '</tr>' ;}
