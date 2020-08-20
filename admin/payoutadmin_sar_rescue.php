@@ -38,7 +38,7 @@ if (!isset($_POST['payout'])) {	?>
 				<tbody>
 				<?php
 				// pull all SAR rescues for specified period
-				$db->query("SELECT id, LastUpdated, pilot, system, locateagent
+				$db->query("SELECT id, closedate, pilot, `system`, locateagent
 							FROM rescuerequest
 							WHERE status = 'closed-rescued' AND closedate BETWEEN :start AND :end
 							ORDER BY closedate DESC");
@@ -50,7 +50,7 @@ if (!isset($_POST['payout'])) {	?>
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display; wonky during US-DST (should be 5 hours then)
 					echo '<td class="white text-nowrap">'. 
-							date("Y-m-d H:i:s", strtotime($value['LastUpdated'])+14400) .
+							date("Y-m-d H:i:s", strtotime($value['closedate'])+14400) .
 						 '</td>';
 					echo '<td><a class="payout" target="_blank"
 							href="https://evewho.com/pilot/'. $value['pilot'] .'">'.
