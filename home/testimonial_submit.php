@@ -3,20 +3,14 @@
 define('ESRC', TRUE);
 require '../page_templates/secure_initialization.php';
 
-// check if the user is logged in
+// if not logged in, force login and redirect back to this page
 if (!isset($_SESSION['auth_characterid'])) {
-	// void the session entries on 'attack'
-	session_unset();
-	// save the redirect URL to current page
-	$_SESSION['auth_redirect'] = Config::ROOT_PATH . substr($_SERVER['PHP_SELF'], 1);
-	// no, redirect to home page
-	header("Location: ".Config::ROOT_PATH."auth/login.php");
-	// stop processing
+	$_SESSION['auth_redirect'] = htmlentities($_SERVER['PHP_SELF']);
+	header("Location: ../auth/login.php");
 	exit;
 }
 
 // PAGE VARS
-$database = new Database();
 $pgtitle = "Submit Your Testimonial";
 
 
@@ -31,53 +25,40 @@ require '../page_templates/home_html-begin.php';
 				<h2 class="pull-left"><?=$pgtitle?></h2>
 			</div>
 			<div class="panel-body">
-<?php 
-// check if the request is made by a POST request
-if (isset($_POST['pilot'])) {
-	// yes, process the request
-	$db = new Database();
-	
-	$pilot = $method = $testimonial = $errmsg = '';
-	
-	$pilot = Output::prepTextarea($_POST["pilot"]);
-	$anon = $_POST["chkAnon"] ?? 0; 
-	$method = Output::prepTextarea($_POST["method"]);
-	$testimonial = Output::prepTextarea($_POST["testimonial"]);
-	
-	//FORM VALIDATION
-	
-	// check that testimonial is not empty
-	if (!isset($testimonial))
-	{
-		$errmsg = $errmsg . "No testimonial has been provided.";
-	}
-	
-	//END FORM VALIDATION
-	
-	//display error message if there is one
-	if (!empty($errmsg)) {
-		echo $errmsg;
-	}
-	// otherwise, perform DB UPDATES
-	else {
-		// create a new cache activity
-		$database->beginTransaction();
-		$database->query("INSERT INTO testimonials (Pilot, Anon, Type, Note)
-			VALUES (:pilot, :anon, :type, :note)");
-		$database->bind(":pilot", $pilot);
-		$database->bind(":anon", $anon);
-		$database->bind(":type", $method);
-		$database->bind(":note", $testimonial);
-		$database->execute();
-		$database->endTransaction();
-		
-		echo 'Thank you! Your testimonial has been submitted successfully and is awaiting moderation.
-			Once approved, it should appear on the site within about a week.<br /><br />
-			<a href="index.php">Return to home page.</a>';
-	} 
-}
-else {
-				?>
+
+			<?php 
+			// process form submit
+			if (isset($_POST['pilot'])) {
+				$errmsg = '';
+				$testimonial = Output::prepTextarea($_POST["testimonial"]);
+				
+				// testimonial cannot be empty
+				if (empty($testimonial))	{
+					$errmsg = $errmsg . "No testimonial has been provided.";
+				}
+				
+				//display error message if there is one
+				if (!empty($errmsg)) {
+					echo $errmsg;
+				}
+				// otherwise, perform DB UPDATES
+				else {
+					$pilot = Output::prepTextarea($_POST["pilot"]);
+					$anon = $_POST["chkAnon"] ?? 0; 
+					$method = Output::prepTextarea($_POST["method"]);
+
+					$database = new Database();
+					$testimonials = new Testimonials($database);
+					$testimonials->createTestimonial($pilot, $anon, $method, $testimonial);
+					
+					echo '<p>Thank you! Your testimonial has been submitted successfully and is 
+						awaiting moderation. Once approved, it should appear on the site within about 
+						a week.</p>
+						<p><a href="index.php">Return to home page.</a></p>';
+				} 
+			}
+			else {	?>
+
 				<p>If you've recently been rescued from a wormhole via either a rescue cache or an
 					assist from a Signal Cartel rescue pilot, we'd love to hear your feedback!
 				</p>
@@ -125,10 +106,11 @@ else {
 						  });
 						</script>
 			      </form>
-			    </div>
-<?php 
-}
-?>
+				</div>
+				
+				<?php 
+			}	?>
+
 			</div>
 		</div>
 	</div>

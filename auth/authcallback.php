@@ -37,9 +37,14 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') > -1) {
 	$_SESSION['auth_charactercorp'] = 98372649;
 	$_SESSION['auth_characteralliance'] = 99005130;
 
-	header('Location: ../home/index.php');
-	//header('Location:'. $_SESSION['auth_redirect']);
-	exit;
+	if (isset($_SESSION['auth_redirect'])) {
+		header('Location: '. $_SESSION['auth_redirect']);
+		exit;
+	}
+	else {
+		header('Location: ../home/index.php');
+		exit;
+	}
 }
 
 //login.php sends an authorization request to EVE's SSO server. The EVE server 
