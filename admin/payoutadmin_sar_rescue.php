@@ -120,25 +120,28 @@ else {			?>
 					$db->bind(':end', $end);
 					$rows = $db->resultset();
 					$ctr = $totamt = 0;
-					$basepay = 50000000; // base rate is 50 mil ISK
 					$dailyincrease = 10000000; // daily increase is 10 mil ISK
 					foreach ($rows as $value) {
 						// skip record if no locateagent listed
-						if (!empty($value['locateagent'])) {
+						if (empty($value['locateagent'])) { continue; }
 						$ctr++;
-						// get right-most number from WH class string for "WH Class multiplier"
-						$whclassmult = intval(substr($value['Class'], -1));
+						$daystosar = intval($value['daystosar']);
+						// base rate is usually 50 mil ISK; but only 20 mil ISK on same-day rescues
+						$basepay = ($daystosar > 0) ? 50000000 : 20000000;
+						$strBasepay = ($basepay == 50000000) ? '50mil' : '20mil';
+						// get "WH Class multiplier"
+						$whclassmult = str_replace('Class ', '', $value['Class']);
+						$whclassmult = ($whclassmult > 6) ? 6 : $whclassmult;	// max value of 6
 						// max payout equation:
 						// (base x WH class multiplier) + (Days until rescued x daily increase amt)
-						$payoutmax = ($basepay*$whclassmult)+(intval($value['daystosar'])*$dailyincrease);
+						$payoutmax = ($basepay*$whclassmult)+($daystosar*$dailyincrease);
 						echo '<tr>';
 						echo '<td><a class="payout" target="_blank"
 								href="/esrc/rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
 								Output::htmlEncodeString(ucfirst($value['system'])) .'</a>
-								<span class="white">(50mil x '. 
-									intval(substr($value['Class'], -1)) .') + 
-									(10mil x '. intval($value['daystosar']).')
-								= '. number_format(intval($payoutmax)) .'</span></td>';
+								<span class="white">('. $strBasepay .' x '. $whclassmult .') + 
+									(10mil x '. $daystosar .')
+									= '. number_format(intval($payoutmax)) .'</span></td>';
 						echo '<td><a class="payout" target="_blank" 
 								href="https://evewho.com/pilot/'. $value['locateagent'] .'">'. 
 								Output::htmlEncodeString($value['locateagent']) .'</a></td>';
@@ -150,7 +153,7 @@ else {			?>
 								onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
 						$totamt = $totamt + $payoutloc;
 						echo '</tr>';
-						}
+
 						// pull all rescuers for specified system rescue, ordered oldest to newest
 						$db->query("SELECT pilot FROM rescueagents WHERE reqid = :id
 									ORDER BY EntryTime");

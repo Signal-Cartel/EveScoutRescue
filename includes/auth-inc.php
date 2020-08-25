@@ -41,23 +41,21 @@ else {
 	$chardiv  =	'<a class="login" href="../auth/login.php"></a>';			
 }
 
-// Only run through auth routines if we are NOT on localhost
-if (strpos($_SERVER['HTTP_HOST'], 'localhost') === false) {
-	// We are on an admin page...
-	if (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) {
-		//1a. ...and user is logged in...
- 		if (isset($_SESSION['auth_characterid'])) {
-			$database = new Database();
-			$users = new Users($database);
-			//2. ...but user is not an admin, so redirect back to home
-			if ($users->isAdmin($charname) === false) {
-					header("Location: ".Config::ROOT_PATH);
-			}
+
+// We are on an admin page...
+if (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) {
+	//1a. ...and user is logged in...
+	if (isset($_SESSION['auth_characterid'])) {
+		$database = new Database();
+		$users = new Users($database);
+		//2. ...but user is not an admin, so redirect back to home
+		if ($users->isAdmin($charname) === false) {
+				header("Location: ".Config::ROOT_PATH);
 		}
-		//1b. ...and user is not logged in, so redirect
-		else {
-			login_redirect();
-		}
+	}
+	//1b. ...and user is not logged in, so redirect
+	else {
+		login_redirect();
 	}
 }
 
