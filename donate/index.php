@@ -1,44 +1,15 @@
 <?php 
-
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-//include_once '../includes/auth-inc.php'; 
+// PAGE VARS
+$pgtitle = "YC121 Fund Drive";
 
-//require_once '../class/db.class.php';
-//require_once '../class/leaderboard.class.php';
-//require_once '../class/users.class.php';
 
-//$database = new Database();
-//$leaderBoard = new Leaderboard($database);
-//$users = new Users($database);
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-<html>
-
-<head>
-	<?php
-	$pgtitle = "YC121 Fund Drive";
-	include_once '../includes/head.php';
-	?>
-	<style>
-		td.clean {
-		    padding: 3px;
-		}
-		</style>
-</head>
-<body>
-<div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
-<?php
-include_once '../includes/top-left.php';
-//include_once '../includes/top-center.php';
-//include_once '../includes/top-right.php';
-?>
-    <div class="col-sm-8 white" style="text-align: center;"><br />
-	    <span class="sechead">YC121 Fund Drive</span></div>
-</div>
-<div class="ws"></div>
 
 <div class="row">
 	<div class="col-sm-8">
@@ -264,6 +235,7 @@ include_once '../includes/top-left.php';
 	</div>
 </div>
 
-</div>
-</body>
-</html>
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>
