@@ -30,6 +30,18 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 */
 
+// if we are on localhost, fake login for testing
+if (strpos($_SERVER['HTTP_HOST'], 'localhost') > -1) {
+	$_SESSION['auth_characterid'] = 96079190;
+	$_SESSION['auth_charactername'] = 'Thrice Hapus';
+	$_SESSION['auth_charactercorp'] = 98372649;
+	$_SESSION['auth_characteralliance'] = 99005130;
+
+	header('Location: ../home/index.php');
+	//header('Location:'. $_SESSION['auth_redirect']);
+	exit;
+}
+
 //login.php sends an authorization request to EVE's SSO server. The EVE server 
 //then sends its response to this script. We need to handle that response.
 

@@ -38,19 +38,25 @@ else {
 		// no, set a default redirect path
 		$_SESSION['auth_redirect']=Config::ROOT_PATH;
 	}
-	
-	
-	$authsite='https://login.eveonline.com';
-    $authurl='/oauth/authorize';
-    $state=uniqid();
-	$_SESSION['auth_state']=$state;
-	$_SESSION['charip']=getIp();
-    session_write_close();
-	header(
-        'Location:'.$authsite.$authurl
-        .'?response_type=code&redirect_uri='.urlencode(Config::AUTH_CALLBACK)
-        .'&client_id='.Config::AUTH_CLIENT_ID.'&scope=&state='.$state
-    );
-	exit;
+
+	// if we are on localhost, fake login for testing
+	if (strpos($_SERVER['HTTP_HOST'], 'localhost') > -1) {
+		header('Location: authcallback.php');
+		exit;
+	}
+	else {
+		$authsite='https://login.eveonline.com';
+		$authurl='/oauth/authorize';
+		$state=uniqid();
+		$_SESSION['auth_state']=$state;
+		$_SESSION['charip']=getIp();
+		session_write_close();
+		header(
+			'Location:'.$authsite.$authurl
+			.'?response_type=code&redirect_uri='.urlencode(Config::AUTH_CALLBACK)
+			.'&client_id='.Config::AUTH_CLIENT_ID.'&scope=&state='.$state
+		);
+		exit;
+	}
 }
 ?>
