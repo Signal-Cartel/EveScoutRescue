@@ -52,6 +52,22 @@ class Testimonials
 		$this->db->execute();
 		$this->db->endTransaction();
 	}
+
+
+	/**
+	 * Get a single testimonial.
+	 * @param int $rowid The ID of the testimonial to retrieve.
+	 * @return array $result
+	 */
+	public function getTestimonial($rowid)
+	{
+		$this->db->query("SELECT * FROM testimonials WHERE ID = :rowid");
+		$this->db->bind(':rowid', $rowid);
+		$result = $this->db->single();
+		$this->db->closeQuery();
+
+		return $result;
+	}
     
 	
 	/**
@@ -75,6 +91,42 @@ class Testimonials
         $this->db->closeQuery();
 
 		return $result;
+	}
+
+
+	/**
+	 * Delete testimonial from db
+	 * @param int $rowid ID of database row to delete
+	 */
+	public function removeTestimonial($rowid)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("DELETE FROM testimonials WHERE ID = :id");
+		$this->db->bind(':id', $rowid);
+		$this->db->execute();
+		$this->db->endTransaction();
+	}
+
+
+	/**
+	 * Update existing testimonial
+	 * @param string $pilot Name of pilot submitting testimonial
+	 * @param bit $anon Anonymize display of testimonial; 1 = anonymous, 0 = not anonymous
+	 * @param string $method rescue method, either via rescue cache or search and rescue
+	 * @param string $testimonial Text of testimonial
+	 */
+	public function updateTestimonial($rowid, $pilot, $testimonial, $approved)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("UPDATE testimonials 
+							SET Pilot = :pilot, Note = :testimonial, Approved = :approved 
+							WHERE ID = :rowid");
+		$this->db->bind(':pilot', $pilot);
+		$this->db->bind(':testimonial', $testimonial);
+		$this->db->bind(':approved', $approved);
+		$this->db->bind(':rowid', $rowid);
+		$this->db->execute();
+		$this->db->endTransaction();
 	}
 
 }

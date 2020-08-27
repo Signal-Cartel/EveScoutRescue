@@ -14,22 +14,24 @@ require '../page_templates/home_html-begin.php';
 ?>
 
 <div class="row">
+	<div class="col-md-4"></div>
 	<?php 
 	// Beacon of Anoikis column
-	Pilot::printTable('sar_rescue', 'Beacon of Anoikis', 100, '14', $arrPilots);
-
-	// Gold Medal column
-	Pilot::printTable('sar_rescue', 'Gold Lifesaver', 50, '13', $arrPilots);
-	
-	// Silver Medal column
-	Pilot::printTable('sar_rescue', 'Silver Lifesaver', 10, '12', $arrPilots);
+	Pilot::printMedalsTable('sar_rescue', 'Beacon of Anoikis', 100, '14', $arrPilots);
 	?>
+	<div class="col-md-4"></div>
 </div>
 
 <div class="row">
 	<?php 
+	// Gold Medal column
+	Pilot::printMedalsTable('sar_rescue', 'Gold Lifesaver', 50, '13', $arrPilots);
+	
+	// Silver Medal column
+	Pilot::printMedalsTable('sar_rescue', 'Silver Lifesaver', 10, '12', $arrPilots);
+
 	// Bronze Medal column
-	Pilot::printTable('sar_rescue', 'Bronze Lifesaver', 1, '11', $arrPilots);
+	Pilot::printMedalsTable('sar_rescue', 'Bronze Lifesaver', 1, '11', $arrPilots);
 	?>
 </div>
 

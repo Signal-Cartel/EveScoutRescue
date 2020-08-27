@@ -96,7 +96,7 @@ if (!isset($_POST['payout'])) {	?>
 else {			?>
 
 	<div class="row" id="systable">
-		<div class="col-sm-10">
+		<div class="col-sm-12">
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -129,19 +129,18 @@ else {			?>
 						// base rate is usually 50 mil ISK; but only 20 mil ISK on same-day rescues
 						$basepay = ($daystosar > 0) ? 50000000 : 20000000;
 						$strBasepay = ($basepay == 50000000) ? '50mil' : '20mil';
-						// get "WH Class multiplier"
-						$whclassmult = str_replace('Class ', '', $value['Class']);
-						$whclassmult = ($whclassmult > 6) ? 6 : $whclassmult;	// max value of 6
-						// max payout equation:
-						// (base x WH class multiplier) + (Days until rescued x daily increase amt)
+						// get WH Class and calculate multiplier: C1-6 = class number; C13 = 3; C14-18 = 6; x6 is max multiplier
+						$whclassnum = str_replace('Class ', '', $value['Class']);
+						$whclassmult = ($whclassnum <= 6) ? $whclassnum : (($whclassnum == 13) ? 3 : 6);
+						// max payout equation: (base x WH class multiplier) + (Days until rescued x daily increase amt)
 						$payoutmax = ($basepay*$whclassmult)+($daystosar*$dailyincrease);
 						echo '<tr>';
 						echo '<td><a class="payout" target="_blank"
 								href="/esrc/rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
 								Output::htmlEncodeString(ucfirst($value['system'])) .'</a>
-								<span class="white">('. $strBasepay .' x '. $whclassmult .') + 
-									(10mil x '. $daystosar .')
-									= '. number_format(intval($payoutmax)) .'</span></td>';
+								<span class="white"> - C'. $whclassnum .' - ('. $strBasepay .' x '. 
+									$whclassmult .') + (10mil x '. $daystosar .') = '. 
+									number_format(intval($payoutmax)) .'</span></td>';
 						echo '<td><a class="payout" target="_blank" 
 								href="https://evewho.com/pilot/'. $value['locateagent'] .'">'. 
 								Output::htmlEncodeString($value['locateagent']) .'</a></td>';
@@ -193,9 +192,6 @@ else {			?>
 					</tr>
 				</tbody>
 			</table>
-		</div>
-		<div class="col-sm-2 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
 		</div>
 	</div>
 
