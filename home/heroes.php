@@ -44,26 +44,26 @@ require '../page_templates/home_html-begin.php';
 <div class="row white">
 	<?php 
 	// InsaneCacher column
-	Pilot::printTable('esrc', 'InsaneCacher', 5000, '6', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'InsaneCacher', 5000, '6', $arrPilots);
 
 	// HeroCacher column
-	Pilot::printTable('esrc', 'HeroicCacher', 3000, '5', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'HeroicCacher', 3000, '5', $arrPilots);
 
 	// UltraCacher column
-	Pilot::printTable('esrc', 'UltraCacher', 1000, '4', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'UltraCacher', 1000, '4', $arrPilots);
 	?>
 </div>
 
 <div class="row white">
 	<?php 
 	// HyperCacher column
-	Pilot::printTable('esrc', 'HyperCacher', 500, '3', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'HyperCacher', 500, '3', $arrPilots);
 
 	// MegaCacher column
-	Pilot::printTable('esrc', 'MegaCacher', 300, '2', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'MegaCacher', 300, '2', $arrPilots);
 
 	// SuperCacher column
-	Pilot::printTable('esrc', 'SuperCacher', 100, '1', $arrPilots);
+	Pilot::printMedalsTable('esrc', 'SuperCacher', 100, '1', $arrPilots);
 	?>
 </div>
 

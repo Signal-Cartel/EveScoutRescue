@@ -125,7 +125,7 @@ class Pilot
 	 * @param string $medalid the type of medal to display in this table
 	 * @param array $rows the array of info to display in the table
 	 */
-	static function printTable($medaltype, $medalname, $min, $medalid, $rows) 
+	static function printMedalsTable($medaltype, $medalname, $min, $medalid, $rows) 
 	{
 		switch ($medaltype) {
 			case 'esrc':

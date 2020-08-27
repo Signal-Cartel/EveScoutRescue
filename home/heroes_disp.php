@@ -17,13 +17,13 @@ require '../page_templates/home_html-begin.php';
 <div class="row">
 	<?php 
 	// Master column
-	Pilot::printTable('sardisp', 'Master Dispatcher', 100, '23', $arrPilots);
+	Pilot::printMedalsTable('sardisp', 'Master Dispatcher', 100, '23', $arrPilots);
 
 	// Proficient column
-	Pilot::printTable('sardisp', 'Proficient Dispatcher', 50, '22', $arrPilots);
+	Pilot::printMedalsTable('sardisp', 'Proficient Dispatcher', 50, '22', $arrPilots);
 
 	// Qualified column
-	Pilot::printTable('sardisp', 'Qualified Dispatcher', 5, '21', $arrPilots);
+	Pilot::printMedalsTable('sardisp', 'Qualified Dispatcher', 5, '21', $arrPilots);
 	?>
 </div>
 
