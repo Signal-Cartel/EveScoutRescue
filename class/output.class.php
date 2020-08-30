@@ -35,6 +35,23 @@ class Output {
 	}
 
 
+	/**
+	 * Prepare display of options for a select list
+	 * @param string $post_value The value that will be posted at form submit
+	 * @param string $displaytext The text to display in the select list to the user
+	 * @param string $selected_value The item to select by default; default to none
+	 * @return array
+	 */
+	static function prepSelectListOption($post_value, $displaytext, $selected_value = '')
+	{
+		$str = '<option value="'.$post_value.'"';
+		if ($post_value == $selected_value) { $str .= ' selected="selected"'; }
+		$str .= '>'.$displaytext.'</option>'."\n";
+	
+		return $str;
+	}
+
+
 	static function prepTextarea($note)
 	{
 		$strclean = $note;

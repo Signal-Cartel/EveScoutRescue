@@ -194,6 +194,24 @@ class Systems {
 		return $result;
 	}
 
+
+	/**
+	 * Get a list of specified systems
+	 * @param string $where_clause The matches to search for in the WHERE LIKE statement
+	 * @return array
+	 */
+	public function getSystemsList($where_clause = '%')
+	{
+		$this->db->query("SELECT solarSystemName FROM mapSolarSystems 
+							WHERE solarSystemName LIKE :where_clause
+							ORDER BY solarSystemName");
+		$this->db->bind(':where_clause', $where_clause);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+
+		return $result;
+	}
+
 		/**
 	 * Get participants of currently active cache
 	 * @param unknown $system
