@@ -60,15 +60,18 @@ class Storms
 	
 	/**
 	 * Get list of storms.
-	 * @param string $last48hrs Get storm reports only from last 48 hours; default to true
+	 * @param string $last24hrs Get storm reports only from last 24 hours; default to true
 	 * @return array $result
 	 */
-	public function getStorms($last48hrs = true)
+	public function getStorms($last24hrs = true)
 	{
-        $where_clause = ($last48hrs === false) ? '' : 
-            'WHERE dateobserved BETWEEN DATE_SUB(NOW(), INTERVAL 2 DAY) AND NOW()';
+        $where_clause = ($last24hrs === false) ? '' : 
+            'WHERE dateobserved >= NOW() - INTERVAL 1 DAY';
 
-		$this->db->query("SELECT * FROM storm_tracker 
+		$this->db->query("SELECT st.*, mr.regionName 
+							FROM storm_tracker st
+							INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
+							INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
 							$where_clause
 							ORDER BY dateobserved DESC");
         $result = $this->db->resultset();

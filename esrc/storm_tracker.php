@@ -53,19 +53,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errmsg = 'Storm report removed from database.';
     }
     elseif (empty($_POST['evesystem']) || empty($_POST['stormtype'])) { // validate form
-        $errmsg = 'Please select a system center and storm type.';
+        $errmsg = 'Please select a storm center system and storm type.';
     }
 
     if (empty($errmsg)) {
-        $storms->createStormEntry($_POST['evesystem'], $_POST['pilot'], $_POST['stormtype'], 
-            $_POST['stormstrength']);
+        $storms->createStormEntry($_POST['evesystem'], $_POST['pilot'], $_POST['stormtype'], 'Strong');
         
         // Broadcast any new storm to Discord	
         $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
         $user = 'EvE-Scout Rescue';
         $alert = 0;
-        $message = "_New storm report from " . $_POST['pilot'] . "_\n" . $_POST['stormstrength'] 
-            . ' Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
+        $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
+            . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
         $skip_the_gif = 1;
 
         $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
@@ -126,55 +125,63 @@ if (!empty($errmsg)) {
 }
 ?>
 
-<div class="row" id="st-submit-row" >
-    <div class="col-md-12">
+<style>
+.col-md-4 {
+  float: none;
+  margin: 0 auto;
+}
+</style>
+
+<div class="row">
+    <div class="col-md-7">
         <h2>Storm Tracker is currently in early beta testing</h2>
+        <p>Dear Signaleer, thank you for being out there chasing storms!</p>
+        <p><strong>Remember: We only need the centre of the storm reported.</strong> You can find 
+        it easily from your in-game map, as shown to the right. Since the centre is always of the STRONG 
+        variety, that will automatically be added to your report.</p>
+        <p>Thank you for your report! o7</p>
+
+        <div class="ws"></div>
+
+        <div class="row">
+            <div class="col-md-4">
+        <form name="stormform" id="stormform" class="form-horizontal" 
+            action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
+            <div class="form-group">
+                <select class="form-control" id="evesystem" name="evesystem" style="width: auto;">
+                    <option value="">Choose the storm center...</option>
+
+                    <?php
+                    require_once '../resources/stormSystems.php';
+                    foreach ($stormSystems as $value) {
+                        echo Output::prepSelectListOption($value['solarSystemName'], 
+                        $value['solarSystemName']);
+                    }
+                    ?>
+
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="stormtype" name="stormtype" class="form-control" style="width: auto;">
+                    <option value="">Choose the storm type...</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Exotic">Exotic</option>
+                    <option value="Gamma">Gamma</option>
+                    <option value="Plasma">Plasma</option>
+                </select>
+            </div>
+            <div class="form-group text-center">
+                <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+            </div></div>
+    </div>
+    <div class="col-md-5">
+        <img src="https://cdn.discordapp.com/attachments/551081375424446483/749915372471451720/unknown.png">
     </div>
 </div>
 <div class="ws"></div>
-
-<div class="row">
-<form name="stormform" id="stormform" class="form-horizontal" 
-    action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
-    <div class="form-group col-md-12">
-        <select class="form-control" id="evesystem" name="evesystem" style="width: auto;">
-            <option value="">Choose the system center...</option>
-
-            <?php
-            require_once '../resources/stormSystems.php';
-            foreach ($stormSystems as $value) {
-                echo Output::prepSelectListOption($value['solarSystemName'], $value['solarSystemName']);
-            }
-            ?>
-
-        </select>
-    </div>
-    <div class="form-group col-md-12">
-        <select id="stormtype" name="stormtype" class="form-control col-md-10" style="width: auto;">
-            <option value="">Choose the storm type...</option>
-            <option value="Electrical">Electrical</option>
-            <option value="Exotic">Exotic</option>
-            <option value="Gamma">Gamma</option>
-            <option value="Plasma">Plasma</option>
-        </select>
-    </div>
-    <div class="form-group col-md-12">
-        <strong>Storm Strength:</strong><br>
-        <label class="radio-inline" for="stormstrength-0">
-        <input type="radio" name="stormstrength" id="stormstrength-0" value="Strong" checked="checked">
-        Strong
-        </label> 
-        <label class="radio-inline" for="stormstrength-1">
-        <input type="radio" name="stormstrength" id="stormstrength-1" value="Weak">
-        Weak
-        </label>
-    </div>
-    <div class="form-group col-md-12">
-        <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</form>
-</div>
 
 <hr class="white">
 
@@ -186,7 +193,6 @@ if (!empty($errmsg)) {
 				<tr>
                     <th class="white">System</th>
                     <th class="white">Type</th>
-                    <th class="white">Strength</th>
 					<th class="white">Pilot</th>
                     <th class="white">Report Date</th>
                     <?php if ($isCoord) { echo '<th class="white">&nbsp;</th>'; } ?>
@@ -206,7 +212,6 @@ if (!empty($errmsg)) {
 				<tr>
                     <td class="white text-nowrap"><?=$value['evesystem']?></td>
                     <td class="white text-nowrap"><?=$value['stormtype']?></td>
-                    <td class="white text-nowrap"><?=$value['stormstrength']?></td>
                     <td class="white text-nowrap"><?=$value['pilot']?></td>
                     <td class="white text-nowrap"><?=$value['dateobserved']?></td>
                     
