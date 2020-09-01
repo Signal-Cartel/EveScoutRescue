@@ -253,9 +253,9 @@ require '../page_templates/home_html-begin.php';
 				else {
 					foreach ($rows as $value) {
 						$dateobserved = date_create($value['dateobserved']);
-						echo $value['evesystem'] .' - '. $value['stormstrength'] .' ' 
-							.' Metaliminal '. $value['stormtype'] .' Ray Storm - last reported: '. 
-							date_format($dateobserved, "M-d@H:i");
+						echo $value['evesystem'] .' ['. $value['regionName'] .'] - '.
+							$value['stormstrength'] .' Metaliminal '. $value['stormtype'] .
+							' Ray Storm - last reported: '. date_format($dateobserved, "M-d@H:i");
 						echo ' <span class="glyphicon glyphicon-forward"></span> ';
 					}
 				}	?>
