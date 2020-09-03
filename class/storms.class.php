@@ -39,22 +39,36 @@ class Storms
 	 * @param bit $anon Anonymize display of testimonial; 1 = anonymous, 0 = not anonymous
 	 * @param string $method rescue method, either via rescue cache or search and rescue
 	 * @param string $testimonial Text of testimonial
+	 * @return boolean TRUE if new report created; FALSE if no new report created
 	 */
 	public function createStormEntry($evesystem, $pilot, $stormtype, $stormstrength)
 	{
 		$dateobserved = new DateTime('now', new DateTimeZone('UTC'));
-		
+
+		// check ford duplicate entry before committing
 		$this->db->beginTransaction();
-		$this->db->query("INSERT INTO storm_tracker (evesystem, pilot, stormtype, stormstrength, 
-								dateobserved)
-							VALUES (:evesystem, :pilot, :stormtype, :stormstrength, :dateobserved)");
+		$this->db->query("SELECT COUNT(id) AS countMatches FROM storm_tracker 
+							WHERE evesystem = :evesystem AND stormtype = :stormtype
+								AND dateobserved >= NOW() - INTERVAL 1 DAY");
 		$this->db->bind(":evesystem", $evesystem);
-		$this->db->bind(":pilot", $pilot);
 		$this->db->bind(":stormtype", $stormtype);
-		$this->db->bind(":stormstrength", $stormstrength);
-		$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
-		$this->db->execute();
+		$result = $this->db->single();
+		$this->db->closeQuery();
+		
+		if ($result['countMatches'] == 0) {	// no duplicate report found, so add new one
+			$this->db->query("INSERT INTO storm_tracker (evesystem, pilot, stormtype, stormstrength, 
+									dateobserved)
+								VALUES (:evesystem, :pilot, :stormtype, :stormstrength, :dateobserved)");
+			$this->db->bind(":evesystem", $evesystem);
+			$this->db->bind(":pilot", $pilot);
+			$this->db->bind(":stormtype", $stormtype);
+			$this->db->bind(":stormstrength", $stormstrength);
+			$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
+			$this->db->execute();
+		}
+
 		$this->db->endTransaction();
+		return ($result['countMatches'] == 0) ? true : false;
 	}
     
 	
@@ -68,10 +82,11 @@ class Storms
         $where_clause = ($last24hrs === false) ? '' : 
             'WHERE dateobserved >= NOW() - INTERVAL 1 DAY';
 
-		$this->db->query("SELECT st.*, mr.regionName 
+		$this->db->query("SELECT st.*, st.id AS stormid, mr.regionName, u.characterid
 							FROM storm_tracker st
 							INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
 							INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
+							INNER JOIN `user` u ON st.pilot = u.character_name
 							$where_clause
 							ORDER BY dateobserved DESC");
         $result = $this->db->resultset();
