@@ -57,17 +57,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($errmsg)) {
-        $storms->createStormEntry($_POST['evesystem'], $_POST['pilot'], $_POST['stormtype'], 'Strong');
+        $newStormEntry = $storms->createStormEntry($_POST['evesystem'], $_POST['pilot'], 
+            $_POST['stormtype'], 'Strong');
         
-        // Broadcast any new storm to Discord	
-        $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
-        $user = 'EvE-Scout Rescue';
-        $alert = 0;
-        $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
-            . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
-        $skip_the_gif = 1;
+        if ($newStormEntry) {   // Broadcast any new storm to Discord	
+            $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
+            $user = 'EvE-Scout Rescue';
+            $alert = 0;
+            $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
+                . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
+            $skip_the_gif = 1;
 
-        $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
+            $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
+        }
+        else {  // new storm report could not be created
+            $errmsg = 'Storm report could not be created. Make sure it is not a duplicate.';
+        }
     }
 }
 
@@ -229,9 +234,8 @@ if (!empty($errmsg)) {
                         </form>
                     </td>
 
-                        <?php
-                    } 
-                    ?>
+                    <?php
+                    }   ?>
 
 				</tr>
 
