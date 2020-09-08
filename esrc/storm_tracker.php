@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if ($newStormEntry) {   // Broadcast any new storm to Discord	
             $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
-            $user = 'EvE-Scout Rescue';
+            $user = 'Storm Tracker';
             $alert = 0;
             $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
                 . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
