@@ -108,12 +108,13 @@ else {		?>
 	
 	<div class="row" id="systable" style="padding-top: 20px;">
 		<div class="col-sm-12">
-			<p class="white">
-			Note that total count of actions here may differ from what is listed on non-Payout summary.
-			This is because pilots are only paid for sows/tends in a given system once each week. 
-			Multiple tends in the same system in the same week, e.g., do not count toward the total 
-			count for payout. However, they <i>do</i> count toward activity counts for medals and such.
-			</p>
+			<p class="white">Note that total count of actions here may differ from what is listed on 
+			non-Payout summary. This is because pilots are only paid for sows/tends in a given system 
+			once each week. Multiple tends in the same system in the same week, e.g., do not count 
+			toward the total count for payout. However, they <i>do</i> count toward activity counts 
+			for medals and such.</p>
+			<p class="white text-center">Payout = (Individual Count / Total Payable Count) * 
+				Total Weekly Payout Amount</p>
 			<table class="table" style="margin: auto; width: auto;">
 				<thead>
 					<tr>
@@ -125,51 +126,26 @@ else {		?>
 				<tbody>
 
 				<?php
-				$ctrParticipants = $ctrParticipantsLessOptouts = 0; 
-				$ctrTotalActions = $ctrActionsLessOptouts = 0;
-				
-				$pilot = new Pilot($db);
-				$arrPilotsOptedOut = $pilot->getOptedOutPilots('ESRC');
-
 				$rows = $lb->getESRCPayees($start, $end, true);
-
-				// get $ctrActionsLessOptouts first to use in calculating individual payout amounts
-				foreach ($rows as $value) {
-					$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
-					if ($isOptedOut === false) {
-						$ctrActionsLessOptouts = $ctrActionsLessOptouts + intval($value['cnt']);
-					}
-				}
-
+				$ctrActionsLessOptouts = array_sum(array_column($rows, 'cntPayableActions'));	// to use in calculating individual payout amounts
+				
 				// build table rows
+				$i = 0;
 				foreach ($rows as $value) {
-					// increment counters
-					$ctrParticipants++;
-					$ctrTotalActions = $ctrTotalActions + intval($value['cnt']);
-					
-					// some pilots have opted out of payments for ESRC activity; set values accordingly
-					$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
-					if ($isOptedOut === false) {
-						$ctrParticipantsLessOptouts++;
-						$countAmt = $value['cnt'];
-						$strActualCount = '';
-						$payoutAmt = round((intval($value['cnt'])/intval($ctrActionsLessOptouts))*intval($_REQUEST['totamt']),2);
-					}
-					else {	// opted out pilots receive credit for 0
-						$countAmt = 0;
-						$strActualCount = ' ('. $value['cnt'] .')';
-						$payoutAmt = 0;
-					}	?>
+					// calc payout amount
+					$payoutAmt = round((intval($value['cntPayableActions'])/intval($ctrActionsLessOptouts))*intval($_REQUEST['totamt']),2);
+					$i++	?>
 
 					<tr>
 						<td><a class="payout" target="_blank" 
 							href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
 							<?=$value['Pilot']?></a> - <a class="payout" target="_blank" 
 							href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
-						<td class="white" align="right"><?=$countAmt . $strActualCount?></td>
-						<td><input type="text" id="amt<?=$ctrParticipants?>" value="<?=$payoutAmt?>" />
+						<td class="white" align="right"><?=$value['cntActions']?></td>
+						<td><input type="text" id="amt<?=$i?>" 
+							value="<?=($payoutAmt == 0) ? 'Opted Out' : $payoutAmt?>" />
 							<i id="copyclip" class="white fa fa-clipboard" 
-							onClick="SelectAllCopy('amt<?=$ctrParticipants?>')"></i></td>
+							onClick="SelectAllCopy('amt<?=$i?>')"></i></td>
 					</tr>
 				
 					<?php
@@ -177,13 +153,13 @@ else {		?>
 
 					<tr>
 						<td class="white">
-							Paid Participants: <?=$ctrParticipantsLessOptouts?><br>
-							All Participants: <?=$ctrParticipants?>
+							Paid Participants: <?=array_sum(array_column($rows, 'cntParticipation'));?><br>
+							All Participants: <?=count($rows)?>
 
 						</td>
 						<td class="white" align="right">
 							PAID TOTAL: <?=$ctrActionsLessOptouts?><br>
-							Sow/Tend Total: <?=$ctrTotalActions?>
+							Sow/Tend Total: <?=array_sum(array_column($rows, 'cntActions'))?>
 						</td>
 						<td>&nbsp;</td>
 					</tr>
