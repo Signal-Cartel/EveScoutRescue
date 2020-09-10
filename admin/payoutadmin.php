@@ -5,6 +5,7 @@ require '../page_templates/secure_initialization.php';
 
 // PAGE VARS
 $db = new Database();
+$lb = new Leaderboard($db);
 $pgtitle = 'ESRC Payouts';
 
 
@@ -19,8 +20,7 @@ require '../page_templates/home_html-begin.php';
 </div>
 
 <?php
-//show detailed records if "Payout" is not checked
-if (!isset($_POST['payout'])) {	?>
+if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not checked	?>
 
 	<div class="row" id="systable" style="padding-top: 20px;">
 		<div class="col-sm-10 white">
@@ -36,103 +36,85 @@ if (!isset($_POST['payout'])) {	?>
 					</tr>
 				</thead>
 				<tbody>
+
 				<?php
-				$ctrtotact = $ctrsow = $ctrtend = 0;
-				// "agent" actions are paid via SAR Dispatch, so do not count here
-				$db->query("SELECT * FROM activity 
-							WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start AND :end 
-							ORDER By ActivityDate DESC");
-				$db->bind(':start', $start);
-				$db->bind(':end', $end);
-				$rows = $db->resultset();
+				$ctrTotalActions = $ctrSows = $ctrTends = 0;
+				$rows = $lb->getESRCPayees($start, $end, false);
 				foreach ($rows as $value) {
-					$ctrtotact++;
-					// calculate action cell format
-					$actioncellformat= '';
-					switch ($value['EntryType']) {
-						case 'sower':
-							$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
-							break;
-						case 'tender':
-							$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
-							break;
-						default:
-							// ??
+					$ctrTotalActions++;	// increment total actions counter
+					if ($value['EntryType'] == 'sower') {
+						$actioncellformat = ' style="background-color:#ccffcc;color:black;"';
+						$ctrSows++;
 					}
-					echo '<tr>';
-					// add 4 hours to convert to UTC (EVE) for display
-					echo '<td class="white text-nowrap">'. 
-							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
-						 '</td>';
-					echo '<td class="text-nowrap">
-							<a class="payout" target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
-							$value['Pilot'] .'</a> - <a class="payout" target="_blank" 
-							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
-					echo '<td class="white" '. $actioncellformat .'>'. ucfirst($value['EntryType']) .'</td>';
-					switch ($value['EntryType']) {
-						case 'sower':
-							$ctrsow++;
-							break;
-						case 'tender':
-							$ctrtend++;
-							break;
-					}
-					echo '<td><a class="payout" href="/esrc/search.php?sys='. $value['System'] .'" target="_blank">'. 
-							$value['System'] .'</a></td>';
-					echo '<td><a class="payout" target="_blank" 
-							href="https://evewho.com/pilot/'. $value['AidedPilot'] .'">'. 
-							Output::htmlEncodeString($value['AidedPilot']) .'</td>';
-					echo '<td class="white">'. Output::htmlEncodeString($value['Note']) .'</td>';
-					echo '</tr>';
-				}
-		
-				$db->query("SELECT COUNT(*) as cnt FROM cache WHERE Status <> 'Expired'");
-				$row = $db->single();
-				$ctrtot = $row['cnt'];
-				?>
+					if ($value['EntryType'] == 'tender') {
+						$actioncellformat= ' style="background-color:#d1dffa;color:black;"';
+						$ctrTends++;
+					} 	?>
+
+					<tr>
+						<td class="white text-nowrap">
+							<?=date("Y-m-d H:i:s", strtotime($value['ActivityDate']))?></td>
+						<td class="text-nowrap">
+							<a class="payout" target="_blank" 
+								href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
+								<?=$value['Pilot']?>'</a> - <a class="payout" target="_blank" 
+								href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
+						<td class="white"<?=$actioncellformat?>><?=ucfirst($value['EntryType'])?></td>
+						<td><a class="payout" href="/esrc/search.php?sys=<?=$value['System']?>" 
+							target="_blank"><?=$value['System']?></a></td>
+						<td><a class="payout" target="_blank" 
+							href="https://evewho.com/pilot/<?=$value['AidedPilot']?>"> 
+							<?=Output::htmlEncodeString($value['AidedPilot'])?></td>
+						<td class="white"><?=Output::htmlEncodeString($value['Note'])?></td>
+					</tr>
+					
+					<?php
+				}	?>
+
 				</tbody>
 			</table>
 		</div>
+
 		<div class="col-sm-2 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-			Actions this period: <?php echo $ctrtotact; ?><br />
-			Sown: <?php echo $ctrsow; ?><br />
-			Tended: <?php echo $ctrtend; ?><br /><br />
-			Total caches in space:<br />
-			<?php echo $ctrtot; ?> of 2603 (<?php echo round((intval($ctrtot)/2603)*100,1); ?>%)
+			<table class="table table-condensed" style="width: auto;">
+				<tr>
+					<td class="white">Sown:</td>
+					<td class="white text-right"><?=$ctrSows?></td>
+				</tr>
+				<tr>
+					<td class="white">Tended:</td>
+					<td class="white text-right"><?=$ctrTends?></td>
+				</tr>
+				<tr>
+					<td class="white">TOTAL:</td>
+					<td class="white text-right"><?=$ctrTotalActions?></td>
+				</tr>
+			</table>
+
+			<?php
+			$caches = new Caches($db);
+			$ctrTotalCaches = $caches->getActiveCount();
+			?>
+
+			Active caches:<br />
+			<?=$ctrTotalCaches?> of 2603 (<?=round((intval($ctrTotalCaches)/2603)*100,1)?>%)
 		</div>
 	</div>
 <?php
 }
 
 //show payout data if "Payout" is checked
-else {	
-	// get array of pilots who have opted out
-	$db->query("SELECT pilot FROM payout_optout WHERE optout_type = 'ESRC'");
-	$arrPilotsOptedOut = $db->resultset();
-	$db->closeQuery();
-
-	//count of all actions performed in the specified period
-	// "agent" actions are paid via SAR Dispatch, so do not count here
-	$db->query("SELECT Pilot, COUNT(DISTINCT(System)) as cnt FROM activity 
-				WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start AND :end 
-				GROUP BY Pilot");
-	$db->bind(':start', $start);
-	$db->bind(':end', $end);
-	$rows = $db->resultset();
-	$db->closeQuery();
-	$ctrtot = $ctrLessOptouts = 0;
-	foreach ($rows as $value) {
-		$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
-		// skip loop if pilot has opted out from payout
-		$ctrtot = $ctrtot + intval($value['cnt']);
-		if ($isOptedOut !== false) { continue; }
-		$ctrLessOptouts = $ctrLessOptouts + intval($value['cnt']);
-	}	?>
+else {		?>
 	
 	<div class="row" id="systable" style="padding-top: 20px;">
-		<div class="col-sm-10">
-			<table class="table" style="width: auto;">
+		<div class="col-sm-12">
+			<p class="white">
+			Note that total count of actions here may differ from what is listed on non-Payout summary.
+			This is because pilots are only paid for sows/tends in a given system once each week. 
+			Multiple tends in the same system in the same week, e.g., do not count toward the total 
+			count for payout. However, they <i>do</i> count toward activity counts for medals and such.
+			</p>
+			<table class="table" style="margin: auto; width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Pilot</th>
@@ -141,36 +123,58 @@ else {
 					</tr>
 				</thead>
 				<tbody>
-					<?php
-					//summary data
-					$ctrParticipants = $ctrParticipantsLessOptouts = 0;
-					foreach ($rows as $value) {
-						$ctrParticipants++;
-						$isOptedOut = array_search($value['Pilot'], 
-							array_column($arrPilotsOptedOut, 'pilot'));
-						// set values accordingly; opted out pilots receive credit for 0
-						if ($isOptedOut === false) {
-							$countAmt = $value['cnt'];
-							$strActualCount = '';
-							$payoutAmt = round((intval($value['cnt'])/intval($ctrLessOptouts))*intval($_REQUEST['totamt']),2);
-							$ctrParticipantsLessOptouts++;
-						}
-						else {
-							$countAmt = 0;
-							$strActualCount = ' ('. $value['cnt'] .')';
-							$payoutAmt = 0;
-						}
-						echo '<tr>';
-						echo '<td><a class="payout" target="_blank" href="/esrc/personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
-							$value['Pilot'] .'</a> - <a class="payout" target="_blank" 
-							href="https://evewho.com/pilot/'. $value['Pilot'] .'">EW</a></td>';
-						echo '<td class="white" align="right">'. $countAmt . $strActualCount .'</td>';
-						echo '<td><input type="text" id="amt'.$ctrParticipants.'" value="'. $payoutAmt .'" />
-									<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctrParticipants.'\')"></i>
-							  </td>';
-						echo '</tr>';
+
+				<?php
+				$ctrParticipants = $ctrParticipantsLessOptouts = 0; 
+				$ctrTotalActions = $ctrActionsLessOptouts = 0;
+				
+				$pilot = new Pilot($db);
+				$arrPilotsOptedOut = $pilot->getOptedOutPilots('ESRC');
+
+				$rows = $lb->getESRCPayees($start, $end, true);
+
+				// get $ctrActionsLessOptouts first to use in calculating individual payout amounts
+				foreach ($rows as $value) {
+					$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
+					if ($isOptedOut === false) {
+						$ctrActionsLessOptouts = $ctrActionsLessOptouts + intval($value['cnt']);
 					}
-					?>
+				}
+
+				// build table rows
+				foreach ($rows as $value) {
+					// increment counters
+					$ctrParticipants++;
+					$ctrTotalActions = $ctrTotalActions + intval($value['cnt']);
+					
+					// some pilots have opted out of payments for ESRC activity; set values accordingly
+					$isOptedOut = array_search($value['Pilot'], array_column($arrPilotsOptedOut, 'pilot'));
+					if ($isOptedOut === false) {
+						$ctrParticipantsLessOptouts++;
+						$countAmt = $value['cnt'];
+						$strActualCount = '';
+						$payoutAmt = round((intval($value['cnt'])/intval($ctrActionsLessOptouts))*intval($_REQUEST['totamt']),2);
+					}
+					else {	// opted out pilots receive credit for 0
+						$countAmt = 0;
+						$strActualCount = ' ('. $value['cnt'] .')';
+						$payoutAmt = 0;
+					}	?>
+
+					<tr>
+						<td><a class="payout" target="_blank" 
+							href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
+							<?=$value['Pilot']?></a> - <a class="payout" target="_blank" 
+							href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
+						<td class="white" align="right"><?=$countAmt . $strActualCount?></td>
+						<td><input type="text" id="amt<?=$ctrParticipants?>" value="<?=$payoutAmt?>" />
+							<i id="copyclip" class="white fa fa-clipboard" 
+							onClick="SelectAllCopy('amt<?=$ctrParticipants?>')"></i></td>
+					</tr>
+				
+					<?php
+				}	?>
+
 					<tr>
 						<td class="white">
 							Paid Participants: <?=$ctrParticipantsLessOptouts?><br>
@@ -178,20 +182,13 @@ else {
 
 						</td>
 						<td class="white" align="right">
-							PAID TOTAL: <?=$ctrLessOptouts?><br>
-							Sow/Tend Total: <?=$ctrtot?>
+							PAID TOTAL: <?=$ctrActionsLessOptouts?><br>
+							Sow/Tend Total: <?=$ctrTotalActions?>
 						</td>
 						<td>&nbsp;</td>
 					</tr>
 				</tbody>
 			</table>
-		</div>
-		<div class="col-sm-2 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-			Note that total count of actions here may differ from what is listed on non-Payout summary.
-			This is because pilots are only paid for sows/tends in a given system once each week. 
-			Multiple tends in the same system in the same week, e.g., do not count toward the total count for payout.
-			However, they <i>do</i> count toward activity counts for medals and such.
 		</div>
 	</div>
 <?php

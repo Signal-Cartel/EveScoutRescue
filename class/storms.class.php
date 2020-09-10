@@ -95,6 +95,38 @@ class Storms
 		return $result;
 	}
 
+	/**
+	 * Get most active storm chasing pilot,
+		* most recent downtime to prior downtime
+		* This is used by discord to award top pilot with icon on name
+	 */
+	public function getTopStormChaser()
+	{
+		$sql = "SELECT u.characterid AS `uid`, st.pilot AS Pilot, Count(st.id) As Actions
+				FROM storm_tracker st
+				INNER JOIN `user` u ON st.pilot = u.character_name			  
+				WHERE
+					(
+						hour(UTC_TIMESTAMP) between 0 and 10 
+						and st.dateobserved >= UTC_DATE - interval 37 hour -- 11am two days ago
+						and st.dateobserved < UTC_DATE - interval 13 hour -- 11am yesterday
+					)
+					OR
+					(
+						hour(UTC_TIMESTAMP) between 11 and 23
+						and st.dateobserved >= UTC_DATE - interval 13 hour -- 11am yesterday
+						and st.dateobserved < UTC_DATE + interval 11 hour -- today 11am
+					)
+				GROUP BY st.pilot
+				ORDER BY Actions DESC";
+
+		$this->db->query($sql);
+		$result = $this->db->single();		
+		$this->db->closeQuery();	
+
+		return $result;
+	}
+
 
 	/**
 	 * Delete storm report entry from db

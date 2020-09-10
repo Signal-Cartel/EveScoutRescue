@@ -75,6 +75,7 @@ class Pilot
 		
 		return $result['cnt'];
 	}
+
 	
 	/**
 	 * Get all activities of a pilot
@@ -95,6 +96,23 @@ class Pilot
 		
 		return $rows;
 	}
+
+
+	/**
+	 * Get pilots who are opted out of a specific activity
+	 * @param string $activity The activity the pilot(s) are opted out of
+	 * @return array
+	 */
+	public function getOptedOutPilots($activity)
+	{
+		$this->db->query("SELECT pilot FROM payout_optout WHERE optout_type = :activity");
+		$this->db->bind(':activity', $activity);
+		$rows = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $rows;
+	}
+
 
 	/**
 	 * Get medals for given medal type
