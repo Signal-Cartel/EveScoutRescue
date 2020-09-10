@@ -57,6 +57,7 @@ class Leaderboard
 		
 		return $result;
 	}
+
 	
 	/**
 	 * Get list of top pilots within specified date range
@@ -85,10 +86,7 @@ class Leaderboard
 		
 		return $result;
 	}
-	
-	/**
-	 * Get personal stats of a pilot
-	 */
+
 
 	/**
 	 *  Get list of recently active pilots (by day)
@@ -114,6 +112,35 @@ class Leaderboard
 		
 		return $result;
 	}
-}
 
+
+	/**
+	 * Get payees for ESRC payouts
+	 * "Agent" actions are paid via SAR Dispatch, so they are not counted here
+	 * @param string $start_date Beginning of date range for desired results
+	 * @param string $end_date End of date range for desired results
+	 * @return array $result
+	 */
+	public function getESRCPayees($start_date, $end_date, $groupByPilot)
+	{			
+		if ($groupByPilot) {
+			$sql = "SELECT Pilot, COUNT(DISTINCT(`System`)) as cnt FROM activity 
+					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
+					GROUP BY Pilot";
+		}
+		else {
+			$sql = "SELECT * FROM activity 
+					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
+					ORDER By ActivityDate DESC";
+		}
+		$this->db->query($sql);
+		$this->db->bind(':start_date', $start_date);
+		$this->db->bind(':end_date', $end_date);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+
+}
 ?>

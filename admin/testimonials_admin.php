@@ -20,21 +20,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 	else {	// edit testimonial
 		$approvedFlag = $_POST['approved'] ?? 0;
+		echo $approvedFlag;
 		$pilot = Output::prepTextarea($_POST['pilot']);
 		$testimonial = Output::prepTextarea($_POST['testimonial']);
 
-		$testimonials->updateTestimonial($_POST['ID'], $pilot, $testimonial, $approvedFlag);
+		$testimonials->updateTestimonial($_POST['ID'], $pilot, $testimonial, intval($approvedFlag));
 		
 		// Broadcast any approved testimonial to Discord
-		if ($approvedFlag == 1) {		
+		if (intval($approvedFlag) == 1) {		
 			$webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
-			$user = 'EvE-Scout Rescue';
-			$alert = 0;
 			$name_holder = ($_POST['anon'] == 1) ? "Anonymous" : $_POST['pilot'];
 			$message = "_New testimonial from " . $name_holder . "_\n" . $_POST['testimonial'];
-			$skip_the_gif = 1;
 
-			$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
+			$result = Discord::sendMessage($webHook, 'EvE-Scout Rescue', 0, $message, 1);
 		}
 	}
 }
@@ -87,7 +85,7 @@ require '../page_templates/home_html-begin.php';	?>
 
 		<?php
 	}
-	else {	//show detail/edit form if ID is specified
+	else {	// show detail/edit form if ID is specified
 		if (is_numeric($_REQUEST['id'])) {
 			$row = $testimonials->getTestimonial($_REQUEST['id']);
 			if (!empty($row)) {	?>
