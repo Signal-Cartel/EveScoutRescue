@@ -57,7 +57,7 @@ if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not che
 						<td class="text-nowrap">
 							<a class="payout" target="_blank" 
 								href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
-								<?=$value['Pilot']?>'</a> - <a class="payout" target="_blank" 
+								<?=$value['Pilot']?></a> - <a class="payout" target="_blank" 
 								href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
 						<td class="white"<?=$actioncellformat?>><?=ucfirst($value['EntryType'])?></td>
 						<td><a class="payout" href="/esrc/search.php?sys=<?=$value['System']?>" 
@@ -77,16 +77,17 @@ if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not che
 
 		<div class="col-sm-2 white">
 			<table class="table table-condensed" style="width: auto;">
+				<caption>TOTALS</caption>
 				<tr>
-					<td class="white">Sown:</td>
+					<td class="white">Sown</td>
 					<td class="white text-right"><?=$ctrSows?></td>
 				</tr>
 				<tr>
-					<td class="white">Tended:</td>
+					<td class="white">Tended</td>
 					<td class="white text-right"><?=$ctrTends?></td>
 				</tr>
 				<tr>
-					<td class="white">TOTAL:</td>
+					<td class="white">TOTAL</td>
 					<td class="white text-right"><?=$ctrTotalActions?></td>
 				</tr>
 			</table>
@@ -134,7 +135,7 @@ else {		?>
 				foreach ($rows as $value) {
 					// calc payout amount
 					$payoutAmt = round((intval($value['cntPayableActions'])/intval($ctrActionsLessOptouts))*intval($_REQUEST['totamt']),2);
-					$i++	?>
+					$i++;	?>
 
 					<tr>
 						<td><a class="payout" target="_blank" 

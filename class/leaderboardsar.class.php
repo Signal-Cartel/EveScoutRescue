@@ -6,10 +6,8 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-// use database class
-require_once '../class/db.class.php';
 
-class SARLeaderboard
+class LeaderboardSAR
 {
 	var $db = null;
 	
@@ -108,15 +106,14 @@ class SARLeaderboard
 	public function getSARDispatchPayees($start_date, $end_date, $groupByPilot)
 	{			
 		if ($groupByPilot) {
-			$sql = "SELECT requestdate, startagent, `status`, `system`, pilot
-					FROM rescuerequest
-					WHERE `status` <> 'closed-dup' AND requestdate BETWEEN :start AND :end
-					ORDER BY requestdate DESC";
+			$sql = "SELECT startagent, COUNT(*) as cnt FROM rescuerequest 
+					WHERE status <> 'closed-dup' AND requestdate BETWEEN :start_date AND :end_date 
+					GROUP BY startagent";
 		}
 		else {
 			$sql = "SELECT requestdate, startagent, `status`, `system`, pilot
 					FROM rescuerequest
-					WHERE `status` <> 'closed-dup' AND requestdate BETWEEN :start AND :end
+					WHERE `status` <> 'closed-dup' AND requestdate BETWEEN :start_date AND :end_date
 					ORDER BY requestdate DESC";
 		}
 		$this->db->query($sql);
