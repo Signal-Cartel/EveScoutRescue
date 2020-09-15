@@ -119,6 +119,7 @@ class Leaderboard
 	 * "Agent" actions are paid via SAR Dispatch, so they are not counted here
 	 * @param string $start_date Beginning of date range for desired results
 	 * @param string $end_date End of date range for desired results
+	 * @param boolean $groupByPilot TRUE to return grouped list; FALSE to return detailed list
 	 * @return array $result
 	 */
 	public function getESRCPayees($start_date, $end_date, $groupByPilot)
