@@ -173,6 +173,7 @@ if (!empty($errmsg)) {
                     <option value="Exotic">Exotic</option>
                     <option value="Gamma">Gamma</option>
                     <option value="Plasma">Plasma</option>
+                    <option value="Unknown">Unknown</option>
                 </select>
             </div>
             <div class="form-group text-center">

@@ -223,18 +223,20 @@ require '../page_templates/home_html-begin.php';
     margin-left: 0;
 }
 
-.glyphicon-remove{
-    padding: 3px 0px 0px 0px;
-    color: #fff;
-    background-color: #000;
-    height: 25px;
-    width: 25px;
-    border-radius: 15px;
-    border: 2px solid #fff;
-}
-
 .scroll-text{
     color: #000;
+}
+
+a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+a.nostyle:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
 }
 </style>
 
@@ -242,8 +244,9 @@ require '../page_templates/home_html-begin.php';
     <input type="checkbox" name="onoffswitch3" class="onoffswitch3-checkbox" id="myonoffswitch3" checked>
     <label class="onoffswitch3-label" for="myonoffswitch3">
         <span class="onoffswitch3-inner">
-            <span class="onoffswitch3-active">
+            <span class="onoffswitch3-active"><a class="nostyle" href="stormtrack.php">
 				<marquee class="scroll-text">
+
 				<?php
 				$rows = $storms->getStorms();
 				if (empty($rows)) {
@@ -253,6 +256,7 @@ require '../page_templates/home_html-begin.php';
 				else {
 					foreach ($rows as $value) {
 						$dateobserved = date_create($value['dateobserved']);
+						echo 'Click for tabular view <span class="glyphicon glyphicon-forward"></span> ';
 						echo $value['evesystem'] .' ['. $value['regionName'] .'] - '.
 							$value['stormstrength'] .' Metaliminal '. $value['stormtype'] .
 							' Ray Storm - last reported: '. date_format($dateobserved, "M-d@H:i");
@@ -261,9 +265,9 @@ require '../page_templates/home_html-begin.php';
 				}	?>
 				
 				</marquee>
-                <span class="onoffswitch3-switch">NEW EDEN WEATHER <span class="glyphicon glyphicon-remove"></span></span>
-            </span>
-            <span class="onoffswitch3-inactive"><span class="onoffswitch3-switch">SHOW WEATHER</span></span>
+                <span class="onoffswitch3-switch">NEW EDEN WEATHER</span>
+				</a>
+			</span>
         </span>
     </label>
 </div>
