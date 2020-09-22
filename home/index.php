@@ -248,7 +248,7 @@ a.nostyle:visited {
 				<marquee class="scroll-text">
 
 				<?php
-				$rows = $storms->getStorms();
+				$rows = $storms->getRecentReports();
 				if (empty($rows)) {
 					echo 'No current reports <span class="glyphicon glyphicon-forward"></span> 
 						Stay tuned for our next update <span class="glyphicon glyphicon-forward"></span> ';

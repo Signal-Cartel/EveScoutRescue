@@ -48,31 +48,38 @@ $isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
 
 // handle form submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // delete record
     if (isset($_POST['formtype']) &&  $_POST['formtype'] == 'delrow') {
         $storms->removeStormEntry($_POST['rowid']);
         $errmsg = 'Storm report removed from database.';
     }
-    elseif (empty($_POST['evesystem']) || empty($_POST['stormtype'])) { // validate form
-        $errmsg = 'Please select a storm center system and storm type.';
+    // add new record; validate form inputs
+    elseif (empty($_POST['evesystem'])) { 
+        $errmsg = 'Please select a storm center system.';
+    }
+    elseif ($_POST['storm_id'] < 1 || $_POST['storm_id'] > 8) {
+        $errmsg = 'Please select a valid storm for this report.';
     }
 
     if (empty($errmsg)) {
-        $newStormEntry = $storms->createStormEntry($_POST['evesystem'], $_POST['pilot'], 
-            $_POST['stormtype'], 'Strong');
+        $observation_type = (isset($_POST['ip'])) ? 'ip' : 'map';
+        $arrStormReport = array("storm_id"=>$_POST['storm_id'], "evesystem"=>$_POST['evesystem'],
+            "pilot"=>$_POST['pilot'], "stormtype"=>$_POST['stormtype'], "stormstrength"=>'Strong', 
+            "observation_type"=>$observation_type);
+        $storms->createStormEntry($arrStormReport);
         
-        if ($newStormEntry) {   // Broadcast any new storm to Discord	
-            $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
-            $user = 'Storm Tracker';
-            $alert = 0;
-            $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
-                . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
-            $skip_the_gif = 1;
+        // Broadcast any new storm to Discord	
+        $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
+        $user = 'Storm Tracker';
+        $alert = 0;
+        $message = "_New storm report from " . $_POST['pilot'] . "_\n" 
+            . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
+        $skip_the_gif = 1;
+        $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 
-            $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
-        }
-        else {  // new storm report could not be created
-            $errmsg = 'Storm report could not be created. Make sure it is not a duplicate.';
-        }
+        // redirect
+        header('Location: ?stormid='. $_POST['storm_id']);
+        exit;
     }
 }
 
@@ -131,10 +138,11 @@ if (!empty($errmsg)) {
 ?>
 
 <style>
-.col-md-4 {
-  float: none;
-  margin: 0 auto;
-}
+    a,
+    a:visited,
+    a:hover {
+        color: white;
+    }
 </style>
 
 <div class="row">
@@ -150,38 +158,42 @@ if (!empty($errmsg)) {
 
         <div class="row">
             <div class="col-md-4">
-        <form name="stormform" id="stormform" class="form-horizontal" 
-            action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
-            <div class="form-group">
-                <select class="form-control" id="evesystem" name="evesystem" style="width: auto;">
-                    <option value="">Choose the storm center...</option>
+                <table class="table display" style="width: auto;">
+                    <thead>
+                        <tr>
+                            <th class="white">Name</th>
+                            <th class="white">Last Known System</th>
+                            <th class="white">Type</th>
+                            <th class="white">Date</th>
+                            <th class="white">Observation</th>
+                            <th class="white">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                        <?php
+                        $rows = $storms->getRecentReports();
+                        foreach ($rows as $value) {	?>
+                        
+                        <tr>
+                            <td class="white text-nowrap">
+                                <a href="?stormid=<?=$value['storm_id']?>">
+                                <?=Storms::getStormName($value['storm_id'])?></a></td>
+                            <td class="white text-nowrap"><?=$value['evesystem']?></td>
+                            <td class="white text-nowrap"><?=$value['stormtype']?></td>
+                            <td class="white text-nowrap"><?=$value['dateobserved']?></td>
+                            <td class="white text-nowrap"><?=($value['observation_type'] == 'map') ? 'Map' : 'In-Person'?></td>
+                            <td><a type="button" class="btn btn-primary" role="button" 
+                                    href="?new=1&stormid=<?=$value['storm_id']?>">New Report</a></td>
+                        </tr>
 
-                    <?php
-                    require_once '../resources/stormSystems.php';
-                    foreach ($stormSystems as $value) {
-                        echo Output::prepSelectListOption($value['solarSystemName'], 
-                        $value['solarSystemName']);
-                    }
-                    ?>
+                            <?php
+                        }	?>
 
-                </select>
+                    </tbody>
+                </table>
             </div>
-            <div class="form-group">
-                <select id="stormtype" name="stormtype" class="form-control" style="width: auto;">
-                    <option value="">Choose the storm type...</option>
-                    <option value="Electrical">Electrical</option>
-                    <option value="Exotic">Exotic</option>
-                    <option value="Gamma">Gamma</option>
-                    <option value="Plasma">Plasma</option>
-                    <option value="Unknown">Unknown</option>
-                </select>
-            </div>
-            <div class="form-group text-center">
-                <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-            </div></div>
+        </div>
     </div>
     <div class="col-md-5">
         <img src="https://cdn.discordapp.com/attachments/551081375424446483/749915372471451720/unknown.png">
@@ -189,25 +201,30 @@ if (!empty($errmsg)) {
 </div>
 <div class="ws"></div>
 
+<?php
+// display detail table when needed
+if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
+    $rows = $storms->getStormReports('named', $_GET['stormid']);  ?>
+
 <hr class="white">
 
 <div class="row" id="systable">
 	<div class="col-sm-12">
-        <p class="white">Storms (most recent report first)</p>
+        <p class="white">
+            <?=Storms::getStormName($_GET['stormid'])?> (most recent report first)</p>
 		<table class="table display" style="width: auto;">
 			<thead>
 				<tr>
+                    <th class="white">Date</th>
                     <th class="white">System</th>
-                    <th class="white">Type</th>
-					<th class="white">Pilot</th>
-                    <th class="white">Report Date</th>
+                    <th class="white">Pilot</th>
+                    <th class="white">Observation</th>
                     <?php if ($isCoord) { echo '<th class="white">&nbsp;</th>'; } ?>
 				</tr>
 			</thead>
 			<tbody>
 			
 			<?php
-            $rows = $storms->getStorms();
             if (empty($rows)) {
                 echo '<td colspan="5" class="white">No data available</td>';
             }
@@ -216,10 +233,10 @@ if (!empty($errmsg)) {
 			    foreach ($rows as $value) {	?>
 				
 				<tr>
-                    <td class="white text-nowrap"><?=$value['evesystem']?></td>
-                    <td class="white text-nowrap"><?=$value['stormtype']?></td>
-                    <td class="white text-nowrap"><?=$value['pilot']?></td>
                     <td class="white text-nowrap"><?=$value['dateobserved']?></td>
+                    <td class="white text-nowrap"><?=$value['evesystem']?></td>
+                    <td class="white text-nowrap"><?=$value['pilot']?></td>
+                    <td class="white text-nowrap"><?=($value['observation_type'] == 'map') ? 'Map' : 'In-Person'?></td>
                     
                     <?php 
                     if ($isCoord) { // ESR Coords have option to delete entry   ?>
@@ -249,6 +266,62 @@ if (!empty($errmsg)) {
 		</table>
     </div>
 </div>
+
+<?php
+}
+?>
+
+<!-- SAR New Modal Form -->
+<div id="ModalNewReport" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title sechead">New Storm Report - <?=Storms::getStormName($_GET['stormid'])?></h4>
+      </div>
+      <form name="stormform" id="stormform" action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
+            <div class="field" style="padding-top:10px;">
+                <select class="form-control black" id="evesystem" name="evesystem" 
+                    style="width:auto; margin:auto;">
+                    <option value="">Choose the storm center...</option>
+
+                    <?php
+                    require_once '../resources/stormSystems.php';
+                    foreach ($stormSystems as $value) {
+                        echo Output::prepSelectListOption($value['solarSystemName'], 
+                        $value['solarSystemName']);
+                    }
+                    ?>
+
+                </select>
+            </div>
+            <div class="field text-center">
+                <label class="checkbox-inline">
+                    <input name="ip" type="checkbox" value="1">
+                    <strong>Confirmed in-person</strong>
+                </label>
+            </div>
+            <div class="field text-center">
+                <input type="hidden" name="storm_id" value="<?=$_GET['stormid']?>">
+                <input type="hidden" name="stormtype" value="<?=$rows[0]['stormtype']?>">
+                <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	// auto-display modal when "new" parameter provided in querystring
+	var url = window.location.href;
+	if(url.indexOf('new=') != -1) {
+	    $('#ModalNewReport').modal('show');
+	}
+</script>
+<!-- /SAR New Modal Form -->
+
 
 </body>
 </html>

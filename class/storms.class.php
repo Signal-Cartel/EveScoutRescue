@@ -35,40 +35,73 @@ class Storms
 
 	/**
 	 * Create new entry into [storm_tracker] table
-	 * @param string $pilot Name of pilot submitting testimonial
-	 * @param bit $anon Anonymize display of testimonial; 1 = anonymous, 0 = not anonymous
-	 * @param string $method rescue method, either via rescue cache or search and rescue
-	 * @param string $testimonial Text of testimonial
-	 * @return boolean TRUE if new report created; FALSE if no new report created
+	 * @param array $arrayStormReport Array of values needed to populate report record
 	 */
-	public function createStormEntry($evesystem, $pilot, $stormtype, $stormstrength)
+	public function createStormEntry($arrayStormReport)
 	{
 		$dateobserved = new DateTime('now', new DateTimeZone('UTC'));
 
-		// check ford duplicate entry before committing
-		$this->db->beginTransaction();
-		$this->db->query("SELECT COUNT(id) AS countMatches FROM storm_tracker 
-							WHERE evesystem = :evesystem AND stormtype = :stormtype
-								AND dateobserved >= NOW() - INTERVAL 1 DAY");
-		$this->db->bind(":evesystem", $evesystem);
-		$this->db->bind(":stormtype", $stormtype);
-		$result = $this->db->single();
-		$this->db->closeQuery();
+		$sql = "INSERT INTO storm_tracker (storm_id, evesystem, pilot, stormtype, stormstrength, 
+					dateobserved, observation_type)
+				VALUES (:storm_id, :evesystem, :pilot, :stormtype, :stormstrength, :dateobserved, 
+					:observation_type)";
 		
-		if ($result['countMatches'] == 0) {	// no duplicate report found, so add new one
-			$this->db->query("INSERT INTO storm_tracker (evesystem, pilot, stormtype, stormstrength, 
-									dateobserved)
-								VALUES (:evesystem, :pilot, :stormtype, :stormstrength, :dateobserved)");
-			$this->db->bind(":evesystem", $evesystem);
-			$this->db->bind(":pilot", $pilot);
-			$this->db->bind(":stormtype", $stormtype);
-			$this->db->bind(":stormstrength", $stormstrength);
-			$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
-			$this->db->execute();
-		}
+		$this->db->query($sql);
+		$this->db->bind(":storm_id", $arrayStormReport['storm_id']);
+		$this->db->bind(":evesystem", $arrayStormReport['evesystem']);
+		$this->db->bind(":pilot", $arrayStormReport['pilot']);
+		$this->db->bind(":stormtype", $arrayStormReport['stormtype']);
+		$this->db->bind(":stormstrength", $arrayStormReport['stormstrength']);
+		$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
+		$this->db->bind(":observation_type", $arrayStormReport['observation_type']);
+		$this->db->execute();
+	}
 
-		$this->db->endTransaction();
-		return ($result['countMatches'] == 0) ? true : false;
+
+	/**
+	 * Get list of most recent storm reports for each defined storm.
+	 * @return array $result
+	 */
+	public function getRecentReports()
+	{
+		$sql = "SELECT st.*, mr.regionName, u.characterid
+				FROM storm_tracker st
+				INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
+				INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
+				INNER JOIN `user` u ON st.pilot = u.character_name
+				WHERE st.id IN (
+					SELECT MAX(id) AS rowid
+					FROM storm_tracker
+					WHERE storm_id > 0
+					GROUP BY storm_id
+					ORDER BY MAX(dateobserved) DESC
+				)
+				GROUP BY st.storm_id
+				ORDER BY st.id DESC";
+		$this->db->query($sql);
+        $result = $this->db->resultset();
+        $this->db->closeQuery();
+
+		return $result;
+	}
+
+
+	/**
+	 * Get name of defined storm based on storm_id.
+	 * @return array $result
+	 */
+	static public function getStormName($id)
+	{
+		switch ($id) {
+			case 1: return 'Electric A'; break;
+			case 2: return 'Electric B'; break;
+			case 3: return 'Exotic A'; break;
+			case 4: return 'Exotic B'; break;
+			case 5: return 'Gamma A'; break;
+			case 6: return 'Gamma B'; break;
+			case 7: return 'Plasma A'; break;
+			case 8: return 'Plasma B'; break;
+		}
 	}
     
 	
@@ -77,15 +110,29 @@ class Storms
 	 * @param string $interval Get storm reports between now and this inteval; defaults to 36 hours
 	 * @return array $result
 	 */
-	public function getStorms($interval = '36 HOUR')
+	public function getStormReports($return_type = '', $stormid = 0, $interval = '36 HOUR')
 	{
-		$this->db->query("SELECT st.*, st.id AS stormid, mr.regionName, u.characterid
+		switch ($return_type) {
+			case 'named':
+				$where_clause = 'WHERE storm_id = :storm_id';
+			break;
+
+			case 'interval':
+				$where_clause = 'WHERE dateobserved >= NOW() - INTERVAL '. $interval;
+			break;
+
+			case 'all':
+			default:
+				$where_clause = 'WHERE 1=1';
+		}
+		$this->db->query("SELECT st.*, mr.regionName, u.characterid
 							FROM storm_tracker st
 							INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
 							INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
 							INNER JOIN `user` u ON st.pilot = u.character_name
-							WHERE dateobserved >= NOW() - INTERVAL $interval
+							$where_clause
 							ORDER BY dateobserved DESC");
+		if ($stormid > 0) { $this->db->bind(':storm_id', $stormid); }
         $result = $this->db->resultset();
         $this->db->closeQuery();
 

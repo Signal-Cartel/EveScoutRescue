@@ -23,7 +23,7 @@ require '../page_templates/home_html-begin.php';
 			<div class="panel-body">
 
             <?php
-            $rows = $storms->getStorms();
+            $rows = $storms->getRecentReports();
             if (empty($rows)) {
                 echo 'No current reports';
             }
@@ -34,7 +34,8 @@ require '../page_templates/home_html-begin.php';
                         <tr>
                             <th>Region</th>
                             <th>System</th>
-                            <th>Storm Type</th>
+                            <th>Name</th>
+                            <th>Type</th>
                             <th>Reported by</th>
                             <th>Last Report</th>
                         </tr>
@@ -48,8 +49,8 @@ require '../page_templates/home_html-begin.php';
                         <tr>
                             <td><?=$value['regionName']?></td>
                             <td><?=$value['evesystem']?></td>
-                            <td><?=$value['stormstrength'] .' Metaliminal '. $value['stormtype'] .
-                                ' Ray Storm' ?></td>
+                            <td><?=Storms::getStormName($value['storm_id'])?></td>
+                            <td><?=$value['stormtype']?></td>
                             <td><?=$value['pilot']?></td>
                             <td><?=date_format($dateobserved, "M-d@H:i")?></td>
                         </tr>
