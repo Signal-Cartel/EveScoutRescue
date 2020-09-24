@@ -65,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $observation_type = (isset($_POST['ip'])) ? 'ip' : 'map';
         $arrStormReport = array("storm_id"=>$_POST['storm_id'], "evesystem"=>$_POST['evesystem'],
             "pilot"=>$_POST['pilot'], "stormtype"=>$_POST['stormtype'], "stormstrength"=>'Strong', 
-            "observation_type"=>$observation_type);
+            "observation_type"=>$observation_type, "lastKnownSystem"=>$_POST['lastKnownSystem'], 
+            "lastObservationDate"=>$_POST['lastObservationDate']);
         $storms->createStormEntry($arrStormReport);
         
         // Broadcast any new storm to Discord	
@@ -152,7 +153,7 @@ if (!empty($errmsg)) {
         <p><strong>Remember: We only need the centre of the storm reported.</strong> You can find 
         it easily from your in-game map, as shown to the right. Since the centre is always of the STRONG 
         variety, that will automatically be added to your report.</p>
-        <p>Thank you for your report! o7</p>
+        <p>New reports can be filed as often as every 12 hours. Thank you for your report! o7</p>
 
         <div class="ws"></div>
 
@@ -165,6 +166,7 @@ if (!empty($errmsg)) {
                             <th class="white">Last Known System</th>
                             <th class="white">Type</th>
                             <th class="white">Date</th>
+                            <th class="white">Hours in System</th>
                             <th class="white">Observation</th>
                             <th class="white">&nbsp;</th>
                         </tr>
@@ -172,8 +174,8 @@ if (!empty($errmsg)) {
                     <tbody>
                     
                         <?php
-                        $rows = $storms->getRecentReports();
-                        foreach ($rows as $value) {	?>
+                        $arrRecentReports = $storms->getRecentReports();
+                        foreach ($arrRecentReports as $value) {	?>
                         
                         <tr>
                             <td class="white text-nowrap">
@@ -181,10 +183,14 @@ if (!empty($errmsg)) {
                                 <?=Storms::getStormName($value['storm_id'])?></a></td>
                             <td class="white text-nowrap"><?=$value['evesystem']?></td>
                             <td class="white text-nowrap"><?=$value['stormtype']?></td>
-                            <td class="white text-nowrap"><?=$value['dateobserved']?></td>
+                            <td class="white text-nowrap"><?=date('M-d', strtotime($value['dateobserved']))?></td>
+                            <td class="white text-nowrap"><?=$value['hours_in_system']?></td>
                             <td class="white text-nowrap"><?=($value['observation_type'] == 'map') ? 'Map' : 'In-Person'?></td>
-                            <td><a type="button" class="btn btn-primary" role="button" 
-                                    href="?new=1&stormid=<?=$value['storm_id']?>">New Report</a></td>
+                            <td><?php if ($value['ready_for_new_report'] == 1) { ?>
+                                <a type="button" class="btn btn-primary" role="button" 
+                                    href="?new=1&stormid=<?=$value['storm_id']?>">New Report</a>
+                                <?php } else { echo '&nbsp;'; } ?>
+                            </td>
                         </tr>
 
                             <?php
@@ -204,7 +210,7 @@ if (!empty($errmsg)) {
 <?php
 // display detail table when needed
 if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
-    $rows = $storms->getStormReports('named', $_GET['stormid']);  ?>
+    $arrStormDetail = $storms->getStormReports('named', $_GET['stormid']);  ?>
 
 <hr class="white">
 
@@ -225,12 +231,12 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
 			<tbody>
 			
 			<?php
-            if (empty($rows)) {
+            if (empty($arrStormDetail)) {
                 echo '<td colspan="5" class="white">No data available</td>';
             }
             else {
                 $i = 0;
-			    foreach ($rows as $value) {	?>
+			    foreach ($arrStormDetail as $value) {	?>
 				
 				<tr>
                     <td class="white text-nowrap"><?=$value['dateobserved']?></td>
@@ -304,7 +310,9 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
             </div>
             <div class="field text-center">
                 <input type="hidden" name="storm_id" value="<?=$_GET['stormid']?>">
-                <input type="hidden" name="stormtype" value="<?=$rows[0]['stormtype']?>">
+                <input type="hidden" name="stormtype" value="<?=$arrStormDetail[0]['stormtype']?>">
+                <input type="hidden" name="lastKnownSystem" value="<?=$arrStormDetail[0]['evesystem']?>">
+                <input type="hidden" name="lastObservationDate" value="<?=$arrStormDetail[0]['dateobserved']?>">
                 <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>

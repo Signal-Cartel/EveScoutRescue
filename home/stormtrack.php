@@ -36,8 +36,9 @@ require '../page_templates/home_html-begin.php';
                             <th>System</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Reported by</th>
                             <th>Last Report</th>
+                            <th>Hours in System</th>
+                            <th>Reported by</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,8 +52,9 @@ require '../page_templates/home_html-begin.php';
                             <td><?=$value['evesystem']?></td>
                             <td><?=Storms::getStormName($value['storm_id'])?></td>
                             <td><?=$value['stormtype']?></td>
-                            <td><?=$value['pilot']?></td>
                             <td><?=date_format($dateobserved, "M-d@H:i")?></td>
+                            <td><?=$value['hours_in_system']?></td>
+                            <td><?=$value['pilot']?></td>
                         </tr>
 
                     <?php
