@@ -41,10 +41,14 @@ class Storms
 	{
 		$dateobserved = new DateTime('now', new DateTimeZone('UTC'));
 
+		// if new report is for same system as previous report, store date of original report
+		$orig_dateobserved = ($arrayStormReport['lastKnownSystem'] == $arrayStormReport['evesystem']) ?
+			$arrayStormReport['lastObservationDate'] : $dateobserved->format('Y-m-d H:i:s');
+
 		$sql = "INSERT INTO storm_tracker (storm_id, evesystem, pilot, stormtype, stormstrength, 
-					dateobserved, observation_type)
+					dateobserved, orig_dateobserved, observation_type)
 				VALUES (:storm_id, :evesystem, :pilot, :stormtype, :stormstrength, :dateobserved, 
-					:observation_type)";
+					:orig_dateobserved, :observation_type)";
 		
 		$this->db->query($sql);
 		$this->db->bind(":storm_id", $arrayStormReport['storm_id']);
@@ -53,6 +57,7 @@ class Storms
 		$this->db->bind(":stormtype", $arrayStormReport['stormtype']);
 		$this->db->bind(":stormstrength", $arrayStormReport['stormstrength']);
 		$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
+		$this->db->bind(":orig_dateobserved", $orig_dateobserved);
 		$this->db->bind(":observation_type", $arrayStormReport['observation_type']);
 		$this->db->execute();
 	}
@@ -64,7 +69,13 @@ class Storms
 	 */
 	public function getRecentReports()
 	{
-		$sql = "SELECT st.*, mr.regionName, u.characterid
+		$sql = "SELECT 
+					st.*, 
+					mr.regionName, 
+					u.characterid, 
+					# (Hours between original report and most recent report) + (Hours between most recent report and now) = Hours in system
+					TIMESTAMPDIFF(HOUR, orig_dateobserved, dateobserved) + TIMESTAMPDIFF(HOUR, dateobserved, NOW()) AS hours_in_system, 
+					IF(dateobserved < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 12 HOUR), 1, 0) AS ready_for_new_report
 				FROM storm_tracker st
 				INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
 				INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
