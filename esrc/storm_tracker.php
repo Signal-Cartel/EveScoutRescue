@@ -54,11 +54,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errmsg = 'Storm report removed from database.';
     }
     // add new record; validate form inputs
-    elseif (empty($_POST['evesystem'])) { 
+    elseif (empty($_POST['evesystem'])) {
         $errmsg = 'Please select a storm center system.';
+    }
+    elseif ($_POST['evesystem'] == $_POST['lastKnownSystem']) {
+        $errmsg = 'Storm is currently in this system. Duplicate entries are not required.';
     }
     elseif ($_POST['storm_id'] < 1 || $_POST['storm_id'] > 8) {
         $errmsg = 'Please select a valid storm for this report.';
+    }
+    else {  // make sure a valid storm name was entered
+        $arrStormSys = json_decode(file_get_contents('../resources/stormSystems.json'));
+        if (array_search($_POST['evesystem'], $arrStormSys) === false) {
+            $errmsg = 'That is not a valid storm system name.';
+        }
     }
 
     if (empty($errmsg)) {
@@ -88,10 +97,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-	<?php
-	$pgtitle = 'Storm Tracker';
-	include_once '../includes/head.php';
-    ?>
+    <meta http-equiv="Content-Language" content="en-us">
+	<title>Storm Tracker :: EvE-Scout Rescue</title>
+	<meta charset="utf-8">
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/main.css?v=1598555001">
+	<link rel="stylesheet" href="../css/sticky-footer.css">
+	<link rel="stylesheet" href="../css/datatables_custom.css">
+	<link rel="stylesheet" href="../css/pikaday.css">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="/favicon.png">
+	
+    <!-- JS -->
+    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>   <!--REQUIRED ON THIS PAGE-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="../js/jquery.dataTables.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script> <!--REQUIRED ON THIS PAGE-->
+    <script src="../js/validator.js"></script>
+    <script src="../js/moment.min.js"></script>
+	<script src="../js/pikaday.js"></script> <!-- https://dbushell.com/Pikaday/ -->
+    <!-- All background images courtesy of EvE-Scout Observatory:
+    		- http://observatory.eve-scout.com/
+    		- https://www.flickr.com/photos/eve-scout/ -->
+    <style type="text/css">
+		body::before {
+			background: url(../img/bg03.jpg);
+			position: fixed;
+			opacity: .5;
+		}
+	</style>
 </head>
 
 <?php
@@ -153,7 +190,11 @@ if (!empty($errmsg)) {
         <p><strong>Remember: We only need the centre of the storm reported.</strong> You can find 
         it easily from your in-game map, as shown to the right. Since the centre is always of the STRONG 
         variety, that will automatically be added to your report.</p>
-        <p>New reports can be filed as often as every 12 hours. Thank you for your report! o7</p>
+        <ul>
+            <li>New reports can be filed as often as every 12 hours.</li>
+            <li>If storm has not moved from "Last Known System," a new report is not needed.</li>
+        </ul>
+        <p>Thank you for your report! o7</p>
 
         <div class="ws"></div>
 
@@ -282,41 +323,36 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">New Storm Report - <?=Storms::getStormName($_GET['stormid'])?></h4>
-      </div>
-      <form name="stormform" id="stormform" action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
-            <div class="field" style="padding-top:10px;">
-                <select class="form-control black" id="evesystem" name="evesystem" 
-                    style="width:auto; margin:auto;">
-                    <option value="">Choose the storm center...</option>
-
-                    <?php
-                    require_once '../resources/stormSystems.php';
-                    foreach ($stormSystems as $value) {
-                        echo Output::prepSelectListOption($value['solarSystemName'], 
-                        $value['solarSystemName']);
-                    }
-                    ?>
-
-                </select>
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title sechead">New Storm Report - <?=Storms::getStormName($_GET['stormid'])?></h4>
+        </div>
+        
+        <form name="stormform" id="stormform" action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
+        
+        <div class="field text-center" style="padding-top:10px;">
+            <div id="sys_search">
+                <input class="typeahead" placeholder="System Name" type="text" name="evesystem"
+                    autoFocus="autoFocus" onclick="this.select()">
             </div>
-            <div class="field text-center">
-                <label class="checkbox-inline">
-                    <input name="ip" type="checkbox" value="1">
-                    <strong>Confirmed in-person</strong>
-                </label>
-            </div>
-            <div class="field text-center">
-                <input type="hidden" name="storm_id" value="<?=$_GET['stormid']?>">
-                <input type="hidden" name="stormtype" value="<?=$arrStormDetail[0]['stormtype']?>">
-                <input type="hidden" name="lastKnownSystem" value="<?=$arrStormDetail[0]['evesystem']?>">
-                <input type="hidden" name="lastObservationDate" value="<?=$arrStormDetail[0]['dateobserved']?>">
-                <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
+        </div>
+        <div class="field text-center">
+            <label class="checkbox-inline">
+                <input name="ip" type="checkbox" value="1">
+                <strong>Confirmed in-person</strong>
+            </label>
+        </div>
+        <div class="field text-center">
+            <input type="hidden" name="storm_id" value="<?=$_GET['stormid']?>">
+            <input type="hidden" name="stormtype" value="<?=$arrStormDetail[0]['stormtype']?>">
+            <input type="hidden" name="lastKnownSystem" value="<?=$arrStormDetail[0]['evesystem']?>">
+            <input type="hidden" name="lastObservationDate" value="<?=$arrStormDetail[0]['dateobserved']?>">
+            <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        
         </form>
+
     </div>
   </div>
 </div>
@@ -327,9 +363,94 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
 	if(url.indexOf('new=') != -1) {
 	    $('#ModalNewReport').modal('show');
 	}
+
+    var storm_systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: '../resources/stormSystems.json'
+    });
+
+    $('#sys_search .typeahead').typeahead(null, {
+        name: 'storm_systems',
+        limit: 15, 
+        source: storm_systems
+    });
 </script>
 <!-- /SAR New Modal Form -->
 
+<style>
+/* Typeahead */
+.tt-menu {
+    text-align: left;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    width: 100%;
+    height: 30px;
+    padding: 8px 12px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+            border-radius: 8px;
+    outline: none;
+}
+
+.typeahead {
+    background-color: #000;
+}
+
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999
+}
+
+.tt-menu {
+    width: 200px;
+    margin: 12px 0;
+    padding: 8px 0;
+    background-color: #000;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+            border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+        -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    line-height: 24px;
+}
+
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+</style>
 
 </body>
 </html>
