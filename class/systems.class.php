@@ -8,7 +8,7 @@ if (!defined('ESRC'))
 }
 
 // use database class
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 class Systems {
 	var $db = null;
 
@@ -188,6 +188,24 @@ class Systems {
 	{
 		$this->db->query("SELECT * FROM activity WHERE System = :system ORDER By ActivityDate DESC");
 		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+
+		return $result;
+	}
+
+
+	/**
+	 * Get a list of specified systems
+	 * @param string $where_clause The matches to search for in the WHERE LIKE statement
+	 * @return array
+	 */
+	public function getSystemsList($where_clause = '%')
+	{
+		$this->db->query("SELECT solarSystemName FROM mapSolarSystems 
+							WHERE solarSystemName LIKE :where_clause
+							ORDER BY solarSystemName");
+		$this->db->bind(':where_clause', $where_clause);
 		$result = $this->db->resultset();
 		$this->db->closeQuery();
 

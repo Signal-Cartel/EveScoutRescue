@@ -96,6 +96,38 @@ class SARLeaderboard
 		
 		return $row['maxdaystosar'];
 	}
+
+
+	/**
+	 * Get payees for SAR Dispatch payouts
+	 * @param string $start_date Beginning of date range for desired results
+	 * @param string $end_date End of date range for desired results
+	 * @param boolean $groupByPilot TRUE to return grouped list; FALSE to return detailed list
+	 * @return array $result
+	 */
+	public function getSARDispatchPayees($start_date, $end_date, $groupByPilot)
+	{			
+		if ($groupByPilot) {
+			$sql = "SELECT requestdate, startagent, `status`, `system`, pilot
+					FROM rescuerequest
+					WHERE `status` <> 'closed-dup' AND requestdate BETWEEN :start AND :end
+					ORDER BY requestdate DESC";
+		}
+		else {
+			$sql = "SELECT requestdate, startagent, `status`, `system`, pilot
+					FROM rescuerequest
+					WHERE `status` <> 'closed-dup' AND requestdate BETWEEN :start AND :end
+					ORDER BY requestdate DESC";
+		}
+		$this->db->query($sql);
+		$this->db->bind(':start_date', $start_date);
+		$this->db->bind(':end_date', $end_date);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+
 }
 
 ?>

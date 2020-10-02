@@ -8,31 +8,31 @@ $navtabsActiveSAR = isset($activeSAR) ? $activeSAR : "";
 // ESRC TAB
 if (strpos($_SERVER['PHP_SELF'], 'search.php') === false) {
 	// inactive
-	echo '<li><a href="search.php?sys=' . $navtabsSystem . '">RESCUE CACHE</a></li>';
+	echo '<li><a href="search.php?sys=' . $navtabsSystem . '">CACHE</a></li>';
 }
 else {
 	// active
-	echo '<li class="active"><a href="#" data-toggle="tab">RESCUE CACHE</a></li>';
+	echo '<li class="active"><a href="#" data-toggle="tab">CACHE</a></li>';
 }
 
 // SAR TAB
 if (strpos($_SERVER['PHP_SELF'], 'rescueoverview.php') === false) {
 	// inactive
-	echo '<li><a href="rescueoverview.php?sys=' . $navtabsSystem . '">SEARCH &amp; RESCUE' . $navtabsActiveSAR . '</a></li>';
+	echo '<li><a href="rescueoverview.php?sys=' . $navtabsSystem . '">SAR' . $navtabsActiveSAR . '</a></li>';
 }
 else {
 	// active
-	echo '<li class="active"><a href="#" data-toggle="tab">SEARCH &amp; RESCUE</a></li>';
+	echo '<li class="active"><a href="#" data-toggle="tab">SAR</a></li>';
 }
 
 // STATS TAB
 if (strpos($_SERVER['PHP_SELF'], 'stats.php') === false) {
 	// inactive
-	echo '<li><a href="stats.php">STATISTICS</a></li>';
+	echo '<li><a href="stats.php">STATS</a></li>';
 }
 else {
 	// active
-	echo '<li class="active"><a href="#" data-toggle="tab">STATISTICS</a></li>';
+	echo '<li class="active"><a href="#" data-toggle="tab">STATS</a></li>';
 }
 
 // THERA TAB
@@ -54,6 +54,16 @@ if (strpos($_SERVER['PHP_SELF'], 'pve_sharer.php') === false) {
 else {
 	// active
 	echo '<li class="active"><a href="#" data-toggle="tab">SITE TRACKER</a></li>';
+}
+
+// STORM TRACKER TAB
+if (strpos($_SERVER['PHP_SELF'], 'storm_tracker.php') === false) {
+	// inactive
+	echo '<li><a href="storm_tracker.php">STORM TRACKER</a></li>';
+}
+else {
+	// active
+	echo '<li class="active"><a href="#" data-toggle="tab">STORM TRACKER</a></li>';
 }
 
 // ESR COORDINATOR TAB - only visible to ESR Coordinators

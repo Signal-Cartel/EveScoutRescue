@@ -1,44 +1,23 @@
 <?php 
-
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-include_once '../includes/auth-inc.php'; 
-
-require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
-require_once '../class/users.class.php';
-
+// PAGE VARS
 $database = new Database();
 $leaderBoard = new Leaderboard($database);
 $users = new Users($database);
-?>
-<html>
+$arrESRTeam = $users->getUsersByRole("'2', '3'", true, true);
+$arrParticipants = $leaderBoard->getActivePilots(30);
+$pgtitle = "About Us";
 
-<head>
-	<?php
-	$pgtitle = "About Us";
-	include_once '../includes/head.php';
-	?>
-	<style>td.clean {
-		    padding: 3px;
-		}
-		</style>
-</head>
-<body>
-<div class="container">
-<div class="row" id="header" style="padding-top: 20px;">
-<?php
-include_once '../includes/top-right.php';
-include_once '../includes/top-left.php';
-include_once '../includes/top-center.php';
 
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-</div>
-<div class="ws"></div>
 
 <div class="row">
+	<!-- LEFT COLUMN -->
 	<div class="col-sm-8">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
@@ -71,106 +50,135 @@ include_once '../includes/top-center.php';
 					encompasses both Search and Rescue operations and the original Rescue Cache 
 					program.</p>
 				<p>In December YC120, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
-					assumed leadership of the Rescue division. While he oversees the division as a whole, it 
-					takes a team to make it all happen. Our current roster includes the following dedicated 
-					rescue pilots.</p>
+					assumed leadership of the Rescue division. While he oversees the division as 
+					a whole, it takes a team to make it all happen. Our current roster includes 
+					the following dedicated rescue pilots.</p>
 
+				<!-- 911 Operators -->
 				<div class="row">
 				  <h2 style="text-align:center">911 Operators</h2>
 				</div>
 				<div class="row">
+
 				<?php 
-				$arrPilots = $users->getUsersByRole('3', true);
-				$arrCount = count($arrPilots);
-				$i = 0;
-				foreach ($arrPilots as $val) {
-					// every four loops, close last row and start a new one
-					if ($i % 6 == 0) {
-						echo '</div><div class="row">';
-					}
-					echo '<div class="col-md-2"><div class="thumbnail text-center">';
-					echo '	<a href="https://evewho.com/pilot/'. urlencode($val['username']) .'">';
-					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_512.jpg" 
-						alt="'. urlencode($val['username']) .'" style="width:100%">';
-					echo '		<div class="caption"><strong>'. $val['username'] .'</strong></div></a></div></div>';
-					// increment counter
+				$i = -1;
+				foreach ($arrESRTeam as $val) {
+					if ($val['roleid'] != '3') { continue; }	// skip row if not '911 Operator'
+					
 					$i++;
+					if ($i % 6 == 0) {	// every six loops, close last row and start a new one	?>
+						
+						</div>
+						<div class="row">
+
+						<?php	
+					}	?>
+					
+					<div class="col-md-2">
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/pilot/<?=urlencode($val['username'])?>">
+								<img src="https://image.eveonline.com/Character/<?=urlencode($val['characterid'])?>_512.jpg" 
+									alt="<?=urlencode($val['username'])?>" style="width:100%">
+								<div class="caption"><strong><?=$val['username']?></strong></div>
+							</a>
+						</div>
+					</div>
+					
+					<?php					
 				}
 				?>
+
 				</div>
 
+				<!-- ESR Coordinators -->
 				<div class="row">
-				  <h2 style="text-align:center">EvE-Scout Rescue Coordinators</h2>
+					<h2 style="text-align:center">EvE-Scout Rescue Coordinators</h2>
 				</div>
 				<div class="row">
+
 				<?php 
-				$arrPilots = $users->getUsersByRole('2', true);
-				$arrCount = count($arrPilots);
 				$i = 0;
-				foreach ($arrPilots as $val) {
+				foreach ($arrESRTeam as $val) {
+					if ($val['roleid'] != '2') { continue; }	// skip row if not 'ESR Coordinator'
 					$i++;
-					// every four loops, close last row and start a new one
-					if ($i % 5 == 0) {
-						echo '</div><div class="row">';
-					}
-					echo '<div class="col-md-3"><div class="thumbnail text-center">';
-					echo '	<a href="https://evewho.com/pilot/'. urlencode($val['username']) .'">';
-					echo '		<img src="https://image.eveonline.com/Character/'. urlencode($val['characterid']) .'_512.jpg" 
-						alt="'. urlencode($val['username']) .'" style="width:100%">';
-					echo '		<div class="caption"><strong>'. $val['username'] .'</strong></div></a></div></div>';
+					
+					if ($i % 5 == 0) {	// every four loops, close last row and start a new one	?>
+						</div>
+						<div class="row">
+
+						<?php
+					}	?>
+					
+					<div class="col-md-3">
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/pilot/<?=urlencode($val['username'])?>">
+								<img src="https://image.eveonline.com/Character/<?=urlencode($val['characterid'])?>_512.jpg" 
+									alt="<?=urlencode($val['username'])?>" style="width:100%">
+								<div class="caption"><strong><?=$val['username']?></strong></div>
+							</a>
+						</div>
+					</div>
+					
+					<?php
 				}
 				?>
+
 				</div>
 
+				<!-- Division Leadership -->
 				<div class="row">
-				  <div class="col-md-1"></div>
-				  <div class="col-md-4">
-						<h2 style="text-align:center"><a href="https://www.signalcartel.com/copilot">ALLISON</a></h2>
-				    <div class="thumbnail text-center">
-				      <a href="https://evewho.com/pilot/A%20Dead%20Parrot">
-				        <img src="https://image.eveonline.com/Character/96765374_512.jpg" alt="A.D. Parrot" style="width:100%">
-				        <div class="caption">
-				          <strong>A Dead Parrot</strong>
-				        </div>
-				      </a>
-				    </div>
-				  </div>
+					<div class="col-md-1"></div>
+					<div class="col-md-4">
+						<h2 style="text-align:center">
+							<a href="https://www.signalcartel.com/copilot">ALLISON</a>
+						</h2>
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/pilot/A%20Dead%20Parrot">
+								<img src="https://image.eveonline.com/Character/96765374_512.jpg" 
+									alt="A.D. Parrot" style="width:100%">
+								<div class="caption"><strong>A Dead Parrot</strong></div>
+							</a>
+						</div>
+				  	</div>
 					<div class="col-md-2"></div>
-				  <div class="col-md-4 text-center">
+				  	<div class="col-md-4 text-center">
 						<h2 style="text-align:center">Director</h2>
-				    <div class="thumbnail text-center">
-						<a href="https://evewho.com/pilot/Igaze">
-				        <img src="https://image.eveonline.com/Character/1852974735_512.jpg" alt="Igaze" style="width:100%">
-				        <div class="caption">
-				          <strong>Igaze</strong>
-				        </div>
-				      </a>
-				    </div>
-				  </div>
-				  <div class="col-md-1"></div>
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/pilot/Igaze">
+								<img src="https://image.eveonline.com/Character/1852974735_512.jpg" 
+									alt="Igaze" style="width:100%">
+								<div class="caption"><strong>Igaze</strong></div>
+							</a>
+						</div>
+				  	</div>
+				  	<div class="col-md-1"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!-- /LEFT COLUMN -->
+	<!-- RIGHT COLUMN -->
 	<div class="col-sm-4 white">
 		<strong>All participants last 30 days, most recent first</strong><br />
 		<table class="white" style="width: auto;">
 			<tbody>
+
 				<?php
-				$rows = $leaderBoard->getActivePilots(30);
 				$a = 1;
-				foreach ($rows as $value) {
+				foreach ($arrParticipants as $value) {
 					if (($a % 2) == 1) { echo '<tr>' ;}
 					echo '<td class="clean text-nowrap">&nbsp;&nbsp;'. $value['Pilot'] .'</td>';
 					if (($a % 2) == 0) { echo '</tr>' ;}
 					$a++;
-				}
-				?>
+				}	?>
+				
 			</tbody>
 		</table>
 	</div>
+	<!-- /RIGHT COLUMN -->
 </div>
 
-</div>
-</body>
-</html>
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>

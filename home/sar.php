@@ -1,28 +1,16 @@
 <?php
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-include_once '../includes/auth-inc.php';
+// PAGE VARS
+$pgtitle = "EvE-Scout Search and Rescue";
+
+
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-<html>
 
-<head>
-<?php
-$pgtitle = 'EvE-Scout Search and Rescue';
-include_once '../includes/head.php';
-?>
-</head>
-
-<body>
-<div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
-	<?php include_once '../includes/top-right.php'; ?>
-	<?php include_once '../includes/top-left.php'; ?>
-	<?php include_once '../includes/top-center.php'; ?>
-
-</div>
-<div class="ws"></div>
 <div class="row">
 	<div class="col-sm-8">
 		<div class="panel-group" id="faqAccordion">
@@ -92,6 +80,8 @@ include_once '../includes/head.php';
 	</div>
 </div>
 
-</div>
-</body>
-</html>
+
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>

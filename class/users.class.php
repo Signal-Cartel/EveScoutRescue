@@ -8,8 +8,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-require_once '../class/db.class.php';
-
 /**
  * Class to check (and later manage) permissions of a user. 
  *
@@ -45,13 +43,20 @@ class Users {
 	 * @param unknown $username
 	 * @return string
 	 */
-	public function isSARCoordinator($username)
+	public function isSARCoordinator($username, $getForLoggedInUser = true)
 	{
-		if (isset($_SESSION['isSARCoordinator'])){
-			return $_SESSION['isSARCoordinator'];
-		} 
+		// we only want to check session var if it's the status of the logged-in user we are after
+		if ($getForLoggedInUser) {
+			if (isset($_SESSION['isSARCoordinator'])) {
+				return $_SESSION['isSARCoordinator'];
+			} 
+		}
+
 		$result = $this->checkPermission($username, "ESR Coordinator");
-		$_SESSION['isSARCoordinator'] = $result;
+
+		// likewise, we only want to set session var for logged-in user
+		if ($getForLoggedInUser) { $_SESSION['isSARCoordinator'] = $result; }
+		
 		return $result;
 	}
 	
@@ -130,13 +135,18 @@ class Users {
 	 * Get list of all users by role, can filter for specific role
 	 * @param string $role the specific role we want a list of users for, use '%%' for not specified
 	 * @param boolean $active active filter, default to "true"
+	 * @param boolean $multiple indicates that $role passes more than one value, default to "false"
 	 * @return array return list of users
 	 */
-	public function getUsersByRole($role, $active = true)
+	public function getUsersByRole($role, $active = true, $multiple = false)
 	{
-		$this->db->query("SELECT * FROM user_roles ur, user u WHERE ur.userid = u.id AND ur.roleid LIKE :role 
-			AND ur.active = :active ORDER BY ur.username");
-		$this->db->bind(":role", $role);
+		$roleMatch = ($multiple === false) ? 'ur.roleid LIKE :role' : 'ur.roleid IN ('. $role .')';
+		$this->db->query("SELECT * 
+							FROM user_roles ur, user u 
+							WHERE ur.userid = u.id AND ur.active = :active AND
+							$roleMatch
+							ORDER BY ur.username");
+		if ($multiple === false) { $this->db->bind(":role", $role); }
 		$this->db->bind(":active", ($active) ? 1 : 0);
 		// get the resultset
 		$data = $this->db->resultset();
@@ -154,6 +164,11 @@ class Users {
 		if (session_status() == PHP_SESSION_NONE) {
 			session_start();
 		}
-		return $_SESSION['auth_characteralliance'] == 99005130;
+
+		if (isset($_SESSION['auth_characteralliance'])){
+			return $_SESSION['auth_characteralliance'] == 99005130;
+		} 
+
+		return false;
 	}
 }

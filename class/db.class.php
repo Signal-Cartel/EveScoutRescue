@@ -1,20 +1,34 @@
 <?php
+/*
+REMOVE THIS FILE WHEN REFACTOR COMPLETE - jmh - 20200813
+-- It has been superseded by database.class.php
+*/
+
 // Reviewed for UTC consistency 2020-0524
 date_default_timezone_set('UTC');
 
-if (strpos($_SERVER['HTTP_HOST'],'dev') === FALSE) {
-	$config = parse_ini_file('../../config/esr_dbconfig.ini');
+// page cannot be accessed directly
+if (!defined('ESRC')) { die ('Direct access not permitted'); }
+
+// get current runtime environment
+switch ($_SERVER['HTTP_HOST']) {
+	case 'dev.evescoutrescue.com':	// staging
+		$configPath = '../../config/esr_dbconfig_dev.ini';
+	break;
+	
+	case 'evescoutrescue.com':	// production
+		$configPath = '../../config/esr_dbconfig.ini';
+	break;
+
+	default:	// usually localhost dev
+		$configPath = '../../conf/esr_dbconfig_localhost.ini';
 }
-else {
-	$configpath = preg_replace('/\/htdocs\/.*$/', '', $_SERVER['REDIRECT_DOCUMENT_ROOT']) . '/htdocs/config/esr_dbconfig_dev.ini';
-	$config = parse_ini_file($configpath);
-}
+// find config file
+$config = parse_ini_file($configPath);
 
 // check if a config is found
-if ($config === FALSE)
-{
+if ($config === FALSE) {
 	echo "<p><b>No DB config found!</b></p>";
-	// add error logging here
 	exit(1);
 }
 
@@ -27,9 +41,8 @@ define("DB_NAME", $config['dbname']);
 // check for enabled maintenance mode in DB
 define("MAINTENANCE", $config['maintenance']);
 
-/**
- * Database connection handling wrapper. It's possible to run one query at a time only.
- */
+
+// Database connection handling wrapper. It's possible to run one query at a time only.
 class Database
 {
 	private $host = DB_HOST;

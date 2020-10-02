@@ -4,7 +4,7 @@
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 require_once '../class/systems.class.php';
 
 // create object instance(s)
@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $systems->addSystemNote($system, $charname, $_REQUEST['notes']);
 }
 ?>
+
 <html>
 
 <head>
@@ -47,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	include_once '../includes/head.php'; 
 	?>
 	<style>
-	<!--
 		table {
 			table-layout: fixed;
 			word-wrap: break-word;
@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		a:hover {
 			color: aqua;
 		}
-	-->
 	</style>
 </head>
 

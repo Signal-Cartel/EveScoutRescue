@@ -8,7 +8,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-require_once '../class/db.class.php';
 
 class Leaderboard
 {
@@ -58,6 +57,7 @@ class Leaderboard
 		
 		return $result;
 	}
+
 	
 	/**
 	 * Get list of top pilots within specified date range
@@ -70,9 +70,11 @@ class Leaderboard
 		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$lastDays.' days'));
 		$end = gmdate('Y-m-d 23:29:59', strtotime("now"));
 			
-		$this->db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act
-					FROM activity
-					WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end 
+		$this->db->query("SELECT COUNT(*) AS cnt, a.Pilot, max(ActivityDate) as act
+					FROM activity a
+					LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
+					WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
+						(EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end)
 					GROUP BY Pilot
 					ORDER BY cnt desc, act DESC limit :limit");
 		$this->db->bind(':start', $start);
@@ -84,10 +86,7 @@ class Leaderboard
 		
 		return $result;
 	}
-	
-	/**
-	 * Get personal stats of a pilot
-	 */
+
 
 	/**
 	 *  Get list of recently active pilots (by day)
@@ -113,6 +112,43 @@ class Leaderboard
 		
 		return $result;
 	}
-}
 
+
+	/**
+	 * Get payees for ESRC payouts
+	 * "Agent" actions are paid via SAR Dispatch, so they are not counted here
+	 * @param string $start_date Beginning of date range for desired results
+	 * @param string $end_date End of date range for desired results
+	 * @param boolean $groupByPilot TRUE to return grouped list; FALSE to return detailed list
+	 * @return array $result
+	 */
+	public function getESRCPayees($start_date, $end_date, $groupByPilot)
+	{			
+		if ($groupByPilot) {
+			$sql = "SELECT 
+						a.Pilot,
+						COUNT(DISTINCT(`System`)) as cntActions, 
+						IF((SELECT optout_type FROM payout_optout po WHERE a.Pilot = po.pilot 
+							AND optout_type = 'ESRC') IS NULL, COUNT(DISTINCT(`System`)), 0) AS cntPayableActions,
+						IF((SELECT optout_type FROM payout_optout po WHERE a.Pilot = po.pilot 
+							AND optout_type = 'ESRC') IS NULL, 1, 0) AS cntParticipation
+					FROM activity a 
+					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
+					GROUP BY Pilot";
+		}
+		else {
+			$sql = "SELECT * FROM activity 
+					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
+					ORDER By ActivityDate DESC";
+		}
+		$this->db->query($sql);
+		$this->db->bind(':start_date', $start_date);
+		$this->db->bind(':end_date', $end_date);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+
+}
 ?>

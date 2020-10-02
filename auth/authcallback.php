@@ -4,6 +4,10 @@
 // secret.php contains clientid and secret key from
 // https://developers.eveonline.com/applications
 
+// Mark all entry pages with this definition. Includes need check check if this is defined
+// and stop processing if called direct for security reasons.
+define('ESRC', TRUE);
+
 require_once '../class/config.class.php';
 require_once '../class/db.class.php';
 
@@ -25,6 +29,23 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 */
+
+// if we are on localhost, fake login for testing
+if (strpos($_SERVER['HTTP_HOST'], 'localhost') > -1) {
+	$_SESSION['auth_characterid'] = 96079190;
+	$_SESSION['auth_charactername'] = 'Thrice Hapus';
+	$_SESSION['auth_charactercorp'] = 98372649;
+	$_SESSION['auth_characteralliance'] = 99005130;
+
+	if (isset($_SESSION['auth_redirect'])) {
+		header('Location: '. $_SESSION['auth_redirect']);
+		exit;
+	}
+	else {
+		header('Location: ../home/index.php');
+		exit;
+	}
+}
 
 //login.php sends an authorization request to EVE's SSO server. The EVE server 
 //then sends its response to this script. We need to handle that response.

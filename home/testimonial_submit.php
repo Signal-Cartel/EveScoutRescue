@@ -1,112 +1,64 @@
 <?php 
-
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+// REQUIRED on all secured pages
 define('ESRC', TRUE);
+require '../page_templates/secure_initialization.php';
 
-include_once '../includes/auth-inc.php'; 
-require_once '../class/db.class.php';
-require_once '../class/users.class.php';
-
-// check if the user is logged in
+// if not logged in, force login and redirect back to this page
 if (!isset($_SESSION['auth_characterid'])) {
-	// void the session entries on 'attack'
-	session_unset();
-	// save the redirect URL to current page
-	$_SESSION['auth_redirect']=$_redirect_uri;
-	// no, redirect to home page
-	header("Location: ".Config::ROOT_PATH."auth/login.php");
-	// stop processing
+	$_SESSION['auth_redirect'] = htmlentities($_SERVER['PHP_SELF']);
+	header("Location: ../auth/login.php");
 	exit;
 }
 
-/**
- * Test provided input data to be valid.
- * @param unknown $data data to check
- * @return string processed and cleaned data
- */
-function test_input($data)
-{
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars_decode($data);
-	return $data;
-}
-?>
-<html>
+// PAGE VARS
+$pgtitle = "Submit Your Testimonial";
 
-<head>
-	<?php
-	$pgtitle = "Submit Your Testimonial";
-	include_once '../includes/head.php';
-	?>
-</head>
-<body>
-<div class="container">
-<div class="row" id="header" style="padding-top: 10px;">
-<?php
-include_once '../includes/top-right.php';
-include_once '../includes/top-left.php';
-include_once '../includes/top-center.php';
 
+// HTML PAGE template - Begin
+require '../page_templates/home_html-begin.php';
 ?>
-</div>
-<div class="ws"></div>
 
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h2 class="pull-left">Submit Your Testimonial</h2>
+				<h2 class="pull-left"><?=$pgtitle?></h2>
 			</div>
 			<div class="panel-body">
-<?php 
-// check if the request is made by a POST request
-if (isset($_POST['pilot'])) {
-	// yes, process the request
-	$db = new Database();
-	
-	$pilot = $method = $testimonial = $errmsg = '';
-	
-	$pilot = test_input($_POST["pilot"]);
-	$anon = $_POST["chkAnon"] == 1 ? 1 : 0; 
-	$method = test_input($_POST["method"]);
-	$testimonial = test_input($_POST["testimonial"]);
-	
-	//FORM VALIDATION
-	
-	// check that testimonial is not empty
-	if (!isset($testimonial))
-	{
-		$errmsg = $errmsg . "No testimonial has been provided.";
-	}
-	
-	//END FORM VALIDATION
-	
-	//display error message if there is one
-	if (!empty($errmsg)) {
-		echo $errmsg;
-	}
-	// otherwise, perform DB UPDATES
-	else {
-		// create a new cache activity
-		$db->beginTransaction();
-		$db->query("INSERT INTO testimonials (Pilot, Anon, Type, Note)
-			VALUES (:pilot, :anon, :type, :note)");
-		$db->bind(":pilot", $pilot);
-		$db->bind(":anon", $anon);
-		$db->bind(":type", $method);
-		$db->bind(":note", $testimonial);
-		$db->execute();
-		$db->endTransaction();
-		
-		echo 'Thank you! Your testimonial has been submitted successfully and is awaiting moderation.
-			Once approved, it should appear on the site within about a week.<br /><br />
-			<a href="index.php">Return to home page.</a>';
-	} 
-}
-else {
-				?>
+
+			<?php 
+			// process form submit
+			if (isset($_POST['pilot'])) {
+				$errmsg = '';
+				$testimonial = Output::prepTextarea($_POST["testimonial"]);
+				
+				// testimonial cannot be empty
+				if (empty($testimonial))	{
+					$errmsg = $errmsg . "No testimonial has been provided.";
+				}
+				
+				//display error message if there is one
+				if (!empty($errmsg)) {
+					echo $errmsg;
+				}
+				// otherwise, perform DB UPDATES
+				else {
+					$pilot = Output::prepTextarea($_POST["pilot"]);
+					$anon = $_POST["chkAnon"] ?? 0; 
+					$method = Output::prepTextarea($_POST["method"]);
+
+					$database = new Database();
+					$testimonials = new Testimonials($database);
+					$testimonials->createTestimonial($pilot, $anon, $method, $testimonial);
+					
+					echo '<p>Thank you! Your testimonial has been submitted successfully and is 
+						awaiting moderation. Once approved, it should appear on the site within about 
+						a week.</p>
+						<p><a href="index.php">Return to home page.</a></p>';
+				} 
+			}
+			else {	?>
+
 				<p>If you've recently been rescued from a wormhole via either a rescue cache or an
 					assist from a Signal Cartel rescue pilot, we'd love to hear your feedback!
 				</p>
@@ -154,18 +106,18 @@ else {
 						  });
 						</script>
 			      </form>
-			    </div>
-<?php 
-}
-?>
+				</div>
+				
+				<?php 
+			}	?>
+
 			</div>
 		</div>
 	</div>
 </div>
 
-</div>
 
-<?php echo isset($charfooter) ? $charfooter : '' ?>
-
-</body>
-</html>
+<?php
+// HTML PAGE template - End
+require '../page_templates/home_html-end.php';
+?>

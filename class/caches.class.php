@@ -7,8 +7,6 @@ if (!defined('ESRC'))
 	exit ( 1 );
 }
 
-// use database class
-require_once '../class/db.class.php';
 
 class Caches
 {
@@ -527,7 +525,7 @@ class Caches
 	 */
 	public function getSystemsVisited($daysBack)
 	{
-		$this->db->query("SELECT COUNT(DISTINCT System) AS cnt FROM `activity` 
+		$this->db->query("SELECT COUNT(DISTINCT `System`) AS cnt FROM `activity` 
 			WHERE ActivityDate >= (CURDATE() - INTERVAL :daysBack DAY)");
 		$this->db->bind(":daysBack", $daysBack);
 		$data = $this->db->single();
@@ -543,33 +541,38 @@ class Caches
 	public function getTopTender()
 	{
 		
-			$sql = "Select
-					  user.characterid as uid,
-					  activity.Pilot,
-					  Count(activity.ID) As Actions
-					From
-					  activity
-					Inner Join
-					  user
-						On user.character_name = activity.Pilot
+			$sql = "SELECT
+						user.characterid AS uid,
+						activity.Pilot,
+						Count(activity.ID) As Actions
+					FROM
+						activity
+					INNER JOIN
+						user
+							ON user.character_name = activity.Pilot
+					LEFT OUTER JOIN
+						payout_optout po
+							ON po.pilot = activity.Pilot
+			  
+					WHERE
+						(po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND
+						(((activity.EntryType = 'sower') Or (activity.EntryType = 'tender')) AND
+						(
+							hour(UTC_TIMESTAMP) between 0 and 10 
+							and activity.ActivityDate >= UTC_DATE - interval 37 hour -- 11am two days ago
+							and activity.ActivityDate < UTC_DATE - interval 13 hour -- 11am yesterday
+						)
+						OR
+						(
+							hour(UTC_TIMESTAMP) between 11 and 23
+							and activity.ActivityDate >= UTC_DATE - interval 13 hour -- 11am yesterday
+							and activity.ActivityDate < UTC_DATE + interval 11 hour -- today 11am
+						))
 						
-					Where
-					  ((activity.EntryType = 'sower') Or (activity.EntryType = 'tender')) and
-					(
-					  hour(UTC_TIMESTAMP) between 0 and 10 
-					  and activity.ActivityDate >= UTC_DATE - interval 37 hour -- 11am two days ago
-					  and activity.ActivityDate < UTC_DATE - interval 13 hour -- 11am yesterday
-					)
-					or
-					(
-					  hour(UTC_TIMESTAMP) between 11 and 23
-					  and activity.ActivityDate >= UTC_DATE - interval 13 hour -- 11am yesterday
-					  and activity.ActivityDate < UTC_DATE + interval 11 hour -- today 11am
-					)
-					  
-					Group By
-					  activity.Pilot
-					  Order by Actions DESC";
+					GROUP BY
+						activity.Pilot
+					ORDER BY 
+						Actions DESC";
 
 		$this->db->query($sql);
 		$result = $this->db->single();		
