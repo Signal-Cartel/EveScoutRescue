@@ -6,6 +6,7 @@ define('ESRC', TRUE);
 include_once '../includes/auth-inc.php';
 require_once '../class/output.class.php';
 require_once '../class/users.class.php';
+require_once '../class/db.class.php';
 
 if (!isset($_POST['start'])) {
 	if (gmdate('w', strtotime("now")) == 0) {
@@ -25,7 +26,7 @@ if (!isset($_POST['end'])) {
 // create database connection
 $db = new Database();
 // instanciate a users check instance
-$users = new Users($database);
+$users = new Users($db);
 
 // check character name is set
 if (!isset($charname))
@@ -81,7 +82,7 @@ if (!$users->isAdmin($charname))
 </head>
 
 <?php
-require_once '../class/db.class.php';
+
 if (isset($_POST['start']) && isset($_POST['end'])) { 
 	$start = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['start'])));
 	$end = htmlspecialchars_decode(date("Y-m-d", strtotime($_POST['end'])));
@@ -107,6 +108,8 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 	<div class="ws"></div>
 	<?php
 	// display results for the selected date range
+	$start .= ' 00:00:00';
+	$end .= ' 23:59:59';
 	?>	
 
 	<div class="row" id="systable">
@@ -124,8 +127,9 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 				<tbody>
 				<?php
 				$ctrtotact = $ctrsow = $ctrtend = $ctradj = 0;
-				$db->query("SELECT DATE(ActivityDate) AS ActionDate, Pilot, COUNT(Pilot) AS Count FROM activity 
-							WHERE DATE(ActivityDate) BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
+
+				$db->query("SELECT ActivityDate, Pilot, COUNT(Pilot) AS Count, EntryType FROM activity 
+							WHERE ActivityDate BETWEEN :start AND :end And EntryType IN ('sower', 'tender')
                             GROUP BY Pilot");
 				$db->bind(':start', $start);
 				$db->bind(':end', $end);
@@ -150,7 +154,7 @@ if (isset($_POST['start']) && isset($_POST['end'])) {
 					echo '<tr>';
 					// add 4 hours to convert to UTC (EVE) for display
 					echo '<td class="white text-nowrap">'. 
-							date("Y-m-d", strtotime($value['ActionDate'])) .
+							date("Y-m-d H:i:s", strtotime($value['ActivityDate'])) .
 						 '</td>';
 					echo '<td class="text-nowrap">
 							<a target="_blank" href="personal_stats.php?pilot='. urlencode($value['Pilot']) .'">'. 
