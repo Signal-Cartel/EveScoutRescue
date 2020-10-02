@@ -58,8 +58,10 @@ if (isset($_POST['sys_adj'])) {
 	$updateexp = !empty($_POST['updateexp']) ? intval($_POST['updateexp']) : 0;
 	$succesrc = !empty($_POST['succesrc']) ? intval($_POST['succesrc']) : 0; // used probes?
 	$succesrcf = !empty($_POST['succesrcf']) ? intval($_POST['succesrcf']) : 0; // used filament?
+	$succesrcb = !empty($_POST['succesrcb']) ? intval($_POST['succesrcb']) : 0; // used both?
 	$eq_used = $succesrc == 1 ? 'pas' : '';// pilot used probes and scanner
 	$eq_used = $succesrcf == 1 ? 'fil' : $eq_used;// pilot used filament
+	$eq_used = $succesrcb == 1 ? 'bth' : $eq_used;// pilot used both
 
 	// check the system
 	if (isset($system)) {
@@ -88,7 +90,7 @@ if (isset($_POST['sys_adj'])) {
 		$caches = new Caches($db);
 
 		// add a new agent activity
-		$cacheStatus = ($succesrc == 1 or $succesrcf==1) ? "Upkeep Required" : "Healthy";
+		$cacheStatus = ($succesrc == 1 or $succesrcf==1 or $succesrcb==1) ? "Upkeep Required" : "Healthy";
 		
 		$caches->addActivityNew($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $eq_used, $cacheStatus );
 
@@ -100,7 +102,7 @@ if (isset($_POST['sys_adj'])) {
 
 		// update expiration date if needed
 		if ($updateexp == 1) {
-			if ($eq_used == 'fil') {
+			if ($eq_used == 'fil' or $eq_used == 'bth') {
 				$hasfil = 0;
 				$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate, $hasfil);
 			}
@@ -111,7 +113,7 @@ if (isset($_POST['sys_adj'])) {
 		
 		// RESCUE update
 		// add a Rescue record only if rescue was successful; Agent note will serve for all others
-		if ($succesrc == 1 or $succesrcf==1) {
+		if ($succesrc == 1 or $succesrcf == 1) {
 			// create a new instance of Rescue class
 			$rescue = new Rescue($db);
 			// add a new Rescue record

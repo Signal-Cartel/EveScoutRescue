@@ -279,7 +279,7 @@ class Caches
 	 * @param $activitydate the date of the activity
 	 * @param $notes notes to add
 	 * @param $aidedpilot the aided pilot for agent records
-	 * @param $eqused 'pas' for probeas and scanner or 'fil' for filament
+	 * @param $eqused 'pas' for probes and scanner or 'fil' for filament or 'bth' for both
 	 */
 	public function addActivityNew($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $eqused, $cacheStatus = '')
 	{
