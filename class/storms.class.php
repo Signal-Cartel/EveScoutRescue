@@ -161,7 +161,7 @@ class Storms
 				FROM storm_tracker st
 				INNER JOIN `user` u ON st.pilot = u.character_name			  
 				WHERE
-					(
+					((
 						hour(UTC_TIMESTAMP) between 0 and 10 
 						and st.dateobserved >= UTC_DATE - interval 37 hour -- 11am two days ago
 						and st.dateobserved < UTC_DATE - interval 13 hour -- 11am yesterday
@@ -171,7 +171,9 @@ class Storms
 						hour(UTC_TIMESTAMP) between 11 and 23
 						and st.dateobserved >= UTC_DATE - interval 13 hour -- 11am yesterday
 						and st.dateobserved < UTC_DATE + interval 11 hour -- today 11am
-					)
+					))
+					# Exclude Discord server mods, because bot does not have permission to rename them
+					AND st.pilot NOT IN ('Katia Sae','Thrice Hapus','Johnny Splunk')
 				GROUP BY st.pilot
 				ORDER BY Actions DESC";
 

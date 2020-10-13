@@ -59,7 +59,7 @@ require '../page_templates/home_html-begin.php';
 			    </div>
 				<p></p>
 				<p style="text-align: center; font-weight: bold;">Thanks to everyone who made our 
-				<a href="../donate/">YC121 Fund Drive</a> a huge success!</p>
+				<a href="../donate/">YC122 Fund Drive</a> a huge success!</p>
 			</div>
 		</div>
 	</div>
