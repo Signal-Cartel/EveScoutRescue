@@ -5,7 +5,7 @@ require '../page_templates/secure_initialization.php';
 
 // PAGE VARS
 $pgtitle = "YC122 Fund Drive";
-$amtRaised = 0; // in billions
+$amtRaised = 66.703; // in billions
 $amtGoal = 60;  // in billions
 $percentComplete = round(($amtRaised/$amtGoal)*100);
 $last_modified = date('d F', filemtime(__FILE__)) . ' YC122, ' . date('H:i', filemtime(__FILE__));  // 01 October YC122, 00:00
@@ -112,7 +112,92 @@ require '../page_templates/home_html-begin.php';
 		<table class="white" style="width: auto;">
 			<tbody>
                 <tr>
-                    <td class="clean text-nowrap">&nbsp;</td>
+                    <td class="clean text-nowrap">Raven Drex</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Knoerp N'beekie</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Connor Enderos</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Angel Lafisques</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Eli Strange</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Jehan Dante</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Lixiana Vor'shan</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Pallyen</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">miruxa</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Null Flare</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Eul Erquilenne</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Allyanna Erquilenne</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Mirielle Asaki</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Vega Blazar</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Qifara Raholan</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Kedo Shaishi</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Dai Jintsu</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Sparkler Cadellane</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Kamiti Arcamer</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Duke Atradis</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">John NoFear</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Rogue Integer</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Tamayo</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Alister Graut</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Xalyar</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Tekufah</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">MicaNielsen</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Igaze</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Katia Sae</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Captain Crinkle</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Mako Koskanaiken</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Mike Azariah</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Metaphor</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Scort</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Ryndallon</td>
                     <td width="15px">&nbsp;</td>
                     <td class="clean text-nowrap">&nbsp;</td>
                 </tr>
