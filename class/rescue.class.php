@@ -74,7 +74,7 @@ class Rescue {
 	 * @param unknown $agentname
 	 * @param unknown $status
 	 * @return unknown
-	 * @param $eqused 'pas' for probeas and scanner or 'fil' for filament
+	 * @param $eqused 'pas' for probes and scanner or 'fil' for filament or 'bth' for both
 	 */
 	public function createESRCRequestNew($system, $cache, $pilot, $agentname, $status, $eqused)
 	{
