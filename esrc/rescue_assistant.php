@@ -558,6 +558,7 @@ if (!empty($errmsg)) {
 
 				<div class="pagebottom" id="ra_foot">
 					<h4>How would you like to proceed?</h4>
+					<p><em>Only choose Rescue Cache if pilot plans to access the cache, all other course of action choose Search & Rescue.</em></p>
 					<h4>
 					<button class="btn btn-success" onclick="ChangePage(2)">Rescue Cache</button>
 					<button class="btn btn-danger" onclick="ChangePage(3)">Search & Rescue</button>
