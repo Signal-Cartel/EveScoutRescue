@@ -32,10 +32,14 @@ require '../page_templates/home_html-begin.php';
 			</thead>
 			<tbody>
 				<tr>	
+					<td>Renek Dallocort</td>	
+					<td>YC122-Nov-15</td>
+				</tr>
+				<tr>	
 					<td>Captain Crinkle</td>	
 					<td>YC122-May-19</td>
 				</tr>
-			</tbody>
+				</tbody>
 		</table>
 	</div>
 	<div class="col-md-4"></div>
