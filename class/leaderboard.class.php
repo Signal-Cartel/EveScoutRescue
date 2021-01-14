@@ -124,6 +124,8 @@ class Leaderboard
 	 */
 	public function getESRCPayees($start_date, $end_date, $groupByPilot)
 	{			
+		$start_date = date('Y-m-d 00:00:00', strtotime($start_date));
+		$end_date = date('Y-m-d 23:59:59', strtotime($end_date));		
 		if ($groupByPilot) {
 			$sql = "SELECT 
 						a.Pilot,
@@ -141,11 +143,14 @@ class Leaderboard
 					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
 					ORDER By ActivityDate DESC";
 		}
+
+	
 		$this->db->query($sql);
 		$this->db->bind(':start_date', $start_date);
 		$this->db->bind(':end_date', $end_date);
 		$result = $this->db->resultset();
 		$this->db->closeQuery();
+		
 		
 		return $result;
 	}

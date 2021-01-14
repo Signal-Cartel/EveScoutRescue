@@ -1,12 +1,33 @@
 <?php
 // Reviewed for UTC consistency 2020-0524
+// use database class
+//require_once '../class/db.class.php';
 
 // check if called from an allowed page
-if (!defined('ESRC')) {
+if (!defined('ESRC'))
+{
 	echo "Do not call the script direct!";
 	exit ( 1 );
 }
 
+// for debug only
+/*
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
+function debug($variable){
+	if(is_array($variable)){
+		echo "<pre>";
+		print_r($variable);
+		echo "</pre>";
+		exit();
+	}
+	else{
+		echo ($variable);
+		exit();
+	}
+}
+*/
 
 /**
  * Class to manage and search SAR requests. 
@@ -302,8 +323,8 @@ class Rescue {
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
 		
-		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
-		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
+		$start = (empty($start)) ? '2017-03-18 00:00:00' : date('Y-m-d 00:00:00:00', strtotime($start));
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
 		
 		// get requests from database
 		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class 
@@ -330,8 +351,8 @@ class Rescue {
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
 		
-		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
-		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
+		$start = (empty($start)) ? '2017-03-18' : date('Y-m-d 00:00:00:00', strtotime($start));
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
 		
 		// get requests from database
 		$this->db->query("Select rr.*, ra.rescueagents,
@@ -441,8 +462,8 @@ Order By
 	public function getRescueCount($rescuetype, $start = '', $end = '')
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
-		$start = (empty($start)) ? '2017-03-18' : $start . " 00:00:00";
-		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : $end . " 23:59:59";
+		$start = (empty($start)) ? '2017-03-18' : date('Y-m-d 00:00:00:00', strtotime($start));
+		$end = (empty($end)) ? gmdate('Y-m-d 23:59:59', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
 		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest 
 			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end ");
 		$this->db->bind(":rescuetype", $rescuetype);

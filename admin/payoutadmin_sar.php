@@ -42,7 +42,7 @@ if (!isset($_POST['payout'])) {	//show detailed records if "Payout" is not check
 					
 					<tr>
 						<td class="white text-nowrap">
-							<?=date("Y-m-d", strtotime($value['requestdate']))?></td>
+							<?=date("Y-m-d H:i:s", strtotime($value['requestdate']))?></td>
 						<td class="text-nowrap">
 							<a class="payout" target="_blank" href="/esrc/personal_stats.php?pilot= 
 								<?=urlencode($value['startagent'])?>"><?=$value['startagent']?></a> 

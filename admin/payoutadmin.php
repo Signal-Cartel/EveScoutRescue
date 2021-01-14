@@ -20,6 +20,7 @@ require '../page_templates/home_html-begin.php';
 </div>
 
 <?php
+
 if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not checked	?>
 
 	<div class="row" id="systable" style="padding-top: 20px;">
@@ -40,6 +41,7 @@ if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not che
 				<?php
 				$ctrTotalActions = $ctrSows = $ctrTends = 0;
 				$rows = $lb->getESRCPayees($start, $end, false);
+
 				foreach ($rows as $value) {
 					$ctrTotalActions++;	// increment total actions counter
 					if ($value['EntryType'] == 'sower') {
