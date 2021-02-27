@@ -308,9 +308,12 @@ if (!empty($system)) {
 					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
 					<td><?php echo ($row['has_fil'] == 1 ? 'Yes' : 'No'); ?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
-
+					<?php
+					// old bookmark name
+					//$system . ' ' . $romans[$row['AlignedWith']] . '>' . $romans[$row['Location']] . ' @' . Output::htmlEncodeString($row['Distance'])
+					?>
 					<td><input type="text" id="bookmark1" style="width:180px;"
-							value="<?= $system . ' ' . $romans[$row['AlignedWith']] . '>' . $romans[$row['Location']] . ' @' . Output::htmlEncodeString($row['Distance']) ?>" readonly />
+							value="<?= $system . ' Rescue Cache' ?>" readonly />
 							<i id="copyclip2" class="fa fa-clipboard"
 								onClick="SelectAllCopy('bookmark1')"></i>
 					</td>

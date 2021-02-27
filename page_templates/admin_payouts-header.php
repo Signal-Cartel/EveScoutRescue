@@ -13,8 +13,8 @@ if (!isset($_REQUEST['start'])) {
 	$startPD = gmdate('Y-M-d', strtotime("- 7 day")); // formatted for Pikaday widget
 }
 if (!isset($_REQUEST['end'])) {
-	$end = gmdate('Y-m-d', strtotime("now"));
-	$endPD = gmdate('Y-M-d', strtotime("now")); // formatted for Pikaday widget
+	$end = gmdate('Y-m-d', strtotime("- 1 day"));
+	$endPD = gmdate('Y-M-d', strtotime("- 1 day")); // formatted for Pikaday widget
 }
 
 // set start and end dates to submitted values (GET or POST)
@@ -37,6 +37,23 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$startPD = htmlspecialchars_decode(date("Y-M-d", strtotime($startYear. '-' . $startMonth. '-' . $startDay)));
 	$endPD = htmlspecialchars_decode(date("Y-M-d", strtotime($endYear. '-' . $endMonth. '-' . $endDay)));
 }
+
+
+function debug($variable){
+	if(is_array($variable)){
+		echo "<pre>";
+		print_r($variable);
+		echo "</pre>";
+		exit();
+	}
+	else{
+		echo ($variable);
+		exit();
+	}
+}
+
+
+
 ?>
 
 <style>

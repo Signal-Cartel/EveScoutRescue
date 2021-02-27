@@ -105,6 +105,8 @@ class LeaderboardSAR
 	 */
 	public function getSARDispatchPayees($start_date, $end_date, $groupByPilot)
 	{			
+		$start_date = date('Y-m-d 00:00:00', strtotime($start_date));
+		$end_date = date('Y-m-d 23:59:59', strtotime($end_date));
 		if ($groupByPilot) {
 			$sql = "SELECT startagent, COUNT(*) as cnt FROM rescuerequest 
 					WHERE status <> 'closed-dup' AND requestdate BETWEEN :start_date AND :end_date 

@@ -32,6 +32,10 @@ require '../page_templates/home_html-begin.php';
 			</thead>
 			<tbody>
 				<tr>	
+					<td>Tamayo</td>	
+					<td>YC123-Jan-24</td>
+				</tr>
+				<tr>	
 					<td>Renek Dallocort</td>	
 					<td>YC122-Nov-15</td>
 				</tr>

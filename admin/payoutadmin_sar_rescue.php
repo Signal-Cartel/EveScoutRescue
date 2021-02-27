@@ -38,6 +38,8 @@ if (!isset($_POST['payout'])) {	?>
 				<tbody>
 				<?php
 				// pull all SAR rescues for specified period
+				$start = date('Y-m-d 00:00:00', strtotime($start));
+				$end = date('Y-m-d 23:59:59', strtotime($end));
 				$db->query("SELECT id, closedate, pilot, `system`, locateagent
 							FROM rescuerequest
 							WHERE status = 'closed-rescued' AND closedate BETWEEN :start AND :end
@@ -48,9 +50,9 @@ if (!isset($_POST['payout'])) {	?>
 				foreach ($rows as $value) {
 					//$ctrtotact++;
 					echo '<tr>';
-					// add 4 hours to convert to UTC (EVE) for display; wonky during US-DST (should be 5 hours then)
+					
 					echo '<td class="white text-nowrap">'. 
-							date("Y-m-d H:i:s", strtotime($value['closedate'])+14400) .
+							date("Y-m-d H:i:s", strtotime($value['closedate'])) .
 						 '</td>';
 					echo '<td><a class="payout" target="_blank"
 							href="https://evewho.com/pilot/'. $value['pilot'] .'">'.
@@ -84,9 +86,7 @@ if (!isset($_POST['payout'])) {	?>
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-2 white">
-			<?=gmdate('Y-m-d H:i:s', strtotime("now"))?> EVE<br /><br />
-		</div>
+
 	</div>
 
 <?php
@@ -109,6 +109,8 @@ else {			?>
 				<tbody>
 					<?php
 					//summary data
+					$start = date('Y-m-d 00:00:00', strtotime($start));
+					$end = date('Y-m-d 23:59:59', strtotime($end));
 					$db->query("SELECT rr.id, rr.locateagent, rr.system, 
 									datediff(rr.LastUpdated, rr.requestdate) AS daystosar, w.Class
 								FROM rescuerequest rr, wh_systems w
