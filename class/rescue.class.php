@@ -464,8 +464,11 @@ Order By
 		// set start and end dates to defaults for "all time" if not passed into function
 		$start = (empty($start)) ? '2017-03-18' : date('Y-m-d 00:00:00:00', strtotime($start));
 		$end = (empty($end)) ? gmdate('Y-m-d 23:59:59', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
-		$this->db->query("SELECT COUNT(id) as cnt FROM rescuerequest 
-			WHERE status = :rescuetype AND lastcontact BETWEEN :start AND :end ");
+		$column = ($rescuetype == 'closed-rescued' ? 'closedate' : 'requestdate' );
+		$sql = "SELECT COUNT(id) as cnt FROM rescuerequest 
+			WHERE status = :rescuetype AND " . $column . " BETWEEN :start AND :end ";
+			
+		$this->db->query($sql);
 		$this->db->bind(":rescuetype", $rescuetype);
 		$this->db->bind(":start", $start);
 		$this->db->bind(":end", $end);

@@ -1,9 +1,11 @@
 <!-- Agent Modal Form -->
 <?php
 // get active cache info
-$rowAgent = $caches->getCacheInfo($system);
-$cacheid = $rowAgent['CacheID'];
-$hasfil =  $rowAgent['has_fil'];
+if ($system != ''){
+	$rowAgent = $caches->getCacheInfo($system);
+	$cacheid = $rowAgent['CacheID'];
+	$hasfil =  $rowAgent['has_fil'];
+}
 //$fil_check = ($hasfil == 1 ? '' : 'disabled');
   $fil_check = '';
 ?>
