@@ -103,7 +103,7 @@ function debug($variable)
 <head>
 	<?php
 	$pgtitle = 'Rescue Assistant';
-	include_once '../includes/head.php';
+	include_once '../page_templates/head.php';
 	?>
 </head>
 
@@ -143,8 +143,8 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 <div class="container">
 
     <div class="row" id="header" style="padding-top: 20px;">
-        <?php include_once '../includes/top-right.php'; ?>
-        <?php include_once '../includes/top-left.php'; ?>
+        <?php include_once '../page_templates/top-right.php'; ?>
+        <?php include_once '../page_templates/top-left.php'; ?>
         <?php //include_once 'top-middle.php'; ?>
 
     </div>
