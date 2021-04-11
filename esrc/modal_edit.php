@@ -46,7 +46,7 @@ if (isset($_POST['sys_edit'])) {
 		$errmsg = $errmsg . "All fields in section 'SOWER' must be completed.\n";
 	}
 	
-	if (!empty($editLocation) && !empty($editAlignedwith) && $editLocation === $editAlignedwith && $editLocation != 'See Notes') {
+	if (!empty($editLocation) && !empty($editAlignedwith) && $editAlignedwith != 'Unaligned' && $editLocation === $editAlignedwith && $editLocation != 'See Notes') {
 		$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
 	}
 	

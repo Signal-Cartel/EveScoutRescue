@@ -33,25 +33,20 @@ require '../page_templates/home_html-begin.php';
 					<a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha 
 					Alendare</a> had a vision of a service that would provide a basic 
 					emergency resource kit for capsuleers stranded in wormholes, 
-					regardless of alliance, sovereignty, or play style. This vision
-					quickly grew to become the Rescue Cache program as we know it today. 
-					Originally managed manually via a spreadsheet and a web form, the 
-					program had humble beginnings, but nonetheless managed to capture the 
-					imagination of many Signal Cartel pilots.</p>
+					regardless of alliance, sovereignty, or play style. This vision captured the 
+					imagination of many Signal Cartel pilots and grew to become the Rescue Cache program we know today. 
+					</p>
 				<p>In late YC118, Forcha decided to move on to activities that would potentially 
 					bring him into conflict with the 
 					<a href="http://www.signalcartel.com/about">Credo</a>, so he chose to  
-					leave the corp. The program languished without anyone tending it, and corp and 
-					alliance leadership decided it was too valuable to be allowed to wither 
-					away. <a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice 
-					Hapus</a> was brought in to manage day-to-day operations.</p>
-				<p>Since then, the program has grown to what it is today. What started as one rescue 
-					program has now grown to become an entire division within Signal Cartel and 
-					encompasses both Search and Rescue operations and the original Rescue Cache 
+					leave the corporation and alliance leadership brought in 
+					<a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice 
+					Hapus</a> to manage day-to-day operations.</p>
+				<p>Since then, the program has grown to become an entire division within Signal Cartel and 
+					encompasses both live Search and Rescue operations as well as the original Rescue Cache 
 					program.</p>
-				<p>In December YC120, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
-					assumed leadership of the Rescue division. While he oversees the division as 
-					a whole, it takes a team to make it all happen. Our current roster includes 
+				<p>When Thrice Hapus became CEO of Signal Cartel, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
+					took over EvE Scout Rescue and guided the division from December YC120 until April YC123. Under his watch the division set many new records for number of rescues, caches in space, and 911 call volume. Today, <a href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a>, one of our most experienced rescue pilots, is at the helm. While he oversees the division as a whole, it takes an entire team to make it all happen. Our current roster includes 
 					the following dedicated rescue pilots.</p>
 
 				<!-- 911 Operators -->
@@ -142,12 +137,12 @@ require '../page_templates/home_html-begin.php';
 				  	</div>
 					<div class="col-md-2"></div>
 				  	<div class="col-md-4 text-center">
-						<h2 style="text-align:center">Director</h2>
+						<h2 style="text-align:center">Manager</h2>
 						<div class="thumbnail text-center">
-							<a href="https://evewho.com/pilot/Igaze">
-								<img src="https://image.eveonline.com/Character/1852974735_512.jpg" 
-									alt="Igaze" style="width:100%">
-								<div class="caption"><strong>Igaze</strong></div>
+							<a href="https://evewho.com/character/97117031">
+								<img src="https://image.eveonline.com/Character/97117031_512.jpg" 
+									alt="Captain Crinkle" style="width:100%">
+								<div class="caption"><strong>Captain Crinkle</strong></div>
 							</a>
 						</div>
 				  	</div>

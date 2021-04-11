@@ -240,7 +240,8 @@ function setBookmark(){
 			return;
 		}
 		if (locationp == 'Unaligned' || align == 'Unaligned'){
-			writeit(sysName + ' > @Unaligned');
+			//writeit(sysName + ' > @Unaligned');
+			writeit(sysName + ' Rescue Cache');
 			return;
 		}
 		var romans ={
@@ -276,7 +277,8 @@ function setBookmark(){
 			XXIX: 29,
 			XXX: 30	
 		};
-		var bm = sysName + " " + romans[align] + ">" + romans[locationp] + " @" +  dist;
+		//var bm = sysName + " " + romans[align] + ">" + romans[locationp] + " @" +  dist;
+		var bm = sysName + " Rescue Cache";
 		writeit(bm);
 		return;
 }
