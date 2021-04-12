@@ -49,6 +49,7 @@ $pilot_system = isset($_REQUEST['system']) ?  TestInput(ucfirst(htmlspecialchars
 $cache_status = '[CACHE STATUS]';
 $cache_pass = '[CACHE PASSWORD]';
 $filament_status = '[UNKNOWN]';
+$bookmark = '[CACHE BOOKMARK]';
 
 if ($pilot_system != '[SYSTEM]'){
 	$database = new Database();
@@ -64,6 +65,26 @@ if ($pilot_system != '[SYSTEM]'){
 		$cache_status = "No cache available";
 		$filament_status = "";
 	}
+
+	switch(substr($pilot_system, -2, 1)) {
+		case "0":
+			$bookmark = "<url=bookmarkFolder:5940238>ESRC Jxxxx0x</url>";
+			break;
+		case "1":
+			$bookmark = "<url=bookmarkFolder:5940242>ESRC Jxxxx1x</url>";
+			break;
+		case "2":
+			$bookmark = "<url=bookmarkFolder:5940246>ESRC Jxxxx2x</url>";
+			break;
+		case "3":
+			$bookmark = "<url=bookmarkFolder:5940250>ESRC Jxxxx3x</url>";
+			break;
+		case "4":
+			$bookmark = "<url=bookmarkFolder:5940257>ESRC Jxxxx4x</url>";
+			break;
+		default:
+			$bookmark = "<url=bookmarkFolder:5940264>ESRC J---other</url>";
+	};
 }
 
 function TestInput($data) {
@@ -569,17 +590,6 @@ if (!empty($errmsg)) {
 
 			<h4>RESCUE CACHE</h4>
 
-				<div class="step">
-					<div class="step-label">
-							<p class="step-inst">In discord, ask for someone with admin access to add bookmark for the system:</p>
-					</div>
-				</div>
-				<div class="step">
-					<div class="step-text">
-						<input type="text" class="copyable disco" style="width: 420px;" value="@911 Operator Could you please add the bookmark for <?=$pilot_system ?>">
-						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-					</div>
-				</div>
 
 				<div class="step">
 					<div class="step-label">
@@ -596,17 +606,15 @@ if (!empty($errmsg)) {
 				<div class="step">
 					<div class="step-text">
 						<textarea id='textcache' class="copyable convo" rows="2" cols="70"
-						data-fr="Nous avons un container dans votre système avec des probes. Je vais vous envoyer par eve-mail le bookmark du container, ainsi que le mot de passe."
-						>We have a cache in your system with some probes. I'm going to send you an eve-mail with the bookmark to the cache's location, and the password to the cache.</textarea>
+						data-fr="Nous avons un container dans votre système avec des probes. Je vais vous envoyer le bookmark du container."
+						>We have a cache in your system with some probes. I'm going to send you a with the bookmark to the cache's location.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
 
-
-
 				<div class="step">
 					<div class="step-label">
-							<p class="step-inst">Add pilot to Bookmark Access List
+							<p class="step-inst">Add pilot to Bookmark Access List <b>ESR Corp and Rescue</b> in
 						<span class="gametext">Neocom-&gt;Social-&gt;Access List</span>
 						<input type="text" class="copyable info" value="<?=$pilot_name?>">
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
@@ -616,14 +624,43 @@ if (!empty($errmsg)) {
 
 				<div class="step">
 					<div class="step-label">
-							<p class="step-inst">Then, send the ingame eve-mail to the pilot:</p>
+							<p class="step-inst">Send the pilot the bookmark link and ask them to put it online:</p>
+					</div>
+				</div>
+				<div class="step">
+					<div class="step-text">
+						<textarea id='textcache' class="copyable convo" rows="3" cols="70"
+						>Please add and online the bookmark folder <?=$bookmark ?>. Note that you can only have 3 bookmark folders online at once, if that is the case you will have to offline a shared bookmark folder.</textarea>
+						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
+					</div>
+				</div>
+
+				<div class="step">
+					<div class="step-label">
+							<p class="step-inst">Tell the pilot to warp to the cache bookmark:</p>
+					</div>
+				</div>
+				<div class="step">
+					<div class="step-text">
+						<textarea id='textcache' class="copyable convo" rows="3" cols="70"
+						>Open the locations window (default key: "L") and warp to the bookmark "<?= $pilot_system . ' Rescue Cache' ?>". Let me know when you're there and I will send you the password via mail.</textarea>
+						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
+					</div>
+				</div>
+
+
+
+
+				<div class="step">
+					<div class="step-label">
+							<p class="step-inst">When the pilot arrives, send them an ingame eve-mail with the password:</p>
 					</div>
 				</div>
 
 			<!-- Eve-Mail -->
 				<div class="step">
 					<p class="step-btn">
-						<button class="btn btn-default" data-toggle="modal" data-target="#mailModal">Eve-mail Cache Bookmark and Password</button>
+						<button class="btn btn-default" data-toggle="modal" data-target="#mailModal">Eve-mail Cache Information</button>
 					</p>
 				</div>
 
@@ -1262,17 +1299,6 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 
 				<div class="step">
 					<div class="step-label">
-							<p class="step-inst">911 Channel: Ask to have bookmark removed from the folder.</p>
-					</div>
-				</div>
-				<div class="step">
-					<div class="step-text">
-						<textarea class="copyable disco"  rows="2" cols="60">Agent filed, pilot removed from the access list. Can someone remove the bookmark for <?=$pilot_system?> please?</textarea>
-						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
-					</div>
-				</div>
-				<div class="step">
-					<div class="step-label">
 							<p class="step-inst">Optional Eve-mail to pilot with info about Signal Cartel</p>
 					</div>
 				</div>
@@ -1293,6 +1319,18 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 					<p class="step-btn">
 						<button class="btn btn-success" data-toggle="modal" data-target="#AgentModal">Record agent action</button>
 					</p>
+				</div>
+
+				<div class="step">
+					<div class="step-label">
+							<p class="step-inst">911 Channel: confirm rescue.</p>
+					</div>
+				</div>
+				<div class="step">
+					<div class="step-text">
+						<textarea class="copyable disco"  rows="1" cols="60">Agent filed, pilot removed from the access list.</textarea>
+						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
+					</div>
 				</div>
 
 			</div>
@@ -1582,8 +1620,8 @@ Please consider the value of your ship/implants and the time it may take for us 
 					</div>
 					<div class="step-text">
 					<textarea class="copyable convo" rows="1" cols="64"
-					data-fr="EvE-Scout Rescue - Information sur le container"
-					>EvE-Scout Rescue - Cache Information</textarea>
+					data-fr="EvE-Scout Rescue - Container mot de passe"
+					>EvE-Scout Rescue - Cache Password</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 			</div>
@@ -1592,20 +1630,7 @@ Please consider the value of your ship/implants and the time it may take for us 
 						<p class="step-inst">Body</p>
 					</div>
 					<div class="step-text">
-<textarea class="copyable convo" rows="20" cols="64"
-data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Voici le lien pour le dossier partagé de Signet:&#013;&#010;&lt;a href=&quot;bookmarkFolder:6026349&quot;&gt;ESR 911 Stranded Pilots&lt;/a&gt;  &#013;&#010;&#010;Mettez ce dossier en ligne et n’oubliez pas d’entrer «L» pour ouvrir la fenêtre des signets sur votre écran. De notre côté, nous allons vous ajouter à la liste d’accès du dossier, et mettre le signet à votre disposition. Cela peut prendre quelques minutes. Si vous ne pouvez acceder au dossier ou si vous ne voyez pas le signet, attendez juste quelques instants et essayez à nouveau. &#013;&#010;Le mot de passe du container est le suivant:&#013;&#010;<?= $cache_pass?>&#013;&#010;Copiez/Collez le mot de passe depuis cet email.&#013;&#010;&#010;Prenez ce dont vous avez besoin."
->Dear <?= $pilot_name?>,
-
-Here is the link to the shared bookmark folder:
-&lt;a href="bookmarkFolder:6026349"&gt;ESR 911 Stranded Pilots&lt;/a&gt;
-
-Put that folder online and don't forget to type "L" to see your saved locations. It might take a few minutes to add you to the folder's access list, and to put the bookmark up. If you can't access the folder or if you don't see the bookmark, just wait a little and try again.
-
-The password to open the Rescue Cache is:
-<?= $cache_pass?>&#013;&#010;
-Please copy/paste the password from this email.
-
-Take whatever you need.
+<textarea class="copyable convo" rows="1" cols="64"><?= $cache_pass?>
 </textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>
@@ -2375,18 +2400,18 @@ function CacheText(choice){
 	var sr = document.getElementById('supplyreturn');
 	switch(choice) {
 		case 'probes':
-		ele.value = "We have a cache in your system with some probes. I'm going to send you a mail with the bookmark to the cache's location, and the password of the cache.";
-		ele.dataset['fr'] = "Nous avons un container dans votre système avec des probes. Je vais vous envoyer par eve-mail le bookmark du container, ainsi que le mot de passe.";
+		ele.value = "We have a cache in your system with some probes. I'm going to send you a bookmark to the cache's location.";
+		ele.dataset['fr'] = "Nous avons un container dans votre système avec des probes. Je vais vous envoyer le bookmark du container.";
 		sr.style.display = 'block';
 		break;
 		case 'launcher':
-		ele.value = "We have a cache in your system with a launcher and some probes. I'm going to send you a mail with the bookmark to the cache's location, and the password of the cache.";
-		ele.dataset['fr'] = "Nous avons un container dans votre système avec des probes et un lanceur de probes. Je vais vous envoyer par eve-mail le bookmark du container, ainsi que le mot de passe";
+		ele.value = "We have a cache in your system with a launcher and some probes. I'm going to send you a bookmark to the cache's location.";
+		ele.dataset['fr'] = "Nous avons un container dans votre système avec des probes et un lanceur de probes.  Je vais vous envoyer le bookmark du container.";
 		sr.style.display = 'block';
 		break;
 		case 'filament':
-		ele.value = "We have a cache in your system with a filament. I'm going to send you a mail with the bookmark to the cache's location, and the password of the cache.";
-		ele.dataset['fr'] = "Nous avons un container dans votre système avec un filament. Je vais vous envoyer par eve-mail le Signet du container, ainsi que le mot de passe";
+		ele.value = "We have a cache in your system with a filament. I'm going to send you a bookmark to the cache's location.";
+		ele.dataset['fr'] = "Nous avons un container dans votre système avec un filament. Je vais vous envoyer le bookmark du container.";
 		sr.style.display = 'none';
 		break;
 		default:
