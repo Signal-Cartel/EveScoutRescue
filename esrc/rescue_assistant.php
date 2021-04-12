@@ -50,6 +50,7 @@ $cache_status = '[CACHE STATUS]';
 $cache_pass = '[CACHE PASSWORD]';
 $filament_status = '[UNKNOWN]';
 $bookmark = '[CACHE BOOKMARK]';
+$discord_invite = 'https://discord.gg/fKy3FeZ';
 
 if ($pilot_system != '[SYSTEM]'){
 	$database = new Database();
@@ -983,8 +984,8 @@ Right-click the menu ≡ on the upper-left corner of your overview→Open Overvi
 				<div class="step">
 				<div class="step-text">
 						<textarea class="copyable convo"  rows="4" cols="80"
-						data-fr="EvE-Scout maintient un salon Discord («Stranded pilot lounge») pour les pilotes perdus, à cette adresse: https://discord.gg/Xy6XEU et vous y êtes bienvenue. Si votre situation devait changer, merci de nous le faire savoir à cet endroit ou par eve-mail. Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous."
-						>EvE-Scout Rescue maintains a Discord channel (the stranded pilot's lounge) for our stranded pilots, located here: https://discord.gg/Xy6XEU, and you are welcome to join. Should your situation change, you can contact us by posting in lounge chat. Be aware that it is a public channel so do not disclose any information in that channel that would jeopardize your safety.</textarea>
+						data-fr="EvE-Scout maintient un salon Discord («Stranded pilot lounge») pour les pilotes perdus, à cette adresse: <?=$discord_invite?> et vous y êtes bienvenue. Si votre situation devait changer, merci de nous le faire savoir à cet endroit ou par eve-mail. Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous."
+						>EvE-Scout Rescue maintains a Discord channel (the stranded pilot's lounge) for our stranded pilots, located here: <?=$discord_invite?>, and you are welcome to join. Should your situation change, you can contact us by posting in lounge chat. Be aware that it is a public channel so do not disclose any information in that channel that would jeopardize your safety.</textarea>
 						<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 					</div>
 				</div>
@@ -1672,7 +1673,7 @@ Dear <?= $pilot_name?>,
 
 We hope you found your way home safely. We are very happy to know that we have been of some help. If you wish to learn more about the EvE-Scout Rescue program, come visit <a href="https://evescoutrescue.com"> https://evescoutrescue.com </a> As you can see, some rescued pilots have submitted testimonials about their rescue. Feel free to add your own!
 
-We also have an in-game public channel: <a href="joinChannel:player_-65344012">EvE-Scout</a>, and a Discord server: <a href="https://discord.gg/6wNp5w">https://discord.gg/6wNp5w</a> Come and say hello if you have the chance.
+We also have an in-game public channel: <a href="joinChannel:player_-65344012">EvE-Scout</a>, and a Discord server: <a href="<?=$discord_invite?>"><?=$discord_invite?></a> Come and say hello if you have the chance.
 
 Another activity of <a href="showinfo:2//98372649">Signal Cartel</a> and the <a href="showinfo:16159//99005130">EvE-Scout</a> Alliance is to maintain a public list of <a href="showinfo:5//31000005">Thera</a>’s wormhole connections. Should you wish to travel to or through Thera, don’t hesitate to check our website: <a href="https://www.eve-scout.com/thera/">www.eve-scout.com</a>
 
@@ -1719,7 +1720,7 @@ Have a great day and fly safe o/
 Dear <?= $pilot_name?>,
 
 We are now looking for you. We will contact you as soon as we find you. Should we fail to do so in the next 7 days, we will follow-up with you to make sure you want us to continue our search.
-Once again, our discord channel for stranded pilots can be found here: <a href="https://discord.gg/Xy6XEU">https://discord.gg/Xy6XEU</a>
+Once again, our discord channel for stranded pilots can be found here: <a href="<?=$discord_invite?>"><?=$discord_invite?></a>
 
 If you wish to learn more about the EvE-Scout Rescue program, come visit  <a href="https://evescoutrescue.com">https://evescoutrescue.com</a>
 
@@ -1774,7 +1775,7 @@ Dear <?= $pilot_name?>,
 
 We're very sorry we couldn't help you this time. We hope it won't prevent you from calling us whenever you need to in the future. If you wish to learn more about the EvE-Scout Rescue program, come visit <a href="https://evescoutrescue.com"> https://evescoutrescue.com </a>
 
-We also have an in-game public channel: <a href="joinChannel:player_-65344012">EvE-Scout</a>, and a Discord server: <a href="https://discord.gg/6wNp5w">https://discord.gg/6wNp5w</a> Come and say hello if you have the chance.
+We also have an in-game public channel: <a href="joinChannel:player_-65344012">EvE-Scout</a>, and a Discord server: <a href="<?=$discord_invite?>"><?=$discord_invite?></a> Come and say hello if you have the chance.
 
 Another activity of <a href="showinfo:2//98372649">Signal Cartel</a> and the <a href="showinfo:16159//99005130">EvE-Scout</a> Alliance is to maintain a public list of <a href="showinfo:5//31000005">Thera</a>’s wormhole connections. Should you wish to travel to or through Thera, don’t hesitate to check our website: <a href="https://www.eve-scout.com/thera/">www.eve-scout.com</a>
 
@@ -1861,7 +1862,7 @@ Have a great day and fly safe o/
 					</div>
 					<div class="step-text">
 					<textarea class="copyable convo" id="mail-body-nr" rows="20" cols="60"
-					data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Vous avez déclenché un appel 911, et nous avons bien reçu votre demande. Nous sommes en train d’essayer de vous contacter en conversation privée, mais vous ne répondez pas. Il se peut que vous vous soyez déconnecté pour des raisons de sécurité. Dans ce cas, vous pouvez me joindre en conversation privée avec un alt, ou bien rejoindre la «Stranded Pilot Lounge» sur notre serveur Discord: &lt;a href=&quot;https://discord.gg/ru6Juw&quot;&gt;https://discord.gg/ru6Juw&lt;/a&gt;   &#013;&#010;&#010;Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous. &#013;&#010;&#010;Merci o/">Dear <?= $pilot_name?>, &#013;&#010;&#010;You issued a 911 call, and we received you request. We are trying to reach you in a private conversation, but you are not responding. You may have logged out for safety reasons. In that case, you can join me in a private conversation with an alt, or you can alternatively join the "Stranded pilot lounge" on our discord server here: &lt;a href="https://discord.gg/ru6Juw"&gt;https://discord.gg/ru6Juw&lt;/a&gt; &#013;&#010;&#010;Be aware that the Discord channel is a public channel, do not reveal any information about your position or situation. Just wave, and an EvE-Scout Rescue Operator will be in touch. &#013;&#010;&#010;Thank you o/</textarea>
+					data-fr="Cher <?= $pilot_name?>,   &#013;&#010;&#010;Vous avez déclenché un appel 911, et nous avons bien reçu votre demande. Nous sommes en train d’essayer de vous contacter en conversation privée, mais vous ne répondez pas. Il se peut que vous vous soyez déconnecté pour des raisons de sécurité. Dans ce cas, vous pouvez me joindre en conversation privée avec un alt, ou bien rejoindre la «Stranded Pilot Lounge» sur notre serveur Discord: &lt;a href=&quot;<?=$discord_invite?>&quot;&gt;<?=$discord_invite?>&lt;/a&gt;   &#013;&#010;&#010;Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous. &#013;&#010;&#010;Merci o/">Dear <?= $pilot_name?>, &#013;&#010;&#010;You issued a 911 call, and we received you request. We are trying to reach you in a private conversation, but you are not responding. You may have logged out for safety reasons. In that case, you can join me in a private conversation with an alt, or you can alternatively join the "Stranded pilot lounge" on our discord server here: &lt;a href="<?=$discord_invite?>"&gt;<?=$discord_invite?>&lt;/a&gt; &#013;&#010;&#010;Be aware that the Discord channel is a public channel, do not reveal any information about your position or situation. Just wave, and an EvE-Scout Rescue Operator will be in touch. &#013;&#010;&#010;Thank you o/</textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>
 			</div>
@@ -1882,8 +1883,8 @@ function changeMail(choice){
 		subj.value = "EvE-Scout Rescue - Your 911 call";
 		subj.dataset['fr'] = "EvE-Scout Rescue – Votre appel 911";
 
-		body.value = "Dear <?= $pilot_name?>,   \r\n\r\nYou issued a 911 call, and we received you request. We are trying to reach you in a private conversation, but you are not responding. You may have logged out for safety reasons. In that case, you can join me in a private conversation with an alt, or you can alternatively join the \"Stranded pilot lounge\" on our discord server here: <a href=\"https://discord.gg/ru6Juw\">https://discord.gg/ru6Juw</a>   \r\n\r\nBe aware that the Discord channel is a public channel, do not reveal any information about your position or situation. Just wave, and an EvE-Scout Rescue Operator will be in touch.   \r\n\r\nThank you o/";
-		body.dataset['fr'] = "Cher <?= $pilot_name?>,   \r\n\r\nVous avez déclenché un appel 911, et nous avons bien reçu votre demande. Nous sommes en train d’essayer de vous contacter en conversation privée, mais vous ne répondez pas. Il se peut que vous vous soyez déconnecté pour des raisons de sécurité. Dans ce cas, vous pouvez me joindre en conversation privée avec un alt, ou bien rejoindre la «Stranded Pilot Lounge» sur notre serveur Discord: <a href=\"https://discord.gg/ru6Juw\">https://discord.gg/ru6Juw</a>   \r\n\r\nAttention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous.   \r\n\r\nMerci o/";
+		body.value = "Dear <?= $pilot_name?>,   \r\n\r\nYou issued a 911 call, and we received you request. We are trying to reach you in a private conversation, but you are not responding. You may have logged out for safety reasons. In that case, you can join me in a private conversation with an alt, or you can alternatively join the \"Stranded pilot lounge\" on our discord server here: <a href=\"<?=$discord_invite?>\"><?=$discord_invite?></a>   \r\n\r\nBe aware that the Discord channel is a public channel, do not reveal any information about your position or situation. Just wave, and an EvE-Scout Rescue Operator will be in touch.   \r\n\r\nThank you o/";
+		body.dataset['fr'] = "Cher <?= $pilot_name?>,   \r\n\r\nVous avez déclenché un appel 911, et nous avons bien reçu votre demande. Nous sommes en train d’essayer de vous contacter en conversation privée, mais vous ne répondez pas. Il se peut que vous vous soyez déconnecté pour des raisons de sécurité. Dans ce cas, vous pouvez me joindre en conversation privée avec un alt, ou bien rejoindre la «Stranded Pilot Lounge» sur notre serveur Discord: <a href=\"<?=$discord_invite?>\"><?=$discord_invite?></a>   \r\n\r\nAttention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous.   \r\n\r\nMerci o/";
 
 		break;
 
@@ -1981,8 +1982,8 @@ function changeOS(choice){
 			<div class="step">
 				<div class="step-text">
 					<textarea class="copyable convo" rows="4" cols="60"
-					data-fr="Vous pouvez aussi joindre notre «Stranded pilot lounge» sur notre serveur Discord: https://discord.gg/ru6Juw (Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous.)"
-					>You can also join our stranded pilot lounge on Discord: https://discord.gg/ru6Juw	(be aware that it's a public channel, don't reveal any information about your situation: just wave and an EvE-Scout Rescue Operator will be in touch). </textarea>
+					data-fr="Vous pouvez aussi joindre notre «Stranded pilot lounge» sur notre serveur Discord: <?=$discord_invite?> (Attention, ce salon est publique, ne révélez aucune information sur votre situation ou sur votre position. Dites juste bonjour et un Operateur EvE-Scout s’occupera de vous.)"
+					>You can also join our stranded pilot lounge on Discord: <?=$discord_invite?> (be aware that it's a public channel, don't reveal any information about your situation: just wave and an EvE-Scout Rescue Operator will be in touch). </textarea>
 					<span class="copybutton" onclick="SelectAllCopy(this)"></span>
 				</div>
 			</div>
