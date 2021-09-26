@@ -89,6 +89,8 @@ if (isset($_POST['sys_adj'])) {
 		// create a new instance of Caches class
 		$caches = new Caches($db);
 
+		$cacheInfo = $caches->getCacheInfo($system, TRUE);
+
 		// add a new agent activity
 		$cacheStatus = ($succesrc == 1 or $succesrcf==1 or $succesrcb==1) ? "Upkeep Required" : "Healthy";
 		
@@ -100,20 +102,17 @@ if (isset($_POST['sys_adj'])) {
 		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
 		$caches->addNoteToCache($cacheid, $agent_note);
 
-		// update expiration date if needed
+		// update expiration date and eq used
 		if ($updateexp == 1) {
-			if ($eq_used == 'fil' or $eq_used == 'bth') {
-				$hasfil = 0;
-				$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate, $hasfil);
-			}
-			else {
-				$caches->updateExpireTime($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate);
-			}			
+			$hasfil = ($eq_used == 'fil' or $eq_used == 'bth') ? 0 : $cacheInfo['has_fil'];
+			$haspas = ($eq_used == 'pas' or $eq_used == 'bth') ? 0 : $cacheInfo['has_pas'];
+		
+			$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate, $hasfil, $haspas);
 		}
 		
 		// RESCUE update
 		// add a Rescue record only if rescue was successful; Agent note will serve for all others
-		if ($succesrc == 1 or $succesrcf == 1) {
+		if ($succesrc == 1 or $succesrcf == 1 or $succesrcb == 1) {
 			// create a new instance of Rescue class
 			$rescue = new Rescue($db);
 			// add a new Rescue record

@@ -51,8 +51,8 @@ if ($system != ''){
 					Both filament and probes					
 				</label>
 			</div>
-						<div class="field">
-				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the Capsuleer who required assistance?</span>
+			<div class="field">
+				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the capsuleer who required assistance?</span>
 					<input type="text" class="form-control" id="aidedpilot" name="aidedpilot" />
 				</label>
 			</div>
@@ -89,16 +89,19 @@ if ($system != ''){
 		}
 		break;
 	  case 'succesrc':
+			// used probes
 			usedFilament.checked = false;
 			usedBoth.checked =  false;
 			cacheAccessed.checked = true;
 		break;
 	  case 'succesrcf':
+			// used filament
 			usedProbes.checked = false;
 			usedBoth.checked =  false;
 			cacheAccessed.checked = true;
 		break;
 		case 'succesrcb':
+			// used both
 			usedProbes.checked = false;
 			usedFilament.checked = false;
 			cacheAccessed.checked = true;

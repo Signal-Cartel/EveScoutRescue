@@ -4,10 +4,14 @@ $users = new Users($database);	?>
 
 <div class="col-sm-8 white" style="text-align: center; padding: 12px;">
 	<span class="sechead"><?=$pgtitle?></span>
-	<br /><br />
-	<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="btn btn-primary btn-md" href="../home/about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="btn btn-primary btn-md" href="../home/donate.php" role="button">Contribute</a>
+		<p>
+			<i>EvE-Scout Rescue operated by <a class="white" href="https://www.signalcartel.org/">Signal Cartel</a></i>
+		</p>
+		<p>
+			<a class="btn btn-danger btn-md" href="../911" role="button">Rescue 911</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a class="btn btn-primary btn-md" href="../home/about.php" role="button">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a class="btn btn-primary btn-md" href="../home/donate.php" role="button">Contribute</a>
+		</p>
 	
 	<?php 
 	// display these buttons only to EvE-Scout pilots

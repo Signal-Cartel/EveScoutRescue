@@ -364,16 +364,17 @@ class Caches
 	 * @param unknown $status the status to set
 	 * @param unknown $expires the expire date
 	 */
-	public function updateExpireTimeNew($cacheid, $status, $expires, $activitydate, $hasfil)
+	public function updateExpireTimeNew($cacheid, $status, $expires, $activitydate, $hasfil,$haspas)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, lastupdated = :lastupdated, has_fil = :hasfil
+		$this->db->query("UPDATE cache SET ExpiresOn = :expdate, Status = :status, lastupdated = :lastupdated, has_fil = :hasfil, has_pas = :haspas
 					WHERE CacheID = :cacheid");
 		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':status', $status);
 		$this->db->bind(':expdate', $expires);
 		$this->db->bind(':lastupdated', $activitydate);
 		$this->db->bind(':hasfil', $hasfil);
+		$this->db->bind(':haspas', $haspas);
 		
 		$this->db->execute();
 		//end db transaction

@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-$hide_stats = false;
+$hide_stats = FALSE; //true for Crinkle Fest or tender games
 // for debug only
 /*
  error_reporting(E_ALL);
@@ -354,12 +354,20 @@ if (!empty($errmsg)) {
 		<div class="col-md-12">
 			<div class="subhead white text-center" style="font-weight: bold;">
 				<?php 
-					echo strtoupper($stat_type);
+					
 					if($hide_stats){
-						echo '<div id="esrcCaches" class="text-center" style="width: 100%; height:400px; margin: 0 auto">Why are you here looking for stats?<br/>Shouldn\'t you be out sowing caches for The Tender Games?<br/>';								
-									echo '<img src="../img/tender-games.jpg"/>';	
-									echo '</div>';											
-						}
+						echo '<div id="esrcCaches" class="text-center" style="width: 100%; height:400px; margin: 0 auto">
+						<p>Why are you here looking for stats?<br/>Shouldn\'t you be out sowing caches for Crinkle Fest?</p>';	
+						echo '<p>Well, since you are here, here is the list of systems, by class, that do not contain a rescue cache.</p>';						
+									//echo '<img src="../img/tender-games.jpg"/>';	
+						include_once '../stats/stats_data_crinkle_fest.php';
+						echo '</div>';
+									
+					}
+					else {
+						echo strtoupper($stat_type);
+					}
+					
 				?>
 			</div>
 		</div>

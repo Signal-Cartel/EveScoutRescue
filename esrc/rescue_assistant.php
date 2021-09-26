@@ -2222,6 +2222,9 @@ $database = new Database();
 $caches = new Caches($database);
 $rowAgent = $caches->getCacheInfo($pilot_system);
 $cacheid = $rowAgent['CacheID'];
+$hasfil =  $rowAgent['has_fil'];
+
+  $fil_check = '';
 ?>
 
 	<div class="modal-dialog">
@@ -2250,7 +2253,7 @@ $cacheid = $rowAgent['CacheID'];
 			<div class="checkbox">
 				<label class="control-label" for="succesrc">
 					<input type="checkbox" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this)">
-					Probes &amp; scanner
+					Probes / scanner
 				</label>
 			</div>
 			<div class="checkbox">
@@ -2259,8 +2262,14 @@ $cacheid = $rowAgent['CacheID'];
 					Filament
 				</label>
 			</div>
+			<div class="checkbox">
+			  	<label class="control-label" for="succesrcb">
+			  		<input type="checkbox" <?=$fil_check ?> id="succesrcb" name="succesrcb" value="1" onClick="checkLogic(this);">
+					Both filament and probes					
+				</label>
+			</div>
 			<div class="field">
-				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the Capsuleer who required assistance?</span>
+				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the capsuleer who required assistance?</span>
 					<input type="text" readonly class="form-control" id="aidedpilot" name="aidedpilot" value="<?=$pilot_name?>"/>
 				</label>
 			</div>
@@ -2421,29 +2430,41 @@ function CacheText(choice){
 }
 
 
-function checkLogic(ele){
+ function checkLogic(ele){
 	var cacheAccessed = document.getElementById('updateexp');
 	var usedProbes = document.getElementById('succesrc');
 	var usedFilament = document.getElementById('succesrcf');
+	var usedBoth = document.getElementById('succesrcb');
 	var choice = ele.id;
 	switch(choice) {
-		case 'updateexp':
-		if (usedFilament.checked == true || usedProbes.checked == true){
-			cacheAccessed.checked = true;
+	  case 'updateexp':
+		if (usedFilament.checked == true || usedProbes.checked == true || usedBoth.checked == true){
+			cacheAccessed.checked = true;	
 		}
 		break;
-		case 'succesrc':
+	  case 'succesrc':
+			// used probes
 			usedFilament.checked = false;
+			usedBoth.checked =  false;
 			cacheAccessed.checked = true;
 		break;
-		case 'succesrcf':
+	  case 'succesrcf':
+			// used filament
 			usedProbes.checked = false;
+			usedBoth.checked =  false;
+			cacheAccessed.checked = true;
+		break;
+		case 'succesrcb':
+			// used both
+			usedProbes.checked = false;
+			usedFilament.checked = false;
 			cacheAccessed.checked = true;
 		break;
 		default:
 		return;
 	}
-}
+
+ }
 
 
 

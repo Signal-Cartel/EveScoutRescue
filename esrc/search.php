@@ -288,8 +288,8 @@ if (!empty($system)) {
 							<th>Location</th>
 							<th>Distance</th>
 							<th>Password</th>
-							<th>Status</th>
-							<th style="color: red;">Filament</th>
+							<th>Probes</th>
+							<th>Filament</th>
 							<th>Expires On</th>
 							<th>Bookmark</th>
 						</tr>
@@ -305,8 +305,17 @@ if (!empty($system)) {
 							<i id="copyclip" class="fa fa-clipboard"
 								onClick="SelectAllCopy('cachepass1')"></i>
 					</td>
-					<td<?=$statuscellformat ?>><?=$row['Status']?></td>
-					<td><?php echo ($row['has_fil'] == 1 ? 'Yes' : 'No'); ?></td>
+					
+					<?php
+					// probes and filament status
+					
+					$haspas = ($row['has_pas'] == 1 ? 'Yes' : 'No');
+					$statpas = ($row['has_pas'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
+					$hasfil = ($row['has_fil'] == 1 ? 'Yes' : 'No');
+					$statfil = ($row['has_fil'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
+					?>
+					<td<?=$statpas ?>><?=$haspas?></td>
+					<td<?=$statfil ?>><?=$hasfil?></td>
 					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
 					<?php
 					// old bookmark name
@@ -438,12 +447,15 @@ if (!empty($system)) {
 			// wrong system name length
 			?>
 			<div class="row" id="systableheader">
-			<div class="col-md-12">
-			<div style="padding-left: 10px;">
-				<span class="subhead white">'<?=$system?> not a valid system name.
-					Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-			</div></div></div>
-		<?php
+				<div class="col-md-12">
+					<div style="padding-left: 10px;">
+						<span class="subhead white">'<?=$system?>' not a valid system name. Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
+					</div>
+				</div>
+			</div>
+			
+			<?php
+			exit();
 		}
 	} //(!empty($row))
 

@@ -69,7 +69,7 @@
 								<label for="hasfil" style="margin-bottom: 20px">
 									<input id="hasfil" name="hasfil" type="checkbox" <?=$hasfil?> value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
 									<p style="display: inline; position: relative; top: -6px;">
-									<strong style="background-color: rgba(136, 0, 0, .6);">Filament: </strong>Does the cache contain a filament?
+									<strong>Filament: </strong>Does the cache contain a filament?
 									</p>
 								</label>
 							</div>

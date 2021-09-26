@@ -18,14 +18,14 @@ require '../page_templates/home_html-begin.php';
 				<h2 class="pull-left">Contribute</h2>
 			</div>
 			<div class="panel-body">
-				<p><a href="http://www.signalcartel.com/">Signal Cartel</a>, 
+				<p><a href="http://www.signalcartel.org/">Signal Cartel</a>, 
 					the core corporation of the 
 					<a href="http://www.eve-scout.com/">EvE-Scout 
 					Enclave</a> alliance, is a neutral, non-profit entity that aims to 
 					provide a valuable public service to all of New Eden. As such, one 
 					of our primary initiatives is to look for and rescue capsuleers who 
 					are stranded inside wormholes without equipment to get out by themselves. 
-					In accordance to our Credo, our services are free and available to 
+					In accordance to our <a href="https://wiki.signalcartel.space/Public:About_Signal_Cartel">Credo</a>, our services are free and available to 
 					capsuleers of all play styles and allegiance.</p>
 				<p></p>
 				<hr class="half-rule">
@@ -51,10 +51,10 @@ require '../page_templates/home_html-begin.php';
 			        <img src="../img/wanted_final.png" style="max-width: 85%; height: auto;">
 			        <h3>Join Us</h3>
 			        <p>Is helping other capsuleers of more interest to you than blowing them up?
-						<br />Want to be part of an active exploration corp filled with neutral 
-						non-aggressors?<br/>If this sounds like a good fit for you, check out the 
-						<a href="https://www.signalcartel.com/about">Credo</a> and consider 
-						<a href="http://www.eve-scout.com/signal-cartel/how-to-join/">joining us</a>!</p>
+						 Want to be part of an active exploration corp filled with neutral 
+						non-aggressors? If this sounds like a good fit for you, check out our 
+						<a href="https://wiki.signalcartel.space/Public:About_Signal_Cartel">Credo</a>, and consider 
+						<a href="https://www.signalcartel.org/join-us">joining us</a>!</p>
 			      </div>
 			    </div>
 				<p></p>

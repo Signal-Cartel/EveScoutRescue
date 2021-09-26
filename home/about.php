@@ -24,25 +24,23 @@ require '../page_templates/home_html-begin.php';
 				<h2 class="pull-left">About Us</h2>
 				<div class="btn-group pull-right" style="padding-top: 12px;">
 			        <a class="btn btn-success btn-lg" 
-			        	href="https://www.signalcartel.com/?s=EvE-Scout+Rescue" role="button">
+			        	href="https://www.signalcartel.org/?s=EvE-Scout+Rescue" role="button">
 			        	Rescue success stories!</a>
 			    </div>
 			</div>
 			<div class="panel-body">
-				<p>In early YC118, 
-					<a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha 
-					Alendare</a> had a vision of a service that would provide a basic 
-					emergency resource kit for capsuleers stranded in wormholes, 
-					regardless of alliance, sovereignty, or play style. This vision captured the 
-					imagination of many Signal Cartel pilots and grew to become the Rescue Cache program we know today. 
+				<p>In early YC118, <a href="https://www.signalcartel.org/">Signal Cartel</a> member 
+					<a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha Alendare</a> had a vision of a service that would provide a basic 
+					emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style. This vision captured the 
+					imagination of many <a href="https://www.signalcartel.org/">Signal Cartel</a> pilots and grew to become the Rescue Cache program we know today. 
 					</p>
 				<p>In late YC118, Forcha decided to move on to activities that would potentially 
 					bring him into conflict with the 
-					<a href="http://www.signalcartel.com/about">Credo</a>, so he chose to  
+					<a href="https://wiki.signalcartel.space/Public:About_Signal_Cartel">Credo</a>, so he chose to  
 					leave the corporation and alliance leadership brought in 
 					<a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice 
 					Hapus</a> to manage day-to-day operations.</p>
-				<p>Since then, the program has grown to become an entire division within Signal Cartel and 
+				<p>Since then, the program has grown to become an entire division within <a href="https://www.signalcartel.org/">Signal Cartel</a> and 
 					encompasses both live Search and Rescue operations as well as the original Rescue Cache 
 					program.</p>
 				<p>When Thrice Hapus became CEO of Signal Cartel, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
@@ -56,12 +54,14 @@ require '../page_templates/home_html-begin.php';
 				<div class="row">
 
 				<?php 
-				$i = -1;
+				$i = 0;
 				foreach ($arrESRTeam as $val) {
 					if ($val['roleid'] != '3') { continue; }	// skip row if not '911 Operator'
 					
 					$i++;
-					if ($i % 6 == 0) {	// every six loops, close last row and start a new one	?>
+					if ($i == 7) {	// every six loops, close last row and start a new one	
+						$i = 1;
+					?>
 						
 						</div>
 						<div class="row">
@@ -97,12 +97,15 @@ require '../page_templates/home_html-begin.php';
 					if ($val['roleid'] != '2') { continue; }	// skip row if not 'ESR Coordinator'
 					$i++;
 					
-					if ($i % 5 == 0) {	// every four loops, close last row and start a new one	?>
+					if ($i == 5) {	// every four loops, close last row and start a new one	
+						$i=1;
+					?>
 						</div>
 						<div class="row">
 
-						<?php
-					}	?>
+					<?php
+					}	
+					?>
 					
 					<div class="col-md-3">
 						<div class="thumbnail text-center">
@@ -125,7 +128,7 @@ require '../page_templates/home_html-begin.php';
 					<div class="col-md-1"></div>
 					<div class="col-md-4">
 						<h2 style="text-align:center">
-							<a href="https://www.signalcartel.com/copilot">ALLISON</a>
+							<a href="https://www.evescoutrescue.com/copilot">ALLISON</a>
 						</h2>
 						<div class="thumbnail text-center">
 							<a href="https://evewho.com/pilot/A%20Dead%20Parrot">
