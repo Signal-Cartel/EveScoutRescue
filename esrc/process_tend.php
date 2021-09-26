@@ -122,7 +122,8 @@ if (isset($_POST['sys_tend'])) {
 				$caches->expireCache($cacheid, $activitydate);
 				break;
 			default:	//'Healthy', 'Upkeep Required'
-				$caches->updateExpireTimeNew($cacheid, $status, gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate, $hasfil);
+				$haspas = 1;
+				$caches->updateExpireTimeNew($cacheid, $status, gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate, $hasfil,$haspas);
 		}
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;

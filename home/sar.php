@@ -16,6 +16,18 @@ require '../page_templates/home_html-begin.php';
 		<div class="panel-group" id="faqAccordion">
 			<?php include_once '../faq/faq-q1.php'; ?>
 			<div class="panel panel-default">
+				<div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question3">
+					<h4 class="panel-title">
+						<a href="#" class="ing">So, what will this cost me?</a>
+					</h4>
+				</div>
+				<div id="question3" class="panel-collapse collapse" style="height: 0px;">
+					<div class="panel-body">
+						<p>We do not charge any fee for our search and rescue service, and our pilots will never solicit payment from you. However, while no payment is required, a tip is always appreciated! The amount of this gratuity, if anything, is completely up to you to determine.</p>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
 				<div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question2">
 					<h4 class="panel-title">
 						<a href="#" class="ing">What is the Search and Rescue program?</a>
@@ -31,18 +43,7 @@ require '../page_templates/home_html-begin.php';
 					</div>
 				</div>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question3">
-					<h4 class="panel-title">
-						<a href="#" class="ing">So, what will this cost me?</a>
-					</h4>
-				</div>
-				<div id="question3" class="panel-collapse collapse" style="height: 0px;">
-					<div class="panel-body">
-						<p>We do not charge any fee for our search and rescue service, and our pilots will never solicit payment from you. However, while no payment is required, a tip is always appreciated! The amount of this gratuity, if anything, is completely up to you to determine.</p>
-					</div>
-				</div>
-			</div>
+
 			<div class="panel panel-default">
 				<div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question4">
 					<h4 class="panel-title">
@@ -54,7 +55,7 @@ require '../page_templates/home_html-begin.php';
 						<p>While our SAR pilots will do their very best to locate the wormhole system where you are stranded, we cannot offer any guarantees as to when or even if we will be able to locate you and effect a rescue. Due to the constant flux of wormhole connections, there is no way to be sure we will locate an entrance to your system in a timely fashion.</p>
 						<p>Please also note that SAR does <strong>not</strong> conduct searches for 
 						specific wormholes, due to the Signal Cartel 
-						<a href="http://www.signalcartel.com/about">Credo</a>'s requirement of 
+						<a href="http://www.signalcartel.org/about">Credo</a>'s requirement of 
 						maintaining neutrality. While we will not be able to help with these sorts 
 						of wormhole search requests, we are happy to recommend the following 
 						service(s) provided by other citizens of New Eden:</p>

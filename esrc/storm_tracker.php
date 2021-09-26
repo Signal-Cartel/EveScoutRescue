@@ -79,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $storms->createStormEntry($arrStormReport);
         
         // Broadcast any new storm to Discord	
+		/* TURNED OFF 11-SEP-2021
         $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
         $user = 'Storm Tracker';
         $alert = 0;
@@ -86,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             . ' Strong Metaliminal '. $_POST['stormtype'] .' Ray Storm in '. $_POST['evesystem'];
         $skip_the_gif = 1;
         $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
-
+		*/
         // redirect
         header('Location: ?stormid='. $_POST['storm_id']);
         exit;

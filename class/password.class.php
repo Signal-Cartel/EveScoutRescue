@@ -9,11 +9,11 @@ if (!defined('ESRC'))
 
 class Password {
 	
-	static function generatePassword($length = 10)
+	static function generatePassword($length = 6)
 	{
 		// lowercase letters only for accessibility reasons (web readers for blind users)
 		// no numeral "1" or lowercase "L" as they are easy to confuse
-		$characters = '023456789abcdefghijkmnopqrstuvwxyz';
+		$characters = '0123456789';
 		$charactersLength = strlen($characters);
 		$randomString = '';
 		for ($i = 0; $i < $length; $i++) {

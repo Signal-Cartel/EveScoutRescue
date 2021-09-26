@@ -19,8 +19,8 @@
 				and potentially unwanted traffic near an anchored structure.</p>
 			<p>For further inquiries regarding EvE-Scout Rescue's initiatives or policies, or to
 				discuss any concerns you might have about rescue operations in the wormhole where
-				you reside, please contact <a 
-				href="https://evewho.com/pilot/Igaze">Igaze</a> 
+				you reside, please contact the head of our rescue division <a 
+				href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a> 
 				via EVEMail.</p>
 		</div>
 	</div>
