@@ -36,7 +36,6 @@ if (!isset($charname))
 }
 
 // check if user is Admin role
-if (!$users->isAdmin($charname))
 if ((!$users->isAdmin($charname)) and ($charname != 'Ben Kalkoken'))
 
 {

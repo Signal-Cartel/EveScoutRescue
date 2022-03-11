@@ -305,7 +305,8 @@ function output($variable)
 			$pcount = 1;
 			foreach ($topscouts as $scout) {
 				// do not display rows with no agent name
-				$exclude = Array("Renek Dallocort");
+				// Array of pilot names to exclude
+				$exclude = Array();
 				
 				if (!empty($scout['pilot']) and !in_array($scout['pilot'],$exclude)) {
 					echo '<tr>';

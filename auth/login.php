@@ -30,7 +30,7 @@ else {
 	}
 	else {
 		$authsite='https://login.eveonline.com';
-		$authurl='/oauth/authorize';
+		$authurl='/v2/oauth/authorize';
 		$state=uniqid();
 		$_SESSION['auth_state']=$state;
 		$_SESSION['charip']=getIp();
