@@ -65,7 +65,7 @@ class Discord
 
         if ($result===false)
         {
-        	return false;
+        	return json_encode($info);
         }
         else
         {

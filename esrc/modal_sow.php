@@ -16,17 +16,15 @@ if (!empty($old_cache)) {
 	$script .= 'var oldPass = "' . Output::htmlEncodeString($old_cache['Password']) . '";';
 }
 
-
-
-
 ?>
+
 <div id="SowModal" class="modal fade" role="dialog">
   <div class="modal-dialog" style="width: 500px;">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header sower">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Sower</h4>
+        <h4 class="modal-title">Sow New Cache</h4>
       </div>
 
 			
@@ -102,7 +100,7 @@ if (!empty($old_cache)) {
 				<i id="copyclip" class="fa fa-clipboard" onclick="SelectAllCopy('spassword')"></i>	    
 			</div>
 			
-			<div>
+			<div style="display: none;">
 				<label for="hasfil-sow" style="margin-bottom: 20px">
 					<input id="hasfil-sow" name="hasfil" type="checkbox" value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
 					<p style="display: inline; position: relative; top: -6px;">
@@ -113,8 +111,8 @@ if (!empty($old_cache)) {
 							
 							
 		  	<div class="field form-group">
-				<label class="control-label" for="snotes">Notes<span class="descr">Other important information we need to know</span></label>
-				<textarea class="form-control" id="snotes" name="notes" rows="2"></textarea>
+				<label class="control-label" for="snotes">Notes<span class="descr">70 character limit</span></label>
+				<textarea class="form-control" id="snotes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
 			</div>
 			<span class="descr" style="width: 100%;">
 			
@@ -141,11 +139,10 @@ if (!empty($old_cache)) {
 </div>
 
 <script>
-	/*
+
   $( document ).ready(function() {
-    $("#sowform").validator();
+    //$("#sowform").validator();
   });
-	*/
 	
 
 		
@@ -167,7 +164,7 @@ if (!empty($old_cache)) {
 
 
 <?=$script?>	
-var noteText = 'Locate with corp bookmark.';
+
 
 function copyOldInfo(){
 	//oldLoc, oldAlign, oldDist, oldPass
@@ -175,7 +172,12 @@ function copyOldInfo(){
 	document.getElementById('location').value = oldLoc;
 	document.getElementById('alignedwith').value = oldAlign;
 	document.getElementById('sdistance').value = oldDist;
-	document.getElementById('snotes').value = "";
+	if (oldLoc == 'Unaligned' && oldAlign == 'Unaligned'){ 
+		document.getElementById('snotes').value = "Locate with corp bookmark.";
+	}
+	else{
+		document.getElementById('snotes').value = '';
+	}
 	//document.getElementById('password').value = oldPass;
 	setBookmark();
 }
@@ -187,7 +189,8 @@ function setUnaligned(){
 		document.getElementById("location").value = 'Unaligned'; 
 		document.getElementById("alignedwith").value = 'Unaligned'; 
 		document.getElementById('sdistance').value = 'Unaligned';
-		document.getElementById('snotes').value = noteText;
+		
+		document.getElementById('snotes').value = 'Locate with corp bookmark.';
 		setBookmark();
 	} 
 }
@@ -207,7 +210,7 @@ function setUnaligned(){
 			locationp.value = 'Unaligned'; 
 			align.value = 'Unaligned'; 
 			dist.value = 'Unaligned';
-			snotes.value = noteText;
+			snotes.value = 'Locate with corp bookmark.';
 		} 
 		else{
 			caller.selectedIndex = 0;

@@ -3,8 +3,30 @@
 <?php
 // get rescue data
 $reqID = $_REQUEST['reqp'] ?? '';
-$request = $rescue->getRequest($reqID);
 $agent_type = $_REQUEST['agent'] ?? '';
+
+$request = $rescue->getRequest($reqID);
+
+
+	switch ($agent_type) {
+		case 'res': 
+			$title = "Add rescue agent";
+			$fieldname = "New rescue agent";
+			$fieldvalue = '';
+		break;
+		
+		case 'loc': 
+			$title = "Edit locate agent";
+			$fieldname = "Edit locate agent";
+			$fieldvalue = Output::htmlEncodeString($request['locateagent']);
+		break;
+		
+		default:
+			$title = "Search & Rescue";
+		break;
+	}
+
+
 // check for required permissions
 $isSARAgent = $users->isSARAgent($charname, $reqID);
 $isRescueAgent = $users->isRescueAgent($charname, $reqID);	
@@ -42,7 +64,7 @@ $isRescueAgent = $users->isRescueAgent($charname, $reqID);
     <div class="modal-content">
       <div class="modal-header sar">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title sechead">Search &amp; Rescue</h4>
+        <h4 class="modal-title sechead"><?= $title ?></h4>
       </div>
       <form name="sareditform" id="sareditform" action="rescueaction.php" method="POST">
 	      <div class="modal-body black">
@@ -97,11 +119,11 @@ $isRescueAgent = $users->isRescueAgent($charname, $reqID);
 			{   ?>
 			
             <div class="field">
-				<label class="control-label" for="status">Add Rescue Pilot</label>
+				<label class="control-label" for="status"><?= $fieldname ?></label>
 				<div class="form-group">
 					<input type="text" name="newrescuepilot" id="newrescuepilot" 
 						class="newrescuepilot" size="30" autoFocus="autoFocus" 
-						autocomplete="off" placeholder="Pilot Name">
+						autocomplete="off" value = "<?= $fieldvalue ?>">
 				</div>
 			</div>
 			<div class="ws"></div>

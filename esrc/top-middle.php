@@ -12,6 +12,7 @@ $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 $sysNoteRow = $systems_top->getWHInfo($system);
 $arrSysnotes = $systems_top->getSystemNotes($system);
 
+
 // get PHP page
 $phpPage = basename($_SERVER['PHP_SELF']);
 ?>

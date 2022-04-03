@@ -8,8 +8,18 @@ $reqID = (isset($_REQUEST['req'])) ? $_REQUEST['req'] : '';
 // get all rescue information
 $request = $rescue->getRequest($reqID);
 
-	$isSARAgent = $users->isSARAgent($charname, $reqID);
-	$isRescueAgent = $users->isRescueAgent($charname, $reqID);
+$agents = array_key_exists('RescueAgents', $request) ? explode(',', $request['RescueAgents']) : Array();
+	
+	// data display different for coordinators and pilots involved in rescue
+	$isSARAgent = (
+		($charname == $request['startagent']) 
+		or (($charname == $request['locateagent'])and($_SESSION['is911']==1)) 
+		or (in_array($charname, $agents) and ($_SESSION['is911']==1)) 
+		or $isCoord
+	) ? 1 :0;
+	
+	$isRescueAgent = (($charname == $request['locateagent']) or $isCoord) ? 1 : 0;
+	
 	
 	
 ?>
@@ -41,13 +51,13 @@ $request = $rescue->getRequest($reqID);
 					<td><strong>
 						<?php
 						// display pilot name only to coordinators and involved pilots
-						if ($isCoord == 0 and $isSARAgent == 0 and $isRescueAgent == 0 )
+						if ($_SESSION['isCoord'] == 1 or $isSARAgent)
 						{
-							echo 'PROTECTED<br />';
+							echo Output::htmlEncodeString($request['pilot']).'<br />';
 						}
 						else
 						{
-							echo Output::htmlEncodeString($request['pilot']).'<br />';
+							echo 'PROTECTED<br />';
 						}
 						?>
 						</strong>
@@ -161,9 +171,10 @@ $request = $rescue->getRequest($reqID);
 			}
 			?>
 		  	<div class="field">
-				<label class="control-label" for="notes">Enter a new note</label>
+				<label class="control-label" for="notes">Enter a new note - <?=$charname?></label>
 				<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
 			</div>
+			
 	      </div>
 	      <div class="modal-footer">
 	        <div class="form-actions">

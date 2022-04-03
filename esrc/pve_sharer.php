@@ -118,7 +118,8 @@ if (!empty($errmsg)) {
 
 <div class="row" id="st-submit-row" >
 		<div class="col-md-12">
-			<h2>Site tracker is currently in early beta testing</h2>
+			<h2>Site tracker</h2>
+			<p>For sharing exploration sites (that you are unable to run yourself) with other SC members.</p>
 			<p>Paste the contents of your scanner window below and submit</p>
             <textarea id="st-submit" rows="10" cols="90" style="display: block;"></textarea>
             <button class="btn btn-success" onclick="SubmitSigs()">Submit signatures</button>

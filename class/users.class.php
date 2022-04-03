@@ -74,6 +74,21 @@ class Users {
 		$_SESSION['isAdmin'] = $result;
 		return $result;
 	}
+
+	/**
+	 * Check if the user is a general admin.
+	 * @param unknown $username
+	 * @return string
+	 */
+	public function is911($username)
+	{
+		if (isset($_SESSION['is911'])){
+			return $_SESSION['is911'];
+		} 
+		$result = $this->checkPermission($username, "911 Operator");
+		$_SESSION['is911'] = $result;
+		return $result;
+	}
 	
 	/**
 	 * Internal permission check function.

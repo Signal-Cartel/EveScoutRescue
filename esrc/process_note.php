@@ -37,13 +37,13 @@ if (!Users::isAllianceUserSession())
 function test_input($data) 
 {
 	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars_decode($data);
+	//$data = stripslashes($data);
+	$data = htmlspecialchars($data);
 	return $data;
 }
 
 // check if the request is made by a POST request
-if (isset($_POST['sys_tend'])) {
+if (isset($_POST['sys_note'])) {
 	// yes, process the request
 	$db = new Database();
 	// create a new cache class
@@ -55,9 +55,10 @@ if (isset($_POST['sys_tend'])) {
 	$cacheid = test_input($_POST["CacheID"]);
 	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$pilot = test_input($_POST["pilot"]);
-	$system = test_input($_POST["sys_tend"]);
+	$system = test_input($_POST["sys_note"]);
 	$status= test_input($_POST["status"]);
 	$notes = trim($_POST["notes"]);
+	$notes = substr($notes,0,70);
 	$hasfil = ((isset($_POST['hasfil']) and $_POST['hasfil'] == 1) ? true : false);
 
 	// check the system
@@ -72,7 +73,7 @@ if (isset($_POST['sys_tend'])) {
 	}
 	
 	//FORM VALIDATION
-	$entrytype = 'tender';
+	$entrytype = 'note';
 	if (empty($status)) { 
 		$errmsg = $errmsg . "You must indicate the status of the cache you are tending.\n"; 
 	}
@@ -89,14 +90,6 @@ if (isset($_POST['sys_tend'])) {
 			// no cache exists
 			$errmsg = $errmsg . "No cache exists. It must have just expired!\n";
 		}
-		else if (0 == $caches->isTendingAllowed($system) && $status === 'Healthy')
-		{
-			$errmsg = $errmsg . "Cache has already been tended. Looks like someone else beat you to it!\n";
-		}
-		else if (($status === 'Expired' && $cacheInfo['Status'] == 'Expired'))
-		{
-			$errmsg = $errmsg . "Could not set cache to '".Output::htmlEncodeString($status)."' as that is already its current status.\n";
-		}
 	}
 	//END FORM VALIDATION
 
@@ -106,38 +99,29 @@ if (isset($_POST['sys_tend'])) {
 	} 
 	// otherwise, perform DB UPDATES
 	else {
-		// add new activity
-		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
+		// add new note
+			if (!empty($notes)) {
+				// add 'Note' Activity
+				$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
+				//add note to cache
+				$caches->appendNoteToCache($cacheid, $notes);	
+		
+		
+				include_once '../class/discord.class.php';
+				$discord = new Discord();
+				// esrc coordinators channel on prod, and dev-test channel on dev
+				$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
+				$user = 'ESRC Notes';
+				$alert = 0;
+				$skip_the_gif = 1;
+				// construct the message - URL is based on configuration
+				$message = "$pilot (new note) in $system wrote:\n```$notes```";
+				$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
+			}	
 
-		//add note to cache - clearing all prior notes
-		$caches->addNoteToCache($cacheid, $notes);		
+			
 	
-		//Send note to coordinator channel
-		if (!empty($notes)) {
-			include_once '../class/discord.class.php';
-			$discord = new Discord();
-			// esrc coordinators channel on prod, and dev-test channel on dev
-			$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
-			$user = 'ESRC Notes';
-			$alert = 0;
-			$skip_the_gif = 1;
-			// construct the message - URL is based on configuration
-			$message = "$pilot (tender) in [$system](https://evescoutrescue.com/esrc/search.php?sys=$system) wrote:\n```$notes```";
-
-			$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
-			
-			
-		}	
-		
-		
-		switch ($status) {
-			case 'Expired':
-				$caches->expireCache($cacheid, $activitydate);
-				break;
-			default:	//'Healthy', 'Upkeep Required'
-				$haspas = 1;
-				$caches->updateExpireTimeNew($cacheid, $status, gmdate("Y-m-d", strtotime("+30 days", time())), $activitydate, $hasfil,$haspas);
-		}
+	
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;
 	}

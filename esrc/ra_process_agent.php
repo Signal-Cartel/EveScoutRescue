@@ -55,7 +55,7 @@ if (isset($_POST['sys_adj'])) {
 	$pilot = test_input($_POST["pilot"]);
 	$system = test_input($_POST["sys_adj"]);
 	$aidedpilot = test_input($_POST["aidedpilot"]);
-	$notes = test_input($_POST["notes"]);
+	$notes = $_POST["notes"];
 	$updateexp = !empty($_POST['updateexp']) ? intval($_POST['updateexp']) : 0;
 	$succesrc = !empty($_POST['succesrc']) ? intval($_POST['succesrc']) : 0; // used probes?
 	$succesrcf = !empty($_POST['succesrcf']) ? intval($_POST['succesrcf']) : 0; // used filament?
@@ -95,10 +95,7 @@ if (isset($_POST['sys_adj'])) {
 		$caches->addActivityNew($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $eq_used, $cacheStatus );
 
 		// add note to cache
-		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
-		$agent_note = '<br />' . $noteDate . 'Rescue Agent: '. $pilot . '; Aided: ' . $aidedpilot;
-		if (!empty($notes)) { $agent_note = $agent_note. '<br />' . $notes; }
-		$caches->addNoteToCache($cacheid, $agent_note);
+		$caches->addNoteToCache($cacheid, $notes);
 
 		// update expiration date and eq used
 		if ($updateexp == 1) {
@@ -107,7 +104,20 @@ if (isset($_POST['sys_adj'])) {
 		
 			$caches->updateExpireTimeNew($cacheid, 'Upkeep Required', gmdate("Y-m-d H:i:s", strtotime("+30 days")), $activitydate, $hasfil, $haspas);
 		}
-		
+
+			//Send note to coordinator channel			
+			if (!empty($notes)) {
+				include_once '../class/discord.class.php';
+				$discord = new Discord();
+				// esrc coordinators channel on prod, and dev-test channel on dev
+				$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
+				$user = 'ESRC Notes';
+				$alert = 0;
+				$skip_the_gif = 1;
+				// construct the message - URL is based on configuration
+				$message = "$pilot (SARA Agent) in $system wrote:\n```$notes```";
+				$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
+			}		
 		
 		// RESCUE update
 		// add a Rescue record only if rescue was successful; Agent note will serve for all others
@@ -123,8 +133,7 @@ if (isset($_POST['sys_adj'])) {
 				$rescue->createRescueNote($newRescueID, $pilot, $notes);
 			}
 			$db->endTransaction();
-		}
-		
+		}							 
 		// just close quietly and no redirect by sending Status code 204 "No Content"
 		http_response_code(204);
 	}

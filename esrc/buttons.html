@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang='en' class=''>
+
+<head>
+
+  <meta charset='UTF-8'>
+  <title>ESRC Buttons</title>
+  
+
+  <style>
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #3c3c3c;
+  font-size: 10px;
+  color: #666666;
+  font-family: monospace;
+  font-variant: all-small-caps;
+  font-size: 1.0em;
+}
+
+.button {
+	position: relative;
+	padding: 0;
+	height: 2em;
+	border: .2em solid #2eff2e;
+	outline: none;
+	background-color: #444444;
+	border-radius: .6em;
+	box-shadow: none;
+	transition: 0.13s ease-in-out;
+	cursor: pointer;
+	margin: 0em 0.5em 0em 0.5em;
+}
+.button:active {
+    box-shadow: -6px -9px 18px #141e10, -6px -6px 12px #64ff64, -6px 6px 12px #4d9f38, 6px 20px 25px rgb(0 0 0 / 20%);
+
+}
+.button:active .button__content {
+  box-shadow: none;
+}
+.button:active .button__content .button__text, .button:active .button__content .button__icon {
+  transform: translate3d(0px, 0px, 0px);
+}
+.button__content {
+	position: relative;
+	/* display: grid; */
+	padding: 4px;
+	width: 100%;
+	height: 100%;
+	gri;
+	/* grid-template-columns: 1fr 1fr 1fr 1fr; */
+	rid-template-rows: 1fr 1fr;
+	box-shadow: inset 0px -4px 0px #111111, 0px -6px 0px #444444;
+	border-radius: .6em;
+	transition: 0.13s ease-in-out;
+	z-index: 1;
+}
+
+.button__text {
+    position: relative;
+    transform: translate3d(0px, -4px, 0px);
+    margin: 0.3em 1em 0.5em 1em;
+    /* align-self: end; */
+    /* grid-column: 1/5; */
+    /* grid-row: 2; */
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: bold;
+    background-color: #8eff9a;
+    color: transparent;
+    /* text-shadow: 2px 2px 3px rgb(255 255 255 / 50%); */
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    transition: 0.13s ease-in-out;
+    top: -0.4em;
+}
+
+  </style>
+
+
+</head>
+
+<body>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">TEND</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">AGENT</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">NEW SAR</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">TRIPWIRE</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">ANOIK.IS</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">CHAINS</p>
+	  </div>
+	</button>
+	<button class="button">
+	  <div class="button__content">
+		<p class="button__text">EDIT CACHE</p>
+	  </div>
+	</button>
+  
+</body>
+
+</html>

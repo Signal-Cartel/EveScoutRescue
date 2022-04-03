@@ -1,4 +1,6 @@
-	<meta http-equiv="Content-Language" content="en-us">
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
 	<title><?php echo $pgtitle; ?> :: EvE-Scout Rescue</title>
 	<meta charset="utf-8">
 	<!-- CSS -->
@@ -25,10 +27,10 @@
     		- https://www.flickr.com/photos/eve-scout/ -->
     <?php
 	//load a different bg image on each new session
-	$bg = array('bg01.jpg', 'bg02.jpg', 'bg03.jpg', 'bg04.jpg', 'bg05.jpg', 'bg06.jpg');
-	$i = rand(0, count($bg)-1);
 	if (!isset($_SESSION['selectedBg'])) {
-		$_SESSION['selectedBg'] = "$bg[$i]";
+		$bg = array('bg01.jpg', 'bg02.jpg', 'bg03.jpg', 'bg04.jpg', 'bg05.jpg', 'bg06.jpg');
+		$i = rand(0, count($bg)-1);		
+		$_SESSION['selectedBg'] = ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ? 'bgDev.jpg' : "$bg[$i]");
 	}
 	?>
     <style type="text/css">

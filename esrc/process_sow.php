@@ -63,7 +63,8 @@ if (isset($_POST['sys_sow'])) {
 	$distance = test_input($_POST["distance"]);
 	$password = test_input($_POST["password"]);
 	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : 'Healthy';
-	$notes = test_input($_POST["notes"]);
+	$notes = trim($_POST["notes"]);
+	$notes = substr($notes,0,70);
 	$hasfil = ((isset($_POST['hasfil']) and $_POST['hasfil'] == 1) ? true : false);
 	
 	// check the system
@@ -110,17 +111,9 @@ if (isset($_POST['sys_sow'])) {
 	} 
 	// otherwise, perform DB UPDATES
 	else {
-
-		$sower_note = '';
-		
-		//prepare note
-		if (!empty($notes)) {
-			$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
-			$sower_note = $noteDate . 'Sown by '. $pilot . ": " . $notes;
-		}
 		
 		//perform [cache] insert
-		$newID = $caches->createCacheNew($system, $location, $alignedwith, $distance, $password, $activitydate, $sower_note, $hasfil);
+		$newID = $caches->createCacheNew($system, $location, $alignedwith, $distance, $password, $activitydate, $notes, $hasfil);
 
 		// create a new cache activity
 		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
@@ -130,16 +123,32 @@ if (isset($_POST['sys_sow'])) {
 		$live_active_cache_count = $caches->getLiveActiveCount();
 		if ($live_active_cache_count == 2122 ){
 			include_once '../class/discord.class.php';
-			$discord = new Discord($db);
+			$discord = new Discord();
 			// esrc coordinators channel on prod, and dev-test channel on dev
-			$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
+			$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
 			$user = 'Igazebot';
 			$alert = 0;
-			$message = "<@303907284126531584>  $pilot just sowed active cache number $live_active_cache_count in $system.";
+			$message = "<@igazeid>  $pilot just sowed active cache number $live_active_cache_count in $system.";
 			$skip_the_gif = 1;
 			$discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);
 		}
 		*/
+		//Send note to coordinator channel
+		if (!empty($notes)) {
+			include_once '../class/discord.class.php';
+			$discord = new Discord();
+			// esrc coordinators channel on prod, and dev-test channel on dev
+			$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
+			$user = 'ESRC Notes';
+			$alert = 0;
+			$skip_the_gif = 1;
+			// construct the message - URL is based on configuration
+			$message = "$pilot (sower) in [$system](https://evescoutrescue.com/esrc/search.php?sys=$system) wrote:\n```$notes```";
+
+			$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
+			
+			
+		}		
 		
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $system;

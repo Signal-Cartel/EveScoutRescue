@@ -15,26 +15,29 @@ $ctrSARrescues = $rescue->getRescueCount('closed-rescued');
 $maxdaysSARrescue = $sarleaderBoard->getRescueMaxDays('closed-rescued');
 
 // get SAR wait time values array
-$arrSARWaits = $rescue->getSARWaitTime();
+$arrSARWaits = $rescue->getSARWaitTime2();
 // then get mean, median, and mode
 $SARWaitMean = mmmr($arrSARWaits);
-//$SARWaitMedian = mmmr($arrSARWaits, 'median');	// not sure if this is helpful, so hiding for now
+$SARWaitMedian = mmmr($arrSARWaits, 'median');	// not sure if this is helpful, so hiding for now
 $SARWaitMode = mmmr($arrSARWaits, 'mode');
 $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 ?>
 
  <div class="col-md-4"> 
 	 <span class="subhead">
-		SAR RESCUES: <span style="color: gold;"><?=$ctrSARrescues?></span></span><br /><br />
-		<span class="subhead">AVERAGE WAIT (DAYS):</span><br /> 
+		SAR RESCUES: <span style="color: gold;"><?=$ctrSARrescues?></span>
+	</span>
+	<br />
+	<br />
+	<span class="subhead">DAYS TO RESCUE:</span>
+	<br /> 
 	
 	 <table id="tblSARWaitTime" class="table display" style="width: auto;"> 
 		<thead> 
 		 	<tr> 
 		 		<th data-toggle="tooltip" data-placement="top" title="Excessively lengthy waits 
-					will skew this number higher">Mean</th> 
-		 		<!-- <th data-toggle="tooltip" data-placement="top" title="Not sure how helpful
-					this number actually is">Median</th> --> 
+					will skew this number higher">Average</th> 
+		 		<th data-toggle="tooltip" data-placement="top" title="50% of rescues take less than this, and 50% take longer">Median</th>
 		 		<th data-toggle="tooltip" data-placement="top" title="The most common wait time 
 					(percentage of rescues that happen in this number of days)">Mode</th>
 				<th data-toggle="tooltip" data-placement="top" title="Longest wait for a   
@@ -44,7 +47,7 @@ $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 		 <tbody> 
 		 	<tr> 
 		 		<td style="text-align: center;"><?=round(intval($SARWaitMean))?></td> 
-		 		<!-- <td style="text-align: center;">'. round(intval($SARWaitMedian)) .'</td> --> 
+		 		<td style="text-align: center;"><?=round(intval($SARWaitMedian))?></td> 
 	 			<td style="text-align: center;"><?=round(intval($SARWaitMode)) 
 					.' ('. round(intval($SARWaitModeCnt) / max(intval($ctrSARrescues), 1) * 100)?>%)</td> 
 				<td style="text-align: center;"><?=round(intval($maxdaysSARrescue))?></td>

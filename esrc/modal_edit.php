@@ -15,8 +15,8 @@ include_once '../class/caches.class.php';
 function test_input($data) 
 {
 	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars_decode($data);
+	//$data = stripslashes($data);
+	$data = htmlspecialchars($data);
 	return $data;
 }
 
@@ -38,7 +38,7 @@ if (isset($_POST['sys_edit'])) {
 	$editAlignedwith = test_input($_POST["alignedwith"]);
 	$editDistance = test_input($_POST["distance"]);
 	$editPassword = test_input($_POST["password"]);
-	$editNewNote = test_input($_POST["newNote"]);
+	$editNewNote = trim($_POST["newNote"]);
 	$edithasfil = !empty($_POST['hasfil']) ? intval($_POST['hasfil']) : 0; // used filament
 	
 	//FORM VALIDATION
@@ -50,8 +50,8 @@ if (isset($_POST['sys_edit'])) {
 		$errmsg = $errmsg . "Location and Aligned With cannot be set to the same value.\n";
 	}
 	
-	if ((int)$editDistance < 22000 || (int)$editDistance > 50000) { 
-		$errmsg = $errmsg . "Distance (".Output::htmlEncodeString($editDistance).") must be a number between 22000 and 50000.\n"; 
+	if ($editDistance != 'Unaligned' and ((int)$editDistance < 22000 || (int)$editDistance > 50000)) { 
+		$errmsg = $errmsg . "Operation failed. Distance must be a number between 22000 and 50000.\n"; 
 	}
 	//END FORM VALIDATION
 
@@ -64,12 +64,10 @@ if (isset($_POST['sys_edit'])) {
 		// edit existing cache
 		$caches->updateCacheNew($editCacheid, $editLocation, $editAlignedwith, $editDistance, $editPassword, $edithasfil);
 
-        //prepare note
-		$noteDate = '[' . gmdate("M-d", strtotime("now")) . '] ';
-		$edit_note = '<br />' . $noteDate . 'Cache info updated by '. $editPilot;
-		if (!empty($editNewNote)) { $edit_note = $edit_note. "\n" . $editNewNote; }
-        $caches->addNoteToCache($editCacheid, $edit_note);
+        //note to update
 
+			$caches->addNoteToCache($editCacheid, $editNewNote);
+		
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $editSystem;
 	}
@@ -134,8 +132,7 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 			<div class="field form-group">
 				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from 
                     the Location planet? Must be a number between 22000 and 50000.</span></label>
-				<input class="form-control " id="distance" name="distance" type="number" value="<?=$row['Distance']?>"
-                    min="22000" max="50000" step="1" required/>
+				<input class="form-control " id="distance" name="distance" value="<?=$row['Distance']?>" required/>
 			</div>
 
 			<div class="field form-group">
@@ -149,15 +146,20 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 			<?php			
 			 $hasfilcheck = ($row['has_fil'] == 1 ? 'checked' : '');
 			?>
-			<div class="field form-group">
+			<div class="field form-group" style="display: none;">
 				<label class="control-label" for="hasfil">Filament<span class="descr">Does the cache contain a filament?</span></label>
 				<input type="checkbox" class="form-control" id="hasfil" name="hasfil" 
 					value = '1' <?=$hasfilcheck ?>/>
 			</div>
 
 		  	<div class="field form-group">
-				<label class="control-label" for="notes">Notes<span class="descr">Will be appended to existing notes.</span></label>
-				<textarea class="form-control" id="newNote" name="newNote" rows="3"></textarea>
+				<?
+				// NOTES
+				// fill text area with existing note, but limit input length to current - to discourage 'new notes' here
+				$lng = strlen($strNotes) + 10;
+				?>
+				<label class="control-label" for="notes">Notes<span class="descr">Edit note</span></label>
+				<textarea class="form-control" id="newNote" name="newNote" rows="3" maxlength="<?=$lng?>"><?=$strNotes?></textarea>
 			</div>
 	      </div>
 	      <div class="modal-footer">
@@ -174,7 +176,9 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 </div>
 
 <script>
+  
   $( document ).ready(function() {
     $("#editform").validator();
   });
+  
 </script>
