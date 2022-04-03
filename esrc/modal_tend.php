@@ -5,7 +5,7 @@
 		<div class="modal-content">
 				<div class="modal-header tender">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Tender</h4>
+					<h4 class="modal-title">Tend cache</h4>
 				</div>
 				<form name="tendform" id="tendform" action="process_tend.php" method="POST">
 					<div class="modal-body black">
@@ -65,7 +65,7 @@
 									<strong>Expired</strong> = Could not find or is unusable
 								</label>
 							</div>
-							<div>
+							<div style="display: none;">
 								<label for="hasfil" style="margin-bottom: 20px">
 									<input id="hasfil" name="hasfil" type="checkbox" <?=$hasfil?> value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
 									<p style="display: inline; position: relative; top: -6px;">
@@ -75,8 +75,8 @@
 							</div>
 							
 							<div class="field form-group">
-								<label class="control-label" for="notes">Notes<span class="descr">Is there any other important information we need to know?</span></label>
-								<textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+								<label class="control-label" for="notes">Notes<span class="descr">70 character limit</span></label>
+								<textarea class="form-control" id="notes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">

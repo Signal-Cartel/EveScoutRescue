@@ -312,7 +312,8 @@ class Caches
 	public function addNoteToCache($cacheid, $noteText)
 	{
 		$this->db->beginTransaction();
-		$this->db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated WHERE CacheID = :cacheid");
+		//$this->db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated WHERE CacheID = :cacheid");
+		$this->db->query("UPDATE cache SET Note = :note, LastUpdated = lastupdated WHERE CacheID = :cacheid");
 		$this->db->bind(':cacheid', $cacheid);
 		$this->db->bind(':note', $noteText);
 
@@ -320,6 +321,26 @@ class Caches
 		//end db transaction
 		$this->db->endTransaction();
 	}
+
+
+	/**
+	 * Add the text to the end of the current note of the cache
+	 * @param unknown $system the current cache of the system
+	 * @param unknown $noteText the text to add
+	 */
+	public function appendNoteToCache($cacheid, $noteText)
+	{
+		$this->db->beginTransaction();
+		//$this->db->query("UPDATE cache SET Note = CONCAT(Note, :note), LastUpdated = lastupdated WHERE CacheID = :cacheid");
+		$this->db->query("UPDATE cache SET Note = CONCAT_WS(CHAR(10 using utf8), :note, Note), LastUpdated = lastupdated WHERE CacheID = :cacheid");
+		$this->db->bind(':cacheid', $cacheid);
+		$this->db->bind(':note', $noteText);
+
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+
 	
 	/**
 	 * Expire a cache in a syste,

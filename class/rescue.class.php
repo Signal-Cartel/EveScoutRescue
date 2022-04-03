@@ -257,6 +257,18 @@ class Rescue {
 		$this->db->bind(":rowid", $rowid);
 		$this->db->execute();
 	}
+
+	/**
+	 * Delete a specific rescue agent
+	 * @param unknown $rowid - ID of [rescueagent] record to update
+	 */
+	public function deleteRescueAgent22($reqid,$pilot)
+	{
+		$this->db->query("DELETE FROM rescueagents WHERE reqid = :reqid and pilot = :pilot");
+		$this->db->bind(":reqid", $reqid);
+		$this->db->bind(":pilot", $pilot);
+		$this->db->execute();
+	}
 	
 	/**
 	 * Get all rescueagents for the given rescue request
@@ -347,6 +359,73 @@ class Rescue {
 	 * @return array
 	 * gmdate("Y-m-d H:i:s", strtotime("now"));
 	 */
+	 
+	public function getRequests22($finished = 0, $start = '', $end = '')
+	{
+		// set start and end dates to defaults for "all time" if not passed into function
+		
+		$start = (empty($start)) ? '2017-03-18 00:00:00' : date('Y-m-d 00:00:00:00', strtotime($start));
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
+		
+		// get requests from database
+		$this->db->query("SELECT rr.*, datediff(NOW(), rr.requestdate) AS daysopen, w.Class, w.StaticWhInfo
+							FROM rescuerequest rr, wh_info w
+							WHERE rr.system = w.System AND rr.finished = :finished 
+							AND rr.lastcontact BETWEEN :start AND :end
+							ORDER BY rr.requestdate");
+		$this->db->bind(":finished", $finished);
+		$this->db->bind(":start", $start);
+		$this->db->bind(":end", $end);
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+	
+	public function getRequests23($finished = 0, $start = '', $end = '')
+	{
+		// set start and end dates to defaults for "all time" if not passed into function
+		
+		$start = (empty($start)) ? '2017-03-18 00:00:00' : date('Y-m-d 00:00:00:00', strtotime($start));
+		$end = (empty($end)) ? gmdate('Y-m-d H:i:s', strtotime('now')) : date('Y-m-d 23:59:59', strtotime($end));
+		
+		// get requests from database
+		$this->db->query("
+		Select
+			rescuerequest.*,
+			DateDiff(Now(), rescuerequest.requestdate) As daysopen,
+			wh_info.Class,
+			wh_info.StaticWhInfo,
+			GROUP_CONCAT(DISTINCT rescueagents.pilot
+				ORDER BY rescueagents.id) as RescueAgents
+		From
+			rescuerequest 
+			Left Join wh_info On rescuerequest.system = wh_info.System 
+			Left Join rescueagents On rescuerequest.id = rescueagents.reqid
+		Where finished = :finished
+		AND rescuerequest.lastcontact BETWEEN :start AND :end
+		Group By rescuerequest.id
+		Order By rescuerequest.requestdate");
+		
+		$this->db->bind(":finished", $finished);
+		$this->db->bind(":start", $start);
+		$this->db->bind(":end", $end);
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $data;
+	}	
+	
+
+	
+	
+	
+	/**
+	 * Get all requests by status and date
+	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
+	 * @return array
+	 * gmdate("Y-m-d H:i:s", strtotime("now"));
+	 */
 	public function getClosedRequests($finished = 1, $start = '', $end = '')
 	{
 		// set start and end dates to defaults for "all time" if not passed into function
@@ -420,6 +499,36 @@ Order By
 		
 		return $data;
 	}
+
+
+	/**
+	 * Get all requests by system
+	 * @param number $system - find request for the system
+	 * @param number $finished 0 - all open requests (default); 1 - all finished requests
+	 * @param number $isCoord 0 - returns only open requests if search for open requests (default); 1 - returns all requests if search for open requests
+	 * @return array
+	 */
+	public function getSystemRequests22($system, $finished = 0, $isCoord = 0)
+	{
+		// set the default query
+		$sql = "SELECT rescuerequest.*, 
+				GROUP_CONCAT(DISTINCT rescueagents.pilot ORDER BY rescueagents.id) as RescueAgents
+				FROM rescuerequest Left Join rescueagents On rescuerequest.id = rescueagents.reqid
+				WHERE system = :system AND finished = :finished
+				GROUP BY rescuerequest.id
+				ORDER BY requestdate DESC";
+				
+		// get requests from database
+		$this->db->query($sql);
+		$this->db->bind(":system", $system);
+		$this->db->bind(":finished", $finished);
+		// $database->execute();
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $data;
+	}
+
 	
 	/**
 	 * Get all notes by request id
@@ -444,7 +553,11 @@ Order By
 	 */
 	public function getRequest($requestID)
 	{
-		$this->db->query("select * from rescuerequest where id = :rescueid");
+		$this->db->query("
+		Select rescuerequest.*,
+			GROUP_CONCAT(DISTINCT rescueagents.pilot ORDER BY rescueagents.id) as RescueAgents
+		FROM rescuerequest Left Join rescueagents On rescuerequest.id = rescueagents.reqid
+				where rescuerequest.id = :rescueid");
 		$this->db->bind(":rescueid", $requestID);
 		$row= $this->db->single();
 		$this->db->closeQuery();
@@ -499,6 +612,24 @@ Order By
 		return $arrint;
 	}
 
+	public function getSARWaitTime2()
+	{
+		// only count SARs that are more than one day.
+		$this->db->query("SELECT datediff(closedate, requestdate) as daystosar 
+							FROM rescuerequest WHERE status = 'closed-rescued' and datediff(closedate, requestdate)>0");
+		$data = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		$ctr = 0;
+		$arrint = [];
+		foreach ($data as $value) {
+			$arrint[$ctr] = $value['daystosar'];
+			$ctr++;
+		}
+		
+		return $arrint;
+	}
+	
 	public function getSARWaitTimeMode()
 	{
 		$this->db->query(

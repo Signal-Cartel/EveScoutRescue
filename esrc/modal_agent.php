@@ -32,24 +32,27 @@ if ($system != ''){
 					Cache was accessed					
 				</label>
 			</div>
-			<span class="control-label">Pilot was rescued using:</span>
-			<div class="checkbox">
-			  	<label class="control-label" for="succesrc">
-					<input type="checkbox" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this);">	
-					Probes / scanner
-				</label>
-			</div>
-			<div class="checkbox">
-			  	<label class="control-label" for="succesrcf">
-			  		<input type="checkbox" <?=$fil_check ?> id="succesrcf" name="succesrcf" value="1" onClick="checkLogic(this);">
-					Filament					
-				</label>
-			</div>
-			<div class="checkbox">
-			  	<label class="control-label" for="succesrcb">
-			  		<input type="checkbox" <?=$fil_check ?> id="succesrcb" name="succesrcb" value="1" onClick="checkLogic(this);">
-					Both filament and probes					
-				</label>
+
+				<span class="control-label">Was pilot successfully rescued?</span>
+				<div class="checkbox">
+					<label class="control-label" for="succesrc">
+						<input type="checkbox" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this);">	
+						Yes, with probes and/or scanner
+					</label>
+				</div>
+			<div style="display: none;">
+				<div class="checkbox">
+					<label class="control-label" for="succesrcf">
+						<input type="checkbox" <?=$fil_check ?> id="succesrcf" name="succesrcf" value="1" onClick="checkLogic(this);">
+						Filament					
+					</label>
+				</div>
+				<div class="checkbox">
+					<label class="control-label" for="succesrcb">
+						<input type="checkbox" <?=$fil_check ?> id="succesrcb" name="succesrcb" value="1" onClick="checkLogic(this);">
+						Both filament and probes					
+					</label>
+				</div>
 			</div>
 			<div class="field">
 				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the capsuleer who required assistance?</span>
@@ -57,8 +60,8 @@ if ($system != ''){
 				</label>
 			</div>
 			<div class="field">
-				<label class="control-label" for="notes">Notes<span class="descr">Other information we need to know?</span>
-					<textarea maxlength="1000" class="form-control" id="notes" name="notes" rows="3"></textarea>
+				<label class="control-label" for="notes">Notes<span class="descr">70 character limit</span>
+					<textarea class="form-control" id="notes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
 				</label>
 			</div>
 	      </div>

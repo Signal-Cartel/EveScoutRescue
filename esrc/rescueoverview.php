@@ -12,7 +12,6 @@ include_once '../class/mmmr.class.php';
 // check if the user is alliance member
 if (!Users::isAllianceUserSession())
 {
-
 	// check if last login was already a non auth user
 	if (isset($_SESSION['AUTH_NOALLIANCE']))
 	{
@@ -39,13 +38,14 @@ if (!Users::isAllianceUserSession())
 
 // check if a valid character name is set
 if (!isset($charname)) {
-	// no, set a dummy char name
-	$charname = 'charname_not_set';
+	// no, redirect to home page
+	header("Location: ".Config::ROOT_PATH."auth/login.php");
+	// stop processing
+	exit;
 }
-?>
-<html>
 
-<head>
+?>
+
 	<?php 
 	$pgtitle = 'SAR Requests';
 	include_once '../includes/head.php'; 
@@ -96,16 +96,56 @@ $users = new Users($database);
 $rescue = new Rescue($database);
 
 // check for user roles
-$isAdmin = $users->isAdmin($charname);
-$isCoord = ($users->isSARCoordinator($charname) || $isAdmin);
-//testing
-	//$isCoord = 1;
-	//$charname = 'Captain Crinkle';
+if (!isset($_SESSION['isAdmin'])){
+	$isAdmin = $_SESSION['isAdmin'] = $users->isAdmin($charname);
+	if ($isAdmin) $_SESSION['is911'] = $_SESSION['isCoord'] = $isAdmin;
+}
+else{
+	$isAdmin = $_SESSION['isAdmin'];
+}
+
+// check for SAR Coordinator login
+if (!isset($_SESSION['isCoord'])){
+	$isCoord = $_SESSION['isCoord'] = ($isAdmin or $users->isSARCoordinator($charname) );	
+}
+else{
+	$isCoord = $_SESSION['isCoord'];
+}
+
+// check for 911 Operator login
+if (!isset($_SESSION['is911'])){
+	$is911 = $_SESSION['is911'] = ($isCoord or $isAdmin or $users->is911($charname));	
+}
+else{
+	$is911 = $_SESSION['is911'];
+}
+
+
+if(isset($_REQUEST['r']) and $_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ){
+	$is911 = $_SESSION['is911'] = $isAdmin = $_SESSION['isAdmin'] = $isCoord = $_SESSION['isCoord'] = 0;
+	if ($_REQUEST['r'] == 'a') $isAdmin = $_SESSION['isAdmin'] = 1;
+	if ($_REQUEST['r'] == 'c' or $isAdmin) $is911 = $_SESSION['is911'] = $isCoord = $_SESSION['isCoord'] = 1;
+	if ($_REQUEST['r'] == '9' or $isAdmin or $isCoord) $is911 = $_SESSION['is911'] = 1;	
+}
+
+
 
 $system = '';
-if (isset($_REQUEST['sys'])) {
-	$system = ucfirst(htmlspecialchars_decode($_REQUEST["sys"]));
+if(isset($_REQUEST['sys'])) {
+	if (ucfirst(htmlspecialchars_decode($_REQUEST['sys'])) != 'Thera'){
+		$systems = new Systems($database);		
+		$trysys = ucfirst(htmlspecialchars_decode($_REQUEST['sys']));
+		if (! (substr ( $trysys, 0, 1 ) === 'J')) $trysys = 'J'. $trysys;	
+		if ($systems->validatename($trysys) === 0) {
+			$system = $trysys;
+		}			
+	}
+	else{
+		$system = 'Thera';
+	}
 }
+
+
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
@@ -118,7 +158,6 @@ if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 		include_once '../includes/top-right.php'; 
 		include_once '../includes/top-left.php';
 		include_once 'top-middle.php'; 
-
 		?>
 	</div>
 	<div class="ws"></div>
@@ -141,12 +180,23 @@ if (!empty($errmsg)) {
 
 // display rescue requests for a specific system
 	if (!empty($system)) { 
-		$systems = new Systems($database);
-		if ($systems->validatename($system) === 0) {
+	
+			//  get active requests from database
+			$data_active = $rescue->getSystemRequests22($system, 0, $isCoord);
+			// get finished requests from database
+			$data_finished = $rescue->getSystemRequests22($system, 1, $isCoord);
+			
+			$activeSARtitle = '';
+			// check for active SAR request
+			if (count($data_active) > 0) {
+				$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+			}
+
 			?>
 			<div>
 				<!-- System Name display -->
-				<span style="font-weight: bold; font-size: 200%;"><?=$system?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+				<p class="systemName"><?=$system . $activeSARtitle ?></p>
+
 				<!-- SAR New button -->
 				<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
 					data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
@@ -171,32 +221,17 @@ if (!empty($errmsg)) {
 			<div class="ws"></div>			
 			<?php 
 			//  displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $summary = 1, $noUpdate = 0)
-			//  get active requests from database
-			$data = $rescue->getSystemRequests($system, 0, $isCoord);
-			displayTable($data, $charname, 0, $system, 1, $isCoord, 0);
-			
-			// get finished requests from database
-			$data = $rescue->getSystemRequests($system, 1, $isCoord);
-			displayTable($data, $charname, 1, $system, 0, $isCoord, 0);
-		}
-		
-			// invalid system name
-		else { ?>
-		<div class="row">
-			<div class="col-md-12">
-				<div style="padding-left: 10px;">
-					<span class="sechead white"><?=$system?> not a valid system name.
-						Please correct name and resubmit.&nbsp;&nbsp;&nbsp;</span>
-				</div>
-			</div>
-		</div>
-	<?php }
+			//  display active requests from database
+			displayTable($data_active, $charname, 0, $system, 1, $isCoord, 0);		
+			// display finished requests from database
+			displayTable($data_finished, $charname, 1, $system, 1, $isCoord, 0);
+
 	}	
-// no system selected, so display all requests
+// no system selected, so display all active requests
 	else {
 		//  displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 0, $isCoord = 0, $summary = 1, $noUpdate = 0)
 		//active requests
-		$data = $rescue->getRequests();
+		$data = $rescue->getRequests23();
 		displayTable($data, $charname, 0, $system, 0, $isCoord, 1);
 	}
 ?>
@@ -303,7 +338,7 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	} 
 	else { 
 		//echo print_r($data); // for testing
-		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: auto;">';
+		echo '<table id="tbl'. $strStatus .'" class="table display" style="width: 90%;">';
 		echo '	<thead>';
 		echo '		<tr>';
 
@@ -311,9 +346,9 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 		echo '<th></th>';
 		
 		echo '			<th>Opened</th>';
-		echo (!empty($system)) ? '' : '<th>System</th>';
-		echo (!empty($system)) ? '' : '<th>Class</th>';
-		echo (!empty($system)) ? '' : '<th>Statics</th>';
+		echo (empty($system)) ? '<th>System</th>' : '' ;
+		echo (empty($system)) ? '<th>Class</th>' : '' ;
+		echo (empty($system)) ? '<th>Statics</th>' : '' ;
 		echo '			<th>Pilot</th>';
 		echo '			<th>Status</th>';
 		echo '			<th>Last&nbsp;Contact</th>';
@@ -351,26 +386,32 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
  */
 function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $summary, $noUpdate)
 {
+	echo "<tr>";
 	// create a new database connection
-	$database = new Database();
+	//$database = new Database();
 	// create object instances
-	$users = new Users($database);
-	$rescue = new Rescue($database);
-	$systems = new Systems($database);
-	
+	//$rescue = new Rescue($database);
+
 	$status = $row['status'];
 	$colspan = 0;
 	
-	echo "<tr>";
+	$agents = array_key_exists('RescueAgents', $row) ? explode(',', $row['RescueAgents']) : Array();
+	
 	// data display different for coordinators and pilots involved in rescue
-	$isSARAgent = $users->isSARAgent($charname, $row['id']);
-	$isRescueAgent = $users->isRescueAgent($charname, $row['id']);
+	$isSARAgent = (
+		($charname == $row['startagent']) 
+		or (($charname == $row['locateagent'])and($_SESSION['is911']==1)) 
+		or (in_array($charname, $agents) and ($_SESSION['is911']==1)) 
+		or $isCoord
+	) ? 1 :0;
+	
+	$isRescueAgent = (($charname == $row['locateagent']) or $isCoord) ? 1 : 0;
 
 	// "Update" button - display only for finished requests if coord logged in
 
-		if (($finished == 1 and $isCoord == 1) || ($finished == 0 && ($isCoord == 1 or $isSARAgent == 1 or $isRescueAgent == 1) && $noUpdate == 0)) {
+		if (($finished and $isCoord) || ($finished == 0 && ($isSARAgent or $isRescueAgent) && $noUpdate == 0)) {
 			echo '<td><a type="button" class="btn btn-danger adminbut" role="button" href="?sys='.
-					$row['system'].'&amp;req='.$row['id'].'">Update</a></td>';
+					$row['system'].'&amp;req='.$row['id'].'" style="color: white;">UPDATE</a></td>';
 		}
 		else{
 			echo '<td>&nbsp;</td>';			
@@ -385,14 +426,14 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// System - name of J-space system to coords and involved pilots
 		
 		
-		if (empty($system) and ($isCoord == 1 or $isSARAgent == 1 or $isRescueAgent == 1)) {	
+		if (empty($system) and ($isCoord or $isSARAgent or $isRescueAgent)) {	
 			$colspan++;		
 			echo '<td><p class="admint"><a href="?sys='.ucfirst($row['system']).'">'.
 					Output::htmlEncodeString(ucfirst($row['system'])).'</a></p></td>';	
 		}
 		else if(empty($system)){
 			$colspan++;
-			echo '<td><p class="admint">&nbsp;&nbsp;J------</p></td>';
+			echo '<td><p class="admint"><em style="color:#999999">JXXXXX</em></p></td>';
 		}
 
 		
@@ -405,35 +446,32 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// Statics
 		if (empty($system)) {
 			$colspan++;
-			// get current system
-			$staticSystem = ucfirst($row['system']);
-			// get connections of system
-			$systemData = $systems->getWHInfo($staticSystem);
 			
 			$staticData = '';
-			foreach (explode(',', $systemData['StaticWhInfo']) as $staticWhInfo) {
+			foreach (explode(',', $row['StaticWhInfo']) as $staticWhInfo) {
 					
 				$staticConnection = explode('/', $staticWhInfo);
-			
-				$dest = $staticConnection[1];
-				// check if already data is added
-				if (strlen($staticData) > 0)
-				{
-					// yes, add delimeter
-					$staticData .= ', ';
+				if (count($staticConnection) > 1){				
+					$dest = $staticConnection[1];
+					// check if already data is added
+					if (strlen($staticData) > 0)
+					{
+						// yes, add delimeter
+						$staticData .= ', ';
+					}
+					// add destination 
+					$staticData .= strtoupper($dest);
 				}
-				// add destination 
-				$staticData .= strtoupper($dest);
 			}
 			echo '<td><p class="admint">'. Output::htmlEncodeString($staticData).'</p></td>';
 		}
 		
-	// Pilot - display stranded pilot's name only to coords and relevant agents
-		// check for related SAR Agent
+	// Pilot - display stranded pilot's name only to coords and SAR agent
+	// check for related SAR Agent
 		$colspan++;
 
-		if ($isCoord == 0 && $isSARAgent == 0 && $isRescueAgent == 0) {
-			echo '<td><p class="admint"><b>PROTECTED</b></p></td>';
+		if ($isCoord == 0 && $isSARAgent == 0) {
+			echo '<td><p class="admint"><em style="color:#999999">PROTECTED</em></p></td>';
 		}
 		else {
 			echo '<td><p class="admint"><a target="_blank" href="https://evewho.com/pilot/'. 
@@ -496,22 +534,25 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			
 			// Rescue Pilot(s) - display name(s) of Signaleer who participated in live rescue (if any)
 			$colspan++;
-			$arrRescueAgents = $rescue->getRescueAgents($row['id']);
+			$arrRescueAgents = $agents;
 			echo '<td style="text-align: right;">';
-			foreach ($arrRescueAgents as $value) {
+			foreach ($arrRescueAgents as $pilot) {
+				
 				if ($_SESSION['isAdmin']) {
-					echo '<form method="post" class="form-inline adminfrm" id="user_role_del'. $value['id'] .'" 
+					echo '<form method="post" class="form-inline adminfrm" id="user_role_del'. $row['id'] .'" 
 						action="rescueaction.php">';
-					echo '<input type="hidden" name="rowid" value="'. $value['id'] .'">';
+					echo '<input type="hidden" name="rowid" value="'. $row['id'] .'">';
+					echo '<input type="hidden" name="pilot" value="'. $pilot .'">';
 					echo '<input type="hidden" name="action" value="RemovePilot">';
+					
 					echo '<input type="hidden" name="system" value="'. $system .'">';
 					
-					echo '<p class="admint">' . $value['pilot'];
+					echo '<p class="admint">' . $pilot;
 					echo '&nbsp;<button type="submit" class="btn btn-xs btn-dark" style="margin: 0px; padding: 0px;"><span class="fa fa-trash" style="color: #FFC107;" aria-hidden="true"></span></button></p>';
 					echo '</form>';					
 				}
 				else{
-					echo '<p class="admint" >' . $value['pilot'] . '</p>';
+					echo '<p class="admint" >' . $pilot . '</p>';
 				}
 			}
 			if ($_SESSION['isAdmin']) {
@@ -521,14 +562,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			echo '</td>';
 			
 			// NOTES
-			if ($notes == 1 && ($isCoord == 1 || $isSARAgent == 1 || $isRescueAgent == 1)) {
-				echo '</tr><tr>';
-				if (($isCoord == 1 && $finished == 1) || ($finished == 0 && $noUpdate == 0)) {
-					echo '<td>&nbsp;</td>';
-				}
-				echo '<td colspan="'.$colspan.'">';
+			if ( $notes && ($isCoord or $isSARAgent) ) {
 				displayNotes($row, $isCoord, $isSARAgent);
-				echo '</td>';
 			}
 		}
 
@@ -545,14 +580,19 @@ function displayNotes($row, $isCoord = 0, $isSARAgent = 0)
 	$rescue = new Rescue($database);
 	$notes = $rescue->getNotes($row['id']);
 	if (count($notes) > 0) {
+		
+		echo '</tr><tr>';
+		echo '<td colspan="5" style="border-top: none;">';
+	
 		foreach($notes as $note) {
-			echo '<div style="padding-left: 2em; text-indent: -2em;">';
-			//echo '['. Output::getEveDatetime($note['notedate']) .' // ';
-			echo '['. date("Y-m-d H:i", strtotime($note['notedate'])) .' // '; 
-			echo Output::htmlEncodeString($note['agent']) .']<br />';
-			echo Output::htmlEncodeString($note['note']) .'<br />';
-			echo '</div><br />';
+			echo '<div style="padding-left: 8em; text-indent: -2em;">';
+			echo '<p style = "font-size: 1em; line-height: 1.4em; opacity: 0.7;"><span style="font-size: 0.9em; opacity: .7; font-style: oblique;">';
+			echo date("Y-m-d H:i", strtotime($note['notedate'])) .' - '; 
+			echo Output::htmlEncodeString($note['agent']) .'</span><br />';
+			echo Output::htmlEncodeString($note['note']) .'</p>';
+			echo '</div>';
 		}
+		echo '</td>';
 	}
 }
 ?>

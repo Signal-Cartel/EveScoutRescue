@@ -2,7 +2,7 @@
 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
-// https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=Boyami%20Lost&system=Thera
+// https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=Boyami%20Lost&system=J135031
 // https://dev.evescoutrescue.com/esrc/rescue_assistant-dev.php?pilot=Boyami%20Lost&system=J135031
 define('ESRC', TRUE);
 
@@ -45,17 +45,6 @@ if (!Users::isAllianceUserSession())
 
 $pilot_name = isset($_REQUEST['pilot']) ?  TestInput(htmlspecialchars_decode($_REQUEST['pilot'])) : '[PILOT NAME]';
 $pilot_system = isset($_REQUEST['system']) ?  TestInput(ucfirst(htmlspecialchars_decode($_REQUEST['system']))) : '[SYSTEM]';
-
-if($pilot_name == '[PILOT NAME]' or $pilot_system == '[SYSTEM]'){
-	$errmsg = "Please re-open SARA using the link provided on the 911 call on Discord.\n";	
-	$redirectURL = "rescueoverview.php?errmsg=". urlencode($errmsg);
-		?>
-		<script>
-			window.location.replace("<?=$redirectURL?>")
-		</script>
-		<?php
-		exit();
-	}
 
 $cache_status = '[CACHE STATUS]';
 $cache_pass = '[CACHE PASSWORD]';
@@ -551,7 +540,7 @@ if (!empty($errmsg)) {
 					<div class="step-label">
 	<p class="step-inst">Cache status</p></div>
 					<div class="step-text">
-						<h4><?=$pilot_system?> : <?=$cache_status?> <?//=$filament_status?></h4>
+						<h4><?=$pilot_system?> : <?=$cache_status?> <?=$filament_status?></h4>
 					</div>
 				</div>
 
@@ -612,7 +601,7 @@ if (!empty($errmsg)) {
 					<p class="step-btn">
 						<button class="btn btn-default" onclick="CacheText('probes')"><i class="fa fa-bullseye" aria-hidden="true"></i> Probes</button>
 						<button class="btn btn-default" onclick="CacheText('launcher')"><i class="fa fa-plus-square" aria-hidden="true"></i> Launcher &amp; Probes</button>
-						<!--<button class="btn btn-info" onclick="CacheText('filament')"><i class="fa fa-random" aria-hidden="true"></i> Filament</button>-->
+						<button class="btn btn-info" onclick="CacheText('filament')"><i class="fa fa-random" aria-hidden="true"></i> Filament</button>
 					</p>
 				</div>
 				<div class="step">
@@ -2260,26 +2249,24 @@ $hasfil =  $rowAgent['has_fil'];
 					Cache was accessed
 				</label>
 			</div>
-			<span class="control-label">Was pilot successfully rescued?</span>
+			<span class="control-label">Pilot was rescued using:</span>
 			<div class="checkbox">
 				<label class="control-label" for="succesrc">
 					<input type="checkbox" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this)">
-					Yes, with probes and/or scanner
+					Probes / scanner
 				</label>
 			</div>
-			<div style="display: none;">
-				<div class="checkbox">
-					<label class="control-label" for="succesrcf">
-						<input type="checkbox" id="succesrcf" name="succesrcf" value="1" onClick="checkLogic(this)">
-						Filament
-					</label>
-				</div>
-				<div class="checkbox">
-					<label class="control-label" for="succesrcb">
-						<input type="checkbox" <?=$fil_check ?> id="succesrcb" name="succesrcb" value="1" onClick="checkLogic(this);">
-						Both filament and probes					
-					</label>
-				</div>
+			<div class="checkbox">
+				<label class="control-label" for="succesrcf">
+					<input type="checkbox" id="succesrcf" name="succesrcf" value="1" onClick="checkLogic(this)">
+					Filament
+				</label>
+			</div>
+			<div class="checkbox">
+			  	<label class="control-label" for="succesrcb">
+			  		<input type="checkbox" <?=$fil_check ?> id="succesrcb" name="succesrcb" value="1" onClick="checkLogic(this);">
+					Both filament and probes					
+				</label>
 			</div>
 			<div class="field">
 				<label class="control-label" for="aidedpilot">Aided Pilot<span class="descr">What is the name of the capsuleer who required assistance?</span>

@@ -111,6 +111,8 @@ form.adminfrm{
     color: gold;
 }
 
+
+
 .control-label {
     font-weight: bold;
     display: block;
@@ -271,6 +273,12 @@ img {
     vertical-align: middle;
 }
 
+td.history {
+	white-space: nowrap;
+	font-size: 1em;
+}
+
+
 .nav>li>a {
     padding: 2px 8px;
 }
@@ -360,27 +368,27 @@ img {
 }
 
 .actionSower {
-    color: gold;
+    color: #32ff32;
 }
 
 .actionAgent {
-    color: green;
+    color: gold;
 }
 
 .actionTender {
-    color: white;
+    color: #eeeeee;
 }
 
 .cacheHealthy {
-    border-left: 6px solid rgb(66, 240, 66);
+    border-left: 6px solid #1fd51f;
 }
 
 .cacheExpired {
-    border-left: 6px solid red;
+    border-left: 6px solid #ff6464;
 }
 
 .cacheUpkeepRequired {
-    border-left: 6px solid yellow;
+    border-left: 6px solid gold;
 }
 
 .cacheNoStatus {
@@ -394,7 +402,7 @@ img {
 
 .systemName {
     font-weight: bold;
-    font-size: 200%;
+    font-size: 1.8em;
     vertical-align: middle;
 }
 

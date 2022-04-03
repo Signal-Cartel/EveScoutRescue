@@ -107,6 +107,29 @@ elseif ($action === 'Create') {
 		// switch display to overview with current system
 		displayRequestOverview($system);
 		
+		$reqs = $rescue->getRequests();
+		if (!empty($reqs)) {
+			$temp = Array();
+			foreach ($reqs as $row) {
+				$status = $row['status'];
+				if (array_key_exists($status, $temp)){
+					$temp[$status]++;
+				}
+				else{
+					$temp[$status] = 1;
+				}				
+			}
+			arsort($temp);
+			$reqstatus = "\n Requests:  ";
+			foreach ($temp as $key => $val){
+				$reqstatus .= ucfirst($key) . ': ' . $val . '   ';
+			}
+        
+		}
+		else{
+			$reqstatus = '';
+		}
+		
 		// send notification to Discord
 		// discord webhook with token - channel and token part are part of config XXXX/abcdef
 		$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
@@ -114,7 +137,7 @@ elseif ($action === 'Create') {
 		$alert = 1;
 		$skip_the_gif = 1;
 		// construct the message - URL is based on configuration
-		$message = "A new SAR request has just been entered by $charname. [Overview page](".Config::ROOT_PATH."esrc/rescueoverview.php) - [Check Chains for $system](https://evescoutrescue.com/copilot/data/chains.php?system=$system)";
+		$message = "New SAR request by $charname in $system. [Overview](" . Config::ROOT_PATH . "esrc/rescueoverview.php?sys=$system) | [Chains](https://evescoutrescue.com/copilot/data/chains.php?system=$system) " . $reqstatus;
 
 		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}
@@ -177,7 +200,7 @@ elseif ($action === 'AddRescuePilot') {
 }
 
 elseif ($action === 'RemovePilot') {
-	$rescue->deleteRescueAgent($_REQUEST['rowid']);
+	$rescue->deleteRescueAgent22($_REQUEST['rowid'],$_REQUEST['pilot']);
 
 	displayRequestOverview ( $_REQUEST['system'] );
 }

@@ -47,6 +47,10 @@ class Systems {
 			return 1;
 		}
 
+		// exception for Thera
+		if (ucfirst($system) == 'Thera'){
+			return 0;// OK!
+		}
 		// make the system name uppercase; should be move to a separate method
 		$system = strtoupper ( $system );
 
@@ -123,7 +127,7 @@ class Systems {
 		// close the query
 		$this->db->closeQuery ();
 
-		return $result ['locked'];
+		return $result['locked'] ?? Null;
 	}
 
 	/**
@@ -151,6 +155,7 @@ class Systems {
 	 */
 	public function getWHInfo($system)
 	{
+		// replaced this fucntion with mysql VIEW wh_info which should be joined in your query
 		// check if system name is set
 		if (! isset ( $system )) {
 			// no, return error code
@@ -194,6 +199,44 @@ class Systems {
 		return $result;
 	}
 
+	/**
+	 * Get activity history of system
+	 * @param unknown $system
+	 * @return string
+	 */
+	public function getSystemHistory($system)
+	{
+		$this->db->query("
+		Select
+			activity.System,
+			activity.ActivityDate,
+			cache.AlignedWith,
+			cache.Distance,
+			cache.Password,
+			activity.Pilot,
+			activity.EntryType,
+			activity.CacheStatus,
+			activity.AidedPilot,
+			activity.Note,
+			cache.Location,
+			cache.ExpiresOn
+		From
+			activity Inner Join
+			cache On activity.CacheID = cache.CacheID
+		Where
+			activity.System = :system
+		Order By
+			activity.ActivityDate Desc
+		");
+	
+		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+
+		return $result;
+	}
+	
+	
 
 	/**
 	 * Get a list of specified systems
@@ -261,6 +304,27 @@ class Systems {
 	}
 
 	/**
+	 * Add system note with type
+	 * @param unknown $system
+	 * @param unknown $charname
+	 * @param unknown $note
+	 */
+	public function addSystemNoteType($system, $charname, $note, $notetype)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("INSERT INTO systemnote (systemname, noteby, note, notedate, notetype)
+			VALUES (:systemname, :username, :note, :notedate, :notetype)");
+		$this->db->bind(':systemname', $system);
+		$this->db->bind(':username', $charname);
+		$this->db->bind(':note', $note);
+		$this->db->bind(':notedate', gmdate("Y-m-d H:i:s", time()));
+		$this->db->bind(':notetype', $notetype);
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+	
+	/**
 	 * Update existing system note
 	 * @param unknown $id
 	 * @param unknown $note
@@ -279,13 +343,33 @@ class Systems {
 	}
 
 	/**
+	 * Update existing system note witrh type
+	 * @param unknown $id
+	 * @param unknown $note
+	 * @param unknown $editdate
+	 */
+	public function editSystemNoteType($id, $note, $editdate, $notetype)
+	{
+		$this->db->beginTransaction();
+		$this->db->query("UPDATE systemnote SET note = :note, LastUpdated = :nowdt, notetype = :notetype WHERE id = :id");
+		$this->db->bind(':note', $note);
+		$this->db->bind(':nowdt', $editdate);
+		$this->db->bind(':notetype', $notetype);
+		$this->db->bind(':id', $id);
+		$this->db->execute();
+		//end db transaction
+		$this->db->endTransaction();
+	}
+	
+	
+	/**
 	 * Get all system notes for a given system
 	 * @param unknown $system
 	 * @return string
 	 */
 	public function getSystemNotes($system)
 	{
-		$this->db->query("SELECT * FROM systemnote WHERE systemname = :system ORDER By notedate DESC");
+		$this->db->query("SELECT * FROM systemnote WHERE systemname = :system ORDER By notetype, notedate DESC");
 		$this->db->bind(':system', $system);
 		$result = $this->db->resultset();
 		$this->db->closeQuery();
@@ -368,4 +452,20 @@ class Systems {
 	}
 
 }
+
+/*
+create view wh_info as Select
+    wh_systems.System,
+    wh_systems.Class,
+    wh_systems.Constellation,
+    wh_systems.Region,
+    Group_Concat(Concat(wh_types.name, '/', wh_types.destination, '/', wh_types.size) Order By wh_types.destination) As
+    StaticWhInfo
+From
+    wh_systems Left Join
+    wh_systemstatics On wh_systems.System = wh_systemstatics.System Inner Join
+    wh_types On wh_systemstatics.StaticType = wh_types.name
+group by 
+  wh_systems.System
+ */
 ?>
