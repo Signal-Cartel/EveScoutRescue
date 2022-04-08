@@ -104,8 +104,7 @@ elseif ($action === 'Create') {
 		}
 		$database->endTransaction();
 	
-		// switch display to overview with current system
-		displayRequestOverview($system);
+
 		
 		$reqs = $rescue->getRequests();
 		if (!empty($reqs)) {
@@ -120,14 +119,14 @@ elseif ($action === 'Create') {
 				}				
 			}
 			arsort($temp);
-			$reqstatus = "\n Requests:  ";
+			$reqstatus = "Requests:\n";
 			foreach ($temp as $key => $val){
 				$reqstatus .= ucfirst($key) . ': ' . $val . '   ';
 			}
         
 		}
 		else{
-			$reqstatus = '';
+			$reqstatus = 'No open SARs';
 		}
 		
 		// send notification to Discord
@@ -136,10 +135,17 @@ elseif ($action === 'Create') {
 		$user = 'SAR System';
 		$alert = 1;
 		$skip_the_gif = 1;
+		$noteentry = $data['notes'] <> "" ? " with note:\r\n```" . $data['notes'] . "```": "\r\n"; 
+		
 		// construct the message - URL is based on configuration
-		$message = "New SAR request by $charname in $system. [Overview](" . Config::ROOT_PATH . "esrc/rescueoverview.php?sys=$system) | [Chains](https://evescoutrescue.com/copilot/data/chains.php?system=$system) " . $reqstatus;
+		$message = "[$system](".Config::ROOT_PATH."esrc/rescueoverview.php?sys=$system \"SAR system page\") - [Chains](".Config::ROOT_PATH."copilot/data/chains.php?system=$system \"Check Chains\") New SAR by $charname" . $noteentry . $reqstatus;
 
 		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
+		
+		// switch display to overview with current system
+		displayRequestOverview($system);
+		
+		
 	}
 	else {
 		// data was wrong. Display input mask with wrong data

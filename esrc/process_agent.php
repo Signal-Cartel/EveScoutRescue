@@ -134,7 +134,7 @@ if (isset($_POST['sys_adj'])) {
 			$alert = 0;
 			$skip_the_gif = 1;
 			// construct the message - URL is based on configuration
-			$message = "$pilot (agent) in [$system](https://evescoutrescue.com/esrc/search.php?sys=$system) wrote:\n```$notes```";
+			$message = "[$system](".Config::ROOT_PATH."esrc/rescueoverview.php \"Rescue overview page\") Agent $charname wrote:\n```$notes```";
 			$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
 		}	
 			

@@ -122,7 +122,7 @@ if (isset($_POST['sys_tend'])) {
 			$alert = 0;
 			$skip_the_gif = 1;
 			// construct the message - URL is based on configuration
-			$message = "$pilot (tender) in [$system](https://evescoutrescue.com/esrc/search.php?sys=$system) wrote:\n```$notes```";
+			$message = "[$system](".Config::ROOT_PATH."esrc/search.php?sys=$system \"ESRC system page\") Tender $pilot wrote:\n```$notes```";
 
 			$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
 			
