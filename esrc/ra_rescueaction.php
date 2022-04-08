@@ -112,15 +112,40 @@ else if ($action === 'Create')
 	
 		// switch display to overview with current system
 		//displayRequestOverview($system);
+
+		$reqs = $rescue->getRequests();
+		if (!empty($reqs)) {
+			$temp = Array();
+			foreach ($reqs as $row) {
+				$status = $row['status'];
+				if (array_key_exists($status, $temp)){
+					$temp[$status]++;
+				}
+				else{
+					$temp[$status] = 1;
+				}				
+			}
+			arsort($temp);
+			$reqstatus = "Requests:\n";
+			foreach ($temp as $key => $val){
+				$reqstatus .= ucfirst($key) . ': ' . $val . '   ';
+			}
+        
+		}
+		else{
+			$reqstatus = 'No open SARs';
+		}
 		
 		// send notification to Discord
 		// discord webhook with token - channel and token part are part of config XXXX/abcdef
 		$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
-		$user = 'SAR System';
+		$user = 'SARA SAR';
 		$alert = 1;
 		$skip_the_gif = 1;
+		$noteentry = $data['notes'] <> "" ? " with note:\r\n```" . $data['notes'] . "```": "\r\n"; 
+		
 		// construct the message - URL is based on configuration
-		$message = "A new SAR request has just been entered by $charname. [Overview page](".Config::ROOT_PATH."esrc/rescueoverview.php) - [Check Chains for $system](https://evescoutrescue.com/copilot/data/chains.php?system=$system)";
+		$message = "[$system](".Config::ROOT_PATH."esrc/rescueoverview.php?sys=$system  \"SAR system page\") - [Chains](".Config::ROOT_PATH."copilot/data/chains.php?system=$system \"Check Chains\") New SAR by $charname" . $noteentry . $reqstatus;
 
 		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 	}

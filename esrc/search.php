@@ -490,7 +490,7 @@ if (!empty($system)) {
 		
 ?>
 		<!-- NOTE(S) SECTION -->
-		
+		<p style="margin-left: 36px"><em>Signaleers, if you see a <b>system note</b> that seems inaccurate or out of date, please mention that in your cache tending note.</em></p>
 		<div style='
 				display: flex;
 				justify-content: flex-end;

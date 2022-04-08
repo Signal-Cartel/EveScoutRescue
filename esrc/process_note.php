@@ -115,7 +115,7 @@ if (isset($_POST['sys_note'])) {
 				$alert = 0;
 				$skip_the_gif = 1;
 				// construct the message - URL is based on configuration
-				$message = "$pilot (new note) in $system wrote:\n```$notes```";
+				$message = "[$system](https://evescoutrescue.com/esrc/search.php?sys=$system \"ESRC system page\") $pilot new note:\n```$notes```";
 				$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
 			}	
 

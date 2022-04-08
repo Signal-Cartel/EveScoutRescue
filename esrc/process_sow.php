@@ -143,7 +143,7 @@ if (isset($_POST['sys_sow'])) {
 			$alert = 0;
 			$skip_the_gif = 1;
 			// construct the message - URL is based on configuration
-			$message = "$pilot (sower) in [$system](https://evescoutrescue.com/esrc/search.php?sys=$system) wrote:\n```$notes```";
+			$message = "[$system](".Config::ROOT_PATH."esrc/search.php?sys=$system \"ESRC system page\") Sower $pilot wrote:\n```$notes```";
 
 			$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
 			

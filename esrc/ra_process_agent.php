@@ -111,11 +111,11 @@ if (isset($_POST['sys_adj'])) {
 				$discord = new Discord();
 				// esrc coordinators channel on prod, and dev-test channel on dev
 				$webhook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
-				$user = 'ESRC Notes';
+				$user = 'SARA Notes';
 				$alert = 0;
 				$skip_the_gif = 1;
 				// construct the message - URL is based on configuration
-				$message = "$pilot (SARA Agent) in $system wrote:\n```$notes```";
+				$message = "[$system](".Config::ROOT_PATH."esrc/rescueoverview.php \"Rescue overview page\") Agent $charname wrote:\n```$notes```";
 				$dresponse = $discord->sendMessage($webhook, $user, $alert, $message, $skip_the_gif);	
 			}		
 		
