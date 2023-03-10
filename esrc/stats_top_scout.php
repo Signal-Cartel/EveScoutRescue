@@ -1,7 +1,6 @@
-
 <?php
 date_default_timezone_set('UTC');
-
+header('Content-type: application/json');
 //error_reporting(E_ALL);
 //ini_set('display_errors', 'on');
 
@@ -11,6 +10,8 @@ date_default_timezone_set('UTC');
 // API is inclusive of start date, but exclusive of end date.
 //Signatures API is here: https://www.eve-scout.com/api/reporting/signatures?startDate=2020-02-22&endDate=2020-02-23
 //Donations API is here: https://www.eve-scout.com/api/reporting/donations?startDate=2020-04-29&endDate=2019-05-05
+
+
 $fulllist = isset($_GET['l']) ? true : false;
 
 
