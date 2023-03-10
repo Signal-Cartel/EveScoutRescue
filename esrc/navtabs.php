@@ -46,7 +46,8 @@ else {
 }
 
 
-// PVE SHARER TAB
+// PVE SHARER TAB - Removed Feb 2023
+/*
 if (strpos($_SERVER['PHP_SELF'], 'pve_sharer.php') === false) {
 	// inactive
 	echo '<li><a href="pve_sharer.php">SITE TRACKER</a></li>';
@@ -55,6 +56,7 @@ else {
 	// active
 	echo '<li class="active"><a href="#" data-toggle="tab">SITE TRACKER</a></li>';
 }
+*/
 
 // STORM TRACKER TAB
 if (strpos($_SERVER['PHP_SELF'], 'storm_tracker.php') === false) {
