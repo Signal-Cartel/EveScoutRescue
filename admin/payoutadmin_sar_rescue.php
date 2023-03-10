@@ -96,7 +96,7 @@ if (!isset($_POST['payout'])) {	?>
 else {			?>
 
 	<div class="row" id="systable">
-		<div class="col-sm-12">
+		<div style="display: flex; flex-direction: row; justify-content: space-around;">
 			<table class="table" style="width: auto;">
 				<thead>
 					<tr>
@@ -131,16 +131,18 @@ else {			?>
 						// base rate is usually 50 mil ISK; but only 20 mil ISK on same-day rescues
 						$basepay = ($daystosar > 0) ? 50000000 : 20000000;
 						$strBasepay = ($basepay == 50000000) ? '50mil' : '20mil';
-						// get WH Class and calculate multiplier: C1-6 = class number; C13 = 3; C14-18 = 6; x6 is max multiplier
 						$whclassnum = str_replace('Class ', '', $value['Class']);
-						$whclassmult = ($whclassnum <= 6) ? $whclassnum : (($whclassnum == 13) ? 3 : 6);
+						// calculate multiplier for class: C1-6 = class number; C13 = 3; C14-18 = 3; x6 is max multiplier
+						//$whclassmult = ($whclassnum <= 6) ? $whclassnum : (($whclassnum == 13) ? 3 : 3);
+						// requested change Drifter hole payouts (C14-C18) to be same as Class 3 (was 6) - per Xalyar
+						$whclassmult = ($whclassnum <= 6) ? $whclassnum : 3;
 						// max payout equation: (base x WH class multiplier) + (Days until rescued x daily increase amt)
 						$payoutmax = ($basepay*$whclassmult)+($daystosar*$dailyincrease);
 						echo '<tr>';
 						echo '<td><a class="payout" target="_blank"
 								href="/esrc/rescueoverview.php?sys='. ucfirst($value['system']) .'">'.
 								Output::htmlEncodeString(ucfirst($value['system'])) .'</a>
-								<span class="white"> - C'. $whclassnum .' - ('. $strBasepay .' x '. 
+								<span style="font-size: 0.9em; color: #c3c3c3;"> - C'. $whclassnum .' - ('. $strBasepay .' x '. 
 									$whclassmult .') + (10mil x '. $daystosar .') = '. 
 									number_format(intval($payoutmax)) .'</span></td>';
 						echo '<td><a class="payout" target="_blank" 
@@ -149,9 +151,9 @@ else {			?>
 						echo '<td>&nbsp;</td>';
 						// Locator gets half of total payout amount
 						$payoutloc = intval($payoutmax/2);	
-						echo '<td><input type="text" id="amt'.$ctr.'" width="100" 
-								value="'. $payoutloc .'" /><i id="copyclip" class="fa fa-clipboard" 
-								onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
+						echo '<td><input type="text" id="amt'.$ctr.'" style="width: 8em; text-align: right;" 
+								value="'. number_format($payoutloc) .'" /><i id="copyclip" class="fa fa-clipboard" 
+								style="color:white;" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
 						$totamt = $totamt + $payoutloc;
 						echo '</tr>';
 
@@ -177,9 +179,9 @@ else {			?>
 								else {
 									$payoutres = intval($payoutres/2);
 								}
-								echo '<td><input type="text" id="amt'.$ctr.'" width="100" value="'. 
-										intval($payoutres) .'" /><i id="copyclip" class="fa 
-										fa-clipboard" onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
+								echo '<td><input type="text" id="amt'.$ctr.'" style="width: 8em; text-align: right;" value="'. 
+										number_format($payoutres) .'" /><i id="copyclip" class="fa 
+										fa-clipboard" style="color:white;"  onClick="SelectAllCopy(\'amt'.$ctr.'\')"></i></td>';
 								$totamt = $totamt + $payoutres;
 								echo '</tr>';
 							}
