@@ -44,8 +44,7 @@ require '../page_templates/home_html-begin.php';
 					encompasses both live Search and Rescue operations as well as the original Rescue Cache 
 					program.</p>
 				<p>When Thrice Hapus became CEO of Signal Cartel, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
-					took over EvE Scout Rescue and guided the division from December YC120 until April YC123. Under his watch the division set many new records for number of rescues, caches in space, and 911 call volume. Today, <a href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a>, one of our most experienced rescue pilots, is at the helm. While he oversees the division as a whole, it takes an entire team to make it all happen. Our current roster includes 
-					the following dedicated rescue pilots.</p>
+					took over EvE Scout Rescue and guided the division from December YC120 until April YC123. Under his watch the division set many new records for number of rescues, caches in space, and 911 call volume. Then in YC123, <a href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a>, one of our most experienced rescue pilots, took the helm. Crinkle guided the division until May of YC124 when our current ESRC Manager, <a href="https://evewho.com/character/2112425049">Xalyar</a> assumed the lead role. While he oversees the division as a whole, it takes an entire team to make it all happen. Our current roster includes the following dedicated rescue pilots.</p>
 
 				<!-- 911 Operators -->
 				<div class="row">
@@ -127,13 +126,39 @@ require '../page_templates/home_html-begin.php';
 				<div class="row">
 					<div class="col-md-1"></div>
 					<div class="col-md-4">
-						<h2 style="text-align:center">
+						<h3 style="text-align:center">Asst. Manager</h3>
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/character/2113316760">
+								<img src="https://image.eveonline.com/Character/2113316760_512.jpg" 
+									alt="Catbriar Chelien" style="width:80%">
+								<div class="caption"><strong>Catbriar Chelien</strong></div>
+							</a>
+						</div>
+				  	</div>
+					<div class="col-md-2"></div>
+				  	<div class="col-md-4 text-center">
+						<h3 style="text-align:center">Asst. Manager</h3>
+						<div class="thumbnail text-center">
+							<a href="https://evewho.com/character/2114254786">
+								<img src="https://image.eveonline.com/Character/2114254786_512.jpg" 
+									alt="Tekufah" style="width:80%">
+								<div class="caption"><strong>Tekufah</strong></div>
+							</a>
+						</div>
+				  	</div>
+				  	<div class="col-md-1"></div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-4" style="margin-top: 24px;">
+						<h3 style="text-align:center">
 							<a href="https://www.evescoutrescue.com/copilot">ALLISON</a>
-						</h2>
+						</h3>
 						<div class="thumbnail text-center">
 							<a href="https://evewho.com/pilot/A%20Dead%20Parrot">
 								<img src="https://image.eveonline.com/Character/96765374_512.jpg" 
-									alt="A.D. Parrot" style="width:100%">
+									alt="A.D. Parrot" style="width:80%">
 								<div class="caption"><strong>A Dead Parrot</strong></div>
 							</a>
 						</div>
@@ -142,10 +167,10 @@ require '../page_templates/home_html-begin.php';
 				  	<div class="col-md-4 text-center">
 						<h2 style="text-align:center">Manager</h2>
 						<div class="thumbnail text-center">
-							<a href="https://evewho.com/character/97117031">
-								<img src="https://image.eveonline.com/Character/97117031_512.jpg" 
-									alt="Captain Crinkle" style="width:100%">
-								<div class="caption"><strong>Captain Crinkle</strong></div>
+							<a href="https://evewho.com/character/2112425049">
+								<img src="https://image.eveonline.com/Character/2112425049_512.jpg" 
+									alt="Xalyar" style="width:100%">
+								<div class="caption"><strong>Xalyar</strong></div>
 							</a>
 						</div>
 				  	</div>

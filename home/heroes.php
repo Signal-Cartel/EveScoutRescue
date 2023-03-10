@@ -19,7 +19,7 @@ require '../page_templates/home_html-begin.php';
 	<div class="col-md-4">
 		<h2 style="text-align: center;">The Crinkle Crown</h2>
 		<p style="text-align: center;">Awarded to pilots upon sowing or tending 
-			10000 rescue caches. First awarded to Captain Crinkle, who is the very embodiment of 
+			10,000 rescue caches. First awarded to Captain Crinkle, who is the very embodiment of 
 			the caring diligence that marks a true-blue Signaleer.<br />
 			<img height="216" src="https://image.eveonline.com/Character/97117031_512.jpg">
 		</p>
@@ -31,12 +31,25 @@ require '../page_templates/home_html-begin.php';
 				</tr>
 			</thead>
 			<tbody>
+
+				<tr>	
+					<td>Krallia Etug</td>	
+					<td>YC124-Dec-25</td>
+				</tr>
+				<tr>	
+					<td>Nac Audene</td>	
+					<td>YC124-Dec-18</td>
+				</tr>			
+				<tr>	
+					<td>Mako Koskanaiken</td>	
+					<td>YC123-Dec-19</td>
+				</tr>			
 				<tr>	
 					<td>Tamayo</td>	
 					<td>YC123-Jan-24</td>
 				</tr>
 				<tr>	
-					<td>Renek Dallocort</td>	
+					<td>Renek Dallocort (twice decorated)</td>	
 					<td>YC122-Nov-15</td>
 				</tr>
 				<tr>	
