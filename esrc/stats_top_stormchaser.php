@@ -11,5 +11,5 @@ $database = new Database();
 $storms = new Storms($database);
 
 $data = $storms->getTopStormChaser();
-
+header('Content-type: application/json');
 echo(json_encode($data));
