@@ -142,12 +142,13 @@ class Pilot
 	 * @param int $min the minimum number of caches at this level
 	 * @param string $medalid the type of medal to display in this table
 	 * @param array $rows the array of info to display in the table
+	 * ex: printMedalsTable('esrc', 'InsaneCacher', 5000, '6', $arrPilots);
 	 */
 	static function printMedalsTable($medaltype, $medalname, $min, $medalid, $rows) 
 	{
 		switch ($medaltype) {
 			case 'esrc':
-				$colDescr = 'Awarded to pilots upon sowing or tending '. $min .' rescue caches.';
+				$colDescr = 'Awarded for sowing or tending '. $min .' rescue caches.';
 				break;
 			case 'sardisp':
 				$colDescr = 'Awarded to a Signaleer for coming to the aid of '. $min .' or more 

@@ -186,7 +186,7 @@ if (!empty($errmsg)) {
 
 <div class="row">
     <div class="col-md-7">
-        <h2>Storm Tracker is currently in early beta testing</h2>
+        <h2>Storm Tracker</h2>
         <p>Dear Signaleer, thank you for being out there chasing storms!</p>
         <p><strong>Remember: We only need the centre of the storm reported.</strong> You can find 
         it easily from your in-game map, as shown to the right. Since the centre is always of the STRONG 
