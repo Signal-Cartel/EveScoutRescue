@@ -4,12 +4,11 @@ define('ESRC', TRUE);
 require '../page_templates/secure_initialization.php';
 
 // PAGE VARS
-$pgtitle = "YC122 Fund Drive";
-$amtRaised = 66.703; // in billions
+$pgtitle = "YC124 Fund Drive";
+$amtRaised = 61; // in billions
 $amtGoal = 60;  // in billions
 $percentComplete = round(($amtRaised/$amtGoal)*100);
-$last_modified = date('d F', filemtime(__FILE__)) . ' YC122, ' . date('H:i', filemtime(__FILE__));  // 01 October YC122, 00:00
-
+$last_modified = date('d F', filemtime(__FILE__)) . ' YC124, ' . date('H:i', filemtime(__FILE__));  // 28 September YC124, 12:40
 
 // HTML PAGE template - Begin
 require '../page_templates/home_html-begin.php';
@@ -39,7 +38,7 @@ require '../page_templates/home_html-begin.php';
                     <li>Be sure to remark "ESR Fund Drive" on the memo line so we know what the 
                     donation is for!</li>
                 </ol>
-                <p>Thank you for your interest in our Rescue program and any donation you can spare! All identifiable donations of 10 million ISK or more will be acknowledged via an in-game mail message and these donors will be listed to the right (unless you send Thrice Hapus an evemail asking to remain anonymous). We do not reveal the amount donated.</p>
+                <p>Thank you for your interest in our Rescue program and any donation you can spare! All identifiable donations of 10 million ISK or more will be acknowledged via an in-game mail message and these donors will be listed to the right (unless you send Katia Sae an evemail asking to remain anonymous). We do not reveal the amount donated.</p>
 
                 <h3>How We Manage Our Budget</h3>
                 <p>Our budget and payout formulas are described below. Tips given to rescue pilots 
@@ -81,9 +80,9 @@ require '../page_templates/home_html-begin.php';
                 successfully, no ISK is paid out at all.</p>
 
                 <h3>Budget Details</h3>
-                <p>(yearly, based on the past 12 months using current payout formulas)</p>
+                <p>(Yearly, based on the past 12 months using current payout formulas)</p>
 
-                <h4>Expenses</h4>
+                <h4>Expenses (Estimated)</h4>
                 <ul>
                     <li><em>ESRC:</em> 26 billion ISK</li>
                     <li><em>Dispatch:</em> 2 billion ISK</li>
@@ -91,12 +90,6 @@ require '../page_templates/home_html-begin.php';
                     <li><em>Events:</em> While events sometimes draw from the ESR budget we generally try and self fund them with donations before the event.</li>
                 </ul>
 
-                <h4>Revenue</h4>
-                <ul>
-                    <li><em>Pilot Donations:</em> 12 billion ISK</li>
-                    <li><em>Fund Drive Target:</em> <?=$amtGoal?> billion ISK</li>
-                    <li><em>On Hand:</em> 15 billion ISK</li>
-                </ul>
 			</div>
 		</div>
 	</div>
@@ -107,97 +100,103 @@ require '../page_templates/home_html-begin.php';
         </div>
         <br />
 		<h4>Donors</h4> <strong>as of <?=$last_modified?></strong><br />
-        (most recent donor listed first)
         <br /><br />
 		<table class="white" style="width: auto;">
 			<tbody>
                 <tr>
-                    <td class="clean text-nowrap">Raven Drex</td>
+                    <td class="clean text-nowrap">Tekufah</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Knoerp N'beekie</td>
+                    <td class="clean text-nowrap">Kendra Prime</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Connor Enderos</td>
+                    <td class="clean text-nowrap">Lortex Gemini</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Angel Lafisques</td>
+                    <td class="clean text-nowrap">Iclil</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Eli Strange</td>
+                    <td class="clean text-nowrap">IucI</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Jehan Dante</td>
+                    <td class="clean text-nowrap">Nac Audene</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Vega Blazar</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Echerie Saissore</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Beau Gus</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Mehk'tor</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Oddore Despayre</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Bon G0</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Arianna Oksaras</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Rea Mortana</td>
+                </tr>
+				
+				
+                <tr>
+                    <td class="clean text-nowrap">Meznyx Saroyan</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Mako Koskanaiken</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Das d'Alembert</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Xalyar</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Sparkler Cadelanne</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Woody Hi</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Captain Crinkle</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Tamayo</td>
+                </tr>
+                <tr>
+                    <td class="clean text-nowrap">Lexington Braddock</td>
+                    <td width="15px">&nbsp;</td>
+                    <td class="clean text-nowrap">Okamainen al'Anzomi</td>
                 </tr>
                 <tr>
                     <td class="clean text-nowrap">Lixiana Vor'shan</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Pallyen</td>
+                    <td class="clean text-nowrap">Kai Gray Dwayne</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">miruxa</td>
+                    <td class="clean text-nowrap">Pria Tymar</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Null Flare</td>
+                    <td class="clean text-nowrap">Sir Fiddle Sticks</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Eul Erquilenne</td>
+                    <td class="clean text-nowrap">Amos Nakrar</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Allyanna Erquilenne</td>
+                    <td class="clean text-nowrap">like-shadows-into the-night</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Mirielle Asaki</td>
+                    <td class="clean text-nowrap">D'addex</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Vega Blazar</td>
+                    <td class="clean text-nowrap">Xavec</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Qifara Raholan</td>
+                    <td class="clean text-nowrap">Alvar Weweai</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Kedo Shaishi</td>
+                    <td class="clean text-nowrap">Nubris Bramblesnatc</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Dai Jintsu</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Sparkler Cadellane</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Kamiti Arcamer</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Duke Atradis</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">John NoFear</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Rogue Integer</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Tamayo</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Alister Graut</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Xalyar</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Tekufah</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">MicaNielsen</td>
-                    <td width="15px">&nbsp;</td>
                     <td class="clean text-nowrap">Igaze</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Katia Sae</td>
                     <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Captain Crinkle</td>
+                    <td class="clean text-nowrap">Krallia Etug</td>
                 </tr>
                 <tr>
-                    <td class="clean text-nowrap">Mako Koskanaiken</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Mike Azariah</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Metaphor</td>
-                    <td width="15px">&nbsp;</td>
-                    <td class="clean text-nowrap">Scort</td>
-                </tr>
-                <tr>
-                    <td class="clean text-nowrap">Ryndallon</td>
+                    <td class="clean text-nowrap">Iralen Tarzal</td>
                     <td width="15px">&nbsp;</td>
                     <td class="clean text-nowrap">&nbsp;</td>
                 </tr>
