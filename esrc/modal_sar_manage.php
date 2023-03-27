@@ -8,7 +8,8 @@ $reqID = (isset($_REQUEST['req'])) ? $_REQUEST['req'] : '';
 // get all rescue information
 $request = $rescue->getRequest($reqID);
 
-$agents = array_key_exists('RescueAgents', $request) ? explode(',', $request['RescueAgents']) : Array();
+$agents = array_key_exists('RescueAgents', $request) ? 
+	explode(',', $request['RescueAgents'] ?? '') : array();
 	
 	// data display different for coordinators and pilots involved in rescue
 	$isSARAgent = (
