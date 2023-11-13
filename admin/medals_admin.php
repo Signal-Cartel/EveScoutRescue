@@ -138,7 +138,7 @@ elseif ($rowid > 0) {
     </div>
     <div class="ws"></div>
     <div class="row" id="systable">
-		<div class="col-sm-4">
+		<div class="col-sm-5">
             <p class="sechead white">Medals Awarded</p>
 			<table id="example" class="table display" style="width: auto;">
 				<thead>
@@ -168,35 +168,34 @@ elseif ($rowid > 0) {
 				</tbody>
 			</table>
 		</div>
-		
-	    <div class="col-sm-4">
+        <div class="col-sm-5">
             <p class="sechead white">Recent Qualifying Activity</p>
 			<table id="example2" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Pilot</th>
 						<th class="white">Count</th>
-                        <th class="white">Last<br>Action</th>
+                        <th class="white">Last Action</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 				// ESRC Medals
                 if (intval($medalid) < 10) {
-                    $db->query("SELECT COUNT(*) AS cnt, Pilot, DATE_FORMAT(max(ActivityDate),'%Y-%m-%d') as act FROM activity
+                    $db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act FROM activity
                         WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN '2017-03-01' AND NOW()
                         GROUP BY Pilot ORDER BY cnt desc, act DESC");
                 }
                 // SAR Medals
                 elseif (intval($medalid) > 10 && intval($medalid) < 20) {
-                    $db->query("SELECT COUNT(ra.pilot) AS cnt, ra.pilot AS Pilot, DATE_FORMAT(MAX(ra.entrytime),'%Y-%m-%d') AS act 
+                    $db->query("SELECT COUNT(ra.pilot) AS cnt, ra.pilot AS Pilot, MAX(ra.entrytime) AS act 
                         FROM rescuerequest rr, rescueagents ra 
 						WHERE rr.status = 'closed-rescued' AND rr.id=ra.reqid
 						GROUP BY ra.pilot ORDER BY cnt DESC, ra.entrytime DESC");
 				}
 				// Dispatcher medals
 				elseif (intval($medalid) > 20) {
-                    $db->query("SELECT COUNT(startagent) as cnt, startagent as Pilot, DATE_FORMAT(max(requestdate),'%Y-%m-%d') as act FROM rescuerequest
+                    $db->query("SELECT COUNT(startagent) as cnt, startagent as Pilot, max(requestdate) as act FROM rescuerequest
                         WHERE requestdate BETWEEN '2017-03-01' AND NOW()
 						GROUP BY startagent ORDER BY COUNT(startagent) DESC, act DESC");
                 }
@@ -218,29 +217,24 @@ elseif ($rowid > 0) {
 				</tbody>
 			</table>
 		</div>
-		
-		<div class="col-sm-4 white">
+		<div class="col-sm-2 white">
 			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
             <p class="sechead white">Medals</p>
-            1 - <a href="?medalid=1&min=100&max=299">SuperCacher (100)</a><?php echo ($medalid==1)? $arrow : '' ?><br />
-            2 - <a href="?medalid=2&min=300&max=499">MegaCacher (300)</a><?php echo ($medalid==2)? $arrow : '' ?><br />
-            3 - <a href="?medalid=3&min=500&max=999">HyperCacher (500)</a><?php echo ($medalid==3)? $arrow : '' ?><br />
-            4 - <a href="?medalid=4&min=1000&max=2999">UltraCacher (1000)</a><?php echo ($medalid==4)? $arrow : '' ?><br />
-            5 - <a href="?medalid=5&min=3000&max=4999">Heroic Cacher (3000)</a><?php echo ($medalid==5)? $arrow : '' ?><br />
-            6 - <a href="?medalid=6&min=5000&max=9999">Insane Cacher (5000)</a><?php echo ($medalid==6)? $arrow : '' ?><br />
-			7 - <a href="?medalid=7&min=10000&max=99999">The Crinkle Crown 10,000</a><?php echo ($medalid==7)? $arrow : '' ?><br />
-            11 - <a href="?medalid=11&min=1&max=9">SAR Bronze (1)</a><?php echo ($medalid==11)? $arrow : '' ?><br />
-            12 - <a href="?medalid=12&min=10&max=49">SAR Silver (10)</a><?php echo ($medalid==12)? $arrow : '' ?><br />
-            13 - <a href="?medalid=13&min=50&max=99">SAR Gold (50)</a><?php echo ($medalid==13)? $arrow : '' ?><br />
-			14 - <a href="?medalid=14&min=100&max=499">Beacon of Anoikis (100)</a><?php echo ($medalid==14)? $arrow : '' ?><br />
-			21 - <a href="?medalid=21&min=5&max=49">Dispatcher - Qualified (5)</a><?php echo ($medalid==21)? $arrow : '' ?><br />
-			22 - <a href="?medalid=22&min=50&max=99">Dispatcher - Proficient (50)</a><?php echo ($medalid==22)? $arrow : '' ?><br />
-			23 - <a href="?medalid=23&min=100&max=999">Dispatcher - Master (100)</a><?php echo ($medalid==23)? $arrow : '' ?><br />
+            1 - <a href="?medalid=1&min=100&max=299">SuperCacher</a><?php echo ($medalid==1)? $arrow : '' ?><br />
+            2 - <a href="?medalid=2&min=300&max=499">MegaCacher</a><?php echo ($medalid==2)? $arrow : '' ?><br />
+            3 - <a href="?medalid=3&min=500&max=999">HyperCacher</a><?php echo ($medalid==3)? $arrow : '' ?><br />
+            4 - <a href="?medalid=4&min=1000&max=2999">UltraCacher</a><?php echo ($medalid==4)? $arrow : '' ?><br />
+            5 - <a href="?medalid=5&min=3000&max=4999">Heroic Cacher</a><?php echo ($medalid==5)? $arrow : '' ?><br />
+            6 - <a href="?medalid=6&min=5000&max=9999">Insane Cacher</a><?php echo ($medalid==6)? $arrow : '' ?><br />
+			7 - <a href="?medalid=7&min=10000&max=99999">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?><br />
+            11 - <a href="?medalid=11&min=1&max=9">SAR Bronze</a><?php echo ($medalid==11)? $arrow : '' ?><br />
+            12 - <a href="?medalid=12&min=10&max=49">SAR Silver</a><?php echo ($medalid==12)? $arrow : '' ?><br />
+            13 - <a href="?medalid=13&min=50&max=99">SAR Gold</a><?php echo ($medalid==13)? $arrow : '' ?><br />
+			14 - <a href="?medalid=14&min=100&max=499">Beacon of Anoikis</a><?php echo ($medalid==14)? $arrow : '' ?><br />
+			21 - <a href="?medalid=21&min=5&max=49">Disp - Qualified</a><?php echo ($medalid==21)? $arrow : '' ?><br />
+			22 - <a href="?medalid=22&min=50&max=99">Disp - Proficient</a><?php echo ($medalid==22)? $arrow : '' ?><br />
+			23 - <a href="?medalid=23&min=100&max=999">Disp - Master</a><?php echo ($medalid==23)? $arrow : '' ?><br />
 		</div>
-	</div>
-	<div class="ws"></div>
-    <div class="row" id="systable1">
-
 	</div>
 	<?php
 	}

@@ -281,7 +281,7 @@ include 'modal_sar_add-rescue-pilot.php';
  * @param unknown $status
  * @return string|unknown
  */
-function translateStatus($status)
+function translateStatus($status = '')
 {
 	$result = "unknown";
 	switch ($status) {
@@ -395,7 +395,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	$status = $row['status'];
 	$colspan = 0;
 	
-	$agents = array_key_exists('RescueAgents', $row) ? explode(',', $row['RescueAgents']) : Array();
+	$agents = array_key_exists('RescueAgents', $row) ? 
+		explode(',', $row['RescueAgents'] ?? '') : array();
 	
 	// data display different for coordinators and pilots involved in rescue
 	$isSARAgent = (

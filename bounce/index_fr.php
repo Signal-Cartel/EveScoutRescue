@@ -18,7 +18,7 @@ include_once '../includes/head.php';
 <div class="container">
 <div class="row" id="header" style="padding-top: 10px;">
 	<?php include_once '../includes/top-left.php'; ?>
-	<div class="col-sm-8 white" style="text-align: center; vertical-align: middle;">
+	<div class="col-sm-8 white" style="text-align: center; height: 100px; vertical-align: middle;">
 		<br /><span class="sechead">Bounce Method Instructions</span><br />
 		Please join the in-game channel <span style="color: gold; font-weight: bold;">EvE-Scout</span> for further assistance.
 	</div>
