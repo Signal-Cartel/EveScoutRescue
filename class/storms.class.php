@@ -6,94 +6,155 @@ if (!defined('ESRC')) {
 	exit ( 1 );
 }
 
+include_once '../class/config.class.php';
 
 class Storms
 {
-	var $db= null;
-	
-	public function __construct($database = NULL)
-	{
-		if (isset($database))
-		{
-			$this->db = $database;
-		}
-		else
-		{
-			// create a new database class instace
-			$this->connectDatabase ();
-		}
-    }
-    
-	
-	/**
-	 * Create a new DB connection.
-	 */
-	private function connectDatabase() {
-		$this->db = new Database ();
-	}
-	
-
 	/**
 	 * Create new entry into [storm_tracker] table
 	 * @param array $arrayStormReport Array of values needed to populate report record
 	 */
-	public function createStormEntry($arrayStormReport)
-	{
-		$dateobserved = new DateTime('now', new DateTimeZone('UTC'));
+  public function createStormEntry($character_id, $observation_type, $observed_in_person, $system_name) {
+    $data = array(
+      "character_id" => intval($character_id),
+      "observation_type" => $observation_type,
+      "observed_in_person" => $observed_in_person,
+      "system_name" => $system_name
+    );
 
-		// if new report is for same system as previous report, store date of original report
-		$orig_dateobserved = ($arrayStormReport['lastKnownSystem'] == $arrayStormReport['evesystem']) ?
-			$arrayStormReport['lastObservationDate'] : $dateobserved->format('Y-m-d H:i:s');
+    $uri = Config::ES_API_URI . "/v2/private/observations";
+    $headers = array(
+      "Content-Type: application/json",
+      "X-ESRC-Auth: " . Config::ES_API_SECRET,
+    );
 
-		$sql = "INSERT INTO storm_tracker (storm_id, evesystem, pilot, stormtype, stormstrength, 
-					dateobserved, orig_dateobserved, observation_type)
-				VALUES (:storm_id, :evesystem, :pilot, :stormtype, :stormstrength, :dateobserved, 
-					:orig_dateobserved, :observation_type)";
-		
-		$this->db->query($sql);
-		$this->db->bind(":storm_id", $arrayStormReport['storm_id']);
-		$this->db->bind(":evesystem", $arrayStormReport['evesystem']);
-		$this->db->bind(":pilot", $arrayStormReport['pilot']);
-		$this->db->bind(":stormtype", $arrayStormReport['stormtype']);
-		$this->db->bind(":stormstrength", $arrayStormReport['stormstrength']);
-		$this->db->bind(":dateobserved", $dateobserved->format('Y-m-d H:i:s'));
-		$this->db->bind(":orig_dateobserved", $orig_dateobserved);
-		$this->db->bind(":observation_type", $arrayStormReport['observation_type']);
-		$this->db->execute();
-	}
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $uri);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
+    switch ($status) {
+      case 200:
+        $result = true;
+        break;
+      case 400:
+        if ($response) {
+          $result = json_decode($response, true);
+          $result = $result['error']['name'];
+          break;
+        }
+      default:
+        $result = "error";
+    }
+
+    return $result;
+}
+
+  /**
+   * Delete storm report entry from db
+   * @param int $rowid ID of database row to delete
+   */
+  public function removeStormEntry($rowid) {
+    $uri = Config::ES_API_URI . "/v2/private/observations/" .
+      urldecode(intval($rowid));
+    $headers = array(
+      "X-ESRC-Auth: " . Config::ES_API_SECRET,
+    );
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $uri);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    switch ($status) {
+      case 200:
+      case 204:
+        $result = true;
+        break;
+      case 400:
+        if ($response) {
+          $result = json_decode($response, true);
+          $result = $result['error']['name'];
+          break;
+        }
+      default:
+        $result = "error";
+    }
+
+    return $result;
+  }
+
+  function sortByCreatedAt($a, $b) {
+    $timeA = strtotime($a['created_at']);
+    $timeB = strtotime($b['created_at']);
+    return $timeB - $timeA;
+  }
 
 	/**
 	 * Get list of most recent storm reports for each defined storm.
 	 * @return array $result
 	 */
-	public function getRecentReports()
+	public function getRecentReports($scope, $storms_only = true)
 	{
-		$sql = "SELECT 
-					st.*, 
-					mr.regionName, 
-					u.characterid, 
-					# (Hours between original report and most recent report) + (Hours between most recent report and now) = Hours in system
-					TIMESTAMPDIFF(HOUR, orig_dateobserved, dateobserved) + TIMESTAMPDIFF(HOUR, dateobserved, NOW()) AS hours_in_system, 
-					IF(dateobserved < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 12 HOUR), 1, 0) AS ready_for_new_report
-				FROM storm_tracker st
-				INNER JOIN mapSolarSystems mss ON st.evesystem = mss.solarSystemName
-				INNER JOIN mapRegions mr ON mss.regionID = mr.regionID
-				INNER JOIN `user` u ON st.pilot = u.character_name
-				WHERE st.id IN (
-					SELECT MAX(id) AS rowid
-					FROM storm_tracker
-					WHERE storm_id > 0
-					GROUP BY storm_id
-					ORDER BY MAX(dateobserved) DESC
-				)
-				GROUP BY st.storm_id
-				ORDER BY st.id DESC";
-		$this->db->query($sql);
-        $result = $this->db->resultset();
-        $this->db->closeQuery();
+    switch ($scope) {
+      case "private":
+        $uri = Config::ES_API_URI . "/v2/private/observations?latest=true";
+        $headers = array(
+          "X-ESRC-Auth: " . Config::ES_API_SECRET,
+        );
+        break;
+      case "public":
+        $uri = Config::ES_API_URI . "/v2/public/observations";
+        $headers = array();
+        break;
+      default:
+        return array();
+    }
 
-		return $result;
+    $result = array();
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $uri);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    if ($response) {
+      $result = json_decode($response, true);
+
+      if ($storms_only) {
+        // the tracking endpoint returns not only storms but other data as well
+        $whitelist = [
+          "electric_a",
+          "electric_b",
+          "exotic_a",
+          "exotic_b",
+          "gamma_a",
+          "gamma_b",
+          "plasma_a",
+          "plasma_b",
+          ];
+        $result = array_filter($result, function ($item) use ($whitelist) {
+          // Check if the 'observation_type' property is in the whitelist
+          return in_array($item['observation_type'], $whitelist);
+        });
+      }
+
+      usort($result, array('Storms', 'sortByCreatedAt'));
+    }
+    if (curl_errno($ch)) {
+      echo 'Curl error: ' . curl_error($ch);
+    }
+    curl_close($ch);
+
+    return $result;
 	}
 
 
@@ -104,25 +165,77 @@ class Storms
 	static public function getStormName($id)
 	{
 		switch ($id) {
-			case 1: return 'Electric A'; break;
-			case 2: return 'Electric B'; break;
-			case 3: return 'Exotic A'; break;
-			case 4: return 'Exotic B'; break;
-			case 5: return 'Gamma A'; break;
-			case 6: return 'Gamma B'; break;
-			case 7: return 'Plasma A'; break;
-			case 8: return 'Plasma B'; break;
+			case 1:
+      case 'electric_a':
+        return 'Electric A';
+        break;
+			case 2:
+      case 'electric_b':
+        return 'Electric B';
+        break;
+			case 3:
+      case 'exotic_a':
+        return 'Exotic A';
+        break;
+			case 4:
+      case 'exotic_b':
+        return 'Exotic B';
+        break;
+			case 5:
+      case 'gamma_a':
+        return 'Gamma A';
+        break;
+      case 'gamma_b':
+			case 6:
+        return 'Gamma B';
+        break;
+			case 7:
+      case 'plasma_a':
+        return 'Plasma A';
+        break;
+			case 8:
+      case 'plasma_b':
+        return 'Plasma B';
+        break;
+      case 'toms_shuttle':
+        return 'Space Oddity';
+      default:
+        return 'unknown';
 		}
 	}
-    
+
 	
 	/**
 	 * Get list of storms.
 	 * @param string $interval Get storm reports between now and this inteval; defaults to 36 hours
 	 * @return array $result
 	 */
-	public function getStormReports($return_type = '', $stormid = 0, $interval = '36 HOUR')
+	public function getStormReports($observation_type)
 	{
+    $uri = Config::ES_API_URI . "/v2/private/observations?observation_type=" .
+        urldecode($observation_type);
+    $headers = array(
+      "X-ESRC-Auth: " . Config::ES_API_SECRET,
+    );
+
+    $result = array();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $uri);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    if ($response) {
+      $result = json_decode($response, true);
+    }
+    if (curl_errno($ch)) {
+      echo 'Curl error: ' . curl_error($ch);
+    }
+    curl_close($ch);
+
+    usort($result, array('Storms', 'sortByCreatedAt'));
+
+    return $result;
+    /*
 		switch ($return_type) {
 			case 'named':
 				$where_clause = 'WHERE storm_id = :storm_id';
@@ -148,6 +261,7 @@ class Storms
         $this->db->closeQuery();
 
 		return $result;
+    */
 	}
 
 	/**
@@ -183,20 +297,4 @@ class Storms
 
 		return $result;
 	}
-
-
-	/**
-	 * Delete storm report entry from db
-	 * @param int $rowid ID of database row to delete
-	 */
-	public function removeStormEntry($rowid)
-	{
-		$this->db->beginTransaction();
-		$this->db->query("DELETE FROM storm_tracker WHERE id = :id");
-		$this->db->bind(':id', $rowid);
-		$this->db->execute();
-		$this->db->endTransaction();
-	}
-
 }
-?>
