@@ -113,14 +113,6 @@ else{
 	$isCoord = $_SESSION['isCoord'];
 }
 
-// check for 911 Operator login
-if (!isset($_SESSION['is911'])){
-	$is911 = $_SESSION['is911'] = ($isCoord or $isAdmin or $users->is911($charname));	
-}
-else{
-	$is911 = $_SESSION['is911'];
-}
-
 $system = '';
 if(isset($_REQUEST['sys'])) {
 	if (ucfirst(htmlspecialchars_decode($_REQUEST['sys'])) != 'Thera'){
@@ -138,20 +130,15 @@ if(isset($_REQUEST['sys'])) {
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
-$activeSAR = $activeSARtitle = '';
-$islocatepilot = false;
-// get active SAR requests of current system if locate pilot or 911 operator or higher
+// get active SAR requests of current system
 $data = $rescue->getSystemRequests($system, 0, $isCoord);
-if (count($data) > 0) {
-	foreach ($data as $row){
-		if ($row['locateagent'] == $charname) {$islocatepilot = true;}
-	}
-	if ($islocatepilot or $is911 ){
-		$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
-		$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
-	}
-}
 
+$activeSAR = $activeSARtitle = '';
+// check for active SAR request
+if (count($data) > 0) {
+	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
+	$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+}
 
 // CONFIRM PILOT'S IN-GAME LOCATION
 $pilotLocStat = '';
