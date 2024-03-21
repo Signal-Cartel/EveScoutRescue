@@ -248,22 +248,26 @@ a.nostyle:visited {
 				<marquee class="scroll-text">
 
 				<?php
-				$rows = $storms->getRecentReports();
+				$rows = $storms->getRecentReports("public", false);
 				if (empty($rows)) {
 					echo 'No current reports <span class="glyphicon glyphicon-forward"></span> 
 						Stay tuned for our next update <span class="glyphicon glyphicon-forward"></span> ';
 				}
 				else {
 					foreach ($rows as $value) {
-						$dateobserved = date_create($value['dateobserved']);
+                        if ($value['observation_type'] == 'toms_shuttle') {
+                            $oddity = $value;
+                            continue;
+                        }
 						echo 'Click for tabular view <span class="glyphicon glyphicon-forward"></span> ';
-						echo $value['evesystem'] .' ['. $value['regionName'] .'] - '.
-							$value['stormstrength'] .' Metaliminal '. $value['stormtype'] .
-							' Ray Storm - last reported: '. date_format($dateobserved, "M-d@H:i");
+                        $type = explode(' ', Storms::getStormName($value['observation_type']));
+                        $date = new DateTime($value['created_at']);
+						echo $value['system_name'] .' ['. $value['region_name'] .'] - '.
+							' Strong Metaliminal '. $type[0] .
+							' Ray Storm - last reported: '. $date->format("M-d@H:i");
 						echo ' <span class="glyphicon glyphicon-forward"></span> ';
 					}
 				}	?>
-				
 				</marquee>
                 <span class="onoffswitch3-switch">NEW EDEN WEATHER</span>
 				</a>
@@ -272,7 +276,30 @@ a.nostyle:visited {
     </label>
 </div>
 <!-- /NEWS TICKER -->
+<!-- SPACE ODDITY -->
+<div class="onoffswitch3">
+    <input type="checkbox" name="onoffswitch4" class="onoffswitch3-checkbox" id="myonoffswitch3" checked>
+    <label class="onoffswitch3-label" for="myonoffswitch3">
+        <span class="onoffswitch3-inner">
+            <span class="onoffswitch3-active">
+				<marquee class="scroll-text">
+                  <?
+                  $value = $oddity;
+                  echo '<span class="glyphicon glyphicon-forward"></span> ';
+                  $date = new DateTime($value['created_at']);
+                  echo $value['system_name'] .' ['. $value['region_name'] .'] - '.
+                    ' Tom\'s Shuttle ' .
+                    ' - last reported: '. $date->format("M-d@H:i");
+                  echo ' <span class="glyphicon glyphicon-forward"></span> ';
 
+                  ?>
+                </marquee>
+                <span class="onoffswitch3-switch">SPACE ODDITY</span>
+            </span>
+        </span>
+    </label>
+</div>
+<!-- /SPACE ODDITY -->
 <?php
 // HTML PAGE template - End
 require '../page_templates/home_html-end.php';

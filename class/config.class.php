@@ -35,6 +35,8 @@ define("USERAGENT", $sysconfig['userAgent']);
 define("DEVSYSTEM", $sysconfig['devSystem']);
 define("DISCORDCOORD", $sysconfig['discordCoordChannel']);
 define("DISCORD_EXPLO", $sysconfig['discordExploChannel']);
+define("ES_API_URI", $sysconfig['eveScoutApiBaseUri']);
+define("ES_API_SECRET", $sysconfig['eveScoutApiSecret']);
 
 
 class Config
@@ -47,4 +49,6 @@ class Config
 	const DEV_SYSTEM = DEVSYSTEM;
 	const DISCORD_SAR_COORD_TOKEN = DISCORDCOORD;
 	const DISCORDEXPLO = DISCORD_EXPLO;
+  const ES_API_URI = ES_API_URI;
+  const ES_API_SECRET = ES_API_SECRET;
 }

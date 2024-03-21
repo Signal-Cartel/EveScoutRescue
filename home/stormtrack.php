@@ -23,7 +23,7 @@ require '../page_templates/home_html-begin.php';
 			<div class="panel-body">
 
             <?php
-            $rows = $storms->getRecentReports();
+            $rows = $storms->getRecentReports("public", true);
             if (empty($rows)) {
                 echo 'No current reports';
             }
@@ -44,17 +44,16 @@ require '../page_templates/home_html-begin.php';
                     <tbody>
 
                     <?php
-                    foreach($rows as $value) {
-                        $dateobserved = date_create($value['dateobserved']);    ?>
+                    foreach($rows as $value) { ?>
 
                         <tr>
-                            <td><?=$value['regionName']?></td>
-                            <td><?=$value['evesystem']?></td>
-                            <td><?=Storms::getStormName($value['storm_id'])?></td>
-                            <td><?=$value['stormtype']?></td>
-                            <td><?=date_format($dateobserved, "M-d@H:i")?></td>
+                            <td><?=$value['region_name']?></td>
+                            <td><?=$value['system_name']?></td>
+                            <td><?=Storms::getStormName($value['observation_type'])?></td>
+                            <td><? $type = explode(' ', Storms::getStormName($value['observation_type'])); echo $type[0]; ?></td>
+                            <td><? $date = new DateTime($value['created_at']); echo $date->format("M-d@H:i"); ?></td>
                             <td><?=$value['hours_in_system']?></td>
-                            <td><?=$value['pilot']?></td>
+                            <td><?=$value['created_by_name']?></td>
                         </tr>
 
                     <?php
