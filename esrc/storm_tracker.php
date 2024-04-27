@@ -255,19 +255,22 @@ if (!empty($errmsg)) {
                         <tr>
                             <td colspan="7">&nbsp;</td>
                         </tr>
-                        <?php $value = $oddity; ?>
+                        <?php
+                            $value = $oddity;
+                            $observation_type = "toms_shuttle";
+                        ?>
                         <tr>
                             <td class="white text-nowrap">
-                                <a href="?observation_type=<?=$value['observation_type']?>">Tom's Shuttle</a>
+                                <a href="?observation_type=<?=$observation_type?>">Tom's Shuttle</a>
                             </td>
-                            <td class="white text-nowrap"><?=$value['system_name']?></td>
-                            <td class="white text-nowrap"><?=Storms::getStormName($value['observation_type'])?></td>
-                            <td class="white text-nowrap"><? $date = new DateTime($value['created_at']); echo $date->format("M-d"); ?></td>
-                            <td class="white text-nowrap"><? if ($value['hours_in_system'] <= 72) {  echo $value['hours_in_system']; } else { echo "72+"; }?></td>
-                            <td class="white text-nowrap"><?=($value['observed_in_person'] === true) ? 'In-Person' : 'Map'?></td>
-                            <td><?php if ($value['hours_in_system'] > 12) { ?>
+                            <td class="white text-nowrap"><?=is_null($value) ? "&nbsp;" : $value['system_name']?></td>
+                            <td class="white text-nowrap"><?=Storms::getStormName($observation_type)?></td>
+                            <td class="white text-nowrap"><? if (is_null($value)) { echo "&nbsp;"; } else { $date = new DateTime($value['created_at']); echo $date->format("M-d"); } ?></td>
+                            <td class="white text-nowrap"><? if (!is_null($value) && $value['hours_in_system'] <= 72) {  echo $value['hours_in_system']; } else { echo "72+"; }?></td>
+                            <td class="white text-nowrap"><?=(is_null($value) || $value['observed_in_person'] === true) ? 'In-Person' : 'Map'?></td>
+                            <td><?php if (is_null($value) || $value['hours_in_system'] > 12) { ?>
                                     <a type="button" class="btn btn-primary" role="button"
-                                       href="?new=1&observation_type=<?=$value['observation_type']?>">New Report</a>
+                                       href="?new=1&observation_type=<?=$observation_type?>">New Report</a>
                               <?php } else { echo '&nbsp;'; } ?>
                             </td>
                         </tr>

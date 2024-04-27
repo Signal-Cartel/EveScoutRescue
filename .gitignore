@@ -69,3 +69,4 @@ esrc/rescue_assistant-dev.php
 .idea/
 deploy.sh
 sync.sftp
+sync-prod.sftp
