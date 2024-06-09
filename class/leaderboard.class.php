@@ -127,6 +127,18 @@ class Leaderboard
 		$start_date = date('Y-m-d 00:00:00', strtotime($start_date));
 		$end_date = date('Y-m-d 23:59:59', strtotime($end_date));		
 		if ($groupByPilot) {
+			
+			$sql = "SELECT 
+						a.Pilot,
+						COUNT(DISTINCT(`System`)) as cntActions, 
+						IF((SELECT optout_type FROM payout_optout po WHERE a.Pilot = po.pilot 
+							AND optout_type = 'ESRC') IS NULL, COUNT(DISTINCT(`System`)), 0) AS cntPayableActions,
+						IF((SELECT optout_type FROM payout_optout po WHERE a.Pilot = po.pilot 
+							AND optout_type = 'ESRC') IS NULL, 1, 0) AS cntParticipation
+					FROM activity a 
+					WHERE EntryType IN ('sower','tender') AND ActivityDate BETWEEN :start_date AND :end_date 
+					GROUP BY Pilot";
+			/*
 			$sql = "SELECT 
 						a.Pilot,
 						COUNT(DISTINCT(`System`)) as cntActions, 
@@ -137,10 +149,11 @@ class Leaderboard
 					FROM activity a 
 					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
 					GROUP BY Pilot";
+			*/
 		}
 		else {
 			$sql = "SELECT * FROM activity 
-					WHERE EntryType <> 'agent' AND ActivityDate BETWEEN :start_date AND :end_date 
+					WHERE EntryType IN ('sower','tender') AND ActivityDate BETWEEN :start_date AND :end_date 
 					ORDER By ActivityDate DESC";
 		}
 
