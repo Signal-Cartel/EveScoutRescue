@@ -6,6 +6,7 @@ if ($system != ''){
 	$cacheid = $rowAgent['CacheID'];
 	$hasfil =  $rowAgent['has_fil'];
 }
+
 //$fil_check = ($hasfil == 1 ? '' : 'disabled');
   $fil_check = '';
 ?>
@@ -27,18 +28,14 @@ if ($system != ''){
 				<span class="sechead"><?php echo $system ?></span>
 			</div>
 			<div class="checkbox">
-			  	<label class="control-label" for="updateexp">
-			  		<input type="checkbox" id="updateexp" name="updateexp" value="1" onClick="checkLogic(this);">
-					Cache was accessed					
-				</label>
+			  	<!-- <label class="control-label" for="updateexp">Cache was accessed</label>-->
+			  	<input type="checkbox" style="display:none" checked="checked" id="updateexp" name="updateexp" value="1" onClick="checkLogic(this);">			
 			</div>
 
-				<span class="control-label">Was pilot successfully rescued?</span>
+				<!--<span class="control-label">Was pilot successfully rescued?</span>-->
 				<div class="checkbox">
-					<label class="control-label" for="succesrc">
-						<input type="checkbox" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this);">	
-						Yes, with probes and/or scanner
-					</label>
+					<!-- <label class="control-label" for="succesrc">Yes, with probes and/or scanner</label>-->
+					<input type="checkbox" style="display:none" checked="checked" id="succesrc" name="succesrc" value="1" onClick="checkLogic(this);">				
 				</div>
 			<div style="display: none;">
 				<div class="checkbox">
@@ -68,7 +65,7 @@ if ($system != ''){
 	      <div class="modal-footer">
 	        <div class="form-actions">
 					<input type="hidden" name="pilot" value="<?php echo isset($charname) ? $charname : 'charname_not_set' ?>" />
-					<input type="hidden" name="CacheID" value="<?=$row['CacheID']?>" />
+					<input type="hidden" name="CacheID" value="<?= $cacheid ?>" />
 			    <button type="submit" class="btn btn-info">Submit</button>
 			</div>
 	      </div>

@@ -187,9 +187,16 @@ if (!empty($errmsg)) {
 			$data_finished = $rescue->getSystemRequests22($system, 1, $isCoord);
 			
 			$activeSARtitle = '';
+			$islocatepilot = false;
 			// check for active SAR request
+			
 			if (count($data_active) > 0) {
-				$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+				foreach ($data_active as $row){
+					if ($row['locateagent'] == $charname) {$islocatepilot = true;}
+				}
+				if ($islocatepilot or $is911 ){
+					$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+				}
 			}
 
 			?>

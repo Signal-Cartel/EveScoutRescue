@@ -20,8 +20,7 @@ require_once '../class/rescue.class.php';
 $cachepass = (isset($_REQUEST['pass']) ? $_REQUEST['pass'] : Password::generatePassword());
 
 // check if the user is alliance member
-if (!Users::isAllianceUserSession())
-{
+if (!Users::isAllianceUserSession()){
 	// check if last login was already a non auth user
 	if (isset($_SESSION['AUTH_NOALLIANCE']))
 	{
@@ -45,6 +44,7 @@ if (!Users::isAllianceUserSession())
 	// stop processing
 	exit;
 }
+unset($_SESSION['AUTH_NOALLIANCE']);
 
 $romans = Array(
 	'Star' => 'Star',
@@ -100,18 +100,39 @@ if (!isset($charname))
 
 // create object instances
 $users = new Users($database);
-$caches = new Caches($database);
+
 $systems = new Systems($database);
 $rescue = new Rescue($database);
 $leaderBoard = new Leaderboard($database);
 
-// check for SAR Coordinator login
+// check for pilot roles
+if (!isset($_SESSION['isAdmin'])){
+	$isAdmin = $_SESSION['isAdmin'] = $users->isAdmin($charname);	
+}
+else{
+	$isAdmin = $_SESSION['isAdmin'];
+}
 if (!isset($_SESSION['isCoord'])){
-	$isCoord = $_SESSION['isCoord'] = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));	
+	$isCoord = $_SESSION['isCoord'] = ($isAdmin or $users->isSARCoordinator($charname));	
 }
 else{
 	$isCoord = $_SESSION['isCoord'];
 }
+if (!isset($_SESSION['is911'])){
+	$is911 = $_SESSION['is911'] = ($isCoord or $isAdmin or $users->is911($charname));	
+}
+else{
+	$is911 = $_SESSION['is911'];
+}
+
+
+if(isset($_REQUEST['r']) and $_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ){
+	$is911 = $_SESSION['is911'] = $isAdmin = $_SESSION['isAdmin'] = $isCoord = $_SESSION['isCoord'] = 0;
+	if ($_REQUEST['r'] == 'a') $isAdmin = $_SESSION['isAdmin'] = 1;
+	if ($_REQUEST['r'] == 'c' or $isAdmin) $is911 = $_SESSION['is911'] = $isCoord = $_SESSION['isCoord'] = 1;
+	if ($_REQUEST['r'] == '9' or $isAdmin or $isCoord) $is911 = $_SESSION['is911'] = 1;	
+}
+
 
 $system = '';
 if(isset($_REQUEST['sys'])) {
@@ -130,45 +151,51 @@ if(isset($_REQUEST['sys'])) {
 
 if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
-// get active SAR requests of current system
-$data = $rescue->getSystemRequests($system, 0, $isCoord);
-
 $activeSAR = $activeSARtitle = '';
-// check for active SAR request
-if (count($data) > 0) {
-	$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
-	$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+$islocatepilot = false;
+// get active SAR requests of current system if locate pilot or 911 operator or higher
+$requests = $rescue->getSystemRequests($system, 0, $isCoord);
+if (count($requests) > 0) {
+	foreach ($requests as $request){
+		if ($request['locateagent'] == $charname) {$islocatepilot = true;}
+	}
+	if ($islocatepilot or $is911 ){
+		$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
+		$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+	}
 }
+
 
 // CONFIRM PILOT'S IN-GAME LOCATION
 $pilotLocStat = '';
 // does not apply to SAR Coordinators
-if ($isCoord == false  && (Config::DEV_SYSTEM != 1)) {
+if ($isCoord == false) {
 	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
 		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
 		// This is awfully inefficient - ADP
+		
 		if (!isset($_SESSION['megacacher'])){
+			$_SESSION['megacacher'] = 0;
 			$daysdiff = round((strtotime("+1 day")- strtotime("2017-03-01")) / (60 * 60 * 24));
 			$rows = $leaderBoard->getTop(2000, $daysdiff);
 			$bitPilotMatch = 0;
 			foreach ($rows as $value) {
 				if ($charname ==  $value['Pilot']) {
 					if ($value['cnt'] >= 300) {
-						$bitPilotMatch = 1;
+						$_SESSION['megacacher'] = 1;
 						break;
 					}
 				}
 			}
-			$_SESSION['megacacher'] = $bitPilotMatch;
 		}
-		
-		if ($_SESSION['megacacher'] == 0) {
+		// DISABLE MEGA CACHER PRIVELEGE TEMPORARILY
+		if (true or $_SESSION['megacacher'] == 0) {
 			// otherwise, pilot may only sow/tend caches for a system they are verified to be present in
-			if (($_SESSION['auth_char_location'] != $system) && ($_SESSION['prior_system'] != $system)) {
-				$pilotLocStat = 'not_in_system';
-				$strBtnAttrib = 'data-toggle="tooltip" title="You must be in or one jump out from '.
-					$system .' in order to perform this action, but you are in '.
+			if ($_SESSION['auth_char_location'] != $system)  {
+				$pilotLocStat = 'not_in_system';				
+				$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '.
+					$system .' to perform this action, but you are in '.
 					$_SESSION['auth_char_location'].'"';
 			}
 		}
@@ -208,17 +235,26 @@ if (!empty($errmsg)) {
 }
 
 
-// check if a system is supplied
+// will not retrieve cache password (or allow sow) if you are not in system or 911 or higher
+$limited_data = $_SESSION['limited_data'] = 1;
+if (isset($_SESSION['auth_char_location']) and ($_SESSION['auth_char_location'] == $system)) $limited_data = $_SESSION['limited_data'] = 0;
+if (isset($_SESSION['prior_system']) and ($_SESSION['prior_system'] == $system)) $limited_data = $_SESSION['limited_data'] = 0;
+if ($is911) $limited_data = $_SESSION['limited_data'] = 0;
+
+// check if a system is supplied	
 if (!empty($system)) {
 	// display result for the selected system
 	// get cache information from database
-	$row = $caches->getCacheInfo($system);
+	$caches = new Caches($database);	
+	$cache_info = $caches->getCacheInfo($system, $limited_data);		
+	$isTendingAllowed = $caches->isTendingAllowed($system);
+
 	$strNotes = '';
 	//only display the following if we got some results back
-	if (!empty($row)) {
+	if (!empty($cache_info)) {
 		// calculate status cell format
 		$statuscellformat = '';
-		switch ($row ['Status']) {
+		switch ($cache_info ['Status']) {
 			case 'Healthy':
 				$statuscellformat = ' style="color: #32ff32;"';//green
 				break;
@@ -233,12 +269,9 @@ if (!empty($system)) {
 		}
 		
 		// save notes as separate var
-		$strNotes = ($row['Note']);
-		// include modals for modifying current cache
-			include 'modal_agent.php';
-			include 'modal_tend.php';
-			include 'modal_edit.php';
-			include 'modal_newnote.php';
+		$strNotes = ($cache_info['Note']);
+		
+			
 		?>
 		
 		
@@ -247,18 +280,20 @@ if (!empty($system)) {
 			<div class="col-md-12">
 				<div style="padding-left: 10px;">
 					<!-- System Name display -->
-					<p class="systemName"><?=$system . "<span $statuscellformat> " . $row ['Status'] . "</span>" . $activeSARtitle ?></p>
+					<p class="systemName"><?=$system . "<span $statuscellformat> " . $cache_info ['Status'] . "</span>" . $activeSARtitle ?></p>
 					<!-- TEND button -->
 					<?php
 					$strTended = '';
-					if (0 == $caches->isTendingAllowed($system)) {
+					
+					if (0 == $isTendingAllowed) {
 						$strTended = ' <i class="white fa fa-clock-o"></i>';
 					}
-
+					
 					//check pilot status
 					if ($pilotLocStat == '') {
 						$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
-					}?>
+					}
+					?>
 					<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
 						Tend<?=$strTended?></button>
 					
@@ -286,7 +321,7 @@ if (!empty($system)) {
 							role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
 					}
 					//edit function only available to Coordinators and recent sowers
-					$isRecentSower = $caches->isRecentSower($charname, $row['CacheID']);
+					//$isRecentSower = $caches->isRecentSower($charname, $cache_info['CacheID']);
 					if ($isCoord || $isRecentSower) {
 						echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
 							data-target="#EditModal">Edit Cache</button>';
@@ -303,14 +338,21 @@ if (!empty($system)) {
 		<div class="row" id="systable">
 			<div class="col-md-12">
 				<!-- DETAIL RECORD -->
+				
+				
+				
 				<table class="table" style="">
 					<thead>
 						<tr>
 							<th>Sown On</th>
 							<th>Aligned With</th>
 							<th>Location</th>
-							<th>Distance</th>
-							<th>Password</th>
+							<? if (isset($cache_info['Password'])){
+								echo '<th>Distance</th>
+									<th>Password</th>';
+							}
+
+							?>
 							<!--
 							<th>Probes</th>
 							<th>Filament</th>
@@ -321,12 +363,20 @@ if (!empty($system)) {
 					</thead>
 					<tbody>
 					<tr>
-					<td><?=Output::getEveDate($row['InitialSeedDate'])?></td>
-					<td><?=$row['AlignedWith']?></td>
-					<td><?=$row['Location']?></td>
-					<td><?=Output::htmlEncodeString($row['Distance'])?></td>
-					<td><input type="text" id="cachepass1" style="width:100px;"
-							value="<?=Output::htmlEncodeString($row['Password'])?>" readonly />
+					<td><?=Output::getEveDate($cache_info['InitialSeedDate'])?></td>
+					<td><?=$cache_info['AlignedWith']?></td>
+					<td><?=$cache_info['Location']?></td>
+					
+					<? 
+					if(!isset($cache_info['Password'])) {$sty_le = ' style="display:none;"';}else{$sty_le='';}; 
+					?>
+					
+					<td<?=$sty_le?>>
+						<? echo isset($cache_info['Distance']) ? Output::htmlEncodeString($cache_info['Distance']) : '&nbsp;';?>
+					</td>
+					<td<?=$sty_le?>>
+						<input type="text" id="cachepass1" style="width:100px;"
+							value="<? echo isset($cache_info['Password']) ? Output::htmlEncodeString($cache_info['Password']) : '';?>" readonly />
 							<i id="copyclip" class="fa fa-clipboard"
 								onClick="SelectAllCopy('cachepass1')"></i>
 					</td>
@@ -334,16 +384,17 @@ if (!empty($system)) {
 					<?php
 					// probes and filament status
 					
-					$haspas = ($row['has_pas'] == 1 ? 'Yes' : 'No');
-					$statpas = ($row['has_pas'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
-					$hasfil = ($row['has_fil'] == 1 ? 'Yes' : 'No');
-					$statfil = ($row['has_fil'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
+					$haspas = ($cache_info['has_pas'] == 1 ? 'Yes' : 'No');
+					$statpas = ($cache_info['has_pas'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
+					$hasfil = ($cache_info['has_fil'] == 1 ? 'Yes' : 'No');
+					$statfil = ($cache_info['has_fil'] == 1 ? ' style="color:rgba(90, 230, 90, .8);"' : ' style="color:rgba(234, 10, 10, .9);"');
+					
 					?>
 					<!--
 					<td<?=$statpas ?>><?=$haspas?></td>
 					<td<?=$statfil ?>><?=$hasfil?></td>
 					-->
-					<td><?=Output::getEveDate($row['ExpiresOn'])?></td>
+					<td><?=Output::getEveDate($cache_info['ExpiresOn'])?></td>
 
 					<td><input type="text" id="bookmark1" style="width:180px;"
 							value="<?= $system . ' Rescue Cache' ?>" readonly />
@@ -357,13 +408,28 @@ if (!empty($system)) {
 				</table>
 			</div>
 		</div>
-	<?php
+		<?php
+		// log the PW access
+		if (isset($cache_info['Password'])) {
+			$fname = "20240518ctrpassfreq.csv";
+			$logData = [
+				gmdate("Y-m-d H:i:s"),
+				$cache_info['CacheID'],
+				str_replace(" ", "_", $system),
+				str_replace(" ", "_", $charname),
+				$_SESSION['auth_characterid']
+			];
+			if (($handle = fopen($fname, 'a')) !== FALSE) {
+				fputcsv($handle, $logData);
+				fclose($handle);
+			}
+		}
 	}
 	else {
 		// no results returned, so give an option to sow a new cache in this system
 		// check for valid system name
 		if ($systems->validatename($system) !== 0) {		
-	?>
+		?>
 			<div class="row" id="systableheader">
 				<div class="col-md-12">
 					<div style="padding-left: 10px;">
@@ -397,10 +463,15 @@ if (!empty($system)) {
 						<!-- SOW button  -->
 						<?php
 						//check pilot status
-						if ($pilotLocStat == '') {
-							$strBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
-						} ?>
-						<button type="button" class="btn btn-success" role="button" <?=$strBtnAttrib?>>
+						if (($limited_data === 0)){	
+							$sowBtnAttrib = 'data-toggle="modal" data-target="#SowModal"';
+						}
+						else{
+							$sowBtnAttrib = 'data-toggle="tooltip" title="You must be logged into Allison and located in '.
+											$system .' to perform this action"';
+						}
+					?>
+						<button type="button" class="btn btn-success" role="button" <?=$sowBtnAttrib?>>
 							Sow New Cache</button>&nbsp;&nbsp;&nbsp;
 														
 						<!-- SAR New button -->
@@ -488,7 +559,7 @@ if (!empty($system)) {
 	} //(!empty($row))
 
 		
-?>
+	?>
 		<!-- NOTE(S) SECTION -->
 		<p style="margin-left: 36px"><em>Signaleers, if you see a <b>system note</b> that seems inaccurate or out of date, please mention that in your cache tending note.</em></p>
 		<div style='
@@ -554,13 +625,13 @@ if (!empty($system)) {
 			
 			
 					
-<?php			
+			<?php			
 			if (true or $strNotes != ''){
 				echo '<div class="cachenote"><h3>Cache notes</h3><p class="notes temp">' . Output::htmlEncodeString($strNotes) . '</p>';
 				//<a href="javascript:void(0)" class="notes" data-toggle="modal" data-target="#EditModal">edit delete</a>
 			}
 			//new note only available to Coordinators?
-			if ((true or $isCoord) and !empty($row)) {
+			if ((true or $isCoord) and !empty($cache_info)) {
 					echo '<a href="#" class="notes" data-toggle="modal" data-target="#NoteModal">
 					<i class="white" style="font-size: 1.1rem; position:absolute; right: 0px; top: 0px;">
 					<span class="white fa fa-plus">&nbsp;</span>New Cache Note</i>
@@ -615,11 +686,14 @@ if (!empty($system)) {
 	//HISTORY
 	// see if there is historical data to display for this system
 	$systemActivities = $systems->getSystemHistory($system);
+	$actioncount = 0;
 	if (!empty($systemActivities)) {
+		$actioncount = count($systemActivities);
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-md-12">';
 		echo '<div style="padding-left: 0px;">';
-		echo '<br /><span class="subhead">HISTORY</span><br />';
+		echo "<br /><span class='subhead'>HISTORY: $actioncount actions</span><br />";
+		
 		echo '<table class="table" style="
 				font-size: 1em;
 				font-weight: normal;
@@ -632,12 +706,17 @@ if (!empty($system)) {
 						<th class="white">Type</th>
 						<th class="white">Align</th>
 						<th class="white">Location</th>
+						';
+		if ($limited_data == 0){
+						echo '
 						<th class="white">Distance</th>
 						<th class="white">Password</th>
-						<th class="white">Expires</th>';
+						';
+		}				
+		echo			'<th class="white">Expires</th>';
 		if ($isCoord) {
 				echo	'<th class="white">Aided&nbsp;Pilot</th>';
-				}
+		}
 
 				echo	'<th class="white">Note</th>
 					</tr>
@@ -695,12 +774,14 @@ if (!empty($system)) {
 				echo '<td class="text-nowrap">'. $rowAW .'</td>';
 				$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
 				echo '<td class="text-nowrap">'. $rowLoc .'</td>';
-				$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';
-				echo '<td class="text-nowrap">'. $rowDist.'</td>';
-
-				$rowPass = (!empty($sowrow)) ? $sowrow['Password'] : '';
-				echo '<td class="text-nowrap">'. Output::htmlEncodeString($rowPass) .'</td>';
 				
+				if ($limited_data == 0) {
+					$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';			
+					echo '<td class="text-nowrap">'. $rowDist.'</td>';
+
+					$rowPass = (!empty($sowrow)) ? $sowrow['Password'] : '';
+					echo '<td class="text-nowrap">'. Output::htmlEncodeString($rowPass) .'</td>';
+				}
 				
 				$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
 				echo '<td class="text-nowrap">'. $rowExp.'</td>';
@@ -716,6 +797,18 @@ if (!empty($system)) {
 			</table>';
 		echo '</div></div></div>';
 	}
+	
+	// include modals for modifying current cache		
+	if ($pilotLocStat == '') {			
+		include 'modal_tend.php';
+	}		
+	$isRecentSower = $caches->isRecentSower($charname, $cache_info['CacheID']);
+	if ($isCoord || $isRecentSower) {
+		include 'modal_edit.php';
+	}		
+	include 'modal_agent.php';		
+	include 'modal_newnote.php';	
+
 }
 // no system selected, so show summary stats
 else {
@@ -726,7 +819,9 @@ else {
 
 <!-- MODAL includes with or without current system-->
 <?php
+if ($limited_data === 0) {	
 	include 'modal_sow.php';
+}
 ?>
 
 <script type="text/javascript">
