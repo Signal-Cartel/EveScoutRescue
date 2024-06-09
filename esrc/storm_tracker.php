@@ -44,41 +44,32 @@ if (!Users::isAllianceUserSession())
 }
 
 // check for SAR Coordinator login
-$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
+// TODO: Remove Sky Diamond here
+$isCoord = ($users->isSARCoordinator($charname) ||
+  $users->isAdmin($charname) ||
+    $charname == "Sky Diamond");
 
 // handle form submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // delete record
     if (isset($_POST['formtype']) &&  $_POST['formtype'] == 'delrow') {
-        $storms->removeStormEntry($_POST['rowid']);
-        $errmsg = 'Storm report removed from database.';
-    }
-    // add new record; validate form inputs
-    elseif (empty($_POST['evesystem'])) {
-        $errmsg = 'Please select a storm center system.';
-    }
-    elseif ($_POST['evesystem'] == $_POST['lastKnownSystem']) {
-        $errmsg = 'Storm is currently in this system. Duplicate entries are not required.';
-    }
-    elseif ($_POST['storm_id'] < 1 || $_POST['storm_id'] > 8) {
-        $errmsg = 'Please select a valid storm for this report.';
-    }
-    else {  // make sure a valid storm name was entered
-        $arrStormSys = json_decode(file_get_contents('../resources/stormSystems.json'));
-        if (array_search($_POST['evesystem'], $arrStormSys) === false) {
-            $errmsg = 'That is not a valid storm system name.';
+        $result = $storms->removeStormEntry($_POST['rowid']);
+        if ($result === true) {
+          $errmsg = 'Storm report removed from database.';
+        } else {
+            $errmsg = $result;
         }
     }
+    // add new record; validate form inputs
+    else {
+        $observed_in_person = (isset($_POST['observed_in_person'])) ? true : false;
+        $result = $storms->createStormEntry(
+                $_SESSION['auth_characterid'],
+                $_POST['observation_type'],
+                $observed_in_person,
+                $_POST['system_name']);
 
-    if (empty($errmsg)) {
-        $observation_type = (isset($_POST['ip'])) ? 'ip' : 'map';
-        $arrStormReport = array("storm_id"=>$_POST['storm_id'], "evesystem"=>$_POST['evesystem'],
-            "pilot"=>$_POST['pilot'], "stormtype"=>$_POST['stormtype'], "stormstrength"=>'Strong', 
-            "observation_type"=>$observation_type, "lastKnownSystem"=>$_POST['lastKnownSystem'], 
-            "lastObservationDate"=>$_POST['lastObservationDate']);
-        $storms->createStormEntry($arrStormReport);
-        
-        // Broadcast any new storm to Discord	
+        // Broadcast any new storm to Discord
 		/* TURNED OFF 11-SEP-2021
         $webHook = 'https://discordapp.com/api/webhooks/' . Config::DISCORDEXPLO;
         $user = 'Storm Tracker';
@@ -89,8 +80,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);
 		*/
         // redirect
-        header('Location: ?stormid='. $_POST['storm_id']);
+      if ($result === true) {
+        header('Location: ?observation_type=' . $_POST['observation_type']);
         exit;
+      }
+
+      switch ($result) {
+        case "ESAPI-0035-0":
+            $errmsg = "Invalid data format submitted ($result).";
+            break;
+        case "ESAPI-0036-0":
+            $errmsg = "This is not a valid system name.";
+          break;
+        case "ESAPI-0039-0";
+            $errmsg = "Storms can only appear in null sec space";
+          break;
+        case "ESAPI-0037-0":
+            $errmsg = 'Storm is currently in this system. Duplicate entries are not required.';
+          break;
+        default:
+            $errmsg = "Error saving data ($result)";
+      }
     }
 }
 
@@ -216,27 +226,51 @@ if (!empty($errmsg)) {
                     <tbody>
                     
                         <?php
-                        $arrRecentReports = $storms->getRecentReports();
-                        foreach ($arrRecentReports as $value) {	?>
+                        $arrRecentReports = $storms->getRecentReports("private", false);
+                        foreach ($arrRecentReports as $value) {
+                            if ($value['observation_type'] == "toms_shuttle") {
+                                $oddity = $value;
+                                continue;
+                            }
+                        ?>
                         
                         <tr>
                             <td class="white text-nowrap">
-                                <a href="?stormid=<?=$value['storm_id']?>">
-                                <?=Storms::getStormName($value['storm_id'])?></a></td>
-                            <td class="white text-nowrap"><?=$value['evesystem']?></td>
-                            <td class="white text-nowrap"><?=$value['stormtype']?></td>
-                            <td class="white text-nowrap"><?=date('M-d', strtotime($value['dateobserved']))?></td>
+                                <a href="?observation_type=<?=$value['observation_type']?>">
+                                <?=Storms::getStormName($value['observation_type'])?></a></td>
+                            <td class="white text-nowrap"><?=$value['system_name']?></td>
+                            <td class="white text-nowrap"><? $type = explode(' ', $storms::getStormName($value['observation_type'])); echo $type[0]; ?></td>
+                            <td class="white text-nowrap"><? $date = new DateTime($value['created_at']); echo $date->format("M-d"); ?></td>
                             <td class="white text-nowrap"><?=$value['hours_in_system']?></td>
-                            <td class="white text-nowrap"><?=($value['observation_type'] == 'map') ? 'Map' : 'In-Person'?></td>
-                            <td><?php if ($value['ready_for_new_report'] == 1) { ?>
+                            <td class="white text-nowrap"><?=($value['observed_in_person'] === true) ? 'In-Person' : 'Map'?></td>
+                            <td><?php if ($value['hours_in_system'] > 12) { ?>
                                 <a type="button" class="btn btn-primary" role="button" 
-                                    href="?new=1&stormid=<?=$value['storm_id']?>">New Report</a>
+                                    href="?new=1&observation_type=<?=$value['observation_type']?>">New Report</a>
                                 <?php } else { echo '&nbsp;'; } ?>
                             </td>
                         </tr>
 
                             <?php
                         }	?>
+                        <tr>
+                            <td colspan="7">&nbsp;</td>
+                        </tr>
+                        <?php $value = $oddity; ?>
+                        <tr>
+                            <td class="white text-nowrap">
+                                <a href="?observation_type=<?=$value['observation_type']?>">Tom's Shuttle</a>
+                            </td>
+                            <td class="white text-nowrap"><?=$value['system_name']?></td>
+                            <td class="white text-nowrap"><?=Storms::getStormName($value['observation_type'])?></td>
+                            <td class="white text-nowrap"><? $date = new DateTime($value['created_at']); echo $date->format("M-d"); ?></td>
+                            <td class="white text-nowrap"><? if ($value['hours_in_system'] <= 72) {  echo $value['hours_in_system']; } else { echo "72+"; }?></td>
+                            <td class="white text-nowrap"><?=($value['observed_in_person'] === true) ? 'In-Person' : 'Map'?></td>
+                            <td><?php if ($value['hours_in_system'] > 12) { ?>
+                                    <a type="button" class="btn btn-primary" role="button"
+                                       href="?new=1&observation_type=<?=$value['observation_type']?>">New Report</a>
+                              <?php } else { echo '&nbsp;'; } ?>
+                            </td>
+                        </tr>
 
                     </tbody>
                 </table>
@@ -251,15 +285,16 @@ if (!empty($errmsg)) {
 
 <?php
 // display detail table when needed
-if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
-    $arrStormDetail = $storms->getStormReports('named', $_GET['stormid']);  ?>
+if (isset($_REQUEST['observation_type']) &&
+  Storms::getStormName($_REQUEST['observation_type']) != 'unknown') {
+    $arrStormDetail = $storms->getStormReports($_REQUEST['observation_type']);  ?>
 
 <hr class="white">
 
 <div class="row" id="systable">
 	<div class="col-sm-12">
         <p class="white">
-            <?=Storms::getStormName($_GET['stormid'])?> (most recent report first)</p>
+            <?=Storms::getStormName($_REQUEST['observation_type'])?> (most recent report first)</p>
 		<table class="table display" style="width: auto;">
 			<thead>
 				<tr>
@@ -281,19 +316,21 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
 			    foreach ($arrStormDetail as $value) {	?>
 				
 				<tr>
-                    <td class="white text-nowrap"><?=$value['dateobserved']?></td>
-                    <td class="white text-nowrap"><?=$value['evesystem']?></td>
-                    <td class="white text-nowrap"><?=$value['pilot']?></td>
-                    <td class="white text-nowrap"><?=($value['observation_type'] == 'map') ? 'Map' : 'In-Person'?></td>
+                    <td class="white text-nowrap"><? $ts = new DateTime($value['created_at']); echo $ts -> format('Y-m-d H:i:s'); ?></td>
+                    <td class="white text-nowrap"><?=$value['system_name']?></td>
+                    <td class="white text-nowrap"><?=$value['created_by_name']?></td>
+                    <td class="white text-nowrap"><?=$value['observed_in_person'] ? 'In-Person' : 'Map'?></td>
                     
                     <?php 
-                    if ($isCoord) { // ESR Coords have option to delete entry   ?>
+                    if ($isCoord) { // ESR Coords have option to delete entry
+                    ?>
 
                     <td>
                         <form method="post" id="delform<?=$i?>" class="form-inline"
                             style="margin-bottom:-2px !important;"
                             action="<?=htmlentities($_SERVER['PHP_SELF'])?>">
                             <input type="hidden" name="formtype" value="delrow">
+                            <input type="hidden" name="observation_type" value="<?=$_REQUEST['observation_type']?>">
                             <input type="hidden" name="rowid" value="<?=$value["id"]?>">
                             <button type="submit" class="btn btn-xs btn-danger">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -326,29 +363,35 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
     <div class="modal-content">
         <div class="modal-header bg-primary">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title sechead">New Storm Report - <?=Storms::getStormName($_GET['stormid'])?></h4>
+            <h4 class="modal-title sechead">New Storm Report - <?=Storms::getStormName($_GET['observation_type'])?></h4>
         </div>
         
         <form name="stormform" id="stormform" action="<?=htmlentities($_SERVER['PHP_SELF'])?>" method="POST">
         
         <div class="field text-center" style="padding-top:10px;">
             <div id="sys_search">
-                <input class="typeahead" placeholder="System Name" type="text" name="evesystem"
+                <input class="typeahead" placeholder="System Name" type="text" name="system_name"
                     autoFocus="autoFocus" onclick="this.select()">
             </div>
         </div>
+          <?php
+          if ($_REQUEST['observation_type'] == "toms_shuttle") {
+            echo <<<EOF
+        <input type="hidden" name="observed_in_person" value="1">
+EOF;
+          } else {
+            echo <<<EOF
         <div class="field text-center">
             <label class="checkbox-inline">
-                <input name="ip" type="checkbox" value="1">
+                <input name="observed_in_person" type="checkbox" value="1">
                 <strong>Confirmed in-person</strong>
             </label>
         </div>
+EOF;
+          }
+        ?>
         <div class="field text-center">
-            <input type="hidden" name="storm_id" value="<?=$_GET['stormid']?>">
-            <input type="hidden" name="stormtype" value="<?=$arrStormDetail[0]['stormtype']?>">
-            <input type="hidden" name="lastKnownSystem" value="<?=$arrStormDetail[0]['evesystem']?>">
-            <input type="hidden" name="lastObservationDate" value="<?=$arrStormDetail[0]['dateobserved']?>">
-            <input type="hidden" name="pilot" id="pilot" value="<?=$charname?>">
+            <input type="hidden" name="observation_type" value="<?=$_REQUEST['observation_type']?>">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         
@@ -365,11 +408,25 @@ if (isset($_GET['stormid']) && is_numeric($_GET['stormid'])) {
 	    $('#ModalNewReport').modal('show');
 	}
 
+    <?php
+    if ($_REQUEST['observation_type'] == "toms_shuttle") {
+      echo <<<EOL
+    var storm_systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: '../resources/allSystems.json'
+    });
+EOL;
+    } else {
+      echo <<<EOL
     var storm_systems = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: '../resources/stormSystems.json'
     });
+EOL;
+    }
+    ?>
 
     $('#sys_search .typeahead').typeahead(null, {
         name: 'storm_systems',
