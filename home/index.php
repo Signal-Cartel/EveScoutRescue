@@ -277,6 +277,9 @@ a.nostyle:visited {
 </div>
 <!-- /NEWS TICKER -->
 <!-- SPACE ODDITY -->
+<?php
+    if (!is_null($oddity)) {
+?>
 <div class="onoffswitch3">
     <input type="checkbox" name="onoffswitch4" class="onoffswitch3-checkbox" id="myonoffswitch3" checked>
     <label class="onoffswitch3-label" for="myonoffswitch3">
@@ -299,6 +302,9 @@ a.nostyle:visited {
         </span>
     </label>
 </div>
+<?php
+    }
+?>
 <!-- /SPACE ODDITY -->
 <?php
 // HTML PAGE template - End
