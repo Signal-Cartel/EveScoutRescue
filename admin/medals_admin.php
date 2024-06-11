@@ -2,21 +2,119 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-include_once '../includes/auth-inc.php';
+
+include_once '../includes/auth-inc.php';// this establishes db connection as well
 //require_once '../class/db.class.php';
-require_once '../class/leaderboard.class.php';
+//require_once '../class/leaderboard.class.php';
 require_once '../class/output.class.php';
 
 // create object instance(s)
 $db = new Database();
-$lb = new Leaderboard($db);
+//$lb = new Leaderboard($db);
+
+$medals = [
+    1 => [
+        "name" => "SuperCacher",
+		"act" => "for caching ",
+        "min" => 100,
+        "max" => 299
+    ],
+    2 => [
+        "name" => "MegaCacher",
+		"act" => "for caching ",
+        "min" => 300,
+        "max" => 499
+    ],
+    3 => [
+        "name" => "HyperCacher",
+		"act" => "for caching ",
+        "min" => 500,
+        "max" => 999
+    ],
+    4 => [
+        "name" => "UltraCacher",
+		"act" => "for caching ",
+        "min" => 1000,
+        "max" => 2999
+    ],
+    5 => [
+        "name" => "Heroic Cacher",
+		"act" => "for caching ",
+        "min" => 3000,
+        "max" => 4999
+    ],
+    6 => [
+        "name" => "Insane Cacher",
+		"act" => "for caching ",
+        "min" => 5000,
+        "max" => 9999
+    ],
+    7 => [
+        "name" => "The Crinkle Crown",
+		"act" => "for caching ",
+        "min" => 10000,
+        "max" => 99999
+    ],
+    11 => [
+        "name" => "SAR Bronze",
+		"act" => "for rescuing ",
+        "min" => 1,
+        "max" => 9
+    ],
+    12 => [
+        "name" => "SAR Silver",
+		"act" => "for rescuing ",
+        "min" => 10,
+        "max" => 49
+    ],
+    13 => [
+        "name" => "SAR Gold",
+		"act" => "for rescuing ",
+        "min" => 50,
+        "max" => 99
+    ],
+    14 => [
+        "name" => "Beacon of Anoikis",
+		"act" => "for rescuing ",
+        "min" => 100,
+        "max" => 499
+    ],
+    21 => [
+        "name" => "Disp - Qualified",
+		"act" => "for dispatching ",
+        "min" => 5,
+        "max" => 49
+    ],
+    22 => [
+        "name" => "Disp - Proficient",
+		"act" => "for dispatching ",
+        "min" => 50,
+        "max" => 99
+    ],
+    23 => [
+        "name" => "Disp - Master",
+		"act" => "for dispatching ",
+        "min" => 100,
+        "max" => 999
+    ],
+];
+
+
+
 
 $rowid = isset($_REQUEST['rowid']) ? $_REQUEST['rowid'] : 0;
-$medalid = isset($_REQUEST['medalid']) ? $_REQUEST['medalid'] : 1;
-$min = isset($_REQUEST['min']) ? $_REQUEST['min'] : 100;
-$max = isset($_REQUEST['max']) ? $_REQUEST['max'] : 299;
-$arrow = '&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-left"></i>';
+$pilot = isset($_REQUEST['pilot']) ? $_REQUEST['pilot'] : 0;
+$showall = isset($_REQUEST['showall']) ? intval($_REQUEST['showall']) : 0;
+$medalid = isset($_REQUEST['medalid']) ? intval($_REQUEST['medalid']) : 1;
+	$min = intval($medals[$medalid]['min']);
+	$max = intval($medals[$medalid]['max']);
+$arrow = '&nbsp;<i class="fa fa-arrow-left"></i>';
+
+
 
 // HANDLE FORM SUBMIT
 // add new medal for specified pilot
@@ -53,57 +151,7 @@ elseif ($rowid > 0) {
 	include_once '../includes/head.php'; 
 	?>
 	<style>
-	<!--
-		table {
-			table-layout: fixed;
-			word-wrap: break-word;
-		}
-		a,
-		a:visited,
-		a:hover {
-			color: aqua;
-		}
-
-		.tt-hint, .username {
-			border: 2px solid #CCCCCC;
-			border-radius: 8px 8px 8px 8px;
-			font-size: .9em;
-			height: 15px;
-			line-height: 15px;
-			outline: medium none;
-			padding: 8px 4px;
-			width: 100%;
-		}
-
-		.tt-dropdown-menu {
-			width: 130%;
-			margin-top: 5px;
-			padding: 8px 0px;
-			background-color: #fff;
-			border: 1px solid #ccc;
-			border: 1px solid rgba(0, 0, 0, 0.2);
-			border-radius: 8px 8px 8px 8px;
-			font-size: 100%;
-			color: #111;
-			background-color: #F1F1F1;
-		}
-
-		.tt-suggestion {
-			padding: 3px 10px;
-			font-size: 100%;
-			line-height: 24px;
-		}
-
-		.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
-			color: #fff;
-			background-color: #0097cf;
-
-		}
-
-		.tt-suggestion p {
-			margin: 0;
-		}
-	-->
+	a {color: #65bbff;}
 	</style>
 </head>
 
@@ -119,48 +167,75 @@ elseif ($rowid > 0) {
 		<?php include_once '../includes/top-right.php'; ?>
 	</div>
 	<div class="ws"></div>
+			<div class="white">
+            <p class="sechead white">Medals</p>
+			<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+				<div>
+				<p>
+				<a href="?medalid=1">SuperCacher</a><?php echo ($medalid==1)? $arrow : '' ?><br>
+				<a href="?medalid=2">MegaCacher</a><?php echo ($medalid==2)? $arrow : '' ?><br>
+				<a href="?medalid=3">HyperCacher</a><?php echo ($medalid==3)? $arrow : '' ?><br>
+				<a href="?medalid=4">UltraCacher</a><?php echo ($medalid==4)? $arrow : '' ?><br>
+				<a href="?medalid=5">Heroic Cacher</a><?php echo ($medalid==5)? $arrow : '' ?><br>
+				<a href="?medalid=6">Insane Cacher</a><?php echo ($medalid==6)? $arrow : '' ?><br>
+				<a href="?medalid=7">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?>
+				</p>
+				</div>
+				<div>
+				<p>
+				<a href="?medalid=11">SAR Bronze</a><?php echo ($medalid==11)? $arrow : '' ?><br>
+				<a href="?medalid=12">SAR Silver</a><?php echo ($medalid==12)? $arrow : '' ?><br>
+				<a href="?medalid=13">SAR Gold</a><?php echo ($medalid==13)? $arrow : '' ?><br>
+				<a href="?medalid=14">Beacon of Anoikis</a><?php echo ($medalid==14)? $arrow : '' ?>
+				</p>
+				</div>
+				<div>
+				<p>
+				<a href="?medalid=21">Dispatch - Qualified</a><?php echo ($medalid==21)? $arrow : '' ?><br>
+				<a href="?medalid=22">Dispatch - Proficient</a><?php echo ($medalid==22)? $arrow : '' ?><br>
+				<a href="?medalid=23">Dispatch - Master</a><?php echo ($medalid==23)? $arrow : '' ?>
+				</p>
+				</div>
+			</div>
+		</div>
+		
 	<?php
 	//show list if no ID is specified
-	if (empty($_REQUEST['id'])) {	
+	if ($pilot == 0) {	
 	?>
-    <div class="row">
-        <div class="col-sm-10">
-            <form method="post" action="medals_admin.php">
-                <div class="form-group">
-                    <input type="text" name="username" id="username" class="username" size="30" autoFocus="autoFocus" 
-                        autocomplete="off" placeholder="Player Name">&nbsp;&nbsp;&nbsp
-                    <input type="text" name="medalid" size="5" placeholder="Medal ID">&nbsp;&nbsp;&nbsp
-                    <button type="submit" class="btn btn-md">Add New</button>
-                    <input type="hidden" name="rowid" id="rowid" value="-1">
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="ws"></div>
-    <div class="row" id="systable">
-		<div class="col-sm-5">
-            <p class="sechead white">Medals Awarded</p>
-			<table id="example" class="table display" style="width: auto;">
+    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+		<div style ="background: #21435e;text-align: center;width: 72%;margin: 8px;">
+			<p class="sechead white text-uppercase" style="margin-bottom: -8px;"><?= $medals[$medalid]['name'] ?></p>
+			<p class="sechead white" style="font-size: smaller;">(<? echo $medals[$medalid]['act'] . $medals[$medalid]['min'] . " to " . $medals[$medalid]['max'];?>)</p>
+		</div>
+	</div>
+
+    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+		<div>
+
+            <p class="white" style="text-align: center;">Awarded</p>
+			<table id="" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">ID</th>
 						<th class="white">Pilot</th>
-                        <th class="white">Medal ID</th>
-						<th class="white">Date Awarded</th>
+                        
+						<th class="white">Date</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
-				$db->query("SELECT * FROM medals WHERE medalid = ". $medalid);
+				$db->query("SELECT * FROM medals WHERE medalid = ". $medalid . " ORDER BY dateawarded DESC");
 				$rows = $db->resultset();
 				$db->closeQuery();
+				
+				$awarded_pilots = Array();
 				foreach ($rows as $value) {
+					$awarded_pilots[] = strtolower($value['pilot']);
 					echo '<tr>';
-					echo '<td class="white text-nowrap"><a href="?id=' . $value['id']. '">'. $value['id'] . '</a></td>';
-					echo '<td class="text-nowrap">
-							<a target="_blank" href="https://evewho.com/pilot/'. $value['pilot'] .'">'. 
+					echo '<td class="white text-nowrap">' . $value['id'] . '</td>';
+					echo '<td class="text-nowrap"><a href="?medalid='. $medalid .'&pilot='. $value['pilot'] .'">'. 
 							$value['pilot'] .'</a></td>';
-                    echo '<td class="white text-nowrap">'. $value['medalid'] . '</td>';
 					echo '<td class="white">' . $value['dateawarded'] .'</a></td>';
 					echo '</tr>';
 				}
@@ -168,124 +243,138 @@ elseif ($rowid > 0) {
 				</tbody>
 			</table>
 		</div>
-        <div class="col-sm-5">
-            <p class="sechead white">Recent Qualifying Activity</p>
-			<table id="example2" class="table display" style="width: auto;">
+        <div>
+            <p class="white"style="text-align: center;">Qualifying Activity 
+			<?
+			if($showall){
+				?>
+				
+				<small><a href="?medalid=<?=$medalid ?>&showall=0">(show qualifying)</a></small>
+				
+				<?
+				}
+				else{
+				?>
+				
+				<small><a href="?medalid=<?=$medalid ?>&showall=1">(show all)</a></small>
+				
+				<?	
+			}			
+			?>
+			</p>
+			<table id="" class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">Pilot</th>
 						<th class="white">Count</th>
                         <th class="white">Last Action</th>
+						<th>*</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 				// ESRC Medals
-                if (intval($medalid) < 10) {
-                    $db->query("SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act FROM activity
+                if ($medalid < 10) {
+					$sql = "SELECT COUNT(*) AS cnt, Pilot, max(ActivityDate) as act FROM activity
                         WHERE EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN '2017-03-01' AND NOW()
-                        GROUP BY Pilot ORDER BY cnt desc, act DESC");
+                        GROUP BY Pilot ORDER BY cnt desc, act DESC";	
                 }
                 // SAR Medals
-                elseif (intval($medalid) > 10 && intval($medalid) < 20) {
-                    $db->query("SELECT COUNT(ra.pilot) AS cnt, ra.pilot AS Pilot, MAX(ra.entrytime) AS act 
+                elseif ($medalid > 10 && $medalid < 20) {
+                    $sql = "SELECT COUNT(ra.pilot) AS cnt, ra.pilot AS Pilot, MAX(ra.entrytime) AS act 
                         FROM rescuerequest rr, rescueagents ra 
 						WHERE rr.status = 'closed-rescued' AND rr.id=ra.reqid
-						GROUP BY ra.pilot ORDER BY cnt DESC, ra.entrytime DESC");
+						GROUP BY ra.pilot ORDER BY cnt DESC, act DESC";
 				}
 				// Dispatcher medals
-				elseif (intval($medalid) > 20) {
-                    $db->query("SELECT COUNT(startagent) as cnt, startagent as Pilot, max(requestdate) as act FROM rescuerequest
+				elseif ($medalid > 20) {
+                    $sql = "SELECT COUNT(startagent) as cnt, startagent as Pilot, max(requestdate) as act FROM rescuerequest
                         WHERE requestdate BETWEEN '2017-03-01' AND NOW()
-						GROUP BY startagent ORDER BY COUNT(startagent) DESC, act DESC");
+						GROUP BY startagent ORDER BY COUNT(startagent) DESC, act DESC";
                 }
+				//echo $sql;
+				$db->query($sql);
 				$rows = $db->resultset();
 				$db->closeQuery();
+
 				foreach ($rows as $value) {
-                    if (intval($value['cnt']) < intval($min) || intval($value['cnt']) > intval($max)) { 
+					
+                    if (intval($value['cnt']) < $min || intval($value['cnt']) > $max) { 
                         continue; 
                     }
+					
+					if (!$showall and in_array(strtolower($value['Pilot']),$awarded_pilots)){
+						continue;
+					}
 					echo '<tr>';
-					echo '<td class="text-nowrap">
-							<a target="_blank" href="https://evewho.com/pilot/'. $value['Pilot'] .'">'. 
-							$value['Pilot'] .'</a></td>';
+					echo '<td class="text-nowrap"><a href="?medalid='. $medalid .'&showall=' . $showall . '&pilot='. $value['Pilot'] .'">'. $value['Pilot'] .'</a></td>';
                     echo '<td class="white text-nowrap">'. $value['cnt'] . '</td>';
-					echo '<td class="white">' . $value['act'] .'</a></td>';
+					echo '<td class="white text-nowrap">' . substr($value['act'],0,10) .'</a></td>';
+					if(in_array(strtolower($value['Pilot']),$awarded_pilots)){						
+						echo '<td class="white text-nowrap">Awarded</td>';
+					}
+					else{
+						echo '<td class="white text-nowrap"><a href="?rowid=-1&medalid='.$medalid.'&username='.$value['Pilot'].'">Give award</a></td>';						
+					}
 					echo '</tr>';
 				}
 				?>
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-2 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-            <p class="sechead white">Medals</p>
-            1 - <a href="?medalid=1&min=100&max=299">SuperCacher</a><?php echo ($medalid==1)? $arrow : '' ?><br />
-            2 - <a href="?medalid=2&min=300&max=499">MegaCacher</a><?php echo ($medalid==2)? $arrow : '' ?><br />
-            3 - <a href="?medalid=3&min=500&max=999">HyperCacher</a><?php echo ($medalid==3)? $arrow : '' ?><br />
-            4 - <a href="?medalid=4&min=1000&max=2999">UltraCacher</a><?php echo ($medalid==4)? $arrow : '' ?><br />
-            5 - <a href="?medalid=5&min=3000&max=4999">Heroic Cacher</a><?php echo ($medalid==5)? $arrow : '' ?><br />
-            6 - <a href="?medalid=6&min=5000&max=9999">Insane Cacher</a><?php echo ($medalid==6)? $arrow : '' ?><br />
-			7 - <a href="?medalid=7&min=10000&max=99999">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?><br />
-            11 - <a href="?medalid=11&min=1&max=9">SAR Bronze</a><?php echo ($medalid==11)? $arrow : '' ?><br />
-            12 - <a href="?medalid=12&min=10&max=49">SAR Silver</a><?php echo ($medalid==12)? $arrow : '' ?><br />
-            13 - <a href="?medalid=13&min=50&max=99">SAR Gold</a><?php echo ($medalid==13)? $arrow : '' ?><br />
-			14 - <a href="?medalid=14&min=100&max=499">Beacon of Anoikis</a><?php echo ($medalid==14)? $arrow : '' ?><br />
-			21 - <a href="?medalid=21&min=5&max=49">Disp - Qualified</a><?php echo ($medalid==21)? $arrow : '' ?><br />
-			22 - <a href="?medalid=22&min=50&max=99">Disp - Proficient</a><?php echo ($medalid==22)? $arrow : '' ?><br />
-			23 - <a href="?medalid=23&min=100&max=999">Disp - Master</a><?php echo ($medalid==23)? $arrow : '' ?><br />
-		</div>
+		
 	</div>
 	<?php
 	}
-	//show detail/edit form if ID is specified
-	else {	
+	else {
+	//show pilot history is specified		
 	?>
-	<div class="row">
-		<div class="col-sm-12">
+	<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+		<div>
 			<?php 
-			$db->query("SELECT * FROM medals WHERE ID = :id");
-			$db->bind(':id', $_REQUEST['id']);
-			$row = $db->single();
+			$db->query("SELECT * FROM medals WHERE pilot = :pilot ORDER BY medalid");
+			$db->bind(':pilot', $pilot);			
+			$rows = $db->resultset();
 			$db->closeQuery();
+			if (count($rows) == 0 ){
+					echo '<p class="sechead white">' . $pilot . ' has no ESR medals :-(</p>';
+			}
+			else{
+				echo '<p class="sechead white">Awards earned by ' . $pilot . '</p>';
 			?>
 			
 			<table class="table display" style="width: auto;">
 				<thead>
 					<tr>
 						<th class="white">ID</th>
-						<th class="white">Pilot</th>
-						<th class="white">Medal ID</th>
-						<th class="white">Date Awarded</th>
+						<th class="white">Medal</th>
+						<th class="white">Awarded</th>
+						<th class="white">DEL</th>
                         <th>&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<form name="editform" id="editform" action="medals_admin.php" method="POST">
-							<td class="white text-nowrap"><?=$row['id']?></td>
-							<td class="white text-nowrap"><?=$row['pilot']?></td>
-							<td class="text-nowrap"><input name="medalid" type="text" value="<?=$row['medalid']?>"></td>
-							<td class="text-nowrap"><input name="dateawarded" type="text" value="<?=$row['dateawarded']?>"></td>
-							<td><button type="submit" class="btn">Update</button></td>
-							<input type="hidden" name="rowid" id="rowid" value="<?=$_REQUEST['id']?>" />
-                            <input type="hidden" name="pilot" id="pilot" value="<?=$row['pilot']?>" />
-						</form>
-					</tr>
-					<tr><td colspan="6">&nbsp;</td></tr>
-					<tr>
-						<form name="delform" id="delform" action="medals_admin.php" method="POST">
-							<td class="white text-nowrap"><a href="?">&lt;&lt; back</a></td>
-							<td class="white text-nowrap">&nbsp;</td>
-							<td class="text-nowrap">&nbsp;</td>
-							<td class="text-nowrap">&nbsp;</td>
-							<td><button type="submit" class="btn btn-danger">Delete</button></td>
-							<input type="hidden" name="rowid" id="rowid" value="<?=$_REQUEST['id']?>" />
-							<input type="hidden" name="del" id="del" value="1" />
-						</form>
-					</tr>
+				<?php
+
+					foreach ($rows as $value) {
+						echo '<tr>';
+						echo '<td class="white">' . $value['id'] . '</td>';			
+						echo '<td class="white">' . $medals[$value['medalid']]['name'] . '</td>';
+						
+						
+						echo '<td class="white">' . $value['dateawarded'] .'</td>';
+						
+						echo '<td><a href="?del=1&rowid=' . $value['id'] . '&medalid='. $medalid .'&pilot='. $value['pilot'] .'"> Delete </a></td>';
+						
+						echo '</tr>';
+					}
+				}
+				$linkurl = '?medalid=' . $medalid . '&showall=' . $showall;
+				?>
+
 				</tbody>
 			</table>
+			<p><a href="<?=$linkurl?>"><< BACK</a></p>
 		</div>
 	</div>
 <?php

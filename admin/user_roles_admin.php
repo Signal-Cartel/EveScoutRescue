@@ -19,15 +19,32 @@ if ($rowid == -1) {
 	$db->bind(':username', $_REQUEST['username']);
 	$row = $db->single();
 	$db->closeQuery();
-	$userid = $row['id'];
-
-	// add new role
-	$db->query("INSERT INTO user_roles (userid, username, roleid, rolename) VALUES (:userid, :username, :roleid, :rolename)");
-	$db->bind(':userid', $userid);
-	$db->bind(':username', $_REQUEST['username']);
-	$db->bind(':roleid', $_REQUEST['roleid']);
-	$db->bind(':rolename', $_REQUEST['rolename']);
-	$db->execute();
+	$userid = isset($row['id']) ? $row['id'] : 0;
+	if ($userid >0){
+		// add new role
+		switch ($_REQUEST['roleid']) {
+			case '1':
+				$rolename = 'Admin';
+				break;
+			case '2':
+				$rolename = 'ESR Coordinator';
+				break;
+			case '3':
+				$rolename = '911 Operator';
+				break;
+			default:
+				$rolename ="";
+				
+		}
+		if($rolename !=""){
+			$db->query("INSERT INTO user_roles (userid, username, roleid, rolename) VALUES (:userid, :username, :roleid, :rolename)");
+			$db->bind(':userid', $userid);
+			$db->bind(':username', $_REQUEST['username']);
+			$db->bind(':roleid', $_REQUEST['roleid']);
+			$db->bind(':rolename', $rolename);
+			$db->execute();
+		}
+	}
 }
 // edit existing role
 elseif ($rowid > 0) {
@@ -57,57 +74,7 @@ elseif ($rowid > 0) {
 	include_once '../includes/head.php'; 
 	?>
 	<style>
-	<!--
-		table {
-			table-layout: fixed;
-			word-wrap: break-word;
-		}
-		a,
-		a:visited,
-		a:hover {
-			color: aqua;
-		}
-
-		.tt-hint, .username {
-			border: 2px solid #CCCCCC;
-			border-radius: 8px 8px 8px 8px;
-			font-size: .9em;
-			height: 15px;
-			line-height: 15px;
-			outline: medium none;
-			padding: 8px 4px;
-			width: 100%;
-		}
-
-		.tt-dropdown-menu {
-			width: 130%;
-			margin-top: 5px;
-			padding: 8px 0px;
-			background-color: #fff;
-			border: 1px solid #ccc;
-			border: 1px solid rgba(0, 0, 0, 0.2);
-			border-radius: 8px 8px 8px 8px;
-			font-size: 100%;
-			color: #111;
-			background-color: #F1F1F1;
-		}
-
-		.tt-suggestion {
-			padding: 3px 10px;
-			font-size: 100%;
-			line-height: 24px;
-		}
-
-		.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
-			color: #fff;
-			background-color: #0097cf;
-
-		}
-
-		.tt-suggestion p {
-			margin: 0;
-		}
-	-->
+	a {color: #65bbff;}
 	</style>
 </head>
 
@@ -128,14 +95,24 @@ elseif ($rowid > 0) {
 	if (empty($_REQUEST['id'])) {	
 	?>
 	<div class="row" id="systable">
-		<div class="col-sm-9">
-            <form method="post" action="user_roles_admin.php">
-				<div class="form-group">
-					<input type="text" name="username" id="username" class="username" size="30" autoFocus="autoFocus" 
-						autocomplete="off" placeholder="Player Name">&nbsp;&nbsp;&nbsp
-                    <input type="text" name="roleid" size="5" placeholder="Role ID">&nbsp;&nbsp;&nbsp
-                    <input type="text" name="rolename" size="30" placeholder="Role Name">&nbsp;&nbsp;&nbsp
-					<button type="submit" class="btn btn-md">Add New</button>
+		<div class="col-sm-12">
+            <form method="post" action="user_roles_admin.php" style="border: 1px solid white; padding: 4px 48px;">
+					<h4 class="white">Add new pilot role</h4>
+					<div class="form-group">
+					
+					<input type="text" name="username" id="username" class="username" size="30" autocomplete="off" placeholder="Player Name" style="padding: 2px 6px;">
+					<p>&nbsp;</p>
+					<select name="roleid" placeholder="Role ID" id="choices">
+						<option value="0">New role</option>
+						<option value="1">Admin</option>
+						<option value="2">ESR Coordinator</option>
+						<option value="3">911 Operator</option>
+					</select>
+                    <!--<input type="hidden" name="roleid" size="5" placeholder="Role ID">-->
+					<br>
+                    <input type="hidden" name="rolename" size="30" placeholder="Role Name" value="">
+					&nbsp;&nbsp;
+					<button type="submit" class="btn btn-md" style="background: green;">Add new role</button>
 					<input type="hidden" name="rowid" id="rowid" value="-1">
 				</div>
 			</form>
@@ -152,7 +129,7 @@ elseif ($rowid > 0) {
 				</thead>
 				<tbody>
 				<?php
-				$db->query("SELECT * FROM user_roles");
+				$db->query("SELECT * FROM user_roles order by id desc");
 				$rows = $db->resultset();
 				$db->closeQuery();
 				foreach ($rows as $value) {
@@ -169,16 +146,6 @@ elseif ($rowid > 0) {
 				?>
 				</tbody>
 			</table>
-		</div>
-		<div class="col-sm-3 white">
-			<?php echo gmdate('Y-m-d H:i:s', strtotime("now"));?><br /><br />
-            <p class="sechead white">Roles</p>
-            1 <input type="text" id="role1" value="Admin" class="black" />
-                <i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('role1')"></i><br />
-            2 <input type="text" id="role2" value="ESR Coordinator" class="black" />
-                <i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('role2')"></i><br />
-            3 <input type="text" id="role3" value="911 Operator" class="black" />
-                <i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('role3')"></i><br />
 		</div>
 	</div>
 	<?php
@@ -248,6 +215,7 @@ elseif ($rowid > 0) {
 	    document.execCommand("Copy");
 	}
 
+	
 	$(document).ready(function() {
         $('input.username').typeahead({
             name: 'username',
@@ -260,6 +228,7 @@ elseif ($rowid > 0) {
             "pageLength": 10
         });
     })
+	
 </script>
 
 </body>

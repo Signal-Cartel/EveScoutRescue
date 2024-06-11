@@ -211,8 +211,8 @@ form.adminfrm{
     border-radius: 6px;
     font-size: 1em;
     outline: medium none;
-    padding: 4px 6px;
-    width: 70%;
+    padding: 2px 6px;
+    width: 100%;
 }
 
 
@@ -340,7 +340,7 @@ td.history {
 /* END BS OVERRIDES*/
 
 .tt-dropdown-menu {
-    width: 40%;
+    width: 90%;
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.8);
     background-color: black;
