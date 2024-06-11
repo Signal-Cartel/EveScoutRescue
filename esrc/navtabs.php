@@ -35,7 +35,8 @@ else {
 	echo '<li class="active"><a href="#" data-toggle="tab">STATS</a></li>';
 }
 
-// THERA TAB
+// THERA TAB - Removed Dec 1, 2023
+/*
 if (strpos($_SERVER['PHP_SELF'], 'theraoverview.php') === false) {
 	// inactive
 	echo '<li><a href="theraoverview.php">THERA SCAN</a></li>';
@@ -44,7 +45,7 @@ else {
 	// active
 	echo '<li class="active"><a href="#" data-toggle="tab">THERA SCAN</a></li>';
 }
-
+*/
 
 // PVE SHARER TAB - Removed Feb 2023
 /*

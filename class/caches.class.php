@@ -113,7 +113,7 @@ class Caches
 		if ($limited)
 		{
 			// yes
-			$sql = "SELECT System, aligned, Location, AlignedWith, Status, has_pas, has_fil, ExpiresOn, InitialSeedDate, LastUpdated FROM cache
+			$sql = "SELECT CacheID, System, aligned, Location, AlignedWith, Status, has_pas, has_fil, ExpiresOn, InitialSeedDate, LastUpdated, Note FROM cache
 						WHERE System = :system AND Status <> 'Expired'";
 		}
 		else
@@ -192,10 +192,12 @@ class Caches
 		}
 
 		// select 0/1 from cache if time diff is >= 24 hours
-		$this->db->query("SELECT count(1) as cnt FROM cache 
-			WHERE System = :system AND ((Status = 'Healthy' AND 
-			(time_to_sec(timediff(UTC_TIMESTAMP(), LastUpdated)) / 3600) >= 24) OR 
-			(status = 'Upkeep Required' and ExpiresOn >= UTC_TIMESTAMP))");
+		$this->db->query(
+			"SELECT count(1) as cnt FROM cache 
+			WHERE System = :system AND (
+			(Status = 'Healthy' AND (time_to_sec(timediff(UTC_TIMESTAMP(), LastUpdated)) / 3600) >= 24) OR 
+			(status = 'Upkeep Required' and ExpiresOn >= UTC_TIMESTAMP))"
+			);
 		$this->db->bind(':system', $system);
 		
 		$result = $this->db->single();

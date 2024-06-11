@@ -39,8 +39,8 @@
 							<label class="control-label" for="status">Status</label>
 							<div class="radio">
 								<label for="status_1">
-									<input id="status_1" name="status" type="radio" value="Healthy" <?php if (0 == $caches->isTendingAllowed($system)) {echo ' disabled="disabled" '; } ?> required data-error="Please select a status for the cache">
-									<?php if (0 == $caches->isTendingAllowed($system)) { ?>
+									<input id="status_1" name="status" type="radio" value="Healthy" <?php if (0 == $isTendingAllowed) {echo ' disabled="disabled" '; } ?> required data-error="Please select a status for the cache">
+									<?php if (0 == $isTendingAllowed) { ?>
 										Tended within the last 24 hours.
 									<?php 
 									}

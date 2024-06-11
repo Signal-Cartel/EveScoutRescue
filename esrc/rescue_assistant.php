@@ -43,6 +43,33 @@ if (!Users::isAllianceUserSession())
 	exit;
 }
 
+$database = new Database();
+$users = new Users($database);
+
+// check for pilot roles
+if (!isset($_SESSION['isAdmin'])){
+	$isAdmin = $_SESSION['isAdmin'] = $users->isAdmin($charname);	
+}
+else{
+	$isAdmin = $_SESSION['isAdmin'];
+}
+if (!isset($_SESSION['isCoord'])){
+	$isCoord = $_SESSION['isCoord'] = ($isAdmin or $users->isSARCoordinator($charname));	
+}
+else{
+	$isCoord = $_SESSION['isCoord'];
+}
+if (!isset($_SESSION['is911'])){
+	$is911 = $_SESSION['is911'] = ($isCoord or $isAdmin or $users->is911($charname));	
+}
+else{
+	$is911 = $_SESSION['is911'];
+}
+if (!$is911) {
+	echo 'You must be a 911 Operator to use SARA';
+	exit();
+}
+
 $pilot_name = isset($_REQUEST['pilot']) ?  TestInput(htmlspecialchars_decode($_REQUEST['pilot'])) : '[PILOT NAME]';
 $pilot_system = isset($_REQUEST['system']) ?  TestInput(ucfirst(htmlspecialchars_decode($_REQUEST['system']))) : '[SYSTEM]';
 
@@ -130,7 +157,7 @@ function debug($variable)
 
 <?php
 
-$database = new Database();
+
 
 if (!isset($charname))
 {
@@ -138,10 +165,7 @@ if (!isset($charname))
 	$charname = 'charname_not_set';
 }
 
-// create object instances
-$users = new Users($database);
-// check for SAR Coordinator login
-$isCoord = ($users->isSARCoordinator($charname) || $users->isAdmin($charname));
+
 
 $system = '';
 $activeSAR = '';

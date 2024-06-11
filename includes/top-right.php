@@ -9,7 +9,7 @@
 
 		echo "<p>Role: $toprole";
 	
-		if ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' and $_SERVER['PHP_SELF'] == '/esrc/rescueoverview.php'){			
+		if ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' and ($_SERVER['PHP_SELF'] == '/esrc/rescueoverview.php' or $_SERVER['PHP_SELF'] == '/esrc/search.php')){			
 			$self = $_SERVER['PHP_SELF'];
 			echo "<br><a href='$self?r=a'>Admin</a>&nbsp;|&nbsp;<a href='$self?r=c'>Coord</a>&nbsp;|&nbsp;<a href='$self?r=9'>911</a>&nbsp;|&nbsp;<a href='$self?r=l'>Sig</a>";
 		}
