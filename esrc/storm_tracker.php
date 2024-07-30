@@ -281,7 +281,7 @@ if (!empty($errmsg)) {
         </div>
     </div>
     <div class="col-md-5">
-        <img src="https://cdn.discordapp.com/attachments/551081375424446483/749915372471451720/unknown.png?ex=66a0c19d&is=669f701d&hm=f3764aebf54fcfdc4a9526fe1f6728b6abf8091b75e647d992d55f0542fc62f9&">
+        <img src="https://wiki.signalcartel.space/images/6/66/Storm_Tracking.png">
     </div>
 </div>
 <div class="ws"></div>
