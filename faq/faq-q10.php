@@ -20,7 +20,7 @@
 			<p>For further inquiries regarding EvE-Scout Rescue's initiatives or policies, or to
 				discuss any concerns you might have about rescue operations in the wormhole where
 				you reside, please contact the head of our rescue division <a 
-				href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a> 
+				href="https://evewho.com/character/2112425049">Xalyar</a> 
 				via EVEMail.</p>
 		</div>
 	</div>

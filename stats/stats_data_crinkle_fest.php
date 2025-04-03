@@ -1,5 +1,6 @@
 <?php
 // https://dev.evescoutrescue.com/stats/stats_data_crinkle_fest.php
+session_start();
 include_once '../class/db.class.php';
 
 //CREATE QUERY TO DB AND PUT RECEIVED DATA INTO ASSOCIATIVE ARRAY

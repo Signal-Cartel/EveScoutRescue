@@ -54,8 +54,8 @@ if (!empty($old_cache)) {
 			<!--This is the beginning of the swap fields class="form-control" -------------->
 			<div id="topfield">
 				<div class="field form-group">
-					<label class="control-label" for="alignedwith">Aligned with<span class="descr"></span></label>
-					<select  id="alignedwith" name="alignedwith" class="form-control" onchange="validatePlanets(this)" required>
+					<label class="control-label" for="sowalignedwith">Aligned with<span class="descr"></span></label>
+					<select  id="sowalignedwith" name="sowalignedwith" class="form-control" onchange="validatePlanets(this)" required>
 						<option value="">- Select -</option>
 						<?php 
 						foreach ($locopts as $val) {
@@ -72,8 +72,8 @@ if (!empty($old_cache)) {
 
 			<div id="bottomfield" >
 				<div class="field form-group">
-					<label class="control-label" for="location">Location celestial<span class="descr"></span></label>
-					<select id="location" name="location" class="form-control" onchange="validatePlanets(this)" required>
+					<label class="control-label" for="sowlocation">Location celestial<span class="descr"></span></label>
+					<select id="sowlocation" name="sowlocation" class="form-control" onchange="validatePlanets(this)" required>
 						<option value="">- Select -</option>
 						<?php
 						foreach ($locopts as $val) {
@@ -168,9 +168,9 @@ if (!empty($old_cache)) {
 
 function copyOldInfo(){
 	//oldLoc, oldAlign, oldDist, oldPass
-	// location, alignedwith, distance, password
-	document.getElementById('location').value = oldLoc;
-	document.getElementById('alignedwith').value = oldAlign;
+	// sowlocation, sowalignedwith, distance, password
+	document.getElementById('sowlocation').value = oldLoc;
+	document.getElementById('sowalignedwith').value = oldAlign;
 	document.getElementById('sdistance').value = oldDist;
 	if (oldLoc == 'Unaligned' && oldAlign == 'Unaligned'){ 
 		document.getElementById('snotes').value = "Locate with corp bookmark.";
@@ -186,8 +186,8 @@ function copyOldInfo(){
 
 function setUnaligned(){
 	if (confirm('An unaligned cache requires prior approval. Has this been approved?')) {
-		document.getElementById("location").value = 'Unaligned'; 
-		document.getElementById("alignedwith").value = 'Unaligned'; 
+		document.getElementById("sowlocation").value = 'Unaligned'; 
+		document.getElementById("sowalignedwith").value = 'Unaligned'; 
 		document.getElementById('sdistance').value = 'Unaligned';
 		
 		document.getElementById('snotes').value = 'Locate with corp bookmark.';
@@ -196,8 +196,8 @@ function setUnaligned(){
 }
 	
   function validatePlanets(caller){ 
-	var locationp = document.getElementById("location"); 
-	var align = document.getElementById("alignedwith");  
+	var locationp = document.getElementById("sowlocation"); 
+	var align = document.getElementById("sowalignedwith");  
 	var dist = document.getElementById("sdistance"); 
 	var snotes = document.getElementById('snotes');
 
@@ -220,7 +220,9 @@ function setUnaligned(){
 			if (locationp.value == 'Unaligned') {locationp.selectedIndex = 0;}
 			if (align.value == 'Unaligned') {align.selectedIndex = 0;}
 			if (dist.value == 'Unaligned') {dist.value = "";}
-			if (snotes.value == noteText) {snotes.value = "";}
+			if (typeof noteText !== 'undefined' && snotes.value == noteText) {
+			  snotes.value = "";
+			}
 	 }	 
 	 setBookmark();
 
@@ -231,8 +233,8 @@ function setBookmark(){
 			document.getElementById("sowbookmark").textContent=text;
 		}
 		var dist = document.getElementById("sdistance").value;
-		var locationp = document.getElementById("location").value; 
-		var align = document.getElementById("alignedwith").value; 		
+		var locationp = document.getElementById("sowlocation").value; 
+		var align = document.getElementById("sowalignedwith").value; 		
 		
 		if (dist == "") {
 			writeit('not yet set');
@@ -314,15 +316,15 @@ function setBookmark(){
 		
   function swapThem()
   {
-		var alignVal = document.getElementById("alignedwith").value;
-		var locationVal = document.getElementById("location").value;
+		var alignVal = document.getElementById("sowalignedwith").value;
+		var locationVal = document.getElementById("sowlocation").value;
 		var tophtm = document.getElementById("topfield").innerHTML;
 		var bottomhtm = document.getElementById("bottomfield").innerHTML;
 
 		document.getElementById("topfield").innerHTML = bottomhtm;
 		document.getElementById("bottomfield").innerHTML = tophtm;
-		document.getElementById("alignedwith").value = alignVal;
-		document.getElementById("location").value = locationVal;
+		document.getElementById("sowalignedwith").value = alignVal;
+		document.getElementById("sowlocation").value = locationVal;
 		
 		LocOnTop = !LocOnTop;
 		if (typeof(Storage) !== "undefined"){

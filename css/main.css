@@ -52,6 +52,10 @@ body::before {
     margin-left: 18px;
 }
 
+#copyclip2 {
+    cursor: pointer;
+}
+
 .clearit {
     clear: both;
 }
@@ -101,6 +105,9 @@ form.adminfrm{
     padding-left: 10px;
     display: inline-block;
     line-height: normal;
+
+    font-style: italic;
+    color: #cccccc;
 }
 
 .white {
@@ -144,7 +151,7 @@ form.adminfrm{
 /* MODALS */
 
 .modal-header {
-    padding: 15px;
+    padding: 6px 16px 0px 24px;
     border: none;
     color: white;
     border-radius: 16px 16px 0px 0px;

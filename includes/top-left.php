@@ -1,3 +1,4 @@
+<!-- BEGIN top-left -->
 <div class="col-sm-2">
 	<a href="../index.php"><img src="../img/eve-scout-logo.png" alt="EvE-Scout Rescue" style="width: 100px;" /></a>
 <div id='timedisp'></div>
@@ -16,3 +17,4 @@ function startTime() {
 startTime();
 </script>
 </div>
+<!-- END top-left -->

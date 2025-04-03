@@ -20,7 +20,8 @@ $ctrSARrescues = $rescues->getRescueCount('closed-rescued');
 $ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
 $ctractive = $caches->getActiveCount();
 $arrSARWaits = $rescues->getSARWaitTime();
-$SARWaitMean = mmmr($arrSARWaits);
+$SARWaitMedian = mmmr($arrSARWaits, 'median-not0');
+$SARWaitMean = mmmr($arrSARWaits, 'mean-not0');
 $SARWaitMode = mmmr($arrSARWaits, 'mode');
 $SARWaitModeCnt = mmmr($arrSARWaits, 'modecnt');
 $daysBack = 7;
@@ -72,13 +73,14 @@ require '../page_templates/home_html-begin.php';
 				<?=round((intval($ctractive)/2603)*100,1)?>%</span> of all wormhole systems
 		</span>
 		<br /><br />
-		<span class="sechead white">Average Wait Time: 
-			<span style="font-weight: bold; color: gold;"><?=round(intval($SARWaitMean))?> days</span>
+		<span class="sechead white">Median Wait Time: 
+			<span style="font-weight: bold; color: gold;"><?=round(intval($SARWaitMedian))?> days</span>
 		</span><br /> 
 		<span class="white">
 			<span style="font-weight: bold; color: gold;">
 		    <?=round(intval($SARWaitModeCnt) / max(intval($ctrSARrescues), 1) * 100)?>%</span>
-			of all rescues occur within <?=round(intval($SARWaitMode)+1*24)?> hours
+			<!-- of all rescues occur within <?=round((intval($SARWaitMode)+1)*24)?> hours -->
+			of all rescues occur in less than 24 hours
 		</span>
 		<br /><br />
 		<span class="sechead white">

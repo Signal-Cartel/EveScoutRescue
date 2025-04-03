@@ -1,20 +1,22 @@
 <?php 
+
 $show_leader_board = true;
 if ($charname == 'Igaze') {$show_leader_board = true;}
-include_once '../includes/auth-inc.php';
-include_once '../class/users.class.php';
-include_once '../class/config.class.php';
-include_once '../class/mmmr.class.php';
+require_once '../includes/auth-inc.php';
+require_once '../class/users.class.php';
+require_once '../class/config.class.php';
+require_once '../class/mmmr.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/leaderboard_sar.class.php';
 
 // initialize objects
-$database = new Database();
-$rescue = new Rescue($database);
-$sarleaderBoard = new SARLeaderboard($database);
-$leaderBoard = new Leaderboard($database);
+if (!isset($database)) { $database = new Database();}
+if (!isset($rescue)) {$rescue = new Rescue($database);}
+if (!isset($sarleaderBoard)) {$sarleaderBoard = new SARLeaderboard($database);}
+if (!isset($leaderBoard)) {$leaderBoard = new Leaderboard($database);}
 
-;
+require_once 'hourly_data.php';	
+
 ?>
 
 <div class="row" id="allsystable">
@@ -22,7 +24,7 @@ $leaderBoard = new Leaderboard($database);
 	<div class="col-sm-4 white">
 		<!-- CURRENT WEEK SOW/TEND LEADERBOARD -->
 		<?php 
-			$daysrangeLB = isset($daysrangeLB) ? $daysrangeLB: '30';
+			$daysrangeLB = isset($daysrangeLB) ? $daysrangeLB: '0';
 			$numberLB= isset($numberLB) ? $numberLB: '10';
 			if (isset($_REQUEST['daysrangeLB'])) { 
 				$daysrangeLB= htmlspecialchars_decode($_REQUEST['daysrangeLB']);
@@ -34,15 +36,17 @@ $leaderBoard = new Leaderboard($database);
 			<!-- date range and number selection form -->
 			<p><span class="subhead">LEADERBOARD</span></p>
 			<form id="LBform" name="LBform" method="get" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-				Top <input type="text" name="numberLB" size="1" autocomplete="off" class="black"
+				<p>Top <input type="text" name="numberLB" size="1" autocomplete="off" class="black"
 					value="<?=$numberLB?>"> 
 				over the last <input type="text" name="daysrangeLB" size="1" autocomplete="off" class="black" 
 					value="<?=$daysrangeLB?>"> days
+					<br><small>* days begin/end at shutdown 11:00 UTC</small></p>
 					<input type="submit" style="display: none;">
 				</form>
 
 						<?php 
-						if ($show_leader_board){
+			
+			if ($show_leader_board){
 							echo '<table class="table" style="width: 80%;"><thead><tr>';
 							echo '<th>Pilot</th>';							
 							echo '<th>Sows/Tends</th>';
@@ -103,16 +107,9 @@ $leaderBoard = new Leaderboard($database);
 	</div>
 	<!-- TOTAL ACTIVE CACHES & ALL ACTIONS -->
 	<div class="col-sm-3 white">
-		<?php
-		$ctrrescues = $rescue->getRescueCount('closed-esrc');
-		$ctrsown = $caches->getSownTotalCount();
-		$ctrtended = $caches->getTendTotalCount();
-		$ctractive = $caches->getActiveCount();
-		$lockedSys = $systems->getLockedCount();
-		
-		$expireDays = 5;
-		$toexpire = $caches->expireInDays($expireDays);
-		?>
+	
+	
+
 		
 		<p class="subhead">CURRENT STATS</p>	
 		<p>

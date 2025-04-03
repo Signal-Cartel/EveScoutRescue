@@ -1,11 +1,10 @@
 <?php
-session_start();
+
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
-
-include_once '../includes/auth-inc.php';
+include_once '../includes/auth-inc.php';//this starts the session
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
 require_once '../class/password.class.php';
@@ -15,8 +14,6 @@ require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
-
-require_once 'hourly_data.php';	
 
 function debug($output){
 	echo "<script>console.log(JSON.parse('" . json_encode($output) . "'));</script>";
@@ -97,7 +94,7 @@ $romans = Array(
 </head>
 <?php
 
-if (!isset($database)) { $database = new Database();}
+$database = new Database();
 
 if (!isset($charname))
 {
@@ -184,13 +181,17 @@ $pilotLocStat = '';
 if ($isCoord == false) {
 	// check for Allison login (required to sow/tend caches)
 	if (isset($_SESSION['auth_char_location'])) {
-		// check if pilot has sown/tended over 300 caches in the past year; if so, they are excluded from this check	
+		// check if pilot has sown/tended over 300 caches; if so, they are excluded from this check
+		// This is awfully inefficient - ADP
+		
 		if (!isset($_SESSION['megacacher'])){
 			$_SESSION['megacacher'] = 0;
-			$rows = $leaderBoard->getActionCount($charname);
+			$daysdiff = round((strtotime("+1 day")- strtotime("2017-03-01")) / (60 * 60 * 24));
+			$rows = $leaderBoard->getTop(2000, $daysdiff);
+			$bitPilotMatch = 0;
 			foreach ($rows as $value) {
-				if ($value['Actions']) {
-					if ($value['Actions'] >= 300) {
+				if ($charname ==  $value['Pilot']) {
+					if ($value['cnt'] >= 300) {
 						$_SESSION['megacacher'] = 1;
 						break;
 					}
@@ -331,7 +332,7 @@ if (!empty($system)) {
 					<?php
 					// "chains" button is Coord-only
 					if ($isCoord) {
-						echo '<a href="/copilot/data/chains.php?system='. $system .'" class="btn btn-info"
+						echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
 							role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
 					}
 					//edit function only available to Coordinators and recent sowers
@@ -509,7 +510,7 @@ if (!empty($system)) {
 						<?php
 						// "chains" button is Coord-only
 						if ($isCoord) {
-							echo '<a href="/copilot/data/chains.php?system='. $system .'" class="btn btn-info"
+							echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info"
 								role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
 						}
 						?>
@@ -696,7 +697,7 @@ if (!empty($system)) {
 
 	//HISTORY
 	// see if there is historical data to display for this system
-	$systemActivities = $systems->getSystemHistoryRecent($system);
+	$systemActivities = $systems->getSystemHistory($system);
 	$actioncount = 0;
 	if (!empty($systemActivities)) {
 		
@@ -704,7 +705,7 @@ if (!empty($system)) {
 		echo '<div class="row" id="historytable">';
 		echo '<div class="col-md-12">';
 		echo '<div style="padding-left: 0px;">';
-		echo "<br /><span class='subhead'>PAST YEAR HISTORY: $actioncount actions</span><br />";
+		echo "<br /><span class='subhead'>HISTORY: $actioncount actions</span><br />";
 		
 		echo '<table class="table" style="
 				font-size: 1em;
@@ -858,8 +859,6 @@ if ($limited_data === 0) {
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
 	}
-
-   
 	
 </script>
 

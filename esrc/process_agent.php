@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+session_start();
 /**
  * Separate data entry code from data entry page content. 
  * 

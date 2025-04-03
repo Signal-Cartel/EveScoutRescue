@@ -25,6 +25,13 @@ class Output {
 		return $result;
 	}
 	
+	static function getEveDateShort($origdate)
+	{
+		$eveyear = intval(date("Y", strtotime($origdate)))-1898;
+		$result = $eveyear .'.'. date("m.d", strtotime($origdate));
+		
+		return $result;
+	}
 	
 	static function getEveDatetime($origdate)
 	{
@@ -34,7 +41,14 @@ class Output {
 		return $result;
 	}
 
-
+	static function getEveDatetimeShort($origdate)
+	{
+		$eveyear = intval(date("Y", strtotime($origdate)))-1898;
+		$result = 'YC' . $eveyear .'-'. date("m-d H:i", strtotime($origdate));	
+		return $result;
+	}
+	
+	
 	/**
 	 * Prepare display of options for a select list
 	 * @param string $post_value The value that will be posted at form submit

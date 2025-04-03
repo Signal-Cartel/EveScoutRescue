@@ -5,6 +5,7 @@
 // https://dev.evescoutrescue.com/esrc/rescue_assistant.php?pilot=Boyami%20Lost&system=Thera
 // https://dev.evescoutrescue.com/esrc/rescue_assistant-dev.php?pilot=Boyami%20Lost&system=J135031
 define('ESRC', TRUE);
+session_start();
 
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';

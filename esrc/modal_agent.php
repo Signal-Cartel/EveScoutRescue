@@ -3,8 +3,8 @@
 // get active cache info
 if ($system != ''){
 	$rowAgent = $caches->getCacheInfo($system);
-	$cacheid = $rowAgent['CacheID'];
-	$hasfil =  $rowAgent['has_fil'];
+		$cacheid = isset($rowAgent['CacheID']) ? $rowAgent['CacheID'] : "";
+		$hasfil =  isset($rowAgent['has_fil']) ? $rowAgent['has_fil'] : ""; 
 }
 
 //$fil_check = ($hasfil == 1 ? '' : 'disabled');
@@ -19,7 +19,7 @@ if ($system != ''){
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Agent</h4>
       </div>
-      <form name="agentform" id="agentform" action="process_agent.php" method="POST">
+      <form name="agentform" id="agentform1" action="process_agent.php" method="POST">
 	      <div class="modal-body black">
 		  	<div class="form-group">
 				<label class="control-label" for="sys_adj">System:
@@ -57,8 +57,8 @@ if ($system != ''){
 				</label>
 			</div>
 			<div class="field">
-				<label class="control-label" for="notes">Notes<span class="descr">70 character limit</span>
-					<textarea class="form-control" id="notes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
+				<label class="control-label" for="notes-a">Notes<span class="descr">70 character limit</span>
+					<textarea class="form-control" id="notes-a" name="notes" rows="2" cols="35" maxlength="70"></textarea>
 				</label>
 			</div>
 	      </div>

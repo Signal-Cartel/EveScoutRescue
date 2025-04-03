@@ -10,7 +10,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+session_start();
 include_once '../class/db.class.php';
 include_once '../class/systems.class.php';
 include_once '../class/caches.class.php';
@@ -58,8 +58,8 @@ if (isset($_POST['sys_sow'])) {
 	$pilot = test_input($_POST["pilot"]);
 	$activitydate = gmdate("Y-m-d H:i:s", strtotime("now"));
 	$system = test_input($_POST["sys_sow"]);
-	$location = test_input($_POST["location"]);
-	$alignedwith = test_input($_POST["alignedwith"]);
+	$location = test_input($_POST["sowlocation"]);
+	$alignedwith = test_input($_POST["sowalignedwith"]);
 	$distance = test_input($_POST["distance"]);
 	$password = test_input($_POST["password"]);
 	$status = isset($_POST["status"]) ? test_input($_POST["status"]) : 'Healthy';
@@ -117,7 +117,8 @@ if (isset($_POST['sys_sow'])) {
 
 		// create a new cache activity
 		$caches->addActivity($newID, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
-
+		// tell allison
+		$_SESSION['cache_activity'] = 'sow';
 		// check active cache total and notify on discord if = 2122
 		/*
 		$live_active_cache_count = $caches->getLiveActiveCount();
