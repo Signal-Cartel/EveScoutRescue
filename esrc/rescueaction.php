@@ -185,6 +185,20 @@ elseif ($action === 'UpdateRequest') {
 	// insert rescue note
 	if (isset($data['notes']) && $data['notes'] != '') {
 		$rescue->createRescueNote($rescueID, $charname, $data['notes']);
+		
+		// send new note to Discord
+		// discord webhook with token - channel and token part are part of config XXXX/abcdef
+		$webHook = 'https://discordapp.com/api/webhooks/'.Config::DISCORD_SAR_COORD_TOKEN;
+		$user = 'SAR System';
+		$alert = 0;
+		$skip_the_gif = 1;
+		$noteentry = $data['notes'] <> "" ? " with note:\r\n```" . $data['notes'] . "```": "\r\n"; 
+		
+		// construct the message - URL is based on config
+		$message = "[$system](".Config::ROOT_PATH."esrc/rescueoverview.php?sys=$system \"SAR system page\") - [Chains](".Config::ROOT_PATH."copilot/data/chains.php?system=$system \"Check Chains\") SAR in $system updated by $charname" . $noteentry;
+
+		$result = Discord::sendMessage($webHook, $user, $alert, $message, $skip_the_gif);	
+		
 	}
 	$database->endTransaction();
 	

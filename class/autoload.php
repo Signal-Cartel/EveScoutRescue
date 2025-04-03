@@ -27,6 +27,8 @@ spl_autoload_register(function ($className) {
 
     if (file_exists($path)) {
         include $path;
+		//file_put_contents('debug_log.txt', "Resolved Path: " . $path . " for class: " . $className . PHP_EOL, FILE_APPEND);
+
     } else {
         throw new Exception(
             sprintf('Class with name %1$s not found. Looked in %2$s',

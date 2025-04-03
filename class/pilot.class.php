@@ -87,7 +87,7 @@ class Pilot
 		$this->db->query("SELECT ActivityDate, EntryType, System
 									FROM activity
 									WHERE Pilot = :pilot
-									ORDER BY ActivityDate DESC");
+									ORDER BY ActivityDate DESC LIMIT 1000");
 		$this->db->bind(':pilot', $pilot);
 		
 		$rows = $this->db->resultset();

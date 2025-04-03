@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+session_start();
 /**
  * Separate data entry code from data entry page content. 
  * 
@@ -105,6 +105,7 @@ if (isset($_POST['sys_tend'])) {
 		$redirectURL = "search.php?sys=". $system ."&errmsg=". urlencode($errmsg);
 	} 
 	// otherwise, perform DB UPDATES
+	
 	else {
 		
 		//update cache status
@@ -119,7 +120,8 @@ if (isset($_POST['sys_tend'])) {
 
 		// add new activity record
 		$caches->addActivity($cacheid, $system, $pilot, $entrytype, $activitydate, $notes, $aidedpilot, $status);
-
+		// tell allison
+		$_SESSION['cache_activity'] = 'tend';
 		//add note to cache 
 		$caches->addNoteToCache($cacheid, $notes);		
 	

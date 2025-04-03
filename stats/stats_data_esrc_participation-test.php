@@ -1,6 +1,7 @@
 <?php
 define('ESRC', TRUE);
 session_start();
+
 include_once '../class/db.class.php';
 
 // instantiate db object
@@ -46,9 +47,17 @@ switch ($_REQUEST['type']) {
 		break;
 }
 
+echo $sql;
 // get database results
+// https://dev.evescoutrescue.com/stats/stats_data_esrc_participation-test.php?start=2025-02-27&end=2025-03-06&type=Overall
+// https://dev.evescoutrescue.com/stats/stats_data_esrc_participation.php?start=2025-02-27&end=2025-03-06&type=Overall
 $timestart = $_REQUEST['start'] . " 00:00:00";
 $timeend = $_REQUEST['end'] . " 23:59:59";
+echo "<br> " . $timestart;
+echo "<br> " . $timeend;
+echo "<br> " . DB_HOST;
+echo "<br> " . $configPath;
+
 $db->query($sql);
 $db->bind (':start', $timestart);
 $db->bind (':end', $timeend);

@@ -113,8 +113,18 @@ class Caches
 		if ($limited)
 		{
 			// yes
-			$sql = "SELECT CacheID, System, aligned, Location, AlignedWith, Status, has_pas, has_fil, ExpiresOn, InitialSeedDate, LastUpdated, Note FROM cache
-						WHERE System = :system AND Status <> 'Expired'";
+			$sql = "Select 
+			    cache.CacheID, cache.System, cache.aligned, cache.Location, cache.AlignedWith, cache.Status, cache.has_pas, cache.has_fil, cache.ExpiresOn, cache.InitialSeedDate, cache.LastUpdated, cache.Note, activity.Pilot, activity.ID
+			From
+				cache Left Join
+				activity On cache.CacheID = activity.CacheID
+			Where
+				cache.System = :system and cache.Status <> 'expired'
+			ORDER BY activity.ID DESC limit 1
+			";
+			
+			
+			//$sql = "SELECT CacheID, System, aligned, Location, AlignedWith, Status, has_pas, has_fil, ExpiresOn, InitialSeedDate, LastUpdated, Note FROM cache WHERE cache.System = :system AND Status <> 'Expired'";
 		}
 		else
 		{
@@ -161,7 +171,36 @@ class Caches
 		return $result;
 	}
 	
+	public function getCacheSower($system)
+	{
+		// check if a system is supplied
+		if (!isset($system))
+		{
+			return;
+		}
+
+		$sql = "
+			Select
+			    cache.System,
+				activity.Pilot
+			From
+				cache Left Join
+				activity On cache.CacheID = activity.CacheID
+			Where
+				cache.system = :system and activity.EntryType = 'sower' and
+				cache.Status <> 'expired'
+			ORDER BY cache.CacheId DESC limit 1
+		";
 		
+		$this->db->query($sql);
+		$this->db->bind(':system', $system);
+		
+		$result = $this->db->single();
+		
+		$this->db->closeQuery();
+		
+		return $result;
+	}		
 						
 						
 	/**
@@ -196,7 +235,7 @@ class Caches
 			"SELECT count(1) as cnt FROM cache 
 			WHERE System = :system AND (
 			(Status = 'Healthy' AND (time_to_sec(timediff(UTC_TIMESTAMP(), LastUpdated)) / 3600) >= 24) OR 
-			(status = 'Upkeep Required' and ExpiresOn >= UTC_TIMESTAMP))"
+			(Status = 'Upkeep Required' and ExpiresOn >= UTC_TIMESTAMP))"
 			);
 		$this->db->bind(':system', $system);
 		

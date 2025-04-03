@@ -34,8 +34,8 @@ if (empty($row)) {
 
 		
 							<div class="field form-group">
-								<label class="control-label" for="notes">Note<span class="descr">70 character limit</span></label>
-								<textarea class="form-control" id="notes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
+								<label class="control-label" for="notes">Note<span class="descr">140 character limit</span></label>
+								<textarea class="form-control" id="notes-new" name="notes" rows="4" cols="35" maxlength="140"></textarea>
 							</div>
 
 						<div class="modal-footer">

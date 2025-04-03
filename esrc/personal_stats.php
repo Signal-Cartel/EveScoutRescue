@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+session_start();
 include_once '../includes/auth-inc.php';
 require_once '../class/db.class.php';
 require_once '../class/pilot.class.php';
@@ -29,6 +29,27 @@ if (isset($_REQUEST['pilot']) && !empty($_REQUEST['pilot'])) {
 		}
 	}
 }
+
+if (!isset($_SESSION['isAdmin'])){
+	$isAdmin = $_SESSION['isAdmin'] = $users->isAdmin($charname);	
+}
+else{
+	$isAdmin = $_SESSION['isAdmin'];
+}
+if (!isset($_SESSION['isCoord'])){
+	$isCoord = $_SESSION['isCoord'] = ($isAdmin or $users->isSARCoordinator($charname));	
+}
+else{
+	$isCoord = $_SESSION['isCoord'];
+}
+if (!isset($_SESSION['is911'])){
+	$is911 = $_SESSION['is911'] = ($isCoord or $isAdmin or $users->is911($charname));	
+}
+else{
+	$is911 = $_SESSION['is911'];
+}
+
+
 ?>
 <html>
 
@@ -80,6 +101,11 @@ elseif (isset($_REQUEST['system'])) {
 </div>
 <div class="ws"></div>
 
+	<!-- NAVIGATION TABS -->
+	<?php include_once 'navtabs.php'; ?>
+	<div class="ws"></div>
+	
+	
 <div class="row" id="allsystable">
 	
 	<!-- COUNTERS -->

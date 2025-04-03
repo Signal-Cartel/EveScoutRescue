@@ -1,19 +1,15 @@
 <?php 
 // create object instances
-$db_top = new Database();
-$systems_top = new Systems($db_top);
-$rescue_top = new Rescue($db_top);
+if (!isset($database)) {$database = new Database();}
+if (!isset($systems_top)) {$systems_top = new Systems($database);}
+//$rescue_top = new Rescue($db_top);
 
 // get rescue counts
-$ctrESRCrescues = $rescue_top->getRescueCount('closed-esrc', '', '');
-$ctrSARrescues = $rescue_top->getRescueCount('closed-rescued');
-$ctrAllRescues = intval($ctrESRCrescues) + intval($ctrSARrescues);
+require_once 'hourly_data.php';	
 
 $sysNoteRow = $systems_top->getWHInfo($system);
 $arrSysnotes = $systems_top->getSystemNotes($system);
 
-
-// get PHP page
 $phpPage = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="col-sm-8 black" style="text-align: center;">
@@ -37,7 +33,8 @@ $phpPage = basename($_SERVER['PHP_SELF']);
 
 			if (isset($sysNoteRow)) {
 				// display system info
-				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
+				//$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . utf8_encode($sysNoteRow['Notes']) : '';
+				$whNotes = (!empty($sysNoteRow['Notes'])) ? '<br />' . $sysNoteRow['Notes'] : '';
 				echo '<strong class="white">'.$sysNoteRow['Class'] . $whNotes . '</strong><br />';
 				
 				if (!empty($sysNoteRow['StaticWhInfo'])) {

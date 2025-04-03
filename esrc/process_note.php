@@ -4,6 +4,7 @@
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
+session_start();
 /**
  * Separate data entry code from data entry page content. 
  * 
@@ -58,7 +59,7 @@ if (isset($_POST['sys_note'])) {
 	$system = test_input($_POST["sys_note"]);
 	$status= test_input($_POST["status"]);
 	$notes = trim($_POST["notes"]);
-	$notes = substr($notes,0,70);
+	$notes = substr($notes,0,280);
 	$hasfil = ((isset($_POST['hasfil']) and $_POST['hasfil'] == 1) ? true : false);
 
 	// check the system

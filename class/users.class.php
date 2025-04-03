@@ -176,9 +176,7 @@ class Users {
 	 */
 	public static function isAllianceUserSession()
 	{
-		if (session_status() == PHP_SESSION_NONE) {
-			session_start();
-		}
+		//if (session_status() == PHP_SESSION_NONE) {	session_start();}
 
 		if (isset($_SESSION['auth_characteralliance'])){
 			return $_SESSION['auth_characteralliance'] == 99005130;

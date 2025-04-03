@@ -13,16 +13,23 @@ if (!defined('ESRC')) { die ('Direct access not permitted'); }
 // get current runtime environment
 switch ($_SERVER['HTTP_HOST']) {
 	case 'dev.evescoutrescue.com':	// staging
-		$configPath = '../../config/esr_dbconfig_dev.ini';
-	break;
+		if (isset($_SESSION['livedata']) and  $_SESSION['livedata'] == 1){
+			$configPath = '../../config/esr_dbconfig.ini';
+		}
+		else{
+			$configPath = '../../config/esr_dbconfig_dev.ini';
+		}
+		break;
 	
 	case 'evescoutrescue.com':	// production
 		$configPath = '../../config/esr_dbconfig.ini';
-	break;
+		break;
 
 	default:	// usually localhost dev
 		$configPath = '../../conf/esr_dbconfig_localhost.ini';
+
 }
+
 // find config file
 $config = parse_ini_file($configPath);
 
@@ -37,6 +44,12 @@ define("DB_HOST", $config['hostname']);
 define("DB_USER", $config['username']);
 define("DB_PASS", $config['password']);
 define("DB_NAME", $config['dbname']);
+
+// debug
+$_SESSION['livedata_active'] = 'db.class' . $configPath;
+$_SESSION['livedata_source'] = DB_HOST;
+
+
 
 // check for enabled maintenance mode in DB
 define("MAINTENANCE", $config['maintenance']);

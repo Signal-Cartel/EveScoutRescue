@@ -236,7 +236,38 @@ class Systems {
 		return $result;
 	}
 	
+	public function getSystemHistoryRecent($system)
+	{
+		$this->db->query("
+		Select
+			activity.System,
+			activity.ActivityDate,
+			cache.AlignedWith,
+			cache.Distance,
+			cache.Password,
+			activity.Pilot,
+			activity.EntryType,
+			activity.CacheStatus,
+			activity.AidedPilot,
+			activity.Note,
+			cache.Location,
+			cache.ExpiresOn
+		From
+			activity Inner Join
+			cache On activity.CacheID = cache.CacheID
+		Where
+			activity.System = :system
+			AND activity.ActivityDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+		Order By
+			activity.ActivityDate Desc
+		");
 	
+		$this->db->bind(':system', $system);
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+
+		return $result;
+	}	
 
 	/**
 	 * Get a list of specified systems

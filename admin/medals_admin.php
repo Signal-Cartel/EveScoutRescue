@@ -57,7 +57,13 @@ $medals = [
         "name" => "The Crinkle Crown",
 		"act" => "for caching ",
         "min" => 10000,
-        "max" => 99999
+        "max" => 49999
+    ],
+    8 => [
+        "name" => "The Crinkle Crown",
+		"act" => "for caching ",
+        "min" => 50000,
+        "max" => 999999
     ],
     11 => [
         "name" => "SAR Bronze",
@@ -178,7 +184,8 @@ elseif ($rowid > 0) {
 				<a href="?medalid=4">UltraCacher</a><?php echo ($medalid==4)? $arrow : '' ?><br>
 				<a href="?medalid=5">Heroic Cacher</a><?php echo ($medalid==5)? $arrow : '' ?><br>
 				<a href="?medalid=6">Insane Cacher</a><?php echo ($medalid==6)? $arrow : '' ?><br>
-				<a href="?medalid=7">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?>
+				<a href="?medalid=7">The Crinkle Crown</a><?php echo ($medalid==7)? $arrow : '' ?><br>
+				<a href="?medalid=8">The Renek Regalia</a><?php echo ($medalid==8)? $arrow : '' ?>
 				</p>
 				</div>
 				<div>
@@ -262,6 +269,18 @@ elseif ($rowid > 0) {
 			}			
 			?>
 			</p>
+			<style>
+			.spin {
+				  animation: rotate 1.0s;
+				}
+
+			@keyframes rotate {
+			  0%   {color: #65bbff;}
+			  25%  {color: black;}
+			  50%  {color: #65bbff;}
+			  100% {color: black;}
+			}
+			</style>
 			<table id="" class="table display" style="width: auto;">
 				<thead>
 					<tr>
@@ -296,27 +315,35 @@ elseif ($rowid > 0) {
 				$db->query($sql);
 				$rows = $db->resultset();
 				$db->closeQuery();
-
+				$row_counter = 0;
 				foreach ($rows as $value) {
+					
 					
                     if (intval($value['cnt']) < $min || intval($value['cnt']) > $max) { 
                         continue; 
                     }
+					$pilot_name = $value['Pilot'];
 					
-					if (!$showall and in_array(strtolower($value['Pilot']),$awarded_pilots)){
+					if (!$showall and in_array(strtolower($pilot_name),$awarded_pilots)){
 						continue;
 					}
 					echo '<tr>';
-					echo '<td class="text-nowrap"><a href="?medalid='. $medalid .'&showall=' . $showall . '&pilot='. $value['Pilot'] .'">'. $value['Pilot'] .'</a></td>';
+					echo '<td class="text-nowrap">';
+					echo '<a href="?medalid='. $medalid .'&showall=' . $showall . '&pilot='. $pilot_name .'" style="margin-right: 0.3em;">'. $pilot_name .'</a>';
+					
+					echo '<input type="text" id="name'.$row_counter.'" style="display: none;" value="'. $pilot_name .'" />';
+					echo '<i id="copyclip" class="fa fa-clipboard" style="color:white;"  onClick="SelectAllCopy(\'name'.$row_counter.'\')"></i></td>';
+					
                     echo '<td class="white text-nowrap">'. $value['cnt'] . '</td>';
 					echo '<td class="white text-nowrap">' . substr($value['act'],0,10) .'</a></td>';
-					if(in_array(strtolower($value['Pilot']),$awarded_pilots)){						
+					if(in_array(strtolower($pilot_name),$awarded_pilots)){						
 						echo '<td class="white text-nowrap">Awarded</td>';
 					}
 					else{
-						echo '<td class="white text-nowrap"><a href="?rowid=-1&medalid='.$medalid.'&username='.$value['Pilot'].'">Give award</a></td>';						
+						echo '<td class="white text-nowrap"><a href="?rowid=-1&medalid='.$medalid.'&username='.$pilot_name.'">Give award</a></td>';						
 					}
 					echo '</tr>';
+					$row_counter++;
 				}
 				?>
 				</tbody>
@@ -383,10 +410,27 @@ elseif ($rowid > 0) {
 </div>
 
 <script type="text/javascript">
+
 	function SelectAllCopy(id) {
-	    document.getElementById(id).focus();
-	    document.getElementById(id).select();
-	    document.execCommand("Copy");
+		var copyText = document.getElementById(id);
+		var icon = copyText.nextElementSibling;
+		copyText.select();
+		copyText.setSelectionRange(0, 99999); // For mobile devices
+		navigator.clipboard.writeText(copyText.value);
+		
+
+		icon.addEventListener('click', () => {
+		  icon.classList.add('spin');
+		});
+		icon.addEventListener('animationend', ()=>{
+			icon.classList.remove('spin');
+		});
+
+
+		
+	    //document.getElementById(id).focus();
+	    //document.getElementById(id).select();
+	    //document.execCommand("Copy");
 	}
 
 	$(document).ready(function() {

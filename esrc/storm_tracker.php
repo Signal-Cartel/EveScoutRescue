@@ -3,7 +3,7 @@
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
-
+session_start();
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 require_once '../class/db.class.php';
@@ -133,13 +133,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- All background images courtesy of EvE-Scout Observatory:
     		- http://observatory.eve-scout.com/
     		- https://www.flickr.com/photos/eve-scout/ -->
+ 
+
+    <?php
+	//load a different bg image on each new session
+	if (!isset($_SESSION['selectedBg'])) {
+		$bg = array('bg01.jpg', 'bg02.jpg', 'bg03.jpg', 'bg04.jpg', 'bg05.jpg', 'bg06.jpg');
+		$i = rand(0, count($bg)-1);		
+		$_SESSION['selectedBg'] = ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ? 'bgDev.webp' : "$bg[$i]");
+	}
+	?>
     <style type="text/css">
 		body::before {
-			background: url(../img/bg03.jpg);
+			background: url(../img/<?php echo $_SESSION['selectedBg']; ?>);
 			position: fixed;
 			opacity: .5;
 		}
 	</style>
+
 </head>
 
 <?php
@@ -297,7 +308,7 @@ if (isset($_REQUEST['observation_type']) &&
 <div class="row" id="systable">
 	<div class="col-sm-12">
         <p class="white">
-            <?=Storms::getStormName($_REQUEST['observation_type'])?> (most recent report first)</p>
+            <?= Storms::getStormName($_REQUEST['observation_type'])?> (most recent report first)</p>
 		<table class="table display" style="width: auto;">
 			<thead>
 				<tr>
@@ -379,17 +390,19 @@ if (isset($_REQUEST['observation_type']) &&
         </div>
           <?php
           if ($_REQUEST['observation_type'] == "toms_shuttle") {
-            echo <<<EOF
-        <input type="hidden" name="observed_in_person" value="1">
+            echo 
+		<<<EOF
+			<input type="hidden" name="observed_in_person" value="1">
 EOF;
           } else {
-            echo <<<EOF
-        <div class="field text-center">
-            <label class="checkbox-inline">
-                <input name="observed_in_person" type="checkbox" value="1">
-                <strong>Confirmed in-person</strong>
-            </label>
-        </div>
+            echo 
+		<<<EOF
+			<div class="field text-center">
+				<label class="checkbox-inline">
+					<input name="observed_in_person" type="checkbox" value="1">
+					<strong>Confirmed in-person</strong>
+				</label>
+			</div>
 EOF;
           }
         ?>
@@ -412,7 +425,8 @@ EOF;
 	}
 
     <?php
-    if ($_REQUEST['observation_type'] == "toms_shuttle") {
+/*     if (isset($_REQUEST['observation_type']) && $_REQUEST['observation_type'] === "toms_shuttle") {
+
       echo <<<EOL
     var storm_systems = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -428,7 +442,33 @@ EOL;
         prefetch: '../resources/stormSystems.json'
     });
 EOL;
-    }
+    } */
+if (isset($_REQUEST['observation_type']) && $_REQUEST['observation_type'] === "toms_shuttle") { 
+    echo <<<EOL
+var storm_systems = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: {
+    url: '../resources/allSystems.json',
+    ttl: 0
+  }
+});
+EOL;
+} else {
+    echo <<<EOL
+var storm_systems = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: {
+    url: '../resources/stormSystems.json',
+    ttl: 0
+  }
+});
+EOL;
+}
+
+	
+	
     ?>
 
     $('#sys_search .typeahead').typeahead(null, {

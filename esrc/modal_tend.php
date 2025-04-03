@@ -66,8 +66,8 @@
 								</label>
 							</div>
 							<div style="display: none;">
-								<label for="hasfil" style="margin-bottom: 20px">
-									<input id="hasfil" name="hasfil" type="checkbox" <?=$hasfil?> value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
+								<label for="hasfilnew" style="margin-bottom: 20px">
+									<input id="hasfilnew" name="hasfil" type="checkbox" <?=$hasfil?> value="1" style="width: 40px; height: 24px;" data-error="Does the cache contain a filament?">
 									<p style="display: inline; position: relative; top: -6px;">
 									<strong>Filament: </strong>Does the cache contain a filament?
 									</p>
@@ -75,8 +75,8 @@
 							</div>
 							
 							<div class="field form-group">
-								<label class="control-label" for="notes">Notes<span class="descr">70 character limit</span></label>
-								<textarea class="form-control" id="notes" name="notes" rows="2" cols="35" maxlength="70"></textarea>
+								<label class="control-label" for="notes2">Notes<span class="descr">70 character limit</span></label>
+								<textarea class="form-control" id="notes2" name="notes" rows="2" cols="35" maxlength="70"></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">

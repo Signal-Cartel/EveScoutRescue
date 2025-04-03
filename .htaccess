@@ -1,0 +1,18 @@
+Options -Indexes -MultiViews
+Header always unset X-Frame-Options
+
+# enable mod_rewrite
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /404.php [L,R=404]
+
+RewriteCond %{SERVER_PORT} 80
+# This checks to make sure the connection is not already HTTPS – port 80 indicates a non-secured HTTP conection.
+# RewriteRule ^(.*)$ https://dev.evescoutrescue.com/$1 [R=301,L]
+# This rule will redirect users from their original location to the same location but using HTTPS.
+# Example: Visitors trying to access http://www.domain.com/somesubsection/ will be redirected to https://www.domain.com/somesubsection/
+
+# Custom 404
+ErrorDocument 404 /404.php
+

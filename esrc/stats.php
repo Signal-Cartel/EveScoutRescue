@@ -1,7 +1,5 @@
 <?php 
-
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
+session_start();
 define('ESRC', TRUE);
 $hide_stats = FALSE; //true for Crinkle Fest or tender games
 // for debug only
@@ -9,11 +7,14 @@ $hide_stats = FALSE; //true for Crinkle Fest or tender games
  error_reporting(E_ALL);
  ini_set('display_errors', 'on');
 */
+//do we want live stats?
+$livedata = (isset($_SESSION['livedata'])and $_SESSION['livedata'] ==1 ) ? '&livedata=1' : '&livedata=0';
+	
 
 include_once '../includes/auth-inc.php';
 include_once '../class/users.class.php';
 include_once '../class/config.class.php';
-require_once '../class/db.class.php';
+//require_once '../class/db.class.php';
 require_once '../class/leaderboard.class.php';
 require_once '../class/caches.class.php';
 require_once '../class/systems.class.php';
@@ -130,29 +131,11 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 			} );
 		} );
 	</script>
-
-	<style>
-	<!--
-		table {
-			table-layout: fixed;
-			word-wrap: break-word;
-		}
-		a,
-		a:visited,
-		a:hover {
-			color: aqua;
-		}
-		.btn-info a,
-		a:visited,
-		a:hover {
-			color: white;
-		}
-	-->
-	</style>
-	
+		<!-- livedata = <?=$_SESSION['livedata']?> -->
 	<!--Load the AJAX API-->
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
+		var liveData = '<?=$livedata?>';
 		// Load the Visualization API and the piechart package.
 		google.charts.load('current', {'packages':['corechart']});
 	
@@ -168,7 +151,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		function drawEsrcCachesChart(type) {
 			if (typeof type === "undefined") { type = 'Daily'; }
 			var jsonData = $.ajax({
-				url: "../stats/stats_data_esrc_caches.php?start=<?=$start?>&end=<?=$end?>&type=" + type,
+				url: "../stats/stats_data_esrc_caches.php?start=<?=$start?>&end=<?=$end?>&type=" + type + liveData,
 				dataType: "json", async: false }).responseText;
 				// Create our data table out of JSON data loaded from server.
 				var data = new google.visualization.DataTable(jsonData);
@@ -196,7 +179,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		function drawEsrcParticipationChart(type) {
 		  if (typeof type === "undefined") { type = 'Overall'; }
 		  var jsonData = $.ajax({
-		      url: "../stats/stats_data_esrc_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
+		      url: "../stats/stats_data_esrc_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type + liveData, 
 		      dataType: "json", async: false }).responseText;		          
 		  var data = new google.visualization.DataTable(jsonData);
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 
@@ -208,7 +191,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 		function drawSarParticipationChart(type) {
 		  if (typeof type === "undefined") { type = 'Rescuers'; }
 		  var jsonData = $.ajax({
-		      url: "../stats/stats_data_sar_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type, 
+		      url: "../stats/stats_data_sar_participation.php?start=<?=$start?>&end=<?=$end?>&type=" + type + liveData, 
 		      dataType: "json", async: false }).responseText;		          
 		  var data = new google.visualization.DataTable(jsonData);
 		  var options = { title: 'Most Active ' + type, titleTextStyle: { color: 'white', fontSize: 16 }, 

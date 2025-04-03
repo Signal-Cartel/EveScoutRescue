@@ -12,16 +12,15 @@
  * 
  * jmh - 20200716
  */
-
+ // if no session, start one
+ if (session_status() === PHP_SESSION_NONE) { session_start(); }
+ 
  // page cannot be accessed directly
  if (!defined('ESRC')) { die ('Direct access not permitted'); }
 
  // autoload classes and set debug params
  require_once '../class/autoload.php';
  require_once '../resources/handler_debug-parameters.php';
-
- // if no session, start one
- if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
  // set default TZ
 date_default_timezone_set('UTC');
@@ -33,7 +32,7 @@ if (isset($_SESSION['auth_characterid'])) {
 	$charname   = $_SESSION['auth_charactername'];
 	$logoutlink = (isset($_SESSION['auth_copilot'])) ? '' : '<span class="descr"><a href="../auth/logout.php">logout</a></span>';
 	$chardiv    = '<div style="text-align: center;"><a href="../esrc/personal_stats.php?pilot=' . 
-				  urlencode($charname) . '" target="_blank">'.$charimg.'<br />' . 
+				  urlencode($charname) . '">'.$charimg.'<br />' . 
 				  '<div><span class="white">' . Output::htmlEncodeString($charname) . 
 				  '</span></a><br />' . $logoutlink . '</div></div>';
 }

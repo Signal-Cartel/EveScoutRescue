@@ -67,16 +67,39 @@ class Leaderboard
 	 */
 	public function getTop($count, $lastDays = 30)
 	{
-		$start = gmdate('Y-m-d 00:00:00', strtotime('-'.$lastDays.' days'));
-		$end = gmdate('Y-m-d 23:29:59', strtotime("now"));
+		$count = ($count>1095 ? 1095 : $count);// 3 years
+		$count = ($count<0 ? 0 : $count);
+		//$start = gmdate('Y-m-d 00:00:00', strtotime('-'. $lastDays .' days'));
+		//$end = gmdate('Y-m-d 23:29:59', strtotime("now"));
+
+		$currentHour = gmdate('H'); // Current hour in UTC
+		if ($lastDays == 0) {
+			$start = ($currentHour < 11) 
+				? gmdate('Y-m-d 11:00:00', strtotime('-1 day'))
+				: gmdate('Y-m-d 11:00:00', strtotime('now'));
 			
+			$end = ($currentHour < 11) 
+				? gmdate('Y-m-d 11:00:00', strtotime('now'))
+				: gmdate('Y-m-d 11:00:00', strtotime('+1 day'));
+		} else {
+			$start = ($currentHour < 11) 
+				? gmdate('Y-m-d 11:00:00', strtotime('-'. $lastDays+1 .' days'))
+				: gmdate('Y-m-d 11:00:00', strtotime('-'. $lastDays .' days'));			
+			// After 11:00 UTC: End time is now (or 11:00 UTC if querying past days)
+			$end = ($currentHour < 11) 
+				? gmdate('Y-m-d 11:00:00', strtotime('-1 day')) 
+				: gmdate('Y-m-d 11:00:00', strtotime('now'));
+		}
+
+		
 		$this->db->query("SELECT COUNT(*) AS cnt, a.Pilot, max(ActivityDate) as act
 					FROM activity a
 					LEFT OUTER JOIN payout_optout po ON po.pilot = a.Pilot
 					WHERE (po.optout_type <> 'Stats' OR po.optout_type IS NULL) AND 
-						(EntryType IN ('sower', 'tender') AND ActivityDate BETWEEN :start AND :end)
+						(EntryType IN ('sower', 'tender') AND ActivityDate >= :start AND ActivityDate < :end)
 					GROUP BY Pilot
 					ORDER BY cnt desc, act DESC limit :limit");
+					
 		$this->db->bind(':start', $start);
 		$this->db->bind(':end', $end);
 		$this->db->bind(':limit', $count);
@@ -86,6 +109,32 @@ class Leaderboard
 		
 		return $result;
 	}
+
+
+	/**
+	 * Get the number of sows and tends in the past year
+	 * @return array $result 
+	 */
+	public function getActionCount($pilot)
+	{
+
+		$this->db->query("
+		SELECT Pilot, COUNT(*) AS Actions
+		FROM activity
+		WHERE EntryType IN ('sower', 'tender') 
+		AND Pilot = :pilotname
+		AND ActivityDate >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) 
+		GROUP BY Pilot;");
+					
+		$this->db->bind(':pilotname', $pilot);
+		
+		$result = $this->db->resultset();
+		$this->db->closeQuery();
+		
+		return $result;
+	}
+	
+
 
 
 	/**

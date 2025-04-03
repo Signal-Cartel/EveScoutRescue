@@ -30,7 +30,7 @@
 	if (!isset($_SESSION['selectedBg'])) {
 		$bg = array('bg01.jpg', 'bg02.jpg', 'bg03.jpg', 'bg04.jpg', 'bg05.jpg', 'bg06.jpg');
 		$i = rand(0, count($bg)-1);		
-		$_SESSION['selectedBg'] = ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ? 'bgDev.jpg' : "$bg[$i]");
+		$_SESSION['selectedBg'] = ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' ? 'bgDev.webp' : "$bg[$i]");
 	}
 	?>
     <style type="text/css">

@@ -2,19 +2,27 @@
 // page cannot be accessed directly
 if (!defined('ESRC')) { die ('Direct access not permitted'); }
 
+
 // get current runtime environment
 switch ($_SERVER['HTTP_HOST']) {
 	case 'dev.evescoutrescue.com':	// staging
-		$configPath = '../../config/esrc_defaults_dev.ini';
-	break;
-
+		if (isset($_SESSION['livedata']) and  $_SESSION['livedata'] == 1){
+			$configPath = '../../config/esrc_defaults.ini';
+		}
+		else{
+			$configPath = '../../config/esrc_defaults_dev.ini';
+		}
+		break;
+	
 	case 'evescoutrescue.com':	// production
 		$configPath = '../../config/esrc_defaults.ini';
-	break;
+		break;
 
-	default:	// usually localhost
+	default:	// usually localhost dev
 		$configPath = '../../conf/esrc_defaults_localhost.ini';
+
 }
+
 
 // find config file
 $sysconfig = parse_ini_file($configPath);

@@ -134,7 +134,7 @@ $agents = array_key_exists('RescueAgents', $request) ?
 					
 					
 					<!--<option value="closed-esrc" <?php if ($request['status'] === 'closed-esrc') { echo ' selected="selected"'; } ?>>Closed - rescued (ESRC)</option>-->
-					<option value="closed-rescued" <?php if ($request['status'] === 'closed-rescued') { echo ' selected="selected"'; } ?>>Closed - rescued (SAR)</option>
+					<option value="closed-rescued" <?php if ($request['status'] === 'closed-rescued') { echo ' selected="selected"'; } ?>>Rescued (SAR)</option>
 					<option value="closed-escaped" <?php if ($request['status'] === 'closed-escaped') { echo ' selected="selected"'; } ?>>Closed - escaped by self</option>
 					<option value="closed-escapedlocals" <?php if ($request['status'] === 'closed-escapedlocals') { echo ' selected="selected"'; } ?>>Closed - escaped by locals</option>
 					<option value="closed-destruct" <?php if ($request['status'] === 'closed-destruct') { echo ' selected="selected"'; } ?>>Closed - self destruct</option>

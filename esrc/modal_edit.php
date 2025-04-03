@@ -1,8 +1,15 @@
-<!-- Edit Cache Modal Form -->
 <?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+// Edit Cache Modal Form 
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 if (!defined('ESRC')) define('ESRC', TRUE);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 include_once '../class/db.class.php';
 include_once '../class/caches.class.php';
@@ -62,25 +69,25 @@ if (isset($_POST['sys_edit'])) {
 	// otherwise, perform DB UPDATES
 	else {
 		// edit existing cache
+		echo "<!-- edit existing cache -->";
 		$caches->updateCacheNew($editCacheid, $editLocation, $editAlignedwith, $editDistance, $editPassword, $edithasfil);
 
         //note to update
 
 			$caches->addNoteToCache($editCacheid, $editNewNote);
-		
+		echo "<!--cacheid " . $editCacheid . " -->";	
+		echo "<!-- new note contains " . $editNewNote . " -->";
 		//redirect back to search page to show updated info
 		$redirectURL = "search.php?sys=". $editSystem;
+		
 	}
 	//END DB UPDATES
 	?>
 		<script>
 			window.location.replace("<?=$redirectURL?>")
 		</script>
-		<?php 
+	<?php 
 } // end form POST processing
-
-// array for Location and AlignedWith select lists
-$locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 ?>
 
 <div id="EditModal" class="modal fade" role="dialog">
@@ -94,20 +101,21 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
       <form name="editform" id="editform" action="modal_edit.php" method="POST">
 	      <div class="modal-body black">
 			<div class="form-group">
-				<label class="control-label" for="sys_edit">System: </label>
+				<label class="control-label" for="sys_edit" style="font-size: 1.4em;"><?php echo $system ?></label>
 				<input type="hidden" name="sys_edit" value="<?php echo $system ?>" />
-				<span class="subhead"><?php echo $system ?></span>
+				
 			</div>
 
             <div class="field form-group">
-                <label class="control-label" for="location">Location<span class="descr">By which celestial is the 
-                    cache located? If somewhere other than a planet or star, please mention in a note.</span></label>
+                <label class="control-label" for="location">Location planet<span class="descr">If somewhere other than a planet or star, please mention in a note.</span></label>
                 <select class="form-control" id="location" name="location" required>
                     <option value="">- Select -</option>
                     <?php
+					// array for Location and AlignedWith select lists
+					$locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
                     foreach ($locopts as $val) {
                         $strSelected = '';
-                        if ($val == $row['Location']) { $strSelected = ' selected="selected"'; }
+                        if (isset($row['Location']) && $val == $row['Location']) { $strSelected = ' selected="selected"'; }
                         echo '<option value="' . $val . '"'. $strSelected .'>' . $val . '</option>';
                     }
                     ?>
@@ -115,14 +123,13 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
             </div>
 
             <div class="field form-group">
-                <label class="control-label" for="alignedwith">Aligned With<span class="descr">With which celestial is 
-                    the cache aligned? If somewhere other than a planet or star, please mention in a note.</span></label>
+                <label class="control-label" for="alignedwith">Align planet<span class="descr">If somewhere other than a planet or star, please mention in a note.</span></label>
                 <select class="form-control" id="alignedwith" name="alignedwith" required>
                     <option value="">- Select -</option>
                     <?php 
                     foreach ($locopts as $val) {
                         $strSelected = '';
-                        if ($val == $row['AlignedWith']) { $strSelected = ' selected="selected"'; }
+                        if (isset($row['Location']) && $val == $row['AlignedWith']) { $strSelected = ' selected="selected"'; }
                         echo '<option value="' . $val . '"'. $strSelected .'>' . $val . '</option>';
                     }
                     ?>
@@ -130,14 +137,12 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
             </div>
 
 			<div class="field form-group">
-				<label class="control-label" for="distance">Distance (km)<span class="descr">How far is the cache from 
-                    the Location planet? Must be a number between 22000 and 50000.</span></label>
+				<label class="control-label" for="distance">Distance (km) from location planet<span class="descr">Between 22000 and 50000.</span></label>
 				<input class="form-control " id="distance" name="distance" value="<?=$row['Distance']?>" required/>
 			</div>
 
 			<div class="field form-group">
-				<label class="control-label" for="password">Password<span class="descr">What is the 
-					password for the secure container? (Generated password is pre-filled. Click to 
+				<label class="control-label" for="password">Password<span class="descr">(Generated password is pre-filled. Click to 
 					paste your own password.)</span></label>
 				<input type="text" class="form-control" id="password" name="password" 
 					value="<?=$row['Password']?>" maxlength="15" onclick="select();" required />
@@ -156,9 +161,9 @@ $locopts = $systems_top->getSowLocations($sysNoteRow['PlanetCount']);
 				<?
 				// NOTES
 				// fill text area with existing note, but limit input length to current - to discourage 'new notes' here
-				$lng = strlen($strNotes) + 10;
+				$lng = strlen($strNotes) + 70;
 				?>
-				<label class="control-label" for="notes">Notes<span class="descr">Edit note</span></label>
+				<label class="control-label" for="newNote">Notes<span class="descr">Edit note</span></label>
 				<textarea class="form-control" id="newNote" name="newNote" rows="3" maxlength="<?=$lng?>"><?=$strNotes?></textarea>
 			</div>
 	      </div>

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Mark all entry pages with this definition. Includes need check check if this is defined
 // and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
@@ -204,9 +204,18 @@ if (!empty($errmsg)) {
 				<!-- System Name display -->
 				<p class="systemName"><?=$system . $activeSARtitle ?></p>
 
-				<!-- SAR New button -->
-				<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
-					data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
+					<!-- SAR New button (if 911 or higher)-->
+					<?php
+					if($is911){
+						?>	
+						
+						<a type="button" class="btn btn-danger"	role="button" data-toggle="modal"
+							data-target="#ModalSARNew">New SAR</a>&nbsp;&nbsp;&nbsp;
+							
+						<?php 
+					}
+					?>
+
 				<!-- TW button -->
 				<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
 					role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
@@ -220,7 +229,7 @@ if (!empty($errmsg)) {
 				<?php
 				// "chains" button is Coord-only
 				if ($isCoord) {
-					echo '<a href="/copilot/data/chains?system='. $system .'" class="btn btn-info" 
+					echo '<a href="/copilot/data/chains.php?system='. $system .'" class="btn btn-info" 
 						role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
 				}
 				?>
@@ -243,36 +252,57 @@ if (!empty($errmsg)) {
 	}
 ?>
 
-<!-- MODAL includes -->
-<?php
-include 'modal_sar_new.php';
-include 'modal_sar_manage.php';
-include 'modal_sar_add-rescue-pilot.php';
-?>
+<!-- SAR MODAL includes (if 911 or higher) -->
 
-<script type="text/javascript">
-	// auto-display edit modal when "req" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('req=') != -1) {
-	    $('#ModalSAREdit').modal('show');
+	<?php
+	if($is911){
+		
+		include 'modal_sar_new.php';
+		include 'modal_sar_manage.php';
+		include 'modal_sar_add-rescue-pilot.php';
 	}
+	?>
 
-	// auto-display Add Pilot modal when "reqp" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('reqp=') != -1) {
-	    $('#ModalSARAddPilot').modal('show');
-	}
 
-	// auto-display new modal when "new" parameter provided in querystring
-	var url = window.location.href;
-	if(url.indexOf('new=') != -1) {
-	    $('#ModalSARNew').modal('show');
-	}
+	<!-- Auto display modals (if 911 or higher? no because locate agents can edit SARS)-->
+				
+		<script>
+			// auto-display edit modal when "req" parameter provided in querystring
+			var url = window.location.href;
+			if(url.indexOf('req=') != -1) {
+				$('#ModalSAREdit').modal('show');
+			}
 
+			// auto-display Add Pilot modal when "reqp" parameter provided in querystring
+			var url = window.location.href;
+			if(url.indexOf('reqp=') != -1) {
+				$('#ModalSARAddPilot').modal('show');
+			}
+
+			// auto-display new modal when "new" parameter provided in querystring
+			var url = window.location.href;
+			if(url.indexOf('new=') != -1) {
+				$('#ModalSARNew').modal('show');
+			}
+		</script>
+											
+
+<script>
 	// initialize tooltip display
 	$(document).ready(function(){
 	    $('[data-toggle="tooltip"]').tooltip({container: 'body'}); 
 	});
+	// copy text element
+	function copyTextElement(id) {
+    const element = document.getElementById(id);
+    navigator.clipboard.writeText(element.textContent)
+        .then(() => {
+            console.log('Text copied to clipboard');
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+	}
 </script>
 
 </div>
@@ -482,8 +512,8 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 			echo '<td><p class="admint"><em style="color:#999999">PROTECTED</em></p></td>';
 		}
 		else {
-			echo '<td><p class="admint"><a target="_blank" href="https://evewho.com/pilot/'. 
-					$row['pilot'] .'">'.Output::htmlEncodeString($row['pilot']).'</a></p></td>';
+			echo '<td><p class="admint" id="clientName" style="display: inline; margin-right: 6px;">'.Output::htmlEncodeString($row['pilot']).'</p>';
+			echo '<i id="copyclip" class="fa fa-clipboard" onClick="copyTextElement(\'clientName\')"></i></td>';
 		}
 	
 	// Status 
