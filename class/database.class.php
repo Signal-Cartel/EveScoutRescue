@@ -39,9 +39,6 @@ define("DB_USER", $config['username']);
 define("DB_PASS", $config['password']);
 define("DB_NAME", $config['dbname']);
 
-// debug
-$_SESSION['livedata_active'] = 'database.class' . $configPath;
-$_SESSION['livedata_source'] = DB_HOST;
 
 // check for enabled maintenance mode in DB
 define("MAINTENANCE", $config['maintenance']);

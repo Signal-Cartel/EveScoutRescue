@@ -13,7 +13,7 @@ require_once '../resources/handler_debug-parameters.php';
 session_start();
 
 if (isset($_SESSION['auth_characterid'])) {
-    echo "Logged in. ".$_SESSION['auth_characterid'];
+    //echo "Logged in. ".$_SESSION['auth_characterid'];
     exit;
 } 
 else {

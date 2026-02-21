@@ -210,6 +210,7 @@ class Systems {
 		Select
 			activity.System,
 			activity.ActivityDate,
+			activity.ID,
 			cache.AlignedWith,
 			cache.Distance,
 			cache.Password,
@@ -242,6 +243,7 @@ class Systems {
 		Select
 			activity.System,
 			activity.ActivityDate,
+			activity.ID,
 			cache.AlignedWith,
 			cache.Distance,
 			cache.Password,

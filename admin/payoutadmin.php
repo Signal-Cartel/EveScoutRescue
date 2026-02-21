@@ -59,8 +59,7 @@ if (!isset($_POST['payout'])) {		// show detailed records if "Payout" is not che
 						<td class="text-nowrap">
 							<a class="payout" target="_blank" 
 								href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
-								<?=$value['Pilot']?></a> - <a class="payout" target="_blank" 
-								href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
+								<?=$value['Pilot']?></a></td>
 						<td class="white"<?=$actioncellformat?>><?=ucfirst($value['EntryType'])?></td>
 						<td><a class="payout" href="/esrc/search.php?sys=<?=$value['System']?>" 
 							target="_blank"><?=$value['System']?></a></td>
@@ -137,13 +136,22 @@ else {		?>
 				foreach ($rows as $value) {
 					// calc payout amount
 					$payoutAmt = round((intval($value['cntPayableActions'])/intval($ctrActionsLessOptouts))*intval($_REQUEST['totamt']),2);
-					$i++;	?>
+					$i++;	
+					$pname = $value['Pilot'];
+					?>
 
 					<tr>
-						<td><a class="payout" target="_blank" 
-							href="/esrc/personal_stats.php?pilot=<?=urlencode($value['Pilot'])?>">
-							<?=$value['Pilot']?></a> - <a class="payout" target="_blank" 
-							href="https://evewho.com/pilot/<?=$value['Pilot']?>">EW</a></td>
+						<td class="white">
+						<p style=""><span id="<?=$pname.$i?>"><?=Output::htmlEncodeString($pname)?></span>
+							<i id="copy<?=$pname.$i?>" class="fa fa-clipboard" style="margin: 0px 8px 0px 16px;" onClick="copyTextElement('<?=$pname.$i?>')"></i>
+						
+							<a class="payout" target="_blank" 
+							href="/esrc/personal_stats.php?pilot=<?=urlencode($pname)?>">
+							Stats</a> 
+						</p>	
+						
+							
+						</td>
 						<td class="white" align="right"><?=$value['cntActions']?></td>
 						<td><input type="text" id="amt<?=$i?>" 
 							value="<?=($payoutAmt == 0) ? 'Opted Out' : $payoutAmt?>" />

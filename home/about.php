@@ -30,7 +30,7 @@ require '../page_templates/home_html-begin.php';
 			</div>
 			<div class="panel-body">
 				<p>In early YC118, <a href="https://www.signalcartel.org/">Signal Cartel</a> member 
-					<a href="https://evewho.com/pilot/Forcha%20Alendare">Forcha Alendare</a> had a vision of a service that would provide a basic 
+					<a href="https://evewho.com/character/94791801">Forcha Alendare</a> had a vision of a service that would provide a basic 
 					emergency resource kit for capsuleers stranded in wormholes, regardless of alliance, sovereignty, or play style. This vision captured the 
 					imagination of many <a href="https://www.signalcartel.org/">Signal Cartel</a> pilots and grew to become the Rescue Cache program we know today. 
 					</p>
@@ -38,13 +38,13 @@ require '../page_templates/home_html-begin.php';
 					bring him into conflict with the 
 					<a href="https://wiki.signalcartel.space/Public:About_Signal_Cartel">Credo</a>, so he chose to  
 					leave the corporation and alliance leadership brought in 
-					<a href="https://evewho.com/pilot/Thrice%20Hapus">Thrice 
+					<a href="https://evewho.com/character/96079190">Thrice 
 					Hapus</a> to manage day-to-day operations.</p>
 				<p>Since then, the program has grown to become an entire division within <a href="https://www.signalcartel.org/">Signal Cartel</a> and 
 					encompasses both live Search and Rescue operations as well as the original Rescue Cache 
 					program.</p>
-				<p>When Thrice Hapus became CEO of Signal Cartel, <a href="https://evewho.com/pilot/Igaze">Igaze</a> 
-					took over EvE Scout Rescue and guided the division from December YC120 until April YC123. Under his watch the division set many new records for number of rescues, caches in space, and 911 call volume. Then in YC123, <a href="https://evewho.com/pilot/Captain%20Crinkle">Captain Crinkle</a>, one of our most experienced rescue pilots, took the helm. Crinkle guided the division until May of YC124 when our current ESRC Manager, <a href="https://evewho.com/character/2112425049">Xalyar</a> assumed the lead role. While he oversees the division as a whole, it takes an entire team to make it all happen. Our current roster includes the following dedicated rescue pilots.</p>
+				<p>When Thrice Hapus became CEO of Signal Cartel, <a href="https://evewho.com/character/1852974735">Igaze</a> 
+					took over EvE Scout Rescue and guided the division from December YC120 until April YC123. Under his watch the division set many new records for number of rescues, caches in space, and 911 call volume. Then in YC123, <a href="https://evewho.com/character/97117031">Captain Crinkle</a>, one of our most experienced rescue pilots, took the helm. Crinkle guided the division until May of YC124 when our current ESRC Manager, <a href="https://evewho.com/character/2112425049">Xalyar</a> assumed the lead role. While he oversees the division as a whole, it takes an entire team to make it all happen. Our current roster includes the following dedicated rescue pilots.</p>
 
 				<!-- 911 Operators -->
 				<div class="row">
@@ -70,7 +70,7 @@ require '../page_templates/home_html-begin.php';
 					
 					<div class="col-md-2">
 						<div class="thumbnail text-center">
-							<a href="https://evewho.com/pilot/<?=urlencode($val['username'])?>">
+							<a href="https://evewho.com/character/<?=urlencode($val['characterid'])?>">
 								<img src="https://image.eveonline.com/Character/<?=urlencode($val['characterid'])?>_512.jpg" 
 									alt="<?=urlencode($val['username'])?>" style="width:100%">
 								<div class="caption"><strong><?=$val['username']?></strong></div>
@@ -108,7 +108,7 @@ require '../page_templates/home_html-begin.php';
 					
 					<div class="col-md-3">
 						<div class="thumbnail text-center">
-							<a href="https://evewho.com/pilot/<?=urlencode($val['username'])?>">
+							<a href="https://evewho.com/character/<?=urlencode($val['characterid'])?>">
 								<img src="https://image.eveonline.com/Character/<?=urlencode($val['characterid'])?>_512.jpg" 
 									alt="<?=urlencode($val['username'])?>" style="width:100%">
 								<div class="caption"><strong><?=$val['username']?></strong></div>
@@ -156,7 +156,7 @@ require '../page_templates/home_html-begin.php';
 							<a href="https://www.evescoutrescue.com/copilot">ALLISON</a>
 						</h3>
 						<div class="thumbnail text-center">
-							<a href="https://evewho.com/pilot/A%20Dead%20Parrot">
+							<a href="https://evewho.com/character/96765374">
 								<img src="https://image.eveonline.com/Character/96765374_512.jpg" 
 									alt="A.D. Parrot" style="width:80%">
 								<div class="caption"><strong>A Dead Parrot</strong></div>

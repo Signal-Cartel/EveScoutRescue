@@ -130,14 +130,28 @@ else {	// show payout data if "Payout" is checked	?>
 				$rows = $lb->getSARDispatchPayees($start, $end, true);
 				$ctr = 0;
 				foreach ($rows as $value) {
-					$ctr++;	?>
+					$ctr++;	
+					$pname = $value['startagent'];
+					
+					?>
 
 					<tr>
-						<td><a class="payout" target="_blank" 
-							href="https://evewho.com/pilot/<?=$value['startagent']?>"> 
-							<?=Output::htmlEncodeString($value['startagent'])?></a></td>
+						<td class="white">
+						<p style=""><span id="<?=$pname.$ctr?>"><?=Output::htmlEncodeString($pname)?></span>
+							<i id="copy<?=$pname.$ctr?>" class="fa fa-clipboard" style="margin: 0px 8px 0px 16px;" onClick="copyTextElement('<?=$pname.$ctr?>')"></i>
+						
+							<a class="payout" target="_blank" 
+							href="/esrc/personal_stats.php?pilot=<?=urlencode($pname)?>">
+							Stats</a> 
+						</p>	
+						
+							
+						</td>
+						
+						
 						<td class="white text-right"><?=$value['cnt']?></td>
-						<td>
+						
+						<td class="white">
 							<input type="text" id="amt<?=$ctr?>" 
 								value="<?=intval($value['cnt'])*1000000?>" />
 							<i id="copyclip" class="fa fa-clipboard" onClick="SelectAllCopy('amt<?=$ctr?>')"></i>

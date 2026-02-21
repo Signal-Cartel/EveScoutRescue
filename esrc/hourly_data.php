@@ -1,4 +1,11 @@
 <?php
+// https://dev.evescoutrescue.com/esrc/hourly_data.php
+
+if (!defined('ESRC')) {
+    define('ESRC', TRUE);
+}
+
+require_once '../class/db.class.php';
 require_once '../class/users.class.php';
 require_once '../class/config.class.php';
 require_once '../class/mmmr.class.php';

@@ -80,6 +80,33 @@ function debug($variable){
 			"pageLength": 15
 		} );
 	} );
+	
+	// copy text element
+	function copyText(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            //console.log('Text copied to clipboard');
+			document.getElementById("copy"+text).style.color = "green";
+			
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+	}
+
+	function copyTextElement(id) {
+    const element = document.getElementById(id);
+    navigator.clipboard.writeText(element.textContent)
+        .then(() => {
+            //console.log('Text copied to clipboard');
+			document.getElementById("copy"+id).style.color = "green";
+			
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+	}	
+	
 </script>
 
 <p style="font-size: 125%; font-weight: bold; color: white;">Payouts:

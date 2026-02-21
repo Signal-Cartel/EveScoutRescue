@@ -13,7 +13,15 @@
 		if (isset($_SESSION['livedata']) and  $_SESSION['livedata'] == false){
 			if ($_SERVER['HTTP_HOST'] == 'dev.evescoutrescue.com' and ($_SERVER['PHP_SELF'] == '/esrc/rescueoverview.php' or $_SERVER['PHP_SELF']== '/esrc/search.php')){
 				$self = $_SERVER['PHP_SELF'];
-				echo "<br><a href='$self?r=a'>Admin</a>&nbsp;|&nbsp;<a href='$self?r=c'>Coord</a>&nbsp;|&nbsp;<a href='$self?r=9'>911</a>&nbsp;|&nbsp;<a href='$self?r=l'>Sig</a>";
+				$system_uri = '';
+				if (isset($system) && $system <>''){
+					$system_uri = '&sys='.$system;
+				}
+				echo "<br>";
+				echo "<a href='$self?r=a$system_uri'>Admin</a>&nbsp;|&nbsp;";
+				echo "<a href='$self?r=c$system_uri'>Coord</a>&nbsp;|&nbsp;";
+				echo "<a href='$self?r=9$system_uri'>911</a>&nbsp;|&nbsp;";
+				echo "<a href='$self?r=l$system_uri'>Sig</a>";
 			}
 		}
 		echo '</p>';
