@@ -12,6 +12,7 @@
  * 
  * jmh - 20200716
  */
+ // https://dev.evescoutrescue.com/includes/auth-inc.php
  // if no session, start one
  if (session_status() === PHP_SESSION_NONE) { session_start(); }
  

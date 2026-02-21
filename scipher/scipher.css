@@ -1,0 +1,205 @@
+@CHARSET "ISO-8859-1";
+
+* { margin, padding: 0; }
+	
+body {
+	background: #2b2b2b;
+	margin: 24px;
+	font-size: 1.4em;
+	background-image: url(metal-grid.jpg);
+}
+
+a {
+	display: block; text-decoration: none;
+	font: Helvetica, Arial, Sans-Serif;  
+	text-align: center;
+	color: #999; text-shadow: 0px 3px 8px #2a2a2a;
+ }
+ 	h1 a:hover {
+ 		color: #a0a0a0; text-shadow: 0px 5px 8px #2a2a2a;
+ 	}
+ 
+h1, h2 {
+	font-size: 0.8em;
+	font-family: monospace;
+	text-align: center;	
+	color: rgba(160, 249, 160, 0.9); 
+	text-shadow: 0px 2px 3px #000;
+	margin: 10px;
+}
+h1{
+	font-size: 2.0em;
+	text-align: center;
+}
+
+.stamped {
+	color: #fff;
+    text-shadow: 1px -1px 0px #555;
+
+	margin: 6px auto; 
+	width:80%;
+	max-width: 600px;
+	background: #1a1a1a; 
+	padding: 2px;
+	font-size: 1em; 
+	font-family: monospace;
+
+	padding: 20px;
+	
+	-webkit-box-shadow: 2px 3px 8px #555;
+	-moz-box-shadow: 2px 3px 8px #555;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	background: linear-gradient(to bottom, rgba(20,20,20,0.7), rgba(20,20,20,0.2));
+}
+
+label {
+    min-width: 110px;
+	vertical-align: top;
+	color: #bbb;
+	margin-bottom: 0px;
+}
+
+i {
+	vertical-align: top;
+    opacity: .8;
+	margin: 5px 0px 0px -12px;
+	
+}
+input,textarea,select,hr {
+	vertical-align: top;
+    margin: 0px 0px 12px 0px;
+    background: #222;
+    padding: 0px 1px 2px 4px;
+    border-color: #000000;
+    font-size: .9em;
+    line-height: 1em;
+	font-family: monospace;
+	min-width: 240px;
+    max-width: 90%;
+
+	color: #fff;
+	-webkit-box-shadow: 0px 2px 3px #555;
+	-moz-box-shadow: 0px 2px 3px #555;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+input:focus,textarea:focus,select:focus{
+  outline: none;
+  box-shadow: 0px 0px 12px #57ea75;
+  	-webkit-box-shadow: 0px 0px 12px #57ea75;
+	-moz-box-shadow: 0px 0px 12px #57ea75;
+
+	background: #292929;
+	transition: 1.5s;	
+}
+
+pre{
+    display: block;
+    font-size: 13px;
+    font-family: monospace;
+    line-height: 1.42857;
+    color: rgb(191, 191, 191);
+white-space: pre-wrap;
+word-wrap: break-word;
+    background-color: rgb(21, 21, 21);
+    padding: 4px;
+    margin: 0px 10px 20px 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(77, 109, 79);
+    border-image: initial;
+    text-shadow: none;
+    border-radius: 4px;
+}
+	
+.tt-hint {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px 8px 8px 8px;
+	font-size: .9em;
+	height: 15px;
+	line-height: 15px;
+	outline: medium none;
+	padding: 8px 4px;
+	width: 100%;
+}
+
+.tt-dropdown-menu {
+	width: 110%;
+	margin-top: 5px;
+	padding: 4px 0px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+	font-size: 100%;
+	color: #eee;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.tt-suggestion {
+    padding: 3px 10px;
+    font-size: 100%;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+    color: #fff;
+    background-color: rgba(35, 214, 71, 0.3);
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+.raised-btn {
+  position: relative;
+  cursor: pointer;
+  line-height: 2.0em;
+  background: #25292C;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  width:50%;
+  max-width:240px;
+  text-align: center;
+  border-radius: 999px;
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3), 
+              inset 3px 15px 45px rgba(255,255,255,0.1),
+              inset -1px -1px 2px rgba(0,0,0,0.5), 
+              inset -3px -15px 45px rgba(0,0,0,0.2),
+              1px 5px 30px -4px rgba(0,0,0,1);
+  -webkit-transition: 0.1s ease-out;
+  -moz-transition:    0.1s ease-out;
+  -o-transition:      0.1s ease-out;
+  transition:         0.1s ease-out;
+}
+
+.raised-btn:before {
+  content: "";
+  background: #1A1A1A;
+  width: 170px;
+  height: 170px;
+  position: absolute;
+
+  top: -15px;
+  left: -15px;
+  z-index: -1;
+  border-radius: 999px;
+  box-shadow: inset -1px -1px 2px rgba(255,255,255,0.3), 
+    inset -5px -15px 40px rgba(255,255,255,0.1),
+    inset 1px 1px 2px rgba(0,0,0,0.5), 
+    inset 5px 15px 40px rgba(0,0,0,0.2),
+    -2px -40px 50px -20px rgba(255,255,255,0.1),
+    2px 35px 50px -10px rgba(0,0,0,0.4),
+    0px 0px 25px 8px rgba(60,60,60,1);
+}
+
+.raised-btn:active {
+  color: rgba(0,0,0,0.7);
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.15);
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3), 
+              inset 3px 15px 45px rgba(0,0,0,0.2),
+              inset -1px -1px 2px rgba(0,0,0,0.5), 
+              inset -3px -15px 45px rgba(255,255,255,0.1),
+              1px 5px 10px -4px rgba(0,0,0,1);
+}

@@ -1,5 +1,6 @@
 <?php 
 // REQUIRED on all secured pages
+
 define('ESRC', TRUE);
 require '../page_templates/secure_initialization.php';
 
@@ -127,6 +128,8 @@ else {			?>
 						// skip record if no locateagent listed
 						if (empty($value['locateagent'])) { continue; }
 						$ctr++;
+						$pname = $value['locateagent'];
+						
 						$daystosar = intval($value['daystosar']);
 						// base rate is usually 50 mil ISK; but only 20 mil ISK on same-day rescues
 						$basepay = ($daystosar > 0) ? 50000000 : 20000000;
@@ -145,10 +148,14 @@ else {			?>
 								<span style="font-size: 0.9em; color: #c3c3c3;"> - C'. $whclassnum .' - ('. $strBasepay .' x '. 
 									$whclassmult .') + (10mil x '. $daystosar .') = '. 
 									number_format(intval($payoutmax)) .'</span></td>';
-						echo '<td><a class="payout" target="_blank" 
-								href="https://evewho.com/pilot/'. $value['locateagent'] .'">'. 
-								Output::htmlEncodeString($value['locateagent']) .'</a></td>';
+									
+						
+			echo '<td class="white"><p class="payout" style="display: inline; margin-right: 6px;"><span id="'.$pname.$ctr.'">'. Output::htmlEncodeString($pname).'</span>';
+			echo '<i id="copy'.$pname.$ctr.'" class="fa fa-clipboard" style="margin: 0px 8px 0px 16px;" onClick="copyTextElement(\''.$pname.$ctr.'\')"></i></p></td>';						
+								
 						echo '<td>&nbsp;</td>';
+						
+						
 						// Locator gets half of total payout amount
 						$payoutloc = intval($payoutmax/2);	
 						echo '<td><input type="text" id="amt'.$ctr.'" style="width: 8em; text-align: right;" 
@@ -167,11 +174,14 @@ else {			?>
 							// do not pay Locator a second time
 							if ($value['locateagent'] != $val['pilot']) {
 								$ctr++;
+								$pname1 = $val['pilot'];
 								echo '<tr>';
 								echo '<td></td><td></td>';
-								echo '<td><a class="payout" target="_blank" 
-										href="https://evewho.com/pilot/'. $val['pilot'] .'">'. 
-										Output::htmlEncodeString($val['pilot']) .'</a></td>';
+								
+			echo '<td class="white"><p class="payout" id="'.$pname1.$ctr.'" style="display: inline; margin-right: 6px;"><span id="'.$pname1.$ctr.'">'.Output::htmlEncodeString($pname1).'</span>';
+			echo '<i id="copy'.$pname1.$ctr.'" class="fa fa-clipboard" style="margin: 0px 8px 0px 16px;" onClick="copyTextElement(\''.$pname1.$ctr.'\')"></i></p></td>';
+			
+								
 								// first rescuer gets half of locator pay, then half again for each successive rescuer
 								if ($payoutres == 0) {
 									$payoutres = intval($payoutloc/2);

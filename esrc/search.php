@@ -1,7 +1,10 @@
 <?php
+if ($_SERVER['HTTP_HOST'] === 'dev.evescoutrescue.com'){
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+}
 session_start();
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
 
@@ -16,7 +19,7 @@ require_once '../class/systems.class.php';
 require_once '../class/output.class.php';
 require_once '../class/rescue.class.php';
 
-require_once 'hourly_data.php';	
+
 
 function debug($output){
 	echo "<script>console.log(JSON.parse('" . json_encode($output) . "'));</script>";
@@ -51,6 +54,8 @@ if (!Users::isAllianceUserSession()){
 	exit;
 }
 unset($_SESSION['AUTH_NOALLIANCE']);
+
+require_once 'hourly_data.php';	
 
 // Planet numbers used in the modals
 $romans = Array(
@@ -92,7 +97,7 @@ $romans = Array(
 
 	<?php
 	$pgtitle = 'ESRC Search';
-	include_once '../includes/head.php';
+	require_once '../includes/head.php';
 	?>
 </head>
 <?php
@@ -104,6 +109,8 @@ if (!isset($charname))
 	// no, set a dummy char name
 	$charname = 'charname_not_set';
 }
+
+echo "<!-- Pilot: $charname ' -->";
 
 // create object instances
 $users = new Users($database);
@@ -133,7 +140,8 @@ else{
 }
 
 
-if ($_SERVER['HTTP_HOST'] === 'dev.evescoutrescue.com' && !empty($_SESSION['livedata']) && $_SESSION['livedata'] != 1) {
+if ($_SERVER['HTTP_HOST'] === 'dev.evescoutrescue.com' && isset($_SESSION['livedata']) && $_SESSION['livedata'] != 1) {
+	echo '<!-- Running role change check -->';
     if (!empty($_REQUEST['r'])) {
         // Initialize variables and session values
         $is911 = $_SESSION['is911'] = $isAdmin = $_SESSION['isAdmin'] = $isCoord = $_SESSION['isCoord'] = 0;
@@ -142,9 +150,13 @@ if ($_SERVER['HTTP_HOST'] === 'dev.evescoutrescue.com' && !empty($_SESSION['live
         if ($r === 'c' || $isAdmin) $is911 = $_SESSION['is911'] = $isCoord = $_SESSION['isCoord'] = 1;
         if ($r === '9' || $isAdmin || $isCoord) $is911 = $_SESSION['is911'] = 1;
     }
+	
+}
+else{
+	echo '<!-- Role change check bypassed -->';
 }
 
-
+if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
 $system = '';
 if(isset($_REQUEST['sys'])) {
@@ -161,58 +173,66 @@ if(isset($_REQUEST['sys'])) {
 	}
 }
 
-if(isset($_REQUEST['errmsg'])) { $errmsg = $_REQUEST['errmsg']; }
 
-$activeSAR = $activeSARtitle = '';
-$islocatepilot = false;
-// get active SAR requests of current system if locate pilot or 911 operator or higher
-$requests = $rescue->getSystemRequests($system, 0, $isCoord);
-if (count($requests) > 0) {
-	foreach ($requests as $request){
-		if ($request['locateagent'] == $charname) {$islocatepilot = true;}
+if (!empty($system)) {
+	echo "<!-- System $system -->";
+	// is a full cache history requested?
+	$getall = (isset($_REQUEST['getall'])) ? true : false;
+
+	// is this system being searched for in SAR
+	$activeSAR = $activeSARtitle = '';
+	$islocatepilot = false;
+	// get active SAR requests of current system if locate pilot or 911 operator or higher
+	$requests = $rescue->getSystemRequests($system, 0, $isCoord);
+	if (count($requests) > 0) {
+		foreach ($requests as $request){
+			if ($request['locateagent'] == $charname) {$islocatepilot = true;}
+		}
+		if ($islocatepilot or $is911 ){
+			$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
+			$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
+		}
 	}
-	if ($islocatepilot or $is911 ){
-		$activeSAR = ' <span style="font-weight: bold; color: red;">(!)</span>';
-		$activeSARtitle = '&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff6464;"> ACTIVE SAR SYSTEM!</span>';
-	}
-}
 
+	// GET PILOT'S TENDING EXPERIENCE LEVEL
+	$_SESSION['pilot_tend_experience'] = 0;
+	// get sow and tend count in past year
+	$rows = $leaderBoard->getActionCount($charname);
+	foreach ($rows as $value) {
+		if ($value['Actions']) {
+				$_SESSION['pilot_tend_experience'] = $value['Actions'];
+		}
+	}	
+	echo "<!-- Pilot experience: {$_SESSION['pilot_tend_experience']} -->";
+		
+	// CONFIRM PILOT'S IN-GAME LOCATION for sowing and tending
+	$pilotLocStat = '';
+	// does not apply to SAR Coordinators
+	if ($isCoord == false) {
+		// check for Allison login (required to sow/tend caches)
+		if (isset($_SESSION['auth_char_location'])) {
 
-// CONFIRM PILOT'S IN-GAME LOCATION
-$pilotLocStat = '';
-// does not apply to SAR Coordinators
-if ($isCoord == false) {
-	// check for Allison login (required to sow/tend caches)
-	if (isset($_SESSION['auth_char_location'])) {
-		// check if pilot has sown/tended over 300 caches in the past year; if so, they are excluded from this check	
-		if (!isset($_SESSION['megacacher'])){
-			$_SESSION['megacacher'] = 0;
-			$rows = $leaderBoard->getActionCount($charname);
-			foreach ($rows as $value) {
-				if ($value['Actions']) {
-					if ($value['Actions'] >= 300) {
-						$_SESSION['megacacher'] = 1;
-						break;
-					}
+			// DISABLE TEND "OUT OF SYSTEM" IF PILOT NOT A "Megacacher"
+			if ($_SESSION['pilot_tend_experience'] < 300) {
+				// pilot may only sow/tend caches for a system they are verified to be present in
+				if ($_SESSION['auth_char_location'] != $system)  {
+					$pilotLocStat = 'not_in_system';				
+					$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '.
+						$system .' to perform this action, but you are in '.
+						$_SESSION['auth_char_location'].'"';
 				}
 			}
 		}
-		// DISABLE MEGA CACHER PRIVELEGE TEMPORARILY
-		if (true or $_SESSION['megacacher'] == 0) {
-			// otherwise, pilot may only sow/tend caches for a system they are verified to be present in
-			if ($_SESSION['auth_char_location'] != $system)  {
-				$pilotLocStat = 'not_in_system';				
-				$strBtnAttrib = 'data-toggle="tooltip" title="You must be in '.
-					$system .' to perform this action, but you are in '.
-					$_SESSION['auth_char_location'].'"';
-			}
+		else {
+			
+			$pilotLocStat = 'not_in_allison';
+			$strBtnAttrib = 'data-toggle="tooltip" title="You must be logged into ALLISON in order to enter ESRC data."';
 		}
 	}
-	else {
-		$pilotLocStat = 'not_in_allison';
-		$strBtnAttrib = 'data-toggle="tooltip" title="You must be logged into ALLISON in order to enter ESRC data."';
-	}
+
 }
+
+
 ?>
 <body class="white" style="background-color: black;">
 <div class="container">
@@ -257,6 +277,8 @@ if (!empty($system)) {
 	$cache_info = $caches->getCacheInfo($system, $limited_data);// returns empty if no cache
 	//debug($system); debug($cache_info);
 	$isTendingAllowed = $caches->isTendingAllowed($system);
+	//$sowingPilot = $caches->getCacheSower($system);
+	
 
 	$strNotes = '';
 	//only display the following if we got some results back
@@ -293,7 +315,8 @@ if (!empty($system)) {
 			<div class="col-md-12">
 				<div style="padding-left: 10px;">
 					<!-- System Name display -->
-					<p class="systemName"><?=$system . "<span $statuscellformat> " . $cache_info ['Status'] . $status_display  . "</span>". $activeSARtitle ?></p>
+					<p id="system_and_status" class="systemName"><?=$system . "<span $statuscellformat> " . $cache_info ['Status'] . $status_display  . "</span>". $activeSARtitle ?></p>
+					
 					<!-- TEND button -->
 					<?php
 					$strTended = '';
@@ -307,43 +330,42 @@ if (!empty($system)) {
 						$strBtnAttrib = 'data-toggle="modal" data-target="#TendModal"';
 					}
 					?>
-					<button type="button" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
-						Tend<?=$strTended?></button>
-					
-					<!-- AGENT and SAR buttons (if 911 or higher)-->
-					<?php
-					if($is911){
+					<p  class="systemName">
+						<button type="button" id="tendingbutton" class="btn btn-primary" role="button" <?=$strBtnAttrib?>>
+							Tend<?=$strTended?></button>
 						
-						echo '<button type="button" class="btn btn-warning" role="button" data-toggle="modal"  data-target="#AgentModal">';
-						echo 'Agent</button>';					
-						echo '<a href="rescueoverview.php?new=1&sys=' . $system . '" class="btn btn-danger" role="button">New SAR</a>';
-					}
-					?>
-					<!-- TW button -->
-					<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
-						role="button" target="_blank">Tripwire</a>
-					
-					<!-- anoik.is button -->
-					<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
-						target="_blank">anoik.is</a>
-					
-					<!-- Chains and Edit buttons, if relevant -->
-					<?php
-					// "chains" button is Coord-only
-					if ($isCoord) {
-						echo '<a href="/copilot/data/chains.php?system='. $system .'" class="btn btn-info"
-							role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
-					}
-					//edit function only available to Coordinators and recent sowers
+						<!-- AGENT and SAR buttons (if 911 or higher)-->
+						<?php
+						if($is911){
+							
+							echo '<button type="button" class="btn btn-warning" role="button" data-toggle="modal"  data-target="#AgentModal">';
+							echo 'Agent</button>';					
+							echo '<a href="rescueoverview.php?new=1&sys=' . $system . '" class="btn btn-danger" role="button">New SAR</a>';
+						}
+						?>
+						<!-- TW button -->
+						<a href="https://tripwiremap.app/?system=<?=$system?>" class="btn btn-info"
+							role="button" target="_blank">Tripwire</a>
+						
+						<!-- anoik.is button -->
+						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
+							target="_blank">anoik.is</a>
+						
+						<!-- Chains and Edit buttons, if relevant -->
+						<?php
+						// "chains" button is Coord-only
+						if ($isCoord) {
+							echo '<a href="/copilot/data/chains.php?system='. $system .'" class="btn btn-info"
+								role="button" target="_blank">Chains</a>&nbsp;&nbsp;&nbsp;';
+						}
+						//edit function only available to Coordinators and recent sowers
 
-					if ($isCoord || $isRecentSower) {
-						echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
-							data-target="#EditModal">Edit Cache</button>';
-					}
-
-					
-					
-					?>
+						if ($isCoord || $isRecentSower) {
+							echo '<button type="button" class="btn btn-success" role="button" data-toggle="modal"
+								data-target="#EditModal">Edit Cache</button>';
+						}
+						?>
+					</p>
 				</div>
 				<div class="ws"></div>
 			</div>
@@ -498,7 +520,7 @@ if (!empty($system)) {
 						?>
 						
 						<!-- TW button -->
-						<a href="https://tripwire.eve-apps.com/?system=<?=$system?>"
+						<a href="https://tripwiremap.app/?system=<?=$system?>"
 							class="btn btn-info" role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 						
 						<!-- anoik.is button -->
@@ -547,7 +569,7 @@ if (!empty($system)) {
 							</span>
 						</p>					
 						<!-- TW button -->
-						<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info"
+						<a href="https://tripwiremap.app/?system=<?=$system?>" class="btn btn-info"
 							role="button" target="_blank">Tripwire</a>				
 						<!-- anoik.is button -->
 						<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button"
@@ -693,133 +715,174 @@ if (!empty($system)) {
 		
 <?php
 		
-
-	//HISTORY
-	// see if there is historical data to display for this system
-	$systemActivities = $systems->getSystemHistoryRecent($system);
-	$actioncount = 0;
-	if (!empty($systemActivities)) {
+	
 		
-		$actioncount = count($systemActivities);
-		echo '<div class="row" id="historytable">';
-		echo '<div class="col-md-12">';
-		echo '<div style="padding-left: 0px;">';
-		echo "<br /><span class='subhead'>PAST YEAR HISTORY: $actioncount actions</span><br />";
-		
-		echo '<table class="table" style="
-				font-size: 1em;
-				font-weight: normal;
-				color: #a7a7a7;
-				">
-				<thead>
-					<tr>
-						<th class="white">YYY-MM-DD</th>
-						<th class="white">Pilot</th>
-						<th class="white">Action</th>
-						<th class="white">Align</th>
-						<th class="white">Loc</th>
-						';
-		if ($limited_data == 0){
-						echo '
-						<th class="white">Dist</th>
-						<th class="white">Pass</th>
-						';
-		}				
-		echo			'<th class="white">Expires</th>';
-		if ($isCoord) {
-				echo	'<th class="white">Client</th>';
+		//HISTORY
+		// see if there is historical data to display for this system
+		if ($getall){
+			$systemActivities = $systems->getSystemHistory($system);
 		}
-
-				//echo	'<th class="white">Note</th>';
-				echo '</tr>
-				</thead>
-				<tbody>';
-		
-
-		foreach ($systemActivities as $activity) {
-			// show all activity except for Tamayo in Anoikis System
-			if (   !(($system == constant("ANOIKISDIV")) and (($activity['Pilot']) == 'Tamayo'))   ){			
-				
-				// only display aligned, location, etc info on new Sow rows 
-				$sowrow = '';
-				if ($activity['EntryType'] == 'sower') {								
-					$sowrow = $activity;
-				}
-				switch ($activity['EntryType']) {
-					case 'sower':
-						$actioncellformat = ' actionSower';
-						break;
-					case 'tender':
-						$actioncellformat = ' actionTender';
-						break;
-					case 'note':
-						$actioncellformat = ' actionTender';
-						break;
-					case 'agent':
-						$actioncellformat = ' actionAgent';
-						break;
-					default:
-						$actioncellformat = '';
-				}
-
-				switch ($activity['CacheStatus']) {
-					case 'Healthy':
-						$actioncellBorderFormat = ' cacheHealthy';
-						break;
-					case 'Expired':
-						$actioncellBorderFormat = ' cacheExpired';
-						break;
-					case 'Upkeep Required':
-						$actioncellBorderFormat = ' cacheUpkeepRequired';
-						break;
-					default:
-						$actioncellBorderFormat = ' cacheNoStatus';
-				}
-
-				echo '<tr class="history">';
-				$rowdate = $activity['ActivityDate'];
-				echo '<td class="text-nowrap">'. Output::getEveDatetimeShort($rowdate) .'</td>';
-				$pilotcellformat = ($charname == $activity['Pilot'] ? $actioncellformat : '');
-				$p1 = substr($activity['Pilot'], 0, 10);
-				$p2 = $p1 == $activity['Pilot'] ? "" : '<span style="font-size: .6em;">...</span>';
-				echo '<td class="text-nowrap' . $pilotcellformat . '">'. $activity['Pilot'] .'</td>';
-				echo '<td class="text-nowrap' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
-				$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
-				echo '<td class="text-nowrap">'. $rowAW .'</td>';
-				$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
-				echo '<td class="text-nowrap">'. $rowLoc .'</td>';
-				
-				if ($limited_data == 0) {
-					$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';			
-					echo '<td class="text-nowrap">'. $rowDist.'</td>';
-
-					$rowPass = (!empty($sowrow)) ? $sowrow['Password'] : '';
-					echo '<td class="text-nowrap">'. Output::htmlEncodeString($rowPass) .'</td>';
-				}
-				
-				$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
-				echo '<td class="text-nowrap" >'. $rowExp.'</td>';
-				
-				if ($isCoord) {
-					$p1 = substr(Output::htmlEncodeString($activity['AidedPilot']), 0, 10);
-					$p2 = $p1 == Output::htmlEncodeString($activity['AidedPilot']) ? '' : '<span style="font-size: .6em;">...</span>';
-					echo '<td class="text-nowrap" >'. Output::htmlEncodeString($activity['AidedPilot']) .'</td>';
-				}
-				if ($activity['Note'] !== ""){
-					echo '</tr>';
-					echo '<tr><td colspan="2" style="border-top:none;">&nbsp;</td>';
-					echo '<td colspan="10" class="' . $actioncellBorderFormat . '" style="border-top: none; text-align: right;">';
-					echo 'NOTE: <em>'. Output::htmlEncodeString($activity['Note']) .'</em></td>';
-				}
-				
-				
-				echo '</tr>';
+		else{
+			$systemActivities = $systems->getSystemHistoryRecent($system);
+		}	
+			
+		$actioncount = 0;
+		if (!empty($systemActivities)) {
+			
+			$actioncount = count($systemActivities);
+			echo '<div class="row" id="historytable">';
+			echo '<div class="col-md-12">';
+			echo '<div style="padding-left: 0px;">';
+			
+			if ($getall){
+				echo "<br /><span class='subhead'>ALL HISTORY: $actioncount actions</span>";		
 			}
+			else{
+				echo "<br /><span class='subhead'>PAST YEAR HISTORY: $actioncount actions</span>";		
+				echo '<a href="search.php?getall=1&sys=' . $system . '" class="btn btn-info" role="button" style="font-size: 12px; background-color: grey;">Get all history</a>';
+			}
+				
+			
+			
+			
+			echo '<br/><table class="table" style="
+					font-size: 1em;
+					font-weight: normal;
+					color: #a7a7a7;
+					">
+					<thead>
+						<tr>
+							<th class="white">YYY-MM-DD</th>';
+							
+			echo '<th class="white">Pilot</th>';
+						
+			echo '			<th class="white">Action</th>
+							<th class="white">Align</th>
+							<th class="white">Loc</th>
+							';
+							
+			if ($limited_data == 0){
+							echo '
+							<th class="white">Dist</th>
+							<th class="white">Pass</th>
+							';
+			}				
+			echo			'<th class="white">Expires</th>';
+			if ($isCoord) {
+					echo	'<th class="white">Client</th>';
+			}
+
+					//echo	'<th class="white">Note</th>';
+					echo '</tr>
+					</thead>
+					<tbody>';
+			
+
+			foreach ($systemActivities as $activity) {
+				// show all activity except for Tamayo in Anoikis System
+				if ( TRUE or  !(($system == constant("ANOIKISDIV")) and (($activity['Pilot']) == 'Tamayo'))   ){			
+					
+					// only display aligned, location, etc info on new Sow rows 
+					$sowrow = '';
+					if ($activity['EntryType'] == 'sower') {								
+						$sowrow = $activity;
+					}
+					switch ($activity['EntryType']) {
+						case 'sower':
+							$actioncellformat = ' actionSower';
+							break;
+						case 'tender':
+							$actioncellformat = ' actionTender';
+							break;
+						case 'note':
+							$actioncellformat = ' actionTender';
+							break;
+						case 'agent':
+							$actioncellformat = ' actionAgent';
+							break;
+						default:
+							$actioncellformat = '';
+					}
+
+					switch ($activity['CacheStatus']) {
+						case 'Healthy':
+							$actioncellBorderFormat = ' cacheHealthy';
+							break;
+						case 'Expired':
+							$actioncellBorderFormat = ' cacheExpired';
+							break;
+						case 'Upkeep Required':
+							$actioncellBorderFormat = ' cacheUpkeepRequired';
+							break;
+						default:
+							$actioncellBorderFormat = ' cacheNoStatus';
+					}
+
+					// date
+					echo '<tr class="history" id="activity-'.$activity['ID'] . '">';
+					$rowdate = $activity['ActivityDate'];
+					$isLessThan48HoursOld = (time() - strtotime($rowdate)) < (48 * 60 * 60);
+					echo '<td class="text-nowrap">'. Output::getEveDatetimeShort($rowdate) .'</td>';
+					
+					// pilot
+					$pilotcellformat = ($charname == $activity['Pilot'] ? $actioncellformat : '');
+					$p1 = substr($activity['Pilot'], 0, 10);
+					$p2 = $p1 == $activity['Pilot'] ? "" : '<span style="font-size: .6em;">...</span>';
+					
+					if ($isLessThan48HoursOld){
+						if ($is911 || ($charname == $activity['Pilot'])){
+						echo '<td class="text-nowrap' . $pilotcellformat . '">'. $activity['Pilot'] .'</td>';
+						}
+						else {
+							echo '<td class="text-nowrap' . $pilotcellformat . '">Signaleer</td>';
+						}
+					}
+					else{
+						echo '<td class="text-nowrap' . $pilotcellformat . '">'. $activity['Pilot'] .'</td>';
+					}
+					
+					// action
+					echo '<td class="text-nowrap' . $actioncellformat . $actioncellBorderFormat .'">'. ucfirst($activity['EntryType']) .'</td>';
+					$rowAW = (!empty($sowrow)) ? $sowrow['AlignedWith'] : '';
+					echo '<td class="text-nowrap">'. $rowAW .'</td>';
+					$rowLoc = (!empty($sowrow)) ? $sowrow['Location'] : '';
+					echo '<td class="text-nowrap">'. $rowLoc .'</td>';
+					
+					if ($limited_data == 0) {
+						$rowDist = (!empty($sowrow)) ? $sowrow['Distance'] : '';			
+						echo '<td class="text-nowrap">'. $rowDist.'</td>';
+
+						$rowPass = (!empty($sowrow)) ? $sowrow['Password'] : '';
+						echo '<td class="text-nowrap">'. Output::htmlEncodeString($rowPass) .'</td>';
+					}
+					
+					$rowExp = (!empty($sowrow)) ? Output::getEveDate($sowrow['ExpiresOn']) : '';
+					echo '<td class="text-nowrap" >'. $rowExp.'</td>';
+					
+					if ($isCoord) {
+						$p1 = substr(Output::htmlEncodeString($activity['AidedPilot']), 0, 10);
+						$p2 = $p1 == Output::htmlEncodeString($activity['AidedPilot']) ? '' : '<span style="font-size: .6em;">...</span>';
+						echo '<td class="text-nowrap" >'. Output::htmlEncodeString($activity['AidedPilot']) .'</td>';
+					}
+					if ($activity['Note'] !== ""){
+						echo '</tr>';
+						echo '<tr><td colspan="2" style="border-top:none;">&nbsp;</td>';
+						echo '<td colspan="10" class="' . $actioncellBorderFormat . '" style="border-top: none; text-align: right;">';
+						echo 'NOTE: <em>'. Output::htmlEncodeString($activity['Note']) .'</em></td>';
+					}
+					
+					
+					echo '</tr>';
+
+				}
+			}
+			echo '</tbody>
+				</table>';
+				
+			echo '</div></div></div>';
 		}
-		echo '</tbody>
-			</table>';
-		echo '</div></div></div>';
-	}
+	
+
 	
 	// include modals for modifying current cache		
 	if ($pilotLocStat == '') {			
@@ -851,17 +914,19 @@ if ($limited_data === 0) {
 ?>
 
 <script type="text/javascript">
-		
-		
 	function SelectAllCopy(id) {
 	    document.getElementById(id).focus();
 	    document.getElementById(id).select();
 	    document.execCommand("Copy");
 	}
-
-   
-	
 </script>
-
+<?php
+if (!empty($system)) {
+	$pilot_exceptions = Array('Renek Dallocort','Zaamex');
+	if (!in_array($charname,$pilot_exceptions)){
+		echo '<script src="../js/esrc.corp.checker.js"></script>';
+	}
+}
+?>
 </body>
 </html>

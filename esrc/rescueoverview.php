@@ -1,7 +1,8 @@
 <?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 session_start();
-// Mark all entry pages with this definition. Includes need check check if this is defined
-// and stop processing if called direct for security reasons.
 define('ESRC', TRUE);
 
 include_once '../includes/auth-inc.php';
@@ -217,7 +218,7 @@ if (!empty($errmsg)) {
 					?>
 
 				<!-- TW button -->
-				<a href="https://tripwire.eve-apps.com/?system=<?=$system?>" class="btn btn-info" 
+				<a href="https://tripwiremap.app/?system=<?=$system?>" class="btn btn-info" 
 					role="button" target="_blank">Tripwire</a>&nbsp;&nbsp;&nbsp;
 				<!-- anoik.is button -->
 				<a href="http://anoik.is/systems/<?=$system?>" class="btn btn-info" role="button" 
@@ -297,7 +298,9 @@ if (!empty($errmsg)) {
     const element = document.getElementById(id);
     navigator.clipboard.writeText(element.textContent)
         .then(() => {
-            console.log('Text copied to clipboard');
+            //console.log('Text copied to clipboard');
+			document.getElementById("copy"+id).style.color = "green";
+			
         })
         .catch(err => {
             console.error('Failed to copy text: ', err);
@@ -411,6 +414,21 @@ function displayTable($data, $charname, $finished = 0, $system = NULL, $notes = 
 	if ($finished == 0 && empty($system)) { include_once 'stats_sar.php'; }
 }
 
+function safe_html_id($string) {
+    // Convert to lowercase
+    $id = strtolower($string);
+    // Replace spaces and unsafe characters with hyphens
+    $id = preg_replace('/[^a-z0-9_-]+/', '-', $id);
+    // Trim leading/trailing hyphens
+    $id = trim($id, '-');
+    // Ensure it starts with a letter (HTML5-friendly)
+    if (!preg_match('/^[a-z]/', $id)) {
+        $id = 'id-' . $id;
+    }
+    return $id;
+}
+
+
 /**
  * Format input as HTML table data row in output
  * @param unknown $data - array of row details
@@ -507,13 +525,13 @@ function displayLine($row, $charname, $finished, $system, $notes, $isCoord, $sum
 	// Pilot - display stranded pilot's name only to coords and SAR agent
 	// check for related SAR Agent
 		$colspan++;
-
+		$pname = safe_html_id($row['pilot']);
 		if ($isCoord == 0 && $isSARAgent == 0) {
 			echo '<td><p class="admint"><em style="color:#999999">PROTECTED</em></p></td>';
 		}
 		else {
-			echo '<td><p class="admint" id="clientName" style="display: inline; margin-right: 6px;">'.Output::htmlEncodeString($row['pilot']).'</p>';
-			echo '<i id="copyclip" class="fa fa-clipboard" onClick="copyTextElement(\'clientName\')"></i></td>';
+			echo '<td><p class="admint" id="'.$pname.'" style="display: inline; margin-right: 6px;">'.Output::htmlEncodeString($row['pilot']).'</p>';
+			echo '<i id="copy'.$pname.'" class="fa fa-clipboard" onClick="copyTextElement(\''.$pname.'\')"></i></td>';
 		}
 	
 	// Status 
